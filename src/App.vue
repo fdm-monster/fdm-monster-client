@@ -1,21 +1,21 @@
 <template>
   <v-app>
+    <NavigationDrawer />
+    <TopBar />
+
     <v-main>
       <router-view/>
     </v-main>
   </v-app>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 
-export default defineComponent({
-  name: 'App',
+import TopBar from '@/components/TopBar.vue';
+import NavigationDrawer from '@/components/NavigationDrawer.vue';
 
-  data () {
-    return {
-      //
-    }
-  },
-})
 </script>
+
+<style>
+@import '@/assets/base.css';
+</style>

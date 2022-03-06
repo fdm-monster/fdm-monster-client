@@ -13,8 +13,9 @@
     "typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
-    "@mdi/font": "5.9.55",
     "axios": "0.26.1",
+    "luxon": "2.3.1",
+    "roboto-fontface": "*",
     "pinia": "2.0.13",
     "vue": "3.2.31",
     "vue-axios": "^3.4.1",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "1.1.2",
     "@types/jsdom": "16.2.14",
+    "@types/luxon": "^2.3.0",
     "@types/node": "16.11.26",
     "@types/webfontloader": "^1.6.34",
     "@vitejs/plugin-vue": "2.2.4",
@@ -41,8 +43,8 @@
     "jsdom": "19.0.0",
     "material-design-icons-iconfont": "^6.4.2",
     "prettier": "2.5.1",
-    "sass": "^1.38.0",
-    "sass-loader": "^10.0.0",
+    "sass": "^1.49.9",
+    "sass-loader": "^12.6.0",
     "start-server-and-test": "1.14.0",
     "typescript": "4.6.2",
     "vite": "2.8.6",
