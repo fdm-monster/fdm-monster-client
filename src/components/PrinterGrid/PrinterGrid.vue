@@ -10,10 +10,7 @@ onMounted(async () => {
 
 <template>
     <div> 
-        Title here
-    </div>
-    <div> 
-        Subtitle here
+        PRINTERGRID TITLE HERE
     </div>
 </template>
 

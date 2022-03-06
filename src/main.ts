@@ -5,13 +5,17 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import { createPinia } from 'pinia'
 import { vueErrorHandler } from './handlers/error.handler';
+import {registerFileDropDirective} from "@/components/file-upload.directive";
 
-loadFonts()
+loadFonts();
+
 
 const app = createApp(App)
   .use(router)
   .use(createPinia())
   .use(vuetify);
+
+registerFileDropDirective(app);
 
 app.config.errorHandler = vueErrorHandler;
 app.mount('#app');
