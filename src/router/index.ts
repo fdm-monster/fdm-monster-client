@@ -2,6 +2,9 @@ import PrinterGrid from "@/components/PrinterGrid/PrinterGrid.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import HomePrinterGrid from "../views/HomePrinterGrid.vue";
 import Settings from "../views/Settings.vue";
+import UserManagementSettings from "@/views/settings/UserManagementSettings.vue";
+import PrinterGroupsSettings from "@/views/settings/PrinterGroupsSettings.vue";
+import FdmSettings from "@/views/settings/FdmSettings.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,35 +22,34 @@ const router = createRouter({
     {
       path: "/settings",
       component: Settings,
+      children: [
+        {
+          path: "",
+          redirect: "printer-groups"
+        },
+        {
+          path: "user-management",
+          component: UserManagementSettings
+        },
+        {
+          path: "printer-groups",
+          component: PrinterGroupsSettings
+        },
+        {
+          path: "system",
+          component: FdmSettings
+        },
+        {
+          path: "other",
+          component: OtherSettings
+        }
+      ]
     },
-    //   children: [
-    //     {
-    //       path: "",
-    //       redirect: "printer-groups"
-    //     },
-    //     {
-    //       path: "user-management",
-    //       component: UserManagementSettings
-    //     },
-    //     {
-    //       path: "printer-groups",
-    //       component: PrinterGroupsSettings
-    //     },
-    //     {
-    //       path: "system",
-    //       component: FdmSettings
-    //     },
-    //     {
-    //       path: "other",
-    //       component: OtherSettings
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: "/scheduling",
-    //   name: "Scheduling",
-    //   component: Scheduling
-    // },
+    {
+      path: "/scheduling",
+      name: "Scheduling",
+      component: PrintScheduling
+    },
     {
       path: "/about",
       name: "about",

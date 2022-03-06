@@ -10,8 +10,10 @@ import {registerFileDropDirective} from "@/directives/file-upload.directive";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import FileExplorerSideNav from "@/components/SideNavs/FileExplorerSideNav.vue";
 import PrintJobsMenu from "@/components/PrintJobsMenu.vue";
+import {configureVeeValidate} from "@/plugins/veevalidate";
 
 await loadFonts();
+configureVeeValidate();
 
 const app = createApp(App)
   .use(router)

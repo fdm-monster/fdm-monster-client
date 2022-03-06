@@ -11,10 +11,10 @@
               <v-col cols="12">
                 <validation-provider v-slot="{ errors }" name="JSON" rules="required|json">
                   <v-textarea
-                    v-model="formData.json"
-                    :error-messages="errors"
-                    data-vv-validate-on="change|blur"
-                    @change="updatePrinterCount()"
+                      v-model="formData.json"
+                      :error-messages="errors"
+                      data-vv-validate-on="change|blur"
+                      @change="updatePrinterCount()"
                   >
                     <template v-slot:label>
                       <div>JSON import <small>(optional)</small></div>
@@ -37,105 +37,84 @@
   </v-row>
 </template>
 
-<script setup lang="ts">
-import type { PrintersService } from "@/backend";
+<script lang="ts" setup>
+import {PrintersService} from "@/backend";
+import {computed} from "vue";
+import {onMounted} from "@vue/runtime-core";
 
-extend("json", {
-  validate: (value) => {
-    try {
-      JSON.parse(value);
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  },
-  message: "{_field_} needs to be valid JSON."
+const props = defineProps<{ show: boolean }>();
+const formData: any = {};
+let numPrinters = 0;
+// const validationObserver: InstanceType<typeof ValidationObserver>;
+
+const mutableShow = computed(() => {
+  // https://forum.vuejs.org/t/update-data-when-prop-changes-data-derived-from-prop/1517/27
+  return show;
 });
 
-@Component({
-  components: {
-    ValidationProvider,
-    ValidationObserver
-  }
-})
-export default class BatchJsonCreateDialog extends Vue {
-  @Prop(Boolean) show: boolean;
-  formData: any = {};
+function mutableShow(newValue: boolean) {
+  $emit("update:show", newValue);
+}
+
+async function updatePrinterCount() {
+  numPrinters = (await parsedPrinters()).length;
+}
+
+async function parsedPrinters() {
+  if (!$refs.validationObserver) return [];
+  if (!(await isValid())) return [];
+
+  const data = JSON.parse(formData.json);
+  if (!Array.isArray(data)) return [];
+
+  return data;
+}
+
+onMounted(async () => {
+  window.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") {
+      closeDialog();
+    }
+  });
+
   numPrinters = 0;
+});
 
-  $refs!: {
-    validationObserver: InstanceType<typeof ValidationObserver>;
-  };
+async function isValid() {
+  return await $refs.validationObserver.validate();
+}
 
-  get mutableShow() {
-    // https://forum.vuejs.org/t/update-data-when-prop-changes-data-derived-from-prop/1517/27
-    return this.show;
-  }
+async function submit() {
+  if (!(await isValid())) return;
 
-  set mutableShow(newValue: boolean) {
-    this.$emit("update:show", newValue);
-  }
+  const printers = await this.parsedPrinters();
 
-  async updatePrinterCount() {
-    this.numPrinters = (await this.parsedPrinters()).length;
-  }
+  const numPrinters = printers.length;
+  const answer = confirm(`Are you sure to import ${numPrinters} printers?`);
 
-  async parsedPrinters() {
-    if (!this.$refs.validationObserver) return [];
-    if (!(await this.isValid())) return [];
-
-    const data = JSON.parse(this.formData.json);
-    if (!Array.isArray(data)) return [];
-
-    return data;
-  }
-
-  async created() {
-    window.addEventListener("keydown", (e) => {
-      if (e.key == "Escape") {
-        this.closeDialog();
+  if (answer) {
+    printers.forEach((p) => {
+      p.enabled = false;
+      if (p["_id"]) {
+        delete p["_id"];
+      }
+      if (p["apikey"]) {
+        p.apiKey = p["apikey"];
+        delete p["apikey"];
+      }
+      if (p["settingsApperance"]) {
+        p.settingsAppearance = p["settingsApperance"];
+        delete p["settingsApperance"];
       }
     });
-
-    this.numPrinters = 0;
+    await PrintersService.batchImportPrinters(printers);
   }
 
-  async isValid() {
-    return await this.$refs.validationObserver.validate();
-  }
-
-  async submit() {
-    if (!(await this.isValid())) return;
-
-    const printers = await this.parsedPrinters();
-
-    const numPrinters = printers.length;
-    const answer = confirm(`Are you sure to import ${numPrinters} printers?`);
-
-    if (answer) {
-      printers.forEach((p) => {
-        p.enabled = false;
-        if (p["_id"]) {
-          delete p["_id"];
-        }
-        if (p["apikey"]) {
-          p.apiKey = p["apikey"];
-          delete p["apikey"];
-        }
-        if (p["settingsApperance"]) {
-          p.settingsAppearance = p["settingsApperance"];
-          delete p["settingsApperance"];
-        }
-      });
-      await PrintersService.batchImportPrinters(printers);
-    }
-
-    this.closeDialog();
-  }
-
-  closeDialog() {
-    this.mutableShow = false;
-  }
+  closeDialog();
 }
+
+function closeDialog() {
+  mutableShow.value = false;
+}
+
 </script>
