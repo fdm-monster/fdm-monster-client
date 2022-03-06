@@ -42,7 +42,6 @@ import {computed} from "vue";
 
 const printersStore = usePrintersStore();
 const {printer, loading = false} = defineProps<{ printer: Printer, loading: boolean }>();
-
 const selected = computed(() => {
   if (!printer) return false;
   return printersStore.isSelectedPrinter(printer?.id);

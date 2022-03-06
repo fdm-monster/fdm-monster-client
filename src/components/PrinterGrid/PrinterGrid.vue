@@ -25,21 +25,21 @@
 
 <script lang="ts" setup>
 import {onMounted} from "@vue/runtime-core";
-import {onBeforeUnmount, ref} from "vue";
+import {inject, onBeforeUnmount, ref} from "vue";
 import {columnCount, rowCount, totalVuetifyColumnCount} from "@/constants/printer-grid.constants";
 import type {PrinterGroup} from "@/models/printers/printer-group.model";
 import {usePrintersStore} from "@/stores/printers";
 import {usePrinterGroupsStore} from "@/stores/printer-groups";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterTile.vue";
-
-let loading = ref(true);
-const printersStore = usePrintersStore();
-const printerGroupsStore = usePrinterGroupsStore();
+import {AppConstants} from "@/constants/app.constants";
 
 const maxColumnUnits = totalVuetifyColumnCount; // Built-in to vuetify
 const columns = columnCount; // x-value choice
 const rows = rowCount; // y-value choice
-
+const printersStore = usePrintersStore();
+const printerGroupsStore = usePrinterGroupsStore();
+const appConstants = inject(AppConstants);
+let loading = ref(true);
 let columnWidth = 3; // default value overwritten later
 let groupMatrix: PrinterGroup[][] = [];
 
@@ -74,7 +74,7 @@ function getPrinter(col: number, row: number, index: number) {
   const x = col - 1;
   const y = rows - row;
 
-  if (!groupMatrix?.length || !this.groupMatrix[x]) return;
+  if (!groupMatrix?.length || !groupMatrix[x]) return;
   const group = groupMatrix[x][y];
   if (!group) return;
 

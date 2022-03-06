@@ -4,33 +4,33 @@
       <v-col v-if="formData" cols="12" md="6">
         <validation-provider v-slot="{ errors }" :rules="printerGroupNameRules" name="Name">
           <v-text-field
-            v-model="formData.name"
-            :counter="printerGroupNameRules.max"
-            :error-messages="errors"
-            label="Printer name*"
-            required
+              v-model="formData.name"
+              :counter="printerGroupNameRules.max"
+              :error-messages="errors"
+              label="Printer name*"
+              required
           />
         </validation-provider>
 
         <validation-provider v-slot="{ errors }" :rules="locationXRules" name="LocationX">
           <v-text-field
-            v-model="formData.location.x"
-            :counter="locationXRules.max"
-            :error-messages="errors"
-            label="Location X"
-            required
-            type="number"
+              v-model="formData.location.x"
+              :counter="locationXRules.max"
+              :error-messages="errors"
+              label="Location X"
+              required
+              type="number"
           />
         </validation-provider>
 
         <validation-provider v-slot="{ errors }" :rules="locationYRules" name="LocationY">
           <v-text-field
-            v-model="formData.location.y"
-            :counter="locationYRules.max"
-            :error-messages="errors"
-            label="Location Y*"
-            required
-            type="number"
+              v-model="formData.location.y"
+              :counter="locationYRules.max"
+              :error-messages="errors"
+              label="Location Y*"
+              required
+              type="number"
           />
         </validation-provider>
 
@@ -51,77 +51,55 @@
   </v-container>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Inject, Prop, Watch } from "vue-property-decorator";
-import { ValidationProvider } from "vee-validate";
-import { AppConstants } from "@/constants/app.constants";
-import { printersState } from "@/store/printers.state";
-import { PrinterGroupService } from "@/backend";
+<script lang="ts" setup>
+import {computed, inject, watch} from "vue";
+import {AppConstants} from "@/constants/app.constants";
+import {usePrintersStore} from "@/stores/printers";
+import {PrinterGroupService} from "@/backend";
 import {
   getDefaultCreatePrinterGroup,
-  PreCreatePrinterGroup
+  type PreCreatePrinterGroup
 } from "@/models/printer-groups/crud/create-printer-group.model";
-import { PrinterGroup } from "@/models/printers/printer-group.model";
-import { Printer } from "@/models/printers/printer.model";
+import type {PrinterGroup} from "@/models/printers/printer-group.model";
+import type {Printer} from "@/models/printers/printer.model";
+import {usePrinterGroupsStore} from "@/stores/printer-groups";
+import {onMounted} from "@vue/runtime-core";
 
-const watchedId = "printerId";
-
-@Component({
-  components: {
-    ValidationProvider
-  },
-  data: () => ({
-    printersWithoutGroup: []
-  })
-})
-export default class PrinterGroupCrudForm extends Vue {
-  @Inject() readonly appConstants!: AppConstants;
-  @Prop() printerGroupId: string;
-  printersWithoutGroup: Printer[];
-  formData?: PreCreatePrinterGroup = getDefaultCreatePrinterGroup();
-
-  public get printerGroupNameRules() {
-    return { required: true, max: this.appConstants.maxPrinterGroupNameLength };
-  }
-
-  public get locationXRules() {
-    return {
+const printersStore = usePrintersStore();
+const printerGroupsStore = usePrinterGroupsStore();
+const appConstants = inject(AppConstants)!;
+const {printerGroupId} = defineProps<{ printerGroupId: string }>();
+let printersWithoutGroup: Printer[];
+let formData: PreCreatePrinterGroup = getDefaultCreatePrinterGroup();
+const printerGroupNames = computed(() => printerGroupsStore.printerGroupNames);
+const printerGroupNameRules = computed(() => {
+  return {required: true, max: appConstants.maxPrinterGroupNameLength};
+});
+const locationXRules = computed(() => ({
       required: true,
       integer: true,
-      max: this.appConstants.maxPrinterGroupLocationX
-    };
-  }
-
-  public get locationYRules() {
-    return {
+      max: appConstants.maxPrinterGroupLocationX
+    })
+);
+const locationYRules = computed(() => ({
       required: true,
       integer: true,
-      max: this.appConstants.maxPrinterGroupLocationY
-    };
+      max: appConstants.maxPrinterGroupLocationY
+    })
+);
+
+onMounted(async () => {
+  if (printerGroupId) {
+    const crudeData = printerGroupsStore.printerGroup(printerGroupId);
+    if (!crudeData) return;
+    formData = PrinterGroupService.convertPrinterGroupToCreateForm(crudeData);
   }
+  await printerGroupsStore.loadPrinterGroups();
+});
 
-  get printerGroupNames() {
-    return printersState.printerGroupNames;
-  }
-
-  async created() {
-    if (this.printerGroupId) {
-      const crudeData = this.$store.getters.printer(this.printerGroupId);
-      this.formData = PrinterGroupService.convertPrinterGroupToCreateForm(crudeData);
-    }
-
-    await printersState.loadPrinterGroups();
-  }
-
-  @Watch(watchedId)
-  onChildChanged(val?: string) {
-    if (!val) return;
-
-    const printerGroup = this.$store.getters.printerGroup(val) as PrinterGroup;
-
-    // Inverse transformation
-    this.formData = PrinterGroupService.convertPrinterGroupToCreateForm(printerGroup);
-  }
-}
+watch(() => printerGroupId, (val?: string) => {
+  if (!val) return;
+  const printerGroup = printerGroupsStore.printerGroup(val) as PrinterGroup;
+  formData = PrinterGroupService.convertPrinterGroupToCreateForm(printerGroup);
+});
 </script>

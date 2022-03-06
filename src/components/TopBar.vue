@@ -9,13 +9,11 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
 
-    <!--    <PrintJobsMenu/>-->
+    <PrintJobsMenu/>
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
-// import PrintJobsMenu from "@/components/Generic/PrintJobsMenu.vue";
-
 import {DateTime} from "luxon";
 
 let currentTimeDiff4h = "";

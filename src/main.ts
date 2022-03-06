@@ -7,12 +7,19 @@ import { createPinia } from 'pinia'
 import { vueErrorHandler } from './handlers/error.handler';
 import {registerFileDropDirective} from "@/directives/file-upload.directive";
 
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import FileExplorerSideNav from "@/components/SideNavs/FileExplorerSideNav.vue";
+import PrintJobsMenu from "@/components/PrintJobsMenu.vue";
+
 await loadFonts();
 
 const app = createApp(App)
   .use(router)
   .use(createPinia())
-  .use(vuetify);
+  .use(vuetify)
+    .component('NavigationDrawer', NavigationDrawer)
+    .component('PrintJobsMenu', PrintJobsMenu)
+    .component('FileExplorerSideNav', FileExplorerSideNav);
 
 registerFileDropDirective(app);
 

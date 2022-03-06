@@ -1,16 +1,21 @@
 <template>
   <v-navigation-drawer
-    v-model="drawerOpened"
-    absolute
-    loading="true"
-    right
-    temporary
-    width="500"
-    @close="closeDrawer()"
+      v-model="drawerOpened"
+      absolute
+      loading="true"
+      right
+      temporary
+      width="500"
+      @close="closeDrawer()"
   >
     <v-list-item>
       <v-list-item-avatar>
-        <v-btn color="primary" fab @click="openPrinterURL()" @click.middle="openPrinterURL()">
+        <v-btn
+            color="primary"
+            fab
+            @click="openPrinterURL()"
+            @click.middle="openPrinterURL()"
+        >
           {{ avatarInitials() }}
         </v-btn>
       </v-list-item-avatar>
@@ -18,38 +23,43 @@
         <v-list-item-title>
           {{ storedSideNavPrinter.printerName }}
           <strong
-            v-if="storedSideNavPrinter.printerState.state === 'Operational'"
-            class="float-end"
+              v-if="storedSideNavPrinter.printerState.state === 'Operational'"
+              class="float-end"
           >
             {{ storedSideNavPrinter.printerState.state }}
           </strong>
           <strong
-            v-if="
-              !storedSideNavPrinter.enabled || !storedSideNavPrinter.apiAccessibility.accessible
+              v-if="
+              !storedSideNavPrinter.enabled ||
+              !storedSideNavPrinter.apiAccessibility.accessible
             "
-            class="float-end"
+              class="float-end"
           >
             OFFLINE/DISABLED
           </strong>
           <strong
-            v-if="
+              v-if="
               storedSideNavPrinter.printerState.state !== 'Operational' &&
               storedSideNavPrinter.apiAccessibility.accessible
             "
-            class="float-end pulsating-red"
+              class="float-end pulsating-red"
           >
             {{ storedSideNavPrinter.printerState.state }}
           </strong>
         </v-list-item-title>
         <v-list-item-subtitle v-if="storedSideNavPrinter.currentJob">
-          <span v-if="storedSideNavPrinter.currentJob.progress" class="d-flex justify-center">
-            Progress: {{ truncateProgress(storedSideNavPrinter.currentJob.progress) }}%
+          <span
+              v-if="storedSideNavPrinter.currentJob.progress"
+              class="d-flex justify-center"
+          >
+            Progress:
+            {{ truncateProgress(storedSideNavPrinter.currentJob.progress) }}%
           </span>
           <v-progress-linear
-            v-if="storedSideNavPrinter.currentJob"
-            :value="truncateProgress(storedSideNavPrinter.currentJob.progress)"
-            class="mt-1 mb-1"
-            height="8px"
+              v-if="storedSideNavPrinter.currentJob"
+              :value="truncateProgress(storedSideNavPrinter.currentJob.progress)"
+              class="mt-1 mb-1"
+              height="8px"
           >
           </v-progress-linear>
 
@@ -67,14 +77,18 @@
 
     <v-divider></v-divider>
 
-    <v-list v-drop-upload="{ printers: [storedSideNavPrinter] }" dense subheader>
+    <v-list
+        v-drop-upload="{ printers: [storedSideNavPrinter] }"
+        dense
+        subheader
+    >
       <v-subheader inset>Commands</v-subheader>
 
       <v-list-item
-        :disabled="isStoppable"
-        class="extra-dense-list-item"
-        link
-        @click.prevent.stop="togglePrinterConnection()"
+          :disabled="isStoppable"
+          class="extra-dense-list-item"
+          link
+          @click.prevent.stop="togglePrinterConnection()"
       >
         <v-list-item-avatar>
           <v-icon>usb</v-icon>
@@ -87,22 +101,25 @@
       </v-list-item>
 
       <v-list-item
-        :disabled="!isStoppable"
-        class="extra-dense-list-item"
-        link
-        @click.prevent.stop="clickStop()"
+          :disabled="!isStoppable"
+          class="extra-dense-list-item"
+          link
+          @click.prevent.stop="clickStop()"
       >
         <v-list-item-avatar>
           <v-icon>stop</v-icon>
         </v-list-item-avatar>
-        <v-list-item-content>Stop print {{ isStoppable ? "" : "- No job" }}</v-list-item-content>
+        <v-list-item-content
+        >Stop print {{ isStoppable ? "" : "- No job" }}
+        </v-list-item-content
+        >
       </v-list-item>
 
       <v-list-item
-        :disabled="!canBeCleared"
-        class="extra-dense-list-item"
-        link
-        @click.prevent.stop="clickClearFiles()"
+          :disabled="!canBeCleared"
+          class="extra-dense-list-item"
+          link
+          @click.prevent.stop="clickClearFiles()"
       >
         <v-list-item-avatar>
           <v-icon>delete</v-icon>
@@ -113,9 +130,9 @@
       </v-list-item>
 
       <v-list-item
-        class="extra-dense-list-item"
-        link
-        @click.prevent.stop="refreshFiles(storedSideNavPrinter)"
+          class="extra-dense-list-item"
+          link
+          @click.prevent.stop="refreshFiles(storedSideNavPrinter)"
       >
         <v-list-item-avatar>
           <v-icon>refresh</v-icon>
@@ -123,7 +140,11 @@
         <v-list-item-content>Refresh files</v-list-item-content>
       </v-list-item>
 
-      <v-list-item class="extra-dense-list-item" link @click.prevent.stop="clickSettings()">
+      <v-list-item
+          class="extra-dense-list-item"
+          link
+          @click.prevent.stop="clickSettings()"
+      >
         <v-list-item-avatar>
           <v-icon>settings</v-icon>
         </v-list-item-avatar>
@@ -131,7 +152,11 @@
       </v-list-item>
     </v-list>
     <v-divider></v-divider>
-    <v-list v-drop-upload="{ printers: [storedSideNavPrinter] }" dense subheader>
+    <v-list
+        v-drop-upload="{ printers: [storedSideNavPrinter] }"
+        dense
+        subheader
+    >
       <v-subheader inset>Files - drag 'n drop!</v-subheader>
 
       <!-- Empty file list -->
@@ -151,7 +176,12 @@
         <v-list-item-avatar>
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" @click="clickDownloadFile(file)" v-on="on">
+              <v-btn
+                  icon
+                  v-bind="attrs"
+                  @click="clickDownloadFile(file)"
+                  v-on="on"
+              >
                 <v-icon>download</v-icon>
               </v-btn>
             </template>
@@ -163,11 +193,11 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                :disabled="isFileBeingPrinted(file)"
-                icon
-                v-bind="attrs"
-                @click="clickPrintFile(file)"
-                v-on="on"
+                  :disabled="isFileBeingPrinted(file)"
+                  icon
+                  v-bind="attrs"
+                  @click="clickPrintFile(file)"
+                  v-on="on"
               >
                 <v-icon>play_arrow</v-icon>
               </v-btn>
@@ -184,17 +214,19 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <span
-                :class="{ 'current-file-print': isFileBeingPrinted(file) }"
-                v-bind="attrs"
-                v-on="on"
+                  :class="{ 'current-file-print': isFileBeingPrinted(file) }"
+                  v-bind="attrs"
+                  v-on="on"
               >
                 {{ file.name }}
               </span>
             </template>
             <span>
-              File: {{ file.name }} <br />
-              Size: {{ formatBytes(file.size) }} <br />
-              <strong>{{ isFileBeingPrinted(file) ? "Printing" : "Unused" }}</strong>
+              File: {{ file.name }} <br/>
+              Size: {{ formatBytes(file.size) }} <br/>
+              <strong>{{
+                  isFileBeingPrinted(file) ? "Printing" : "Unused"
+                }}</strong>
             </span>
           </v-tooltip>
           <v-list-item-title></v-list-item-title>
@@ -204,11 +236,11 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                :disabled="isFileBeingPrinted(file)"
-                icon
-                v-bind="attrs"
-                @click="deleteFile(file)"
-                v-on="on"
+                  :disabled="isFileBeingPrinted(file)"
+                  icon
+                  v-bind="attrs"
+                  @click="deleteFile(file)"
+                  v-on="on"
               >
                 <v-icon color="grey lighten-1">delete</v-icon>
               </v-btn>
@@ -221,176 +253,174 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { Watch } from "vue-property-decorator";
-import { printersState } from "@/store/printers.state";
-import { Printer } from "@/models/printers/printer.model";
-import { generateInitials } from "@/constants/noun-adjectives.data";
-import { PrinterFileService, PrintersService } from "@/backend";
-import { PrinterFile } from "@/models/printers/printer-file.model";
-import { PrinterFileBucket } from "@/models/printers/printer-file-bucket.model";
-import { isPrinterStoppable } from "@/utils/printer-state.utils";
-import { formatBytes } from "@/utils/file-size.util";
+<script lang="ts" setup>
+import {formatBytes} from "@/utils/file-size.util";
+import {isPrinterStoppable} from "@/utils/printer-state.utils";
+import {usePrintersStore} from "@/stores/printers";
+import {computed, ref, watch} from "vue";
+import type {PrinterFileBucket} from "@/models/printers/printer-file-bucket.model";
+import type {Printer} from "@/models/printers/printer.model";
+import type {PrinterFile} from "@/models/printers/printer-file.model";
+import {generateInitials} from "@/constants/noun-adjectives.data";
+import {PrinterFileService, PrintersService} from "@/backend";
+import {usePrinterFilesStore} from "@/stores/printer-files";
 
-@Component({
-  data: () => ({
-    shownFileBucket: {}
-  })
-})
-export default class FileExplorerSideNav extends Vue {
-  drawerOpened = false;
-  loading = true;
-  shownFileBucket?: PrinterFileBucket;
-  formatBytes = formatBytes;
+let shownFileBucket: PrinterFileBucket | undefined;
+const printersStore = usePrintersStore();
+const printerFilesStore = usePrinterFilesStore();
+let drawerOpened = ref(false);
+let loading = ref(true);
 
-  get printerId() {
-    return this.storedSideNavPrinter?.id;
-  }
+const storedSideNavPrinter = computed(() => printersStore.sideNavPrinter);
+const printerId = computed(() => storedSideNavPrinter?.value?.id);
+const isOperational = computed(() =>
+    printersStore.isPrinterOperational(printerId.value)
+);
+const filesListed = computed(() => shownFileBucket?.files || []);
+const isStoppable = computed(() => {
+  if (!storedSideNavPrinter.value) return false;
+  return isPrinterStoppable(storedSideNavPrinter.value);
+});
 
-  get isOperational() {
-    return printersState.isPrinterOperational(this.printerId);
-  }
+function canBeCleared() {
+  return (
+      shownFileBucket?.files?.length &&
+      storedSideNavPrinter?.value?.apiAccessibility.accessible
+  );
+}
 
-  get filesListed() {
-    return this.shownFileBucket?.files || [];
-  }
+function truncateProgress(progress: number) {
+  if (!progress) return "";
+  return progress?.toFixed(1);
+}
 
-  get storedSideNavPrinter() {
-    return printersState.currentSideNavPrinter;
-  }
+watch(
+    storedSideNavPrinter,
+    async (viewedPrinter?: Printer, oldVal?: Printer) => {
+      drawerOpened.value = !!viewedPrinter;
+      const printerId = viewedPrinter?.id;
+      if (!viewedPrinter || !printerId) return;
 
-  get isStoppable() {
-    if (!this.storedSideNavPrinter) return false;
-    return isPrinterStoppable(this.storedSideNavPrinter);
-  }
-
-  get canBeCleared() {
-    return (
-      this.shownFileBucket?.files?.length && this.storedSideNavPrinter?.apiAccessibility.accessible
-    );
-  }
-
-  truncateProgress(progress: number) {
-    if (!progress) return "";
-    return progress?.toFixed(1);
-  }
-
-  @Watch("storedSideNavPrinter")
-  async inputUpdate(viewedPrinter?: Printer, oldVal?: Printer) {
-    this.drawerOpened = !!viewedPrinter;
-    const printerId = viewedPrinter?.id;
-    if (!viewedPrinter || !printerId) return;
-
-    if (!this.shownFileBucket || viewedPrinter.id !== this.shownFileBucket.printerId || !oldVal) {
-      await this.refreshFiles(viewedPrinter);
+      if (
+          !shownFileBucket ||
+          viewedPrinter.id !== shownFileBucket.printerId ||
+          !oldVal
+      ) {
+        await refreshFiles(viewedPrinter);
+      }
     }
+);
+
+watch(drawerOpened, (newVal: boolean) => {
+  // Due to the animation delay the nav model lags behind enough for SSE to pick up and override
+  if (!newVal) {
+    printersStore.setSideNavPrinter(undefined);
+  }
+});
+
+function isFileBeingPrinted(file: PrinterFile) {
+  if (!storedSideNavPrinter.value) return false;
+  // Completed job will not disappear (yet)
+  if (storedSideNavPrinter.value.printerState.state === "Operational")
+    return false;
+  return storedSideNavPrinter.value.currentJob?.fileName === file.name;
+}
+
+function currentJob() {
+  return storedSideNavPrinter?.value?.currentJob || {};
+}
+
+function avatarInitials() {
+  const viewedPrinter = storedSideNavPrinter.value;
+  if (viewedPrinter && drawerOpened) {
+    return generateInitials(viewedPrinter.printerName);
+  }
+}
+
+function openPrinterURL() {
+  if (!storedSideNavPrinter.value) return;
+
+  PrintersService.openPrinterURL(storedSideNavPrinter.value.printerURL);
+
+  closeDrawer();
+}
+
+async function togglePrinterConnection() {
+  if (!printerId.value) return;
+
+  if (printersStore.isPrinterOperational(printerId.value)) {
+    return await PrintersService.sendPrinterDisconnectCommand(printerId.value);
   }
 
-  @Watch("drawerOpened")
-  updateStore(newVal: boolean) {
-    // Due to the animation delay the nav model lags behind enough for SSE to pick up and override
-    if (!newVal) {
-      printersState.setSideNavPrinter(undefined);
-    }
+  await PrintersService.sendPrinterConnectCommand(printerId.value);
+}
+
+async function refreshFiles(viewedPrinter: Printer) {
+  loading.value = true;
+  const printerId = viewedPrinter.id;
+  // Offline printer fallback
+  if (viewedPrinter.apiAccessibility.accessible) {
+    let fileCache = await printerFilesStore.loadPrinterFiles({
+      printerId,
+      recursive: false,
+    });
+    shownFileBucket = {
+      printerId,
+      ...fileCache,
+    };
+  } else {
+    const fileCache = await PrinterFileService.getFileCache(printerId);
+    shownFileBucket = {
+      printerId,
+      ...fileCache,
+    };
   }
+  loading.value = false;
+}
 
-  isFileBeingPrinted(file: PrinterFile) {
-    if (!this.storedSideNavPrinter) return false;
-    // Completed job will not disappear (yet)
-    if (this.storedSideNavPrinter.printerState.state === "Operational") return false;
-    return this.storedSideNavPrinter.currentJob?.fileName === file.name;
-  }
+async function deleteFile(file: PrinterFile) {
+  if (!printerId.value) return;
 
-  currentJob() {
-    return this.storedSideNavPrinter?.currentJob || {};
-  }
+  await printerFilesStore.deletePrinterFile({
+    printerId: printerId.value,
+    fullPath: file.path,
+  });
+}
 
-  avatarInitials() {
-    const viewedPrinter = this.storedSideNavPrinter;
-    if (viewedPrinter && this.drawerOpened) {
-      return generateInitials(viewedPrinter.printerName);
-    }
-  }
+async function clickStop() {
+  await printersStore.sendStopJobCommand(printerId.value);
+}
 
-  openPrinterURL() {
-    if (!this.storedSideNavPrinter) return;
+async function clickClearFiles() {
+  if (!printerId.value) return;
 
-    PrintersService.openPrinterURL(this.storedSideNavPrinter.printerURL);
+  loading.value = true;
+  await printerFilesStore.clearPrinterFiles(printerId.value);
 
-    this.closeDrawer();
-  }
+  loading.value = false;
+  shownFileBucket = printerFilesStore.printerFileBucket(printerId.value);
+}
 
-  async togglePrinterConnection() {
-    if (!this.printerId) return;
+function clickSettings() {
+  if (!storedSideNavPrinter.value) return;
+  printersStore.setUpdateDialogPrinter(storedSideNavPrinter.value);
+  closeDrawer();
+}
 
-    if (printersState.isPrinterOperational(this.printerId)) {
-      return await PrintersService.sendPrinterDisconnectCommand(this.printerId);
-    }
+async function clickPrintFile(file: PrinterFile) {
+  if (!printerId.value) return;
+  await printersStore.selectAndPrintFile({
+    printerId: printerId.value,
+    fullPath: file.path,
+  });
+}
 
-    await PrintersService.sendPrinterConnectCommand(this.printerId);
-  }
+function clickDownloadFile(file: PrinterFile) {
+  PrinterFileService.downloadFile(file);
+}
 
-  async refreshFiles(viewedPrinter: Printer) {
-    this.loading = true;
-    const printerId = viewedPrinter.id;
-    // Offline printer fallback
-    if (viewedPrinter.apiAccessibility.accessible) {
-      let fileCache = await printersState.loadPrinterFiles({ printerId, recursive: false });
-      this.shownFileBucket = {
-        printerId,
-        ...fileCache
-      };
-    } else {
-      const fileCache = await PrinterFileService.getFileCache(printerId);
-      this.shownFileBucket = {
-        printerId,
-        ...fileCache
-      };
-    }
-    this.loading = false;
-  }
-
-  async deleteFile(file: PrinterFile) {
-    if (!this.printerId) return;
-
-    await printersState.deletePrinterFile({ printerId: this.printerId, fullPath: file.path });
-  }
-
-  async clickStop() {
-    await printersState.sendStopJobCommand(this.printerId);
-  }
-
-  async clickClearFiles() {
-    this.loading = true;
-    await printersState.clearPrinterFiles(this.printerId);
-
-    this.loading = false;
-    this.shownFileBucket = printersState.printerFileBucket(this.printerId);
-  }
-
-  clickSettings() {
-    if (!this.storedSideNavPrinter) return;
-
-    printersState.setUpdateDialogPrinter(this.storedSideNavPrinter);
-
-    this.closeDrawer();
-  }
-
-  async clickPrintFile(file: PrinterFile) {
-    if (!this.printerId) return;
-
-    await printersState.selectAndPrintFile({ printerId: this.printerId, fullPath: file.path });
-  }
-
-  clickDownloadFile(file: PrinterFile) {
-    PrinterFileService.downloadFile(file);
-  }
-
-  closeDrawer() {
-    printersState.setSideNavPrinter(undefined);
-  }
+function closeDrawer() {
+  printersStore.setSideNavPrinter(undefined);
 }
 </script>
 
