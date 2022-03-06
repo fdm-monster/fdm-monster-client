@@ -119,7 +119,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {computed, inject, reactive, watch} from "vue";
 import {AppConstants} from "@/constants/app.constants";
 import {getDefaultCreatePrinter, type PreCreatePrinter} from "@/models/printers/crud/create-printer.model";

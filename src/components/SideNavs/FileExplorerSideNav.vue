@@ -339,19 +339,15 @@ function avatarInitials() {
 
 function openPrinterURL() {
   if (!storedSideNavPrinter.value) return;
-
   PrintersService.openPrinterURL(storedSideNavPrinter.value.printerURL);
-
   closeDrawer();
 }
 
 async function togglePrinterConnection() {
   if (!printerId.value) return;
-
   if (printersStore.isPrinterOperational(printerId.value)) {
     return await PrintersService.sendPrinterDisconnectCommand(printerId.value);
   }
-
   await PrintersService.sendPrinterConnectCommand(printerId.value);
 }
 

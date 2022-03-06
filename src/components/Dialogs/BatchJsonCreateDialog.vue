@@ -37,14 +37,8 @@
   </v-row>
 </template>
 
-<script lang="ts">
-// https://www.digitalocean.com/community/tutorials/vuejs-typescript-class-components
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { extend, setInteractionMode, ValidationObserver, ValidationProvider } from "vee-validate";
-import { PrintersService } from "@/backend";
-
-setInteractionMode("eager");
+<script setup lang="ts">
+import type { PrintersService } from "@/backend";
 
 extend("json", {
   validate: (value) => {
