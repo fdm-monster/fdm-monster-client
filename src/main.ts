@@ -5,10 +5,9 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import { createPinia } from 'pinia'
 import { vueErrorHandler } from './handlers/error.handler';
-import {registerFileDropDirective} from "@/components/file-upload.directive";
+import {registerFileDropDirective} from "@/directives/file-upload.directive";
 
-loadFonts();
-
+await loadFonts();
 
 const app = createApp(App)
   .use(router)
