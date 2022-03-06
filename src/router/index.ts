@@ -1,6 +1,7 @@
 import PrinterGrid from '@/components/PrinterGrid/PrinterGrid.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import Settings from '../views/Settings.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,9 +16,10 @@ const router = createRouter({
       name: "Printers",
       component: PrinterGrid
     },
-    // {
-    //   path: "/settings",
-    //   component: Settings,
+    {
+      path: "/settings",
+      component: Settings,
+    },
     //   children: [
     //     {
     //       path: "",
