@@ -1,5 +1,5 @@
-import { Printer } from "@/models/printers/printer.model";
-import { PrinterGroup } from "@/models/printers/printer-group.model";
+import type { Printer } from "@/models/printers/printer.model";
+import type { PrinterGroup } from "@/models/printers/printer-group.model";
 
 export interface TestProgressDetails {
   connected: boolean;

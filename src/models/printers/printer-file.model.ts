@@ -1,4 +1,4 @@
-import { GCodeAnalysis } from "@/models/printers/gcode/gcode-analysis.model";
+import type { GCodeAnalysis } from "@/models/printers/gcode/gcode-analysis.model";
 
 export interface LastPrintMoment {
   date: number;
