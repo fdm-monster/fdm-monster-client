@@ -1,3 +1,4 @@
+import PrinterGrid from '@/components/PrinterGrid/PrinterGrid.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
@@ -9,6 +10,47 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
+    {
+      path: "/printers",
+      name: "Printers",
+      component: PrinterGrid
+    },
+    // {
+    //   path: "/settings",
+    //   component: Settings,
+    //   children: [
+    //     {
+    //       path: "",
+    //       redirect: "printer-groups"
+    //     },
+    //     {
+    //       path: "user-management",
+    //       component: UserManagementSettings
+    //     },
+    //     {
+    //       path: "printer-groups",
+    //       component: PrinterGroupsSettings
+    //     },
+    //     {
+    //       path: "system",
+    //       component: FdmSettings
+    //     },
+    //     {
+    //       path: "other",
+    //       component: OtherSettings
+    //     }
+    //   ]
+    // },
+    // {
+    //   path: "/scheduling",
+    //   name: "Scheduling",
+    //   component: Scheduling
+    // },
+    // {
+    //   path: "*",
+    //   name: "NotFound",
+    //   component: () => import(/* webpackChunkName: "about" */ "../views/NotFound.vue")
+    // },
     {
       path: '/about',
       name: 'about',
