@@ -1,7 +1,15 @@
 <script setup lang="ts">
+import { PrintersService } from '@/backend';
+import { onMounted } from 'vue';
+
 defineProps<{
-  msg: string
-}>()
+  msg: String
+}>();
+
+onMounted(async () => {
+  await PrintersService.getPrinters();
+});
+
 </script>
 
 <template>
