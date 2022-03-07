@@ -13,7 +13,7 @@
         <v-card-text>
           <v-row>
             <v-col :cols="12">
-              <PrinterGroupCrudForm ref="printerGroupCrudForm" />
+              <PrinterGroupCrudForm ref="printerGroupCrudForm"/>
             </v-col>
           </v-row>
         </v-card-text>
@@ -32,80 +32,68 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Watch } from "vue-property-decorator";
-import { ValidationObserver } from "vee-validate";
-import { PrinterGroupService } from "@/backend";
-import { generateInitials } from "@/constants/noun-adjectives.data";
-import { printersState } from "@/store/printers.state";
-import { infoMessageEvent } from "@/event-bus/alert.events";
-import PrinterGroupCrudForm from "@/components/Forms/PrinterGroupCrudForm.vue";
+<script lang="ts" setup>
+import {computed, watch} from "vue";
+import {PrinterGroupService} from "@/backend";
+import {generateInitials} from "@/constants/noun-adjectives.data";
+import {usePrintersStore} from "@/stores/printers";
+import {infoMessageEvent} from "@/event-bus/alert.events";
+import type PrinterGroupCrudForm from "@/components/Forms/PrinterGroupCrudForm.vue";
+import {usePrinterGroupsStore} from "@/stores/printer-groups";
+import {onMounted} from "@vue/runtime-core";
 
-@Component({
-  components: {
-    ValidationObserver,
-    PrinterGroupCrudForm
-  },
-  data: () => ({})
-})
-export default class CreatePrinterGroupDialog extends Vue {
-  showingDialog = false;
+let showingDialog = false;
+let showChecksPanel = false;
+const printersStore = usePrintersStore();
+const printerGroupsStore = usePrinterGroupsStore();
+const printerGroupCrudForm: InstanceType<typeof PrinterGroupCrudForm>;
 
-  showChecksPanel = false;
-  $refs!: {
-    validationObserver: InstanceType<typeof ValidationObserver>;
-    printerGroupCrudForm: InstanceType<typeof PrinterGroupCrudForm>;
-  };
+const dialogOpenedState = computed(() =>
+    printerGroupsStore.createGroupDialogOpened
+);
+watch(dialogOpenedState, (newValue?: boolean) => {
+  showingDialog = newValue ?? false;
+});
 
-  get dialogOpenedState() {
-    return printersState.createGroupDialogOpened;
-  }
+function formData() {
+  return $refs.printerGroupCrudForm?.formData;
+}
 
-  @Watch("dialogOpenedState")
-  changeDialogOpened(newValue: boolean) {
-    this.showingDialog = newValue;
-  }
-
-  formData() {
-    return this.$refs.printerGroupCrudForm?.formData;
-  }
-
-  async created() {
-    window.addEventListener("keydown", (e) => {
-      if (e.key == "Escape") {
-        this.closeDialog();
-      }
-    });
-  }
-
-  avatarInitials() {
-    const formData = this.formData();
-    if (formData && this.showingDialog) {
-      return generateInitials(formData.name);
+onMounted(async () => {
+  window.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") {
+      closeDialog();
     }
+  });
+});
+
+function avatarInitials() {
+  const formData = this.formData();
+  if (formData && this.showingDialog) {
+    return generateInitials(formData.name);
   }
+}
 
-  async isValid() {
-    return await this.$refs.validationObserver.validate();
-  }
+async function isValid() {
+  return await $refs.validationObserver.validate();
+}
 
-  async submit() {
-    if (!(await this.isValid())) return;
+async function submit() {
+  if (!(await isValid())) return;
 
-    const formData = this.formData();
-    if (!formData) return;
-    const newPrinterGroupData = PrinterGroupService.convertCreateFormToPrinterGroup(formData);
+  const formData = this.formData();
+  if (!formData) return;
+  const newPrinterGroupData = PrinterGroupService.convertCreateFormToPrinterGroup(formData);
 
-    await printersState.createPrinterGroup(newPrinterGroupData);
+  await printerGroupsStore.createPrinterGroup(newPrinterGroupData);
 
-    this.$bus.emit(infoMessageEvent, `Printer ${newPrinterGroupData.name} created`);
+  // TODO bus
+  // $bus.emit(infoMessageEvent, `Printer ${newPrinterGroupData.name} created`);
 
-    this.closeDialog();
-  }
+  closeDialog();
+}
 
-  closeDialog() {
-    printersState._setCreateGroupDialogOpened(false);
-  }
+function closeDialog() {
+  printerGroupsStore.setCreateGroupDialogOpened(false);
 }
 </script>

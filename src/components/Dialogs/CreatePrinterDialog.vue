@@ -13,7 +13,7 @@
         <v-card-text>
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
-              <PrinterCrudForm ref="printerCrudForm" />
+              <PrinterCrudForm ref="printerCrudForm"/>
             </v-col>
 
             <PrinterChecksPanel v-if="showChecksPanel" :cols="4" :test-progress="testProgress">
@@ -35,117 +35,94 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
-// https://www.digitalocean.com/community/tutorials/vuejs-typescript-class-components
-import Vue from "vue";
-import { Component, Watch } from "vue-property-decorator";
-import { ValidationObserver } from "vee-validate";
-import { Printer } from "@/models/printers/printer.model";
-import { sseTestPrinterUpdate } from "@/event-bus/sse.events";
-import {
-  PrinterSseMessage,
-  TestProgressDetails
-} from "@/models/sse-messages/printer-sse-message.model";
-import { PrintersService } from "@/backend";
-import { generateInitials } from "@/constants/noun-adjectives.data";
+<script lang="ts" setup>
+import type {Printer} from "@/models/printers/printer.model";
+import type {PrinterSseMessage, TestProgressDetails} from "@/models/sse-messages/printer-sse-message.model";
+import {PrintersService} from "@/backend";
+import {generateInitials} from "@/constants/noun-adjectives.data";
 import PrinterChecksPanel from "@/components/Dialogs/PrinterChecksPanel.vue";
-import { printersState } from "@/store/printers.state";
-import PrinterCrudForm from "@/components/Forms/PrinterCrudForm.vue";
-import { infoMessageEvent } from "@/event-bus/alert.events";
+import {usePrintersStore} from "@/stores/printers";
+import type PrinterCrudForm from "@/components/Forms/PrinterCrudForm.vue";
+import {computed, ref, watch} from "vue";
+import {onMounted} from "@vue/runtime-core";
 
-@Component({
-  components: {
-    ValidationObserver,
-    PrinterCrudForm,
-    PrinterChecksPanel
-  },
-  data: () => ({
-    testProgress: undefined
-  })
-})
-export default class CreatePrinterDialog extends Vue {
-  showingDialog = false;
+const printersStore = usePrintersStore();
+const showingDialog = ref(false);
+const testProgress?:TestProgressDetails = undefined;
+const showChecksPanel = ref(false);
+const printerCrudForm = ref<InstanceType<typeof PrinterCrudForm>>();
+const dialogOpenedState = computed(() => printersStore.createDialogOpened);
 
-  showChecksPanel = false;
-  testProgress?: TestProgressDetails = undefined;
-  $refs!: {
-    validationObserver: InstanceType<typeof ValidationObserver>;
-    printerCrudForm: InstanceType<typeof PrinterCrudForm>;
-  };
+watch(dialogOpenedState, (newValue: boolean | undefined) => {
+  showingDialog.value = newValue || false;
+});
 
-  get dialogOpenedState() {
-    return printersState.createDialogOpened;
-  }
+function formData() {
+  return $refs.printerCrudForm?.formData;
+}
 
-  @Watch("dialogOpenedState")
-  changeDialogOpened(newValue: boolean) {
-    this.showingDialog = newValue;
-  }
-
-  formData() {
-    return this.$refs.printerCrudForm?.formData;
-  }
-
-  async created() {
-    window.addEventListener("keydown", (e) => {
-      if (e.key == "Escape") {
-        this.closeDialog();
-      }
-    });
-  }
-
-  avatarInitials() {
-    const formData = this.formData();
-    if (formData && this.showingDialog) {
-      return generateInitials(formData.printerName);
+onMounted(() => async () => {
+  window.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") {
+      closeDialog();
     }
-  }
+  });
+});
 
-  async isValid() {
-    return await this.$refs.validationObserver.validate();
-  }
-
-  openTestPanel() {
-    this.showChecksPanel = true;
-    this.testProgress = undefined;
-  }
-
-  async onTestPrinterUpdate(payload: PrinterSseMessage) {
-    this.testProgress = payload.testProgress;
-  }
-
-  async testPrinter() {
-    if (!(await this.isValid())) return;
-
-    this.showChecksPanel = true;
-    this.testProgress = undefined;
-
-    const formData = this.formData();
-    if (!formData) return;
-    const testPrinter = PrintersService.convertCreateFormToPrinter(formData);
-
-    const result: Printer = await printersState.createTestPrinter(testPrinter);
-    if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
-
-    this.$bus.on(sseTestPrinterUpdate(result.correlationToken), this.onTestPrinterUpdate);
-  }
-
-  async submit() {
-    if (!(await this.isValid())) return;
-
-    const formData = this.formData();
-    if (!formData) return;
-    const newPrinterData = PrintersService.convertCreateFormToPrinter(formData);
-
-    await printersState.createPrinter(newPrinterData);
-
-    this.$bus.emit(infoMessageEvent, `Printer ${newPrinterData.printerName} created`);
-
-    this.closeDialog();
-  }
-
-  closeDialog() {
-    printersState._setCreateDialogOpened(false);
+function avatarInitials() {
+  const formData = this.formData();
+  if (formData && this.showingDialog) {
+    return generateInitials(formData.printerName);
   }
 }
+
+async function isValid() {
+  return await this.$refs.validationObserver.validate();
+}
+
+function openTestPanel() {
+  this.showChecksPanel = true;
+  this.testProgress = undefined;
+}
+
+async function onTestPrinterUpdate(payload: PrinterSseMessage) {
+  this.testProgress = payload.testProgress;
+}
+
+async function testPrinter() {
+  if (!(await isValid())) return;
+
+  showChecksPanel = true;
+  testProgress = undefined;
+
+  const formData = this.formData();
+  if (!formData) return;
+  const testPrinter = PrintersService.convertCreateFormToPrinter(formData);
+
+  const result: Printer = await printersStore.createTestPrinter(testPrinter);
+  if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
+
+  // TODO bus
+  // this.$bus.on(sseTestPrinterUpdate(result.correlationToken), this.onTestPrinterUpdate);
+}
+
+async function submit() {
+  if (!(await isValid())) return;
+
+  const formData = formData();
+  if (!formData) return;
+  const newPrinterData = PrintersService.convertCreateFormToPrinter(formData);
+
+  await printersStore.createPrinter(newPrinterData);
+
+  // TODO bus
+  // this.$bus.emit(infoMessageEvent, `Printer ${newPrinterData.printerName} created`);
+
+  closeDialog();
+}
+
+function closeDialog() {
+  printersStore.setCreateDialogOpened(false);
+}
+
 </script>
