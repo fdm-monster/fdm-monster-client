@@ -2,15 +2,14 @@
   <v-container>
     <v-row>
       <v-col v-if="formData" cols="12" md="6">
-        <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
-          <v-text-field
-              v-model="formData.printerName"
-              :counter="printerNameRules.max"
-              :error-messages="errors"
-              label="Printer name*"
-              required
-          />
-        </validation-provider>
+
+        <v-text-field
+            v-model="formData.printerName"
+            :counter="printerNameRules.max"
+            :error-messages="emailErrors"
+            label="Printer name*"
+            required
+        />
 
         <validation-provider
             v-slot="{ errors }"
@@ -128,6 +127,8 @@ import type {Printer} from "@/models/printers/printer.model";
 import {usePrinterGroupsStore} from "@/stores/printer-groups";
 import {onMounted} from "@vue/runtime-core";
 import {usePrintersStore} from "@/stores/printers";
+import {useField, useForm} from "vee-validate";
+import * as yup from "yup";
 
 const appConstants = inject(AppConstants);
 const printersStore = usePrintersStore();
@@ -137,6 +138,17 @@ let formData: PreCreatePrinter = reactive(getDefaultCreatePrinter());
 const apiKeyRules = computed(() => ({required: true, length: appConstants?.apiKeyLength, alpha_num: true}));
 const printerNameRules = computed(() => ({required: true, max: appConstants?.maxPrinterNameLength}));
 const printerGroupNames = computed(() => printerGroupsStore.printerGroupNames);
+
+// Define a validation schema
+const schema = yup.object({
+  email: yup.string().required().email(),
+  password: yup.string().required().min(8),
+});
+
+// Create a form context with the validation schema
+const form = useForm({
+  validationSchema: schema,
+});
 
 onMounted(async () => {
   if (printerId) {

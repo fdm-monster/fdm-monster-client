@@ -25,7 +25,8 @@
     "vue-router": "4.0.14",
     "vuedraggable": "^4.1.0",
     "vuetify": "^3.0.0-alpha.13",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "1.1.2",
