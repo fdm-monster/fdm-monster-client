@@ -13,7 +13,7 @@
         <v-card-text>
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
-              <PrinterCrudForm ref="printerUpdateForm" :printer-id="storedUpdatedPrinter.id" />
+              <PrinterCrudForm ref="printerUpdateForm" :printer-id="storedUpdatedPrinter.id"/>
             </v-col>
 
             <PrinterChecksPanel v-if="showChecksPanel" :cols="4" :test-progress="testProgress">
@@ -35,137 +35,121 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Watch } from "vue-property-decorator";
-import { ValidationObserver } from "vee-validate";
-import { Printer } from "@/models/printers/printer.model";
-import { sseTestPrinterUpdate } from "@/event-bus/sse.events";
-import {
-  PrinterSseMessage,
-  TestProgressDetails
-} from "@/models/sse-messages/printer-sse-message.model";
-import { PrintersService } from "@/backend";
-import { generateInitials } from "@/constants/noun-adjectives.data";
-import { updatedPrinterEvent } from "@/event-bus/printer.events";
+<script lang="ts" setup>
+import type {Printer} from "@/models/printers/printer.model";
+import type {PrinterSseMessage, TestProgressDetails} from "@/models/sse-messages/printer-sse-message.model";
+import {PrintersService} from "@/backend";
+import {generateInitials} from "@/constants/noun-adjectives.data";
+import {updatedPrinterEvent} from "@/event-bus/printer.events";
 import PrinterChecksPanel from "@/components/Dialogs/PrinterChecksPanel.vue";
-import { printersState } from "@/store/printers.state";
-import PrinterCrudForm from "@/components/Forms/PrinterCrudForm.vue";
-import { infoMessageEvent } from "@/event-bus/alert.events";
+import {usePrintersStore} from "@/stores/printers";
+import type PrinterCrudForm from "@/components/Forms/PrinterCrudForm.vue";
+import {infoMessageEvent} from "@/event-bus/alert.events";
+import {computed, ref, watch} from "vue";
+import {onMounted} from "@vue/runtime-core";
+import {usePrinterGroupsStore} from "@/stores/printer-groups";
 
-@Component({
-  components: {
-    ValidationObserver,
-    PrinterCrudForm,
-    PrinterChecksPanel
-  },
-  data: () => ({
-    testProgress: undefined
-  })
-})
-export default class UpdatePrinterDialog extends Vue {
-  dialogShowed = false;
+const printersStore = usePrintersStore();
+const printerGroupsStore = usePrinterGroupsStore();
+let dialogShowed = ref(false);
+let showChecksPanel = ref(false);
+let testProgress = ref<TestProgressDetails>();
+const $refs!: {
+  printerUpdateForm: InstanceType<typeof PrinterCrudForm>;
+};
 
-  showChecksPanel = false;
-  testProgress?: TestProgressDetails = undefined;
-  $refs!: {
-    validationObserver: InstanceType<typeof ValidationObserver>;
-    printerUpdateForm: InstanceType<typeof PrinterCrudForm>;
-  };
+const storedUpdatedPrinter = computed(() => {
+  return printersStore.updateDialogPrinter;
+});
 
-  get storedUpdatedPrinter() {
-    return printersState.currentUpdateDialogPrinter;
+function formData() {
+  return $refs.printerUpdateForm?.formData;
+}
+
+watch(storedUpdatedPrinter, (viewedPrinter?: Printer) => {
+  dialogShowed.value = !!viewedPrinter;
+  const printerId = viewedPrinter?.id;
+  if (!viewedPrinter || !printerId) return;
+
+  const loginDetails = await PrintersService.getPrinterLoginDetails(printerId);
+  const formData = this.formData();
+  if (formData) formData.apiKey = loginDetails.apiKey;
+});
+
+watch(dialogShowed, (newVal: boolean) => {
+  // Due to the animation delay the nav model lags behind enough for SSE to pick up and override
+  if (!newVal) {
+    printersStore.setUpdateDialogPrinter(undefined);
   }
+});
 
-  formData() {
-    return this.$refs.printerUpdateForm?.formData;
-  }
-
-  @Watch("storedUpdatedPrinter")
-  async inputUpdate(viewedPrinter?: Printer) {
-    this.dialogShowed = !!viewedPrinter;
-    const printerId = viewedPrinter?.id;
-    if (!viewedPrinter || !printerId) return;
-
-    const loginDetails = await PrintersService.getPrinterLoginDetails(printerId);
-    const formData = this.formData();
-    if (formData) formData.apiKey = loginDetails.apiKey;
-  }
-
-  @Watch("dialogShowed")
-  updateStore(newVal: boolean) {
-    // Due to the animation delay the nav model lags behind enough for SSE to pick up and override
-    if (!newVal) {
-      printersState.setUpdateDialogPrinter(undefined);
+onMounted(async () => {
+  window.addEventListener("keydown", (e) => {
+    if (e.key == "Escape") {
+      closeDialog();
     }
-  }
+  });
 
-  async created() {
-    window.addEventListener("keydown", (e) => {
-      if (e.key == "Escape") {
-        this.closeDialog();
-      }
-    });
+  await printerGroupsStore.loadPrinterGroups();
+});
 
-    await printersState.loadPrinterGroups();
-  }
-
-  avatarInitials() {
-    const formData = this.formData();
-    if (formData && this.dialogShowed) {
-      return generateInitials(formData.printerName);
-    }
-  }
-
-  openTestPanel() {
-    this.showChecksPanel = true;
-    this.testProgress = undefined;
-  }
-
-  async onTestPrinterUpdate(payload: PrinterSseMessage) {
-    this.testProgress = payload.testProgress;
-  }
-
-  async isValid() {
-    return await this.$refs.validationObserver.validate();
-  }
-
-  async testPrinter() {
-    if (!(await this.isValid())) return;
-
-    const formData = this.formData();
-    if (!formData) return;
-
-    const testPrinter = PrintersService.convertCreateFormToPrinter(formData);
-    if (!testPrinter) return;
-    this.openTestPanel();
-
-    const result: Printer = await printersState.createTestPrinter(testPrinter);
-    if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
-
-    this.$bus.on(sseTestPrinterUpdate(result.correlationToken), this.onTestPrinterUpdate);
-  }
-
-  async submit() {
-    if (!(await this.isValid())) return;
-
-    const formData = this.formData();
-    if (!formData) return;
-
-    const updatedPrinter = PrintersService.convertCreateFormToPrinter(formData);
-    const printerId = updatedPrinter.id;
-
-    const updatedData = await printersState.updatePrinter({
-      printerId: printerId as string,
-      updatedPrinter
-    });
-
-    this.$bus.emit(updatedPrinterEvent(printerId as string), updatedData);
-    this.$bus.emit(infoMessageEvent, `Printer ${updatedPrinter.printerName} updated`);
-  }
-
-  closeDialog() {
-    printersState.setUpdateDialogPrinter(undefined);
+function avatarInitials() {
+  const formData = formData();
+  if (formData && dialogShowed) {
+    return generateInitials(formData.printerName);
   }
 }
+
+function openTestPanel() {
+  showChecksPanel.value = true;
+  testProgress.value = undefined;
+}
+
+async function onTestPrinterUpdate(payload: PrinterSseMessage) {
+  testProgress.value = payload.testProgress;
+}
+
+async function isValid() {
+  // return await this.$refs.validationObserver.validate();
+}
+
+async function testPrinter() {
+  if (!(await isValid())) return;
+
+  const formData = formData();
+  if (!formData) return;
+
+  const testPrinter = PrintersService.convertCreateFormToPrinter(formData);
+  if (!testPrinter) return;
+  this.openTestPanel();
+
+  const result: Printer = await printersStore.createTestPrinter(testPrinter);
+  if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
+
+  // TODO bus
+  // this.$bus.on(sseTestPrinterUpdate(result.correlationToken), this.onTestPrinterUpdate);
+}
+
+async function submit() {
+  if (!(await isValid())) return;
+
+  const formData = formData();
+  if (!formData) return;
+
+  const updatedPrinter = PrintersService.convertCreateFormToPrinter(formData);
+  const printerId = updatedPrinter.id;
+
+  const updatedData = await printersStore.updatePrinter({
+    printerId: printerId as string,
+    updatedPrinter
+  });
+
+  this.$bus.emit(updatedPrinterEvent(printerId as string), updatedData);
+  this.$bus.emit(infoMessageEvent, `Printer ${updatedPrinter.printerName} updated`);
+}
+
+function closeDialog() {
+  printersStore.setUpdateDialogPrinter(undefined);
+}
+
 </script>

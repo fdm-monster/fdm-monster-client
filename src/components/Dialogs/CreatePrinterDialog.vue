@@ -70,32 +70,32 @@ onMounted(() => async () => {
 });
 
 function avatarInitials() {
-  const formData = this.formData();
-  if (formData && this.showingDialog) {
+  const formData = formData();
+  if (formData && showingDialog) {
     return generateInitials(formData.printerName);
   }
 }
 
 async function isValid() {
-  return await this.$refs.validationObserver.validate();
+  return await $refs.validationObserver.validate();
 }
 
 function openTestPanel() {
-  this.showChecksPanel = true;
-  this.testProgress = undefined;
+  showChecksPanel.value = true;
+  testProgress.value = undefined;
 }
 
 async function onTestPrinterUpdate(payload: PrinterSseMessage) {
-  this.testProgress = payload.testProgress;
+  testProgress.value = payload.testProgress;
 }
 
 async function testPrinter() {
   if (!(await isValid())) return;
 
-  showChecksPanel = true;
-  testProgress = undefined;
+  showChecksPanel.value = true;
+  testProgress.value = undefined;
 
-  const formData = this.formData();
+  const formData = formData();
   if (!formData) return;
   const testPrinter = PrintersService.convertCreateFormToPrinter(formData);
 

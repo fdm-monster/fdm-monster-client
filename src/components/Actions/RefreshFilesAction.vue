@@ -5,24 +5,18 @@
   </v-btn>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
-import { printersState } from "@/store/printers.state";
-import { Printer } from "@/models/printers/printer.model";
+<script setup lang="ts">
+import type {Printer} from "@/models/printers/printer.model";
+import {usePrinterFilesStore} from "@/stores/printer-files";
 
-@Component({
-  data: () => ({})
-})
-export default class RefreshFilesAction extends Vue {
-  @Prop() printer: Printer;
+const {printer} = defineProps<{ printer: Printer }>();
+const printerFilesStore = usePrinterFilesStore();
 
-  async getFiles() {
-    await printersState.loadPrinterFiles({
-      printerId: this.printer.id,
-      recursive: false
-    });
-  }
+async function getFiles() {
+  await printerFilesStore.loadPrinterFiles({
+    printerId: printer.id,
+    recursive: false
+  });
 }
+
 </script>

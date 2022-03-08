@@ -2,42 +2,42 @@
   <v-col :cols="cols">
     <strong>Checks:</strong>
     <v-alert
-      v-if="testProgress && isSet(testProgress.connected)"
-      :type="testProgress.connected ? 'success' : 'error'"
-      dense
-      text
+        v-if="testProgress && isSet(testProgress.connected)"
+        :type="testProgress.connected ? 'success' : 'error'"
+        dense
+        text
     >
       <small>Connected</small>
     </v-alert>
     <v-alert
-      v-if="testProgress && isSet(testProgress.apiOk)"
-      :type="testProgress.apiOk ? 'success' : 'error'"
-      dense
-      text
+        v-if="testProgress && isSet(testProgress.apiOk)"
+        :type="testProgress.apiOk ? 'success' : 'error'"
+        dense
+        text
     >
       <small>API ok</small>
     </v-alert>
     <v-alert
-      v-if="testProgress && isSet(testProgress.apiKeyNotGlobal)"
-      :type="testProgress.apiKeyNotGlobal ? 'success' : 'error'"
-      dense
-      text
+        v-if="testProgress && isSet(testProgress.apiKeyNotGlobal)"
+        :type="testProgress.apiKeyNotGlobal ? 'success' : 'error'"
+        dense
+        text
     >
       <small>Key not Global API Key</small>
     </v-alert>
     <v-alert
-      v-if="testProgress && isSet(testProgress.apiKeyOk)"
-      :type="testProgress.apiKeyOk ? 'success' : 'error'"
-      dense
-      text
+        v-if="testProgress && isSet(testProgress.apiKeyOk)"
+        :type="testProgress.apiKeyOk ? 'success' : 'error'"
+        dense
+        text
     >
       <small>Key accepted</small>
     </v-alert>
     <v-alert
-      v-if="testProgress && isSet(testProgress.websocketBound)"
-      :type="testProgress.websocketBound ? 'success' : 'error'"
-      dense
-      text
+        v-if="testProgress && isSet(testProgress.websocketBound)"
+        :type="testProgress.websocketBound ? 'success' : 'error'"
+        dense
+        text
     >
       <small>WebSocket bound</small>
     </v-alert>
@@ -46,21 +46,13 @@
   </v-col>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
-import { TestProgressDetails } from "@/models/sse-messages/printer-sse-message.model";
+<script lang="ts" setup>
+import type {TestProgressDetails} from "@/models/sse-messages/printer-sse-message.model";
+const {testProgress} = defineProps<{ testProgress: TestProgressDetails }>();
 
-@Component({
-  components: {}
-})
-export default class PrinterChecksPanel extends Vue {
-  @Prop() testProgress: TestProgressDetails;
-  cols = 4;
+const cols = 4;
 
-  isSet(value: boolean) {
-    return value === false || value === true;
-  }
+function isSet(value: boolean) {
+  return value === false || value === true;
 }
 </script>

@@ -1,30 +1,23 @@
 <template>
-  <v-btn @click="deletePrinter()" color="warning" outlined>
+  <v-btn color="warning" outlined @click="deletePrinter()">
     <v-icon>delete</v-icon>
     <span class="d-none d-lg-inline">Delete printer</span>
   </v-btn>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import FileControlList from "@/components/PrinterList/FileControlList.vue";
-import { Prop } from "vue-property-decorator";
-import { Printer } from "@/models/printers/printer.model";
-import { printersState } from "@/store/printers.state";
+<script lang="ts" setup>
+import {computed} from "vue";
+import type {Printer} from "@/models/printers/printer.model";
+import {usePrintersStore} from "@/stores/printers";
 
-@Component({
-  components: { FileList: FileControlList }
-})
-export default class PrinterDeleteAction extends Vue {
-  @Prop() printer: Printer;
+const printersStore = usePrintersStore();
+const {printer} = defineProps<{ printer: Printer }>();
 
-  get printerId() {
-    return this.printer.id;
-  }
+const printerId = computed(() => {
+  return printer.id;
+});
 
-  async deletePrinter() {
-    await printersState.deletePrinter(this.printerId);
-  }
+async function deletePrinter() {
+  await printersStore.deletePrinter(printerId.value);
 }
 </script>

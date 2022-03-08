@@ -155,6 +155,7 @@ export const usePrintersStore = defineStore({
     async createTestPrinter(newPrinter: CreatePrinter) {
       this.testPrinter = await PrintersService.testConnection(newPrinter);
       this.storeUpdate();
+      return this.testPrinter;
     },
     async deletePrinter(printerId: string) {
       const data = await PrintersService.deletePrinter(printerId);

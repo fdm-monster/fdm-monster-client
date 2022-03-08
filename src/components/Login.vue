@@ -34,16 +34,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
-
-@Component({
-  props: {
-    source: String
-  }
-})
-export default class Login extends Vue {}
+<script setup lang="ts">
 </script>
 
 <style></style>

@@ -1,35 +1,27 @@
 <template>
   <v-btn
-    class="ma-2"
-    color="primary"
-    fab
-    small
-    @click.c.capture.native.stop="openPrinterURL(printer)"
+      class="ma-2"
+      color="primary"
+      fab
+      small
+      @click.c.capture.native.stop="openPrinterURL(printer)"
   >
     <v-icon>directions</v-icon>
   </v-btn>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import FileControlList from "@/components/PrinterList/FileControlList.vue";
-import { Prop } from "vue-property-decorator";
-import { Printer } from "@/models/printers/printer.model";
-import { PrintersService } from "@/backend";
+<script lang="ts" setup>
+import type {Printer} from "@/models/printers/printer.model";
+import {PrintersService} from "@/backend";
+import {computed} from "vue";
 
-@Component({
-  components: { FileList: FileControlList }
-})
-export default class PrinterUrlAction extends Vue {
-  @Prop() printer: Printer;
+const {printer} = defineProps<{ printer: Printer }>();
 
-  get printerId() {
-    return this.printer.id;
-  }
+const printerId = computed(() => {
+  return printer.id;
+});
 
-  openPrinterURL(printer: Printer) {
-    PrintersService.openPrinterURL(printer.printerURL);
-  }
+function openPrinterURL(printer: Printer) {
+  PrintersService.openPrinterURL(printer.printerURL);
 }
 </script>

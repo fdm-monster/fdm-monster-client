@@ -46,7 +46,7 @@ let showingDialog = false;
 let showChecksPanel = false;
 const printersStore = usePrintersStore();
 const printerGroupsStore = usePrinterGroupsStore();
-const printerGroupCrudForm: InstanceType<typeof PrinterGroupCrudForm>;
+const printerGroupCrudForm: InstanceType<PrinterGroupCrudForm>;
 
 const dialogOpenedState = computed(() =>
     printerGroupsStore.createGroupDialogOpened

@@ -3,12 +3,12 @@
     <slot></slot>
     <div>
       <v-snackbar
-        v-model="progressSnackbarOpened"
-        absolute
-        bottom
-        right
-        rounded="rounded"
-        timeout="-1"
+          v-model="progressSnackbarOpened"
+          absolute
+          bottom
+          right
+          rounded="rounded"
+          timeout="-1"
       >
         {{ progressInfo }}
         <div v-for="(state, index) in progressStates" :key="index" class="mb-2">
@@ -24,23 +24,23 @@
       </v-snackbar>
 
       <v-snackbar
-        class="mb-16"
-        v-if="info || err"
-        v-model="infoSnackbarOpened"
-        absolute
-        bottom
-        right
-        rounded="pill"
+          v-if="info || err"
+          v-model="infoSnackbarOpened"
+          absolute
+          bottom
+          class="mb-16"
+          right
+          rounded="pill"
       >
         <span v-if="err">{{ err.message }}</span>
         {{ info }}
 
         <template v-slot:action="{ attrs }">
           <v-btn
-            :color="err ? 'error' : 'success'"
-            text
-            v-bind="attrs"
-            @click="infoSnackbarOpened = false"
+              :color="err ? 'error' : 'success'"
+              text
+              v-bind="attrs"
+              @click="infoSnackbarOpened = false"
           >
             Close
           </v-btn>
@@ -50,93 +50,79 @@
   </div>
 </template>
 
-<script lang="ts">
-import Component from "vue-class-component";
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
-import {
-  eventTypeToMessage,
-  InfoEventType,
-  infoMessageEvent,
-  uploadMessageEvent,
-  vuexErrorEvent
-} from "@/event-bus/alert.events";
-import { TrackedUpload, UploadStates } from "@/models/sse-messages/printer-sse-message.model";
-import { uploadsState } from "@/store/uploads.state";
+<script lang="ts" setup>
+import {eventTypeToMessage, InfoEventType} from "@/event-bus/alert.events";
+import type {TrackedUpload, UploadStates} from "@/models/sse-messages/printer-sse-message.model";
+import {useUploadsStore} from "@/stores/uploads";
+import {onMounted} from "@vue/runtime-core";
+import {type AppContext, onBeforeUnmount, ref} from "vue";
 
-@Component({
-  data: () => ({
-    err: undefined,
-    progressStates: undefined,
-    progressInfo: undefined,
-    info: undefined
-  })
-})
-export default class ErrorAlert extends Vue {
-  @Prop() stopPropagation: boolean;
-  progressSnackbarOpened = false;
-  infoSnackbarOpened = false;
-  err?: Error;
-  progressStates?: TrackedUpload[];
-  progressInfo?: any;
-  vm?: Vue;
-  info?: any;
+const {stopPropagation} = defineProps<{ stopPropagation: boolean }>();
+const uploadsStore = useUploadsStore();
 
-  getUploadingFileName(state: TrackedUpload) {
-    if (!state.multerFile?.length) return "";
-    return state.multerFile[0].originalname;
-  }
+const progressSnackbarOpened = ref<boolean>(false);
+const infoSnackbarOpened = ref<boolean>(false);
+const err = ref<unknown>();
+const context = ref<AppContext>();
+const progressStates = ref<TrackedUpload[]>([]);
+const progressInfo = ref<any>();
+const info = ref<any>();
 
-  created() {
-    this.$bus.on(vuexErrorEvent, this.storeError);
-    this.$bus.on(infoMessageEvent, this.infoMessage);
-    this.$bus.on(uploadMessageEvent, this.uploadTracker);
-  }
-
-  beforeDestroyed() {
-    this.$bus.off(vuexErrorEvent, this.storeError);
-    this.$bus.off(infoMessageEvent, this.infoMessage);
-    this.$bus.off(uploadMessageEvent, this.uploadTracker);
-  }
-
-  infoMessage(message: string) {
-    this.info = message;
-    this.infoSnackbarOpened = true;
-  }
-
-  uploadTracker(type: InfoEventType, uploadProgress: UploadStates) {
-    if (
-      !uploadProgress.current?.length &&
-      !uploadsState.hasPendingUploads &&
-      !uploadsState.isUploadingNow
-    ) {
-      this.progressSnackbarOpened = false;
-      return;
-    }
-
-    this.progressInfo = eventTypeToMessage(type, uploadProgress.current?.length);
-    this.progressStates = uploadProgress.current;
-    this.progressSnackbarOpened = true;
-  }
-
-  storeError(event: PromiseRejectionEvent) {
-    this.err = event.reason;
-    this.infoSnackbarOpened = true;
-  }
-
-  errorCaptured(err: Error, vm: Vue, info: any) {
-    this.infoSnackbarOpened = true;
-    this.err = err;
-    this.vm = vm;
-    this.info = info;
-    return this.stopPropagation;
-  }
-
-  cancelError() {
-    this.err = undefined;
-    this.progressStates = undefined;
-  }
+function getUploadingFileName(state: TrackedUpload) {
+  if (!state.multerFile?.length) return "";
+  return state.multerFile[0].originalname;
 }
-</script>
 
-<style lang="scss" scoped></style>
+onMounted(() => {
+  // TODO bus
+  // this.$bus.on(vuexErrorEvent, this.storeError);
+  // this.$bus.on(infoMessageEvent, this.infoMessage);
+  // this.$bus.on(uploadMessageEvent, this.uploadTracker);
+});
+
+onBeforeUnmount(() => {
+  // TODO bus
+  // this.$bus.off(vuexErrorEvent, this.storeError);
+  // this.$bus.off(infoMessageEvent, this.infoMessage);
+  // this.$bus.off(uploadMessageEvent, this.uploadTracker);
+});
+
+function infoMessage(message: string) {
+  info.value = message;
+  infoSnackbarOpened.value = true;
+}
+
+function uploadTracker(type: InfoEventType, uploadProgress: UploadStates) {
+  if (
+      !uploadProgress.current?.length &&
+      !uploadsStore.hasPendingUploads &&
+      !uploadsStore.uploadingNow
+  ) {
+    progressSnackbarOpened.value = false;
+    return;
+  }
+
+  progressInfo.value = eventTypeToMessage(type, uploadProgress.current?.length);
+  progressStates.value = uploadProgress.current;
+  progressSnackbarOpened.value = true;
+}
+
+function storeError(event: PromiseRejectionEvent) {
+  err.value = event.reason;
+  infoSnackbarOpened.value = true;
+}
+
+function errorCaptured(_err: unknown, _context: AppContext, _info: any) {
+  infoSnackbarOpened.value = true;
+  err.value = _err;
+  context.value = _context;
+  info.value = _info;
+  return stopPropagation;
+}
+
+function cancelError() {
+  err.value = undefined;
+  progressStates.value = [];
+}
+
+</script>

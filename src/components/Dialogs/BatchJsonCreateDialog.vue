@@ -53,7 +53,8 @@ const mutableShow = computed(() => {
 });
 
 function mutableShow(newValue: boolean) {
-  $emit("update:show", newValue);
+  // TODO bus // emit
+  // $emit("update:show", newValue);
 }
 
 async function updatePrinterCount() {
@@ -87,7 +88,7 @@ async function isValid() {
 async function submit() {
   if (!(await isValid())) return;
 
-  const printers = await this.parsedPrinters();
+  const printers = await parsedPrinters();
 
   const numPrinters = printers.length;
   const answer = confirm(`Are you sure to import ${numPrinters} printers?`);
