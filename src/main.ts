@@ -7,6 +7,7 @@ import { createPinia } from 'pinia'
 import { vueErrorHandler } from './handlers/error.handler';
 import {registerFileDropDirective} from "@/directives/file-upload.directive";
 
+import CalendarView from "@/components/PrintScheduling/CalendarView.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
 import FileExplorerSideNav from "@/components/SideNavs/FileExplorerSideNav.vue";
 import PrintJobsMenu from "@/components/PrintJobsMenu.vue";
@@ -19,6 +20,7 @@ const app = createApp(App)
   .use(router)
   .use(createPinia())
   .use(vuetify)
+    .component("CalendarView", CalendarView)
     .component('NavigationDrawer', NavigationDrawer)
     .component('PrintJobsMenu', PrintJobsMenu)
     .component('FileExplorerSideNav', FileExplorerSideNav);

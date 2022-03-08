@@ -22,12 +22,6 @@
   </v-card>
 </template>
 
-<script>
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 
-@Component({
-  components: {}
-})
-export default class OtherSettings extends Vue {}
 </script>

@@ -5,9 +5,5 @@
     <CalendarView />
   </v-container>
 </template>
-<script>
-import CalendarView from "@/components/PrintScheduling/CalendarView";
-export default {
-  components: { CalendarView }
-};
+<script lang="ts" setup>
 </script>

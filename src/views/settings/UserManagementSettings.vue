@@ -15,11 +15,11 @@
             User <strong>{{ user.name }}</strong>
           </v-list-item-title>
           <v-list-item-subtitle>
-            Username <strong>{{ user.username }}</strong> <br />
-            <br />
+            Username <strong>{{ user.username }}</strong> <br/>
+            <br/>
           </v-list-item-subtitle>
           <v-list-item-subtitle>
-            Created at <strong>{{ user.createdAt }}</strong> <br />
+            Created at <strong>{{ user.createdAt }}</strong> <br/>
             Role count <strong>{{ user.roles.length }}</strong>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -29,21 +29,15 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { UserService } from "@/backend/user.service";
-import { User } from "@/models/user.model";
+<script lang="ts" setup>
+import {ref} from "vue";
+import {UserService} from "@/backend/user.service";
+import type {User} from "@/models/user.model";
+import {onMounted} from "@vue/runtime-core";
 
-@Component({
-  components: {},
-  data: () => ({ users: [] })
-})
-export default class UserManagementSettings extends Vue {
-  users: User[];
+const users = ref<User[]>([]);
 
-  async created() {
-    this.users = await UserService.listUsers();
-  }
-}
+onMounted(async () => {
+  users.value = await UserService.listUsers();
+});
 </script>
