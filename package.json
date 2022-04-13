@@ -13,6 +13,8 @@
     "typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
+    "@formvuelate/plugin-vee-validate": "^3.8.1",
+    "@types/yup": "^0.29.13",
     "@vee-validate/rules": "4.5.11",
     "axios": "0.26.1",
     "formvuelate": "^3.8.1",
@@ -26,7 +28,8 @@
     "vue-router": "4.0.14",
     "vuedraggable": "^4.1.0",
     "vuetify": "^3.0.0-beta.0",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "1.1.2",
