@@ -1,6 +1,14 @@
-import {defineRule} from "vee-validate";
+import { defineRule } from "vee-validate";
 import AllRules from "@vee-validate/rules";
 import validator from "validator";
+import { SchemaFormFactory } from "formvuelate";
+import VeeValidatePlugin from "@formvuelate/plugin-vee-validate";
+
+export const SchemaFormWithValidation = SchemaFormFactory([
+  VeeValidatePlugin({
+    // plugin configuration here
+  }),
+]);
 
 export function configureVeeValidate() {
   Object.keys(AllRules).forEach((rule) => {
@@ -9,7 +17,7 @@ export function configureVeeValidate() {
 
   defineRule("ip_or_fqdn", (value: any) => {
     return (
-        validator.isFQDN(value) || validator.isIP(value) || value === "localhost"
+      validator.isFQDN(value) || validator.isIP(value) || value === "localhost"
     );
   });
 
