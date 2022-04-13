@@ -1,19 +1,21 @@
 <template>
   <div>
     <v-text-field
-      :error="!!validation.errorMessage"
-      :error-messages="validation.errorMessage"
-      :label="label"
-      :model-value="modelValue"
-      @input="update($event.target.value)"
+        :error="!!validation.errorMessage"
+        :error-messages="validation.errorMessage"
+        :label="label"
+        :model-value="modelValue"
+        @input="update"
     ></v-text-field>
   </div>
 </template>
 
 <script lang="ts">
-export default {
+import {defineComponent} from "vue";
+
+export default defineComponent({
   props: {
-    modelValue: { required: true },
+    modelValue: {required: true},
     required: {
       type: Boolean,
       default: false,
@@ -24,7 +26,7 @@ export default {
     },
     config: {
       type: Object,
-      default: () => ({ type: "text" }),
+      default: () => ({type: "text"}),
     },
     readOnly: {
       type: Boolean,
@@ -41,9 +43,9 @@ export default {
   },
   computed: {},
   methods: {
-    update(value) {
+    update(value: any | null) {
       this.$emit("update:modelValue", value);
     },
   },
-};
+});
 </script>
