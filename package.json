@@ -18,7 +18,7 @@
     "@vee-validate/rules": "4.5.11",
     "axios": "0.26.1",
     "formvuelate": "^3.8.1",
-    "luxon": "2.3.1",
+    "luxon": "2.3.2",
     "pinia": "2.0.13",
     "roboto-fontface": "*",
     "validator": "^13.7.0",
