@@ -23,7 +23,11 @@ export class PrinterFileService extends BaseService {
     return (await this.getApi(path)) as PrinterFileCache;
   }
 
-  static async selectAndPrintFile(printerId: string, filePath: string, print = true) {
+  static async selectAndPrintFile(
+    printerId: string,
+    filePath: string,
+    print = true
+  ) {
     const path = ServerApi.printerFilesSelectAndPrintRoute(printerId);
 
     return await this.postApi(path, { filePath, print });
