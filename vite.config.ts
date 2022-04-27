@@ -1,26 +1,47 @@
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import VueJsx from "@vitejs/plugin-vue-jsx";
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import vuetify from "@vuetify/vite-plugin";
+import Vue from "@vitejs/plugin-vue";
+import Vuetify from "@vuetify/vite-plugin";
 import { fileURLToPath, URL } from "url";
+import AutoImport from "unplugin-auto-import/vite";
 
 // https://github.com/governance-foundation/template-electron-vuex-vuetify/blob/master/vite.config.ts
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    // @ts-ignore
     {
       name: "vitest-plugin-beforeall",
       config: () => ({
         test: { setupFiles: ["./vitest/beforeall.ts"] },
       }),
     },
-    vue({
+    AutoImport({
+      imports: [
+        "vue",
+        "@vueuse/core",
+        "pinia",
+        "vue-router",
+        "vee-validate",
+        {
+          "@/stores/index": [
+            "usePrintersStore",
+            "usePrinterFilesStore",
+            "usePrinterGroupsStore",
+            "useUploadsStore",
+          ],
+        },
+      ],
+      resolvers: [],
+      /* options */
+    }),
+    Vue({
       // Allows for deconstructing props etc
       reactivityTransform: true,
     }),
-    vueJsx(),
+    VueJsx(),
     // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
-    vuetify({
+    Vuetify({
       autoImport: true,
     }),
   ],
@@ -42,6 +63,7 @@ export default defineConfig({
       ".scss",
     ],
   },
+  // @ts-ignore
   test: {
     globals: true,
     globalSetup: ["./vitest/setup.ts"],
@@ -51,16 +73,16 @@ export default defineConfig({
     },
   },
   /* remove the need to specify .vue files https://vitejs.dev/config/#resolve-extensions
-  resolve: {
-    extensions: [
-      '.js',
-      '.json',
-      '.jsx',
-      '.mjs',
-      '.ts',
-      '.tsx',
-      '.vue',
-    ]
-  },
-  */
+    resolve: {
+      extensions: [
+        '.js',
+        '.json',
+        '.jsx',
+        '.mjs',
+        '.ts',
+        '.tsx',
+        '.vue',
+      ]
+    },
+    */
 });
