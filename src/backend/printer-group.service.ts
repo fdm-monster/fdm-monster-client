@@ -9,7 +9,9 @@ import {
 import { newRandomNamePair } from "@/constants/noun-adjectives.data";
 
 export class PrinterGroupService extends BaseService {
-  static convertPrinterGroupToCreateForm(printerGroup: PrinterGroup): PreCreatePrinterGroup {
+  static convertPrinterGroupToCreateForm(
+    printerGroup: PrinterGroup
+  ): PreCreatePrinterGroup {
     // Inverse transformation
     const newFormData = getDefaultCreatePrinterGroup();
 
@@ -19,7 +21,7 @@ export class PrinterGroupService extends BaseService {
 
     newFormData.location = {
       x: printerGroup.location?.x.toString() || "0",
-      y: printerGroup.location.y?.toString() || "0"
+      y: printerGroup.location.y?.toString() || "0",
     };
 
     return newFormData;
@@ -32,7 +34,10 @@ export class PrinterGroupService extends BaseService {
     modifiedData.location.x = parseInt(modifiedData.location.x);
     modifiedData.location.y = parseInt(modifiedData.location.y);
 
-    if (Number.isNaN(modifiedData.location.x) || Number.isNaN(modifiedData.location.y)) {
+    if (
+      Number.isNaN(modifiedData.location.x) ||
+      Number.isNaN(modifiedData.location.y)
+    ) {
       throw new Error("Group location X or Y did not convert to number.");
     }
 

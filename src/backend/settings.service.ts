@@ -20,11 +20,13 @@ export class SettingsService extends BaseService {
     return (await this.getApi(path)) as ClientSettings;
   }
 
-  static async setFileHandlingClientSettings(subSettings: PrinterFileCleanSettings) {
+  static async setFileHandlingClientSettings(
+    subSettings: PrinterFileCleanSettings
+  ) {
     const path = `${ServerApi.serverSettingsRoute}`;
 
     return (await this.putApi(path, {
-      printerFileClean: subSettings
+      printerFileClean: subSettings,
     } as PrinterFileCleanSubSetting)) as ServerSettings;
   }
 }
