@@ -1,6 +1,6 @@
-import type { ServerSettings } from "../server-settings/server-settings.model";
+import type { ServerSettings } from "../server-settings.model";
 
 export interface ServerSettingsStore {
-    serverSettings?: ServerSettings,
-    lastUpdated?: number
-};
+  serverSettings?: ServerSettings;
+  lastUpdated?: number;
+}

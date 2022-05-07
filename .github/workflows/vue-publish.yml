@@ -15,5 +15,5 @@ jobs:
           node-version: 16.x
 
       - run: yarn install --immutable --immutable-cache --check-cache
-      - run: npm run typecheck
       - run: npm run test:unit
+      - run: npm run typecheck

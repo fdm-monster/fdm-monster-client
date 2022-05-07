@@ -5,6 +5,7 @@ import FormText from "../FormText.vue";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { createVuetify } from "vuetify";
+import { getTestConfig } from "@/utils/tests/test-mount.util";
 
 describe("FormText", () => {
   const vuetify = createVuetify({ components, directives });
@@ -12,15 +13,13 @@ describe("FormText", () => {
   const defaultModelValue = "noValue";
   const defaultLabel = "Email";
   it("renders properly", () => {
-    const component = mount(FormText, {
-      global: {
-        plugins: [vuetify],
-      },
-      attrs: {
-        label: defaultLabel,
-        modelValue: defaultModelValue,
-      },
-    });
+    const testConfig = getTestConfig(vuetify);
+    testConfig.props = {
+      label: defaultLabel,
+      modelValue: defaultModelValue,
+    };
+    // @ts-ignore
+    const component = mount(FormText, testConfig);
     expect(component.text()).toContain(defaultLabel);
     expect(component.html()).toContain("input");
     expect(component.html()).toContain('type="text"');

@@ -2,8 +2,10 @@ import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import type { FileUploadCommands } from "@/models/printers/file-upload-commands.model";
 import type { PrinterFileCache } from "@/models/printers/printer-file-cache.model";
-import type { ClearedFilesResult, PrinterFile } from "@/models/printers/printer-file.model";
-import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
+import type {
+  ClearedFilesResult,
+  PrinterFile,
+} from "@/models/printers/printer-file.model";
 import type { Printer } from "@/models/printers/printer.model";
 
 export class PrinterFileService extends BaseService {

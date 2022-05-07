@@ -1,6 +1,6 @@
 import type { QueuedUpload } from "../uploads/queued-upload.model";
 
 export interface UploadsStore {
-    queuedUploads: QueuedUpload[],
-    uploadingNow: boolean
+  queuedUploads: QueuedUpload[];
+  uploadingNow: boolean;
 }

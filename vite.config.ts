@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import Vue from "@vitejs/plugin-vue";
 import Vuetify from "@vuetify/vite-plugin";
 import { fileURLToPath, URL } from "url";
+import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 
 // https://github.com/governance-foundation/template-electron-vuex-vuetify/blob/master/vite.config.ts
@@ -33,6 +34,10 @@ export default defineConfig({
         },
       ],
       resolvers: [],
+      /* options */
+    }),
+    // https://github.com/antfu/unplugin-vue-components
+    Components({
       /* options */
     }),
     Vue({

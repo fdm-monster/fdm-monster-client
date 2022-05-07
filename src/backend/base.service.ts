@@ -1,8 +1,9 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import { isDevEnv } from "@/utils/env.util";
 
 // TODO fix
 // export const apiBase = Vue.config.devtools ? "http://localhost:4000" : ""; // Same-origin policy
-export const apiBase = "http://localhost:4000";
+export const apiBase = isDevEnv() ? "http://localhost:4000" : "";
 
 export class BaseService {
   static readonly UNWRAP = { unwrap: true };
