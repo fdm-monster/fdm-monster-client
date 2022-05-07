@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     FileExplorerSideNav: typeof import('./src/components/SideNavs/FileExplorerSideNav.vue')['default']
     FormText: typeof import('./src/components/Forms/FormText.vue')['default']
     FormTextArea: typeof import('./src/components/Forms/FormTextArea.vue')['default']
+    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
     NavigationDrawer: typeof import('./src/components/NavigationDrawer.vue')['default']
     PrinterChecksPanel: typeof import('./src/components/Dialogs/PrinterChecksPanel.vue')['default']
@@ -25,14 +26,15 @@ declare module '@vue/runtime-core' {
     PrinterGridTile: typeof import('./src/components/PrinterGrid/PrinterGridTile.vue')['default']
     PrinterGroupCrudForm: typeof import('./src/components/Forms/PrinterGroupCrudForm.vue')['default']
     PrinterSettingsAction: typeof import('./src/components/Actions/PrinterSettingsAction.vue')['default']
-    PrinterTile: typeof import("./src/components/PrinterGrid/PrinterTile.vue")["default"];
     PrinterUrlAction: typeof import('./src/components/Actions/PrinterUrlAction.vue')['default']
     PrintJobsMenu: typeof import('./src/components/PrintJobsMenu.vue')['default']
     RefreshFilesAction: typeof import('./src/components/Actions/RefreshFilesAction.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
     UpdatePrinterDialog: typeof import('./src/components/Dialogs/UpdatePrinterDialog.vue')['default']
+    WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }
 

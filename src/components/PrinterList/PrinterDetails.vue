@@ -25,7 +25,7 @@
       </v-col>
     </v-row>
 
-    <FileList :file-list="printer.fileList" :printer-id="printerId" />
+<!--    <FileList v-if="printer.fileList" :file-list="printer.fileList" :printer-id="printerId" />-->
   </v-container>
 </template>
 
