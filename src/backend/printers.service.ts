@@ -1,19 +1,19 @@
 import { ServerApi } from "@/backend/server.api";
 import { BaseService } from "@/backend/base.service";
 import type { LoginDetails, Printer } from "@/models/printers/printer.model";
-import {
-  getDefaultCreatePrinter,
-  type CreatePrinter,
-  type HttpProtocol,
-  type PreCreatePrinter,
-  type WebSocketProtocol
-} from "@/models/printers/crud/create-printer.model";
-import { newRandomNamePair } from "@/constants/noun-adjectives.data";
+import type {
+  CreatePrinter,
+  HttpProtocol,
+  PreCreatePrinter,
+  WebSocketProtocol,
+} from "@/models/forms/create-printer.legacy.model";
+import { newRandomNamePair } from "@/shared/noun-adjectives.data";
+import { getDefaultFormData } from "@/models/forms/printer-crud.form";
 
 export class PrintersService extends BaseService {
   static convertPrinterToCreateForm(printer: CreatePrinter) {
     // Inverse transformation
-    const newFormData = getDefaultCreatePrinter();
+    const newFormData = getDefaultFormData();
 
     const printerURL = new URL(printer.printerURL);
     const webSocketURL = new URL(printer.webSocketURL);

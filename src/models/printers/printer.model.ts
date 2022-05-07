@@ -1,6 +1,13 @@
-import type { HostState, PrinterState, WebsocketState } from "@/models/printers/visual-state.model";
+import type {
+  HostState,
+  PrinterState,
+  WebsocketState,
+} from "@/models/printers/visual-state.model";
 import type { CostSettings } from "@/models/printers/cost-settings.model";
-import type { PrinterCurrentJob, PrinterJob } from "@/models/printers/printer-current-job.model";
+import type {
+  PrinterCurrentJob,
+  PrinterJob,
+} from "@/models/printers/printer-current-job.model";
 import type { ConnectionOptions } from "@/models/printers/connection-options.model";
 import type { PrinterProfile } from "@/models/printers/printer-profile.model";
 
@@ -9,6 +16,8 @@ export interface ApiAccessibility {
   retryable: boolean;
   reason: string;
 }
+
+export const UUID_LENGTH = 32;
 
 export interface LoginDetails {
   apiKey: string;

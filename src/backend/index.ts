@@ -6,3 +6,4 @@ export * from "./printers.service";
 export * from "./server.api";
 export * from "./settings.service";
 export * from "./user.service";
+export * from "./sse.service";

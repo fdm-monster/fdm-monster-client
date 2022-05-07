@@ -4,9 +4,9 @@ import type { PrinterGroup } from "@/models/printers/printer-group.model";
 import {
   type CreatePrinterGroup,
   getDefaultCreatePrinterGroup,
-  type PreCreatePrinterGroup
-} from "@/models/printer-groups/crud/create-printer-group.model";
-import { newRandomNamePair } from "@/constants/noun-adjectives.data";
+  type PreCreatePrinterGroup,
+} from "@/models/crud/create-printer-group.model";
+import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 
 export class PrinterGroupService extends BaseService {
   static convertPrinterGroupToCreateForm(

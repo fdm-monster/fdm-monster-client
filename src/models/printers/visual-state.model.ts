@@ -1,6 +1,11 @@
 export type PSTATE = string;
 export type CATEGORY = string;
-export type ColourLabel = "dark" | "success" | "warning" | "danger" | "secondary";
+export type ColourLabel =
+  | "dark"
+  | "success"
+  | "warning"
+  | "danger"
+  | "secondary";
 
 export interface WebsocketState {
   colour: ColourLabel;

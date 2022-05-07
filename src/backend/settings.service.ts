@@ -1,11 +1,11 @@
 import { ServerApi } from "@/backend/server.api";
 import { BaseService } from "@/backend/base.service";
-import type  {
+import type {
   PrinterFileCleanSubSetting,
-  ServerSettings
-} from "@/models/server-settings/server-settings.model";
-import type { PrinterFileCleanSettings } from "@/models/server-settings/printer-file-clean-settings.model";
-import type { ClientSettings } from "@/models/client-settings/client-settings.model";
+  PrinterFileCleanSettings,
+  ServerSettings,
+} from "@/models/server-settings.model";
+import type { ClientSettings } from "@/models/client-settings.model";
 
 export class SettingsService extends BaseService {
   static async getServerSettings() {

@@ -22,9 +22,10 @@ declare module '@vue/runtime-core' {
     PrinterDeleteAction: typeof import('./src/components/Actions/PrinterDeleteAction.vue')['default']
     PrinterDetails: typeof import('./src/components/PrinterList/PrinterDetails.vue')['default']
     PrinterGrid: typeof import('./src/components/PrinterGrid/PrinterGrid.vue')['default']
+    PrinterGridTile: typeof import('./src/components/PrinterGrid/PrinterGridTile.vue')['default']
     PrinterGroupCrudForm: typeof import('./src/components/Forms/PrinterGroupCrudForm.vue')['default']
     PrinterSettingsAction: typeof import('./src/components/Actions/PrinterSettingsAction.vue')['default']
-    PrinterTile: typeof import('./src/components/PrinterGrid/PrinterTile.vue')['default']
+    PrinterTile: typeof import("./src/components/PrinterGrid/PrinterTile.vue")["default"];
     PrinterUrlAction: typeof import('./src/components/Actions/PrinterUrlAction.vue')['default']
     PrintJobsMenu: typeof import('./src/components/PrintJobsMenu.vue')['default']
     RefreshFilesAction: typeof import('./src/components/Actions/RefreshFilesAction.vue')['default']
