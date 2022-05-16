@@ -18,7 +18,7 @@
     "@formvuelate/plugin-vee-validate": "^3.8.1",
     "@vee-validate/rules": "4.5.11",
     "@vee-validate/zod": "^4.5.11",
-    "@vueuse/core": "8.4.2",
+    "@vueuse/core": "8.5.0",
     "@vueuse/integrations": "8.4.2",
     "axios": "0.27.2",
     "event-source-polyfill": "^1.0.26",
