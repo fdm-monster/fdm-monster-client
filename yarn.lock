@@ -367,10 +367,10 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@formvuelate/plugin-vee-validate@^3.8.1":
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/@formvuelate/plugin-vee-validate/-/plugin-vee-validate-3.8.1.tgz#fb0d86be79de16635f8421367529a4fb0e819eb1"
-  integrity sha512-kYo+7/BG0QFZD+jJ1+UGhaBCXe4aeWmiQ2i91rS0bszHzztXRPBEtRjOZTFh/Y02KomgpydXYDZpFsvuENzLhw==
+"@formvuelate/plugin-vee-validate@3.9.1":
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@formvuelate/plugin-vee-validate/-/plugin-vee-validate-3.9.1.tgz#75922d01dfe6a2b0eaca4ec6bd63997f25984cfd"
+  integrity sha512-BP4vG14y8T6B9p8l6s/XY4DNHKrAFUSBCzYmdJ6NqxpFeLXudqJMHEQ6hLXcJ4ugLVUUviqATkTr+/x+mn15ng==
 
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
