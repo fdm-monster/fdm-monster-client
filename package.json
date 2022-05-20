@@ -22,7 +22,7 @@
     "@vueuse/integrations": "8.5.0",
     "axios": "0.27.2",
     "event-source-polyfill": "^1.0.26",
-    "formvuelate": "^3.8.1",
+    "formvuelate": "3.9.1",
     "luxon": "2.4.0",
     "pinia": "2.0.14",
     "roboto-fontface": "*",
