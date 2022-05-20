@@ -28,7 +28,7 @@
     "roboto-fontface": "*",
     "validator": "^13.7.0",
     "vee-validate": "4.5.11",
-    "vue": "3.2.34",
+    "vue": "3.2.35",
     "vue-axios": "^3.4.1",
     "vue-router": "4.0.15",
     "vuedraggable": "^4.1.0",
