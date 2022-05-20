@@ -2261,10 +2261,10 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
-formvuelate@^3.8.1:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/formvuelate/-/formvuelate-3.8.1.tgz#77b25e0aad69595e3c2777b03f2fad499bf12332"
-  integrity sha512-WalYUIOYx+2j3G+ZNI1w7Auwsa8j3oPCRxth3s4wIMERSSbQUU/vF6AyVn0SjcaXvIIBRLn5n8yLHUi1KGWUuQ==
+formvuelate@3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/formvuelate/-/formvuelate-3.9.1.tgz#3552ef20bfa7dc5599d37566caaf93cbb2299d23"
+  integrity sha512-dYs4l03v6x/+YMUG4HpohSrpcHXcclyywW9/BanrG8rXbnHmMYt3l4XQKHynjyfQ8HEhKZEZqLVQIrpY0tVYMw==
 
 from@~0:
   version "0.1.7"
