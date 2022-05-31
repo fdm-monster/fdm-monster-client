@@ -908,15 +908,6 @@
     "@vuetify/loader-shared" "^1.4.0"
     debug "^4.3.3"
 
-"@vueuse/core@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-8.5.0.tgz#2b7548e52165c88e1463756c36188e105d806543"
-  integrity sha512-VEJ6sGNsPlUp0o9BGda2YISvDZbhWJSOJu5zlp2TufRGVrLcYUKr31jyFEOj6RXzG3k/H4aCYeZyjpItfU8glw==
-  dependencies:
-    "@vueuse/metadata" "8.5.0"
-    "@vueuse/shared" "8.5.0"
-    vue-demi "*"
-
 "@vueuse/core@8.6.0":
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-8.6.0.tgz#a8f80363cc63d17382423f16beae57696f376e67"
@@ -926,31 +917,19 @@
     "@vueuse/shared" "8.6.0"
     vue-demi "*"
 
-"@vueuse/integrations@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/integrations/-/integrations-8.5.0.tgz#14af94371631b82ff4dc48c23b214f03fc7b2a53"
-  integrity sha512-tZNYg5T07OacF1x4evGoRZK1BMU0ge7MqF4tzR3eJLD0EPiq4jd6+HUzCloPtMZ14wNPwaP1B8xYUyYxucPJ3w==
+"@vueuse/integrations@8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/integrations/-/integrations-8.6.0.tgz#8d18ec1078e7e006f2772482e4cc853607c54c01"
+  integrity sha512-CTja5TF27KTi7wd9XivWTz3kBX9Z8ujlj+GEjfiHqQ+7OYARSM4mab1hLceMt9XVaGUAwaPeK7Adl9IZuP8Cjw==
   dependencies:
-    "@vueuse/core" "8.5.0"
-    "@vueuse/shared" "8.5.0"
+    "@vueuse/core" "8.6.0"
+    "@vueuse/shared" "8.6.0"
     vue-demi "*"
-
-"@vueuse/metadata@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-8.5.0.tgz#1aaa3787922cfda0f38243aaa7779366a669b4db"
-  integrity sha512-WxsD+Cd+bn+HcjpY6Dl9FJ8ywTRTT9pTwk3bCQpzEhXVYAyNczKDSahk50fCfIJKeWHhyI4B2+/ZEOxQAkUr0g==
 
 "@vueuse/metadata@8.6.0":
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-8.6.0.tgz#34771443a72ee891ae001a70aa05dd9a1d799372"
   integrity sha512-F+CKPvaExsm7QgRr8y+ZNJFwXasn89rs5wth/HeX9lJ1q8XEt+HJ16Q5Sxh4rfG5YSKXrStveVge8TKvPjMjFA==
-
-"@vueuse/shared@8.5.0":
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-8.5.0.tgz#fa01ecd3161933f521dd6428b9ef8015ded1bbd3"
-  integrity sha512-qKG+SZb44VvGD4dU5cQ63z4JE2Yk39hQUecR0a9sEdJA01cx+XrxAvFKJfPooxwoiqalAVw/ktWK6xbyc/jS3g==
-  dependencies:
-    vue-demi "*"
 
 "@vueuse/shared@8.6.0":
   version "8.6.0"
