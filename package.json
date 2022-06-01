@@ -67,7 +67,7 @@
     "unplugin-vue-components": "0.19.6",
     "vite": "2.9.9",
     "vitest": "0.13.1",
-    "vue-cli-plugin-vuetify": "2.5.0",
+    "vue-cli-plugin-vuetify": "2.5.1",
     "vue-tsc": "0.35.2",
     "vuetify-loader": "^2.0.0-alpha.9"
   }
