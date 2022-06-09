@@ -30,7 +30,7 @@
     "vee-validate": "4.5.11",
     "vue": "3.2.37",
     "vue-axios": "^3.4.1",
-    "vue-router": "4.0.15",
+    "vue-router": "4.0.16",
     "vuedraggable": "^4.1.0",
     "vuetify": "3.0.0-beta.3",
     "webfontloader": "^1.6.28",
