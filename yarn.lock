@@ -4100,10 +4100,10 @@ vuetify-loader@^2.0.0-alpha.9:
     querystring "^0.2.1"
     upath "^2.0.1"
 
-vuetify@3.0.0-beta.3:
-  version "3.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.0.0-beta.3.tgz#ac1f11f2447f9a5a3fa6850ee16da780dead2a64"
-  integrity sha512-as6G+6S6q4kfioc0wioJ+/DOLhIDGsA/ufaSwE8GHnxnoOmx+Usi+CLAh6UaZr1VEG7HVVtFV+gBXsk8pmljQg==
+vuetify@3.0.0-beta.4:
+  version "3.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.0.0-beta.4.tgz#39d6b9cc38f0e9f5f342dff3d7ca72924fe41735"
+  integrity sha512-saq44U5bDO5z7BNWVeBdyY37BTPOQTeuz7Tm3kyywMEDHhZKw9BhtCo/QodTndoofRSRWXfE7MI2/AEvG/1x+g==
 
 w3c-hr-time@^1.0.2:
   version "1.0.2"
