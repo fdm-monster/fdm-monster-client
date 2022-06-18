@@ -4,7 +4,10 @@
     :max-width="showChecksPanel ? '700px' : '600px'"
     persistent
   >
-    <v-card v-if="storedUpdatedPrinter" :width="showChecksPanel ? '700px' : '600px'">
+    <v-card
+      v-if="storedUpdatedPrinter"
+      :width="showChecksPanel ? '700px' : '600px'"
+    >
       <v-card-title class="ma-0">
         <span class="text-h5">
           <v-avatar color="primary" size="56">
@@ -38,10 +41,19 @@
         <em class="red--text">* indicates required field</em>
         <v-spacer></v-spacer>
         <v-btn text @click="closeDialog()">Close</v-btn>
-        <v-btn :disabled="!isFormValid" color="warning" text @click="testPrinter()">
+        <v-btn
+          :disabled="!isFormValid"
+          color="warning"
+          text
+          @click="testPrinter()"
+        >
           Test connection
         </v-btn>
-        <v-btn :disabled="!isFormValid" color="blue darken-1" text @click="submit()"
+        <v-btn
+          :disabled="!isFormValid"
+          color="blue darken-1"
+          text
+          @click="submit()"
           >Save
         </v-btn>
       </v-card-actions>

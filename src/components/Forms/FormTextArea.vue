@@ -1,24 +1,23 @@
 <template>
   <v-textarea
-      :error="!!validation.errorMessage"
-      :error-messages="validation.errorMessage"
-      :label="label"
-      :model-value="modelValue"
-      :rows="config.rows || 5"
-      @input="update"
+    :error="!!validation.errorMessage"
+    :error-messages="validation.errorMessage"
+    :label="label"
+    :model-value="modelValue"
+    :rows="config.rows || 5"
+    @input="update"
   >
   </v-textarea>
 </template>
 
 <script lang="ts">
-
 type HTMLElementEvent<T extends HTMLElement> = Event & {
   target: T;
 };
 
 export default defineComponent({
   props: {
-    modelValue: {required: true},
+    modelValue: { required: true },
     required: {
       type: Boolean,
       default: false,
@@ -29,7 +28,7 @@ export default defineComponent({
     },
     config: {
       type: Object,
-      default: () => ({type: "text", rows: 15}),
+      default: () => ({ type: "text", rows: 15 }),
     },
     readOnly: {
       type: Boolean,

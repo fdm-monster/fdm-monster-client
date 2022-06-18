@@ -5,17 +5,17 @@
       <v-spacer></v-spacer>
       <div>
         <v-switch
-            v-model="autoPrint"
-            disabled
-            hide-details
-            label="Auto-select and print"
+          v-model="autoPrint"
+          disabled
+          hide-details
+          label="Auto-select and print"
         ></v-switch>
       </div>
       <v-btn
-          class="ml-3"
-          color="primary"
-          type="button"
-          @click="openCreatePrinterDialog()"
+        class="ml-3"
+        color="primary"
+        type="button"
+        @click="openCreatePrinterDialog()"
       >
         Create Printer
       </v-btn>
@@ -25,21 +25,19 @@
       <v-row>
         <v-col>
           <v-btn color="secondary" small @click="clearSelectedPrinters()"
-          >Clear selection
-          </v-btn
-          >
+            >Clear selection
+          </v-btn>
           <v-chip-group>
             <v-chip v-if="selectedPrinters.length === 0"
-            >No printers selected
-            </v-chip
-            >
+              >No printers selected
+            </v-chip>
             <v-chip
-                v-for="selectedPrinter in selectedPrinters"
-                :key="selectedPrinter.id"
-                close
-                color="primary"
-                @click="openPrinter(selectedPrinter)"
-                @click:close="deselectPrinter(selectedPrinter)"
+              v-for="selectedPrinter in selectedPrinters"
+              :key="selectedPrinter.id"
+              close
+              color="primary"
+              @click="openPrinter(selectedPrinter)"
+              @click:close="deselectPrinter(selectedPrinter)"
             >
               {{ selectedPrinter.printerName }}
             </v-chip>
@@ -47,14 +45,14 @@
         </v-col>
         <v-col align="right">
           <strong class="mr-2">Drop or select GCODE to print</strong>
-          <br/>
+          <br />
           <input
-              ref="fileUpload"
-              :multiple="false"
-              accept=".gcode"
-              style="display: none"
-              type="file"
-              @change="updateFilesSelected()"
+            ref="fileUpload"
+            :multiple="false"
+            accept=".gcode"
+            style="display: none"
+            type="file"
+            @change="updateFilesSelected()"
           />
           <v-chip-group v-if="selectedFile" class="float-end">
             <v-chip close @click:close="deselectFile()">
@@ -62,21 +60,21 @@
               <strong class="pl-1">{{ formatBytes(selectedFile.size) }}</strong>
             </v-chip>
           </v-chip-group>
-          <br/>
+          <br />
           <v-btn
-              class="ml-2"
-              color="primary"
-              small
-              @click="$refs.fileUpload.click()"
+            class="ml-2"
+            color="primary"
+            small
+            @click="$refs.fileUpload.click()"
           >
             Select gcode file
           </v-btn>
           <v-btn
-              :disabled="!selectedFile"
-              class="ml-2"
-              color="green"
-              small
-              @click="uploadFile()"
+            :disabled="!selectedFile"
+            class="ml-2"
+            color="green"
+            small
+            @click="uploadFile()"
           >
             Upload gcode file
           </v-btn>
@@ -84,17 +82,17 @@
       </v-row>
     </v-banner>
 
-    <PrinterGrid class="ma-2"/>
+    <PrinterGrid class="ma-2" />
   </div>
 </template>
 
 <script lang="ts">
-import {PrintersService} from "@/backend";
-import type {Printer} from "@/models/printers/printer.model";
-import {usePrintersStore} from "@/stores/printers";
-import {useUploadsStore} from "@/stores/uploads";
-import {formatBytes} from "@/utils/file-size.util";
-import {convertMultiPrinterFileToQueue} from "@/utils/uploads-state.utils";
+import { PrintersService } from "@/backend";
+import type { Printer } from "@/models/printers/printer.model";
+import { usePrintersStore } from "@/stores/printers";
+import { useUploadsStore } from "@/stores/uploads";
+import { formatBytes } from "@/utils/file-size.util";
+import { convertMultiPrinterFileToQueue } from "@/utils/uploads-state.utils";
 
 export default defineComponent({
   setup: () => {
@@ -105,13 +103,13 @@ export default defineComponent({
       viewedPrinter: undefined,
       fileUpload: ref<InstanceType<typeof HTMLInputElement>>(),
       autoPrint: ref(true),
-      selectedFile: ref<File>()
-    }
+      selectedFile: ref<File>(),
+    };
   },
   computed: {
     selectedPrinters() {
       return this.printersStore.selectedPrinters;
-    }
+    },
   },
   methods: {
     updateFilesSelected() {
@@ -125,14 +123,14 @@ export default defineComponent({
     },
     async uploadFile() {
       const accessiblePrinters = this.selectedPrinters.filter(
-          (p) => p.apiAccessibility.accessible
+        (p) => p.apiAccessibility.accessible
       );
 
       if (!this.selectedFile) return;
 
       // Checking and informing user
       const incompleteListCount =
-          this.selectedPrinters.length - accessiblePrinters.length;
+        this.selectedPrinters.length - accessiblePrinters.length;
       if (incompleteListCount > 0) {
         // TODO BUS
         // this.$bus.emit(
@@ -142,8 +140,8 @@ export default defineComponent({
       }
 
       const uploads = convertMultiPrinterFileToQueue(
-          accessiblePrinters,
-          this.selectedFile
+        accessiblePrinters,
+        this.selectedFile
       );
       this.uploadsStore.queueUploads(uploads);
 
@@ -161,7 +159,7 @@ export default defineComponent({
     },
     openCreatePrinterDialog() {
       this.printersStore.setCreateDialogOpened(true);
-    }
-  }
+    },
+  },
 });
 </script>

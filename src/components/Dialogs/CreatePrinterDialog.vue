@@ -38,10 +38,19 @@
         <em class="red--text">* indicates required field</em>
         <v-spacer></v-spacer>
         <v-btn text @click="closeDialog()">Close</v-btn>
-        <v-btn :disabled="!isFormValid()" color="warning" text @click="testPrinter()">
+        <v-btn
+          :disabled="!isFormValid()"
+          color="warning"
+          text
+          @click="testPrinter()"
+        >
           Test connection
         </v-btn>
-        <v-btn :disabled="!isFormValid()" color="blue darken-1" text @click="submit()"
+        <v-btn
+          :disabled="!isFormValid()"
+          color="blue darken-1"
+          text
+          @click="submit()"
           >Create
         </v-btn>
       </v-card-actions>

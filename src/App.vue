@@ -27,7 +27,7 @@ export default defineComponent({
     return {
       sseClient: ref<SseClient>(),
       printersStore: usePrintersStore(),
-      printerGroupsStore: usePrinterGroupsStore()
+      printerGroupsStore: usePrinterGroupsStore(),
     };
   },
   methods: {

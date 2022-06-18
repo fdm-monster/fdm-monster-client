@@ -12,17 +12,17 @@
 
       <v-list density="compact" nav>
         <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            :to="item.path"
-            router-link
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.path"
+          router-link
         >
           <v-list-item-avatar>
             <v-icon :icon="item.icon"></v-icon>
           </v-list-item-avatar>
           <v-list-item-title
-              class="pl-2"
-              v-text="item.title"
+            class="pl-2"
+            v-text="item.title"
           ></v-list-item-title>
         </v-list-item>
       </v-list>
@@ -46,8 +46,8 @@ const items = [
     icon: "group",
     path: "/settings/user-management",
   },
-  {title: "FDM settings", icon: "image", path: "/settings/system"},
-  {title: "Other", icon: "help", path: "/settings/other"},
+  { title: "FDM settings", icon: "image", path: "/settings/system" },
+  { title: "Other", icon: "help", path: "/settings/other" },
 ];
 </script>
 

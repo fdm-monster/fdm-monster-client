@@ -1,21 +1,16 @@
 <template>
   <div class="text-center">
     <v-menu
-        v-model="state.menu"
-        :close-on-content-click="false"
-        :nudge-width="300"
-        anchor="start"
-        open-on-hover
-        transition="slide-x-transition"
+      v-model="state.menu"
+      :close-on-content-click="false"
+      :nudge-width="300"
+      anchor="start"
+      open-on-hover
+      transition="slide-x-transition"
     >
       <template v-slot:activator="{ props }">
         <!--            :color="activePrintCount ? 'green' : 'success'"-->
-        <v-btn
-            :elevation="3"
-            color="secondary"
-            flat
-            v-bind="props"
-        >
+        <v-btn :elevation="3" color="secondary" flat v-bind="props">
           <span>
             Print jobs
             {{ activePrintCount ? `(${activePrintCount})` : "" }}
@@ -28,7 +23,9 @@
         <v-list>
           <v-list-item>
             <v-list-item-avatar size="50">
-              <v-avatar class="ml" color="primary">{{ activePrintCount }}</v-avatar>
+              <v-avatar class="ml" color="primary">{{
+                activePrintCount
+              }}</v-avatar>
             </v-list-item-avatar>
 
             <v-list-item-header class="pl-2">
@@ -45,10 +42,10 @@
             <template v-slot:append>
               <v-list-item-avatar start>
                 <v-progress-circular
-                    :size="60"
-                    :value="jobProgress(printer.currentJob)"
-                    :width="5"
-                    color="green"
+                  :size="60"
+                  :value="jobProgress(printer.currentJob)"
+                  :width="5"
+                  color="green"
                 >
                   {{ truncateJobProgress(printer.currentJob) + "%" || "" }}
                 </v-progress-circular>
@@ -61,7 +58,7 @@
               <v-list-item-subtitle>
                 Elapsed:
                 {{ getElapsedJobTime(printer) }}
-                minutes <br/>
+                minutes <br />
                 Printer: {{ printer.printerName }}
               </v-list-item-subtitle>
             </v-list-item-header>
@@ -79,8 +76,11 @@
 </template>
 
 <script lang="ts">
-import type {Printer} from "@/models/printers/printer.model";
-import type {PrinterCurrentJob, PrinterJob} from "@/models/printers/printer-current-job.model";
+import type { Printer } from "@/models/printers/printer.model";
+import type {
+  PrinterCurrentJob,
+  PrinterJob,
+} from "@/models/printers/printer-current-job.model";
 
 export default defineComponent({
   setup: () => {
@@ -89,8 +89,8 @@ export default defineComponent({
       printersStore,
       activePrintJobs: computed(() => printersStore.printersWithJob),
       activePrintCount: computed(() => printersStore.printersWithJob?.length),
-      state: reactive({menu: false})
-    }
+      state: reactive({ menu: false }),
+    };
   },
   methods: {
     jobProgress(printerJob: PrinterCurrentJob | PrinterJob) {
@@ -102,12 +102,12 @@ export default defineComponent({
       return progress?.toFixed(0);
     },
     getElapsedJobTime(printer: Printer) {
-      const jobCurrent = (printer.currentJob as PrinterCurrentJob);
+      const jobCurrent = printer.currentJob as PrinterCurrentJob;
       if (jobCurrent) {
         return Math.round(jobCurrent.printTimeElapsed / 60);
       }
       return "-";
-    }
-  }
-})
+    },
+  },
+});
 </script>
