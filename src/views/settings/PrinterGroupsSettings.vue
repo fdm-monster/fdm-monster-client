@@ -39,9 +39,9 @@
         Selected index: {{ selectedItem }} Printer groups:
         {{ printerGroups.length }}
         <v-list-item
-            v-for="group of printerGroups"
-            :key="group._id"
-            :value="selectedItem"
+          v-for="group of printerGroups"
+          :key="group._id"
+          :value="selectedItem"
         >
           <v-list-item-header>
             <v-list-item-title>{{ group.name }}</v-list-item-title>
@@ -109,13 +109,13 @@
           </v-list-item-header>
           <v-list-item-header v-else>
             <v-select
-                :items="unassignedPrinters()"
-                item-text="printerName"
-                label="Not assigned"
-                no-data-text="No printers left"
-                outlined
-                return-object
-                @change="addPrinterToGroup(selectedPrinterGroup, x)"
+              :items="unassignedPrinters()"
+              item-text="printerName"
+              label="Not assigned"
+              no-data-text="No printers left"
+              outlined
+              return-object
+              @change="addPrinterToGroup(selectedPrinterGroup, x)"
             ></v-select>
           </v-list-item-header>
 
@@ -145,24 +145,23 @@
 </template>
 
 <script lang="ts">
-import {PrinterGroupService} from "@/backend";
-import type {PrinterGroup} from "@/models/printers/printer-group.model";
-import type {Printer} from "@/models/printers/printer.model";
+import { PrinterGroupService } from "@/backend";
+import type { PrinterGroup } from "@/models/printers/printer-group.model";
+import type { Printer } from "@/models/printers/printer.model";
 
 export default defineComponent({
   data: () => ({
-    printersPerGroup: 4
+    printersPerGroup: 4,
   }),
   setup: () => {
     return {
       printersStore: usePrintersStore(),
       printerGroupsStore: usePrinterGroupsStore(),
       editedPrinterGroupName: ref(""),
-      selectedItem: ref(0)
-    }
+      selectedItem: ref(0),
+    };
   },
-  async mounted() {
-  },
+  async mounted() {},
   props: {},
   computed: {
     printerGroups() {
@@ -170,7 +169,7 @@ export default defineComponent({
     },
     selectedPrinterGroup() {
       return this.printerGroupsStore.printerGroups[this.selectedItem];
-    }
+    },
   },
   methods: {
     printerLocation(group: PrinterGroup, index: number) {
@@ -178,12 +177,11 @@ export default defineComponent({
     },
     unassignedPrinters() {
       // TODO Convert to string array to silence typecheck
-      return this.printerGroupsStore.ungroupedPrinters.map(p => p.printerName);
+      return this.printerGroupsStore.ungroupedPrinters.map(
+        (p) => p.printerName
+      );
     },
-    printerInGroup(
-        group: PrinterGroup,
-        index: number
-    ): Printer | undefined {
+    printerInGroup(group: PrinterGroup, index: number): Printer | undefined {
       if (!group?.printers) return;
 
       const printer = group.printers[index - 1];
@@ -205,7 +203,7 @@ export default defineComponent({
     async updatePrinterGroupName() {
       if (!this.selectedPrinterGroup?._id) return;
 
-      const {_id: groupId} = this.selectedPrinterGroup;
+      const { _id: groupId } = this.selectedPrinterGroup;
       await this.printerGroupsStore.updatePrinterGroupName({
         groupId,
         name: this.editedPrinterGroupName,
@@ -214,12 +212,11 @@ export default defineComponent({
     async clickDeleteGroup() {
       if (!this.selectedPrinterGroup?._id) return;
 
-      await this.printerGroupsStore.deletePrinterGroup(this.selectedPrinterGroup._id);
+      await this.printerGroupsStore.deletePrinterGroup(
+        this.selectedPrinterGroup._id
+      );
     },
-    addPrinterToGroup(
-        group: PrinterGroup,
-        position: number
-    ) {
+    addPrinterToGroup(group: PrinterGroup, position: number) {
       return async (printer: Printer) => {
         if (!this.selectedPrinterGroup._id) return;
 
@@ -239,7 +236,7 @@ export default defineComponent({
         groupId: group._id,
         printerId: printer.id,
       });
-    }
+    },
   },
 });
 </script>

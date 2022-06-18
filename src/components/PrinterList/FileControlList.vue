@@ -15,16 +15,19 @@
 </template>
 
 <script lang="ts" setup>
-import type {PrinterFile} from "@/models/printers/printer-file.model";
-import type {PrinterFileCache} from "@/models/printers/printer-file-cache.model";
+import type { PrinterFile } from "@/models/printers/printer-file.model";
+import type { PrinterFileCache } from "@/models/printers/printer-file-cache.model";
 
 const printerFilesStore = usePrinterFilesStore();
-const {fileList, printerId} = defineProps<{ fileList: PrinterFileCache, printerId: string }>();
+const { fileList, printerId } = defineProps<{
+  fileList: PrinterFileCache;
+  printerId: string;
+}>();
 
 async function deleteFile(file: PrinterFile) {
   fileList.files = await printerFilesStore.deletePrinterFile({
     printerId: printerId,
-    fullPath: file.path
+    fullPath: file.path,
   });
 }
 </script>

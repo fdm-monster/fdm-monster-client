@@ -2,15 +2,13 @@
   <v-row>
     <v-col>
       <v-sheet height="600">
-        <v-calendar dark ref="calendar" type="week">
-        </v-calendar>
+        <v-calendar dark ref="calendar" type="week"> </v-calendar>
       </v-sheet>
     </v-col>
   </v-row>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
 .v-current-time {

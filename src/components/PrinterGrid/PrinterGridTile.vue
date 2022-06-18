@@ -47,7 +47,10 @@
 
 <script lang="ts">
 import type { Printer } from "@/models/printers/printer.model";
-import type {PrinterCurrentJob, PrinterJob} from "@/models/printers/printer-current-job.model";
+import type {
+  PrinterCurrentJob,
+  PrinterJob,
+} from "@/models/printers/printer-current-job.model";
 
 export default defineComponent({
   props: {

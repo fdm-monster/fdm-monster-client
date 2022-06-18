@@ -6,10 +6,10 @@
 </template>
 
 <script lang="ts" setup>
-import type {Printer} from "@/models/printers/printer.model";
+import type { Printer } from "@/models/printers/printer.model";
 
 const printersStore = usePrintersStore();
-const {printer} = defineProps<{ printer: Printer }>();
+const { printer } = defineProps<{ printer: Printer }>();
 
 const printerId = computed(() => {
   return printer.id;

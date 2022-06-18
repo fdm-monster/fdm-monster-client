@@ -1,21 +1,38 @@
 <template>
   <div>
     <v-row v-for="y in rows" :key="y" class="ma-1" no-gutters>
-      <v-col v-for="x in columns" :key="x" :cols="columnWidth" :sm="columnWidth">
+      <v-col
+        v-for="x in columns"
+        :key="x"
+        :cols="columnWidth"
+        :sm="columnWidth"
+      >
         <v-row class="test-top" no-gutters>
           <v-col cols="6">
-            <PrinterGridTile :loading="loading" :printer="getPrinter(x, y, 3)"/>
+            <PrinterGridTile
+              :loading="loading"
+              :printer="getPrinter(x, y, 3)"
+            />
           </v-col>
           <v-col cols="6">
-            <PrinterGridTile :loading="loading" :printer="getPrinter(x, y, 0)"/>
+            <PrinterGridTile
+              :loading="loading"
+              :printer="getPrinter(x, y, 0)"
+            />
           </v-col>
         </v-row>
         <v-row class="test-bottom" no-gutters>
           <v-col cols="6">
-            <PrinterGridTile :loading="loading" :printer="getPrinter(x, y, 2)"/>
+            <PrinterGridTile
+              :loading="loading"
+              :printer="getPrinter(x, y, 2)"
+            />
           </v-col>
           <v-col cols="6">
-            <PrinterGridTile :loading="loading" :printer="getPrinter(x, y, 1)"/>
+            <PrinterGridTile
+              :loading="loading"
+              :printer="getPrinter(x, y, 1)"
+            />
           </v-col>
         </v-row>
       </v-col>
@@ -24,14 +41,18 @@
 </template>
 
 <script lang="ts">
-import {columnCount, rowCount, totalVuetifyColumnCount} from "@/shared/printer-grid.constants";
-import type {PrinterGroup} from "@/models/printers/printer-group.model";
+import {
+  columnCount,
+  rowCount,
+  totalVuetifyColumnCount,
+} from "@/shared/printer-grid.constants";
+import type { PrinterGroup } from "@/models/printers/printer-group.model";
 
 export default defineComponent({
   data: () => ({
     maxColumnUnits: totalVuetifyColumnCount, // Built-in to vuetify
     columns: columnCount, // x-value choice
-    rows: rowCount // y-value choice
+    rows: rowCount, // y-value choice
   }),
   setup: () => {
     return {
@@ -39,8 +60,8 @@ export default defineComponent({
       printersStore: usePrintersStore(),
       groupMatrix: ref<PrinterGroup[][]>([]),
       columnWidth: ref(3), // default value overwritten later
-      loading: ref(true)
-    }
+      loading: ref(true),
+    };
   },
   async mounted() {
     this.calculateGrid();
@@ -73,7 +94,7 @@ export default defineComponent({
       if (!group) return;
 
       const printerInGroup = this.groupMatrix[x][y].printers?.find(
-          (p) => p.location === index.toString()
+        (p) => p.location === index.toString()
       );
 
       if (!printerInGroup) return;
@@ -82,8 +103,8 @@ export default defineComponent({
     },
     onSseMessage() {
       this.updateGridMatrix();
-    }
-  }
+    },
+  },
 });
 </script>
 

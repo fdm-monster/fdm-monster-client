@@ -50,7 +50,7 @@ import {
 } from "@/models/forms/printer-batch-create.form";
 import type { PrintersStore } from "@/models/store/printer-store.model";
 import type { SubscriptionCallbackMutation } from "pinia";
-import {bindWindowEscape} from "@/utils/window-listener.utils";
+import { bindWindowEscape } from "@/utils/window-listener.utils";
 
 export default defineComponent({
   setup: () => {
