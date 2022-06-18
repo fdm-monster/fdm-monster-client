@@ -26,7 +26,7 @@ const router = createRouter({
         },
         {
           path: "user-management",
-          component: UserManagementSettings
+          component: UserManagementSettings,
         },
         {
           path: "printer-groups",
@@ -34,12 +34,12 @@ const router = createRouter({
         },
         {
           path: "system",
-          component: FdmSettings
+          component: FdmSettings,
         },
         {
           path: "other",
-          component: OtherSettings
-        }
+          component: OtherSettings,
+        },
       ],
     },
     // {

@@ -1,20 +1,20 @@
 <template>
   <v-navigation-drawer
-      v-model="drawerOpened"
-      absolute
-      loading="true"
-      right
-      temporary
-      width="500"
-      @close="closeDrawer()"
+    v-model="drawerOpened"
+    absolute
+    loading="true"
+    right
+    temporary
+    width="500"
+    @close="closeDrawer()"
   >
     <v-list-item>
       <v-list-item-avatar>
         <v-btn
-            color="primary"
-            fab
-            @click="openPrinterURL()"
-            @click.middle="openPrinterURL()"
+          color="primary"
+          fab
+          @click="openPrinterURL()"
+          @click.middle="openPrinterURL()"
         >
           {{ avatarInitials }}
         </v-btn>
@@ -23,26 +23,26 @@
         <v-list-item-title>
           {{ storedSideNavPrinter.printerName }}
           <strong
-              v-if="storedSideNavPrinter.printerState.state === 'Operational'"
-              class="float-end"
+            v-if="storedSideNavPrinter.printerState.state === 'Operational'"
+            class="float-end"
           >
             {{ storedSideNavPrinter.printerState.state }}
           </strong>
           <strong
-              v-if="
+            v-if="
               !storedSideNavPrinter.enabled ||
               !storedSideNavPrinter.apiAccessibility.accessible
             "
-              class="float-end"
+            class="float-end"
           >
             OFFLINE/DISABLED
           </strong>
           <strong
-              v-if="
+            v-if="
               storedSideNavPrinter.printerState.state !== 'Operational' &&
               storedSideNavPrinter.apiAccessibility.accessible
             "
-              class="float-end pulsating-red"
+            class="float-end pulsating-red"
           >
             {{ storedSideNavPrinter.printerState.state }}
           </strong>
@@ -53,9 +53,9 @@
             {{ truncateProgress(currentJob.progress) }}%
           </span>
           <v-progress-linear
-              :value="truncateProgress(currentJob.progress)"
-              class="mt-1 mb-1"
-              height="8px"
+            :value="truncateProgress(currentJob.progress)"
+            class="mt-1 mb-1"
+            height="8px"
           >
           </v-progress-linear>
 
@@ -72,17 +72,17 @@
     <v-divider></v-divider>
 
     <v-list
-        v-drop-upload="{ printers: [storedSideNavPrinter] }"
-        dense
-        subheader
+      v-drop-upload="{ printers: [storedSideNavPrinter] }"
+      dense
+      subheader
     >
       <v-list-subheader :inset="true">Commands</v-list-subheader>
 
       <v-list-item
-          :disabled="isStoppable"
-          class="extra-dense-list-item"
-          link
-          @click.prevent.stop="togglePrinterConnection()"
+        :disabled="isStoppable"
+        class="extra-dense-list-item"
+        link
+        @click.prevent.stop="togglePrinterConnection()"
       >
         <v-list-item-avatar start>
           <v-icon>usb</v-icon>
@@ -95,10 +95,10 @@
       </v-list-item>
 
       <v-list-item
-          :disabled="!isStoppable"
-          class="extra-dense-list-item"
-          link
-          @click.prevent.stop="clickStop()"
+        :disabled="!isStoppable"
+        class="extra-dense-list-item"
+        link
+        @click.prevent.stop="clickStop()"
       >
         <v-list-item-avatar>
           <v-icon>stop</v-icon>
@@ -109,10 +109,10 @@
       </v-list-item>
 
       <v-list-item
-          :disabled="!canBeCleared"
-          class="extra-dense-list-item"
-          link
-          @click.prevent.stop="clickClearFiles()"
+        :disabled="!canBeCleared"
+        class="extra-dense-list-item"
+        link
+        @click.prevent.stop="clickClearFiles()"
       >
         <v-list-item-avatar>
           <v-icon>delete</v-icon>
@@ -123,9 +123,9 @@
       </v-list-item>
 
       <v-list-item
-          class="extra-dense-list-item"
-          link
-          @click.prevent.stop="refreshFiles(storedSideNavPrinter)"
+        class="extra-dense-list-item"
+        link
+        @click.prevent.stop="refreshFiles(storedSideNavPrinter)"
       >
         <v-list-item-avatar>
           <v-icon>refresh</v-icon>
@@ -134,9 +134,9 @@
       </v-list-item>
 
       <v-list-item
-          class="extra-dense-list-item"
-          link
-          @click.prevent.stop="clickSettings()"
+        class="extra-dense-list-item"
+        link
+        @click.prevent.stop="clickSettings()"
       >
         <v-list-item-avatar>
           <v-icon>settings</v-icon>
@@ -146,9 +146,8 @@
     </v-list>
     <v-divider></v-divider>
     <v-list
-        v-drop-upload="{ printers: [storedSideNavPrinter] }"
-        dense
-        subheader
+      v-drop-upload="{ printers: [storedSideNavPrinter] }"
+      density="compact"
     >
       <v-list-subheader inset>Files - drag 'n drop!</v-list-subheader>
 
@@ -176,9 +175,9 @@
 
         <v-list-item-action>
           <v-btn
-              :disabled="isFileBeingPrinted(file)"
-              icon="play_arrow"
-              @click="clickPrintFile(file)"
+            :disabled="isFileBeingPrinted(file)"
+            icon="play_arrow"
+            @click="clickPrintFile(file)"
           >
             <v-tooltip activator="parent" anchor="bottom">
               <span>Select & Print</span>
@@ -191,11 +190,11 @@
             {{ file.name }}
             <v-tooltip activator="parent" anchor="start">
               <span>
-                File: {{ file.name }} <br/>
-                Size: {{ formatBytes(file.size) }} <br/>
+                File: {{ file.name }} <br />
+                Size: {{ formatBytes(file.size) }} <br />
                 <strong>{{
-                    isFileBeingPrinted(file) ? "Printing" : "Unused"
-                  }}</strong>
+                  isFileBeingPrinted(file) ? "Printing" : "Unused"
+                }}</strong>
               </span>
             </v-tooltip>
           </span>
@@ -203,9 +202,9 @@
 
         <v-list-item-action>
           <v-btn
-              :disabled="isFileBeingPrinted(file)"
-              icon
-              @click="deleteFile(file)"
+            :disabled="isFileBeingPrinted(file)"
+            icon
+            @click="deleteFile(file)"
           >
             <v-icon color="grey lighten-1">delete</v-icon>
             <v-tooltip activator="parent" anchor="start">
@@ -219,14 +218,14 @@
 </template>
 
 <script lang="ts">
-import {isPrinterStoppable} from "@/utils/printer-state.utils";
-import type {PrinterFileBucket} from "@/models/printers/printer-file-bucket.model";
-import type {Printer} from "@/models/printers/printer.model";
-import type {PrinterFile} from "@/models/printers/printer-file.model";
-import {generateInitials} from "@/shared/noun-adjectives.data";
-import {PrinterFileService, PrintersService} from "@/backend";
-import {formatBytes} from "@/utils/file-size.util";
-import type {PrinterCurrentJob} from "@/models/printers/printer-current-job.model";
+import { isPrinterStoppable } from "@/utils/printer-state.utils";
+import type { PrinterFileBucket } from "@/models/printers/printer-file-bucket.model";
+import type { Printer } from "@/models/printers/printer.model";
+import type { PrinterFile } from "@/models/printers/printer-file.model";
+import { generateInitials } from "@/shared/noun-adjectives.data";
+import { PrinterFileService, PrintersService } from "@/backend";
+import { formatBytes } from "@/utils/file-size.util";
+import type { PrinterCurrentJob } from "@/models/printers/printer-current-job.model";
 
 export default defineComponent({
   setup: () => {
@@ -246,7 +245,7 @@ export default defineComponent({
       return this.storedSideNavPrinter?.id;
     },
     isOperational() {
-      return this.printersStore.isPrinterOperational(this.printerId)
+      return this.printersStore.isPrinterOperational(this.printerId);
     },
     filesListed() {
       return this.shownFileBucket?.files || [];
@@ -264,13 +263,13 @@ export default defineComponent({
       if (viewedPrinter && this.drawerOpened) {
         return generateInitials(viewedPrinter.printerName);
       }
-    }
+    },
   },
   methods: {
     canBeCleared() {
       return (
-          this.shownFileBucket?.files?.length &&
-          this.storedSideNavPrinter?.apiAccessibility.accessible
+        this.shownFileBucket?.files?.length &&
+        this.storedSideNavPrinter?.apiAccessibility.accessible
       );
     },
     formatBytes,
@@ -289,7 +288,9 @@ export default defineComponent({
       if (!this.printerId) return;
 
       if (this.printersStore.isPrinterOperational(this.printerId)) {
-        return await PrintersService.sendPrinterDisconnectCommand(this.printerId);
+        return await PrintersService.sendPrinterDisconnectCommand(
+          this.printerId
+        );
       }
       await PrintersService.sendPrinterConnectCommand(this.printerId);
     },
@@ -340,7 +341,9 @@ export default defineComponent({
       await this.printerFilesStore.clearPrinterFiles(this.printerId);
 
       this.loading = false;
-      this.shownFileBucket = this.printerFilesStore.printerFileBucket(this.printerId);
+      this.shownFileBucket = this.printerFilesStore.printerFileBucket(
+        this.printerId
+      );
     },
     clickSettings() {
       if (!this.storedSideNavPrinter) return;
@@ -359,7 +362,7 @@ export default defineComponent({
     },
     closeDrawer() {
       this.printersStore.setSideNavPrinter(undefined);
-    }
+    },
   },
   watch: {
     async storedSideNavPrinter(viewedPrinter?: Printer, oldVal?: Printer) {
@@ -368,9 +371,9 @@ export default defineComponent({
       if (!viewedPrinter || !printerId) return;
 
       if (
-          !this.shownFileBucket ||
-          viewedPrinter.id !== this.shownFileBucket.printerId ||
-          !oldVal
+        !this.shownFileBucket ||
+        viewedPrinter.id !== this.shownFileBucket.printerId ||
+        !oldVal
       ) {
         await this.refreshFiles(viewedPrinter);
       }
@@ -380,8 +383,8 @@ export default defineComponent({
       if (!newVal) {
         this.printersStore.setSideNavPrinter(undefined);
       }
-    }
-  }
+    },
+  },
 });
 </script>
 

@@ -79,10 +79,10 @@
     <!--      </v-col>-->
     <!--    </v-row>-->
 
-    <v-expansion-panels accordion>
+    <v-expansion-panels variant="accordion">
       <v-expansion-panel>
-        <v-expansion-panel-header>Advanced settings</v-expansion-panel-header>
-        <v-expansion-panel-content>
+        <v-expansion-panel-title>Advanced settings</v-expansion-panel-title>
+        <v-expansion-panel-text>
           <v-col cols="12" md="12">
             <v-select
               v-model="formData.printerHostPrefix"
@@ -100,7 +100,7 @@
               value="ws"
             ></v-select>
           </v-col>
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </v-container>
