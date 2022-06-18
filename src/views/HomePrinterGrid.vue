@@ -65,7 +65,7 @@
             class="ml-2"
             color="primary"
             small
-            @click="$refs.fileUpload.click()"
+            @click="clickSelectFile()"
           >
             Select gcode file
           </v-btn>
@@ -116,6 +116,9 @@ export default defineComponent({
       if (!this.fileUpload?.files) return (this.selectedFile = undefined);
 
       this.selectedFile = this.fileUpload.files[0];
+    },
+    clickSelectFile() {
+      this.fileUpload?.click();
     },
     deselectFile() {
       this.fileUpload!.value = "";

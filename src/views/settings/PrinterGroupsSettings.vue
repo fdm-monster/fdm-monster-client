@@ -101,7 +101,7 @@
         <v-list-item v-for="x in printersPerGroup" :key="x">
           <v-list-item-header v-if="printerInGroup(selectedPrinterGroup, x)">
             <v-list-item-title>
-              {{ printerInGroup(selectedPrinterGroup, x).printerName }}
+              {{ printerInGroup(selectedPrinterGroup, x)!.printerName }}
             </v-list-item-title>
             <v-list-item-subtitle>
               {{ printerLocation(selectedPrinterGroup, x) }}

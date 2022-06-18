@@ -47,7 +47,7 @@ const { testProgress } = defineProps<{ testProgress: TestProgressDetails }>();
 
 const cols = 4;
 
-function isSet(value: boolean) {
-  return value === false || value === true;
+function isSet(value?: boolean) {
+  return value === true || value === false;
 }
 </script>
