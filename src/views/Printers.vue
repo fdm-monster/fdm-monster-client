@@ -13,6 +13,8 @@
       ></v-text-field>
     </v-card-title>
 
+    This page is under construction. <strong>Vuetify 3 has no datatable yet.</strong>
+
     <v-data-table
       :expanded.sync="expanded"
       :headers="tableHeaders"

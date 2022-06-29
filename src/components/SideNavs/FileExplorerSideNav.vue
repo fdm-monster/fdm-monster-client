@@ -3,7 +3,7 @@
     v-model="drawerOpened"
     absolute
     loading="true"
-    right
+    location="right"
     temporary
     width="500"
     @close="closeDrawer()"

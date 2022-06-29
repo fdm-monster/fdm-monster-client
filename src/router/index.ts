@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePrinterGrid from "../views/HomePrinterGrid.vue";
-import Settings from "../views/Settings.vue";
+import HomePrinterGrid from "@/views/HomePrinterGrid.vue";
+import Printers from "@/views/Printers.vue";
+import Settings from "@/views/Settings.vue";
 import UserManagementSettings from "@/views/settings/UserManagementSettings.vue";
 import PrinterGroupsSettings from "@/views/settings/PrinterGroupsSettings.vue";
 import FdmSettings from "@/views/settings/FdmSettings.vue";
@@ -13,6 +14,11 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: HomePrinterGrid,
+    },
+    {
+      path: "/printers",
+      name: "Printers",
+      component: Printers,
     },
     {
       path: "/settings",
