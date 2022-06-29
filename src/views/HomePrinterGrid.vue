@@ -21,7 +21,7 @@
       </v-btn>
     </v-toolbar>
 
-    <v-banner v-drop-upload="{ printers: selectedPrinters }">
+    <v-banner v-drop-upload="{ printers: selectedPrinters }" class="d-flex">
       <v-row>
         <v-col>
           <v-btn color="secondary" small @click="clearSelectedPrinters()"
@@ -43,41 +43,45 @@
             </v-chip>
           </v-chip-group>
         </v-col>
-        <v-col align="right">
-          <strong class="mr-2">Drop or select GCODE to print</strong>
-          <br />
-          <input
-            ref="fileUpload"
-            :multiple="false"
-            accept=".gcode"
-            style="display: none"
-            type="file"
-            @change="updateFilesSelected()"
-          />
-          <v-chip-group v-if="selectedFile" class="float-end">
-            <v-chip close @click:close="deselectFile()">
-              {{ selectedFile.name }}
-              <strong class="pl-1">{{ formatBytes(selectedFile.size) }}</strong>
-            </v-chip>
-          </v-chip-group>
-          <br />
-          <v-btn
-            class="ml-2"
-            color="primary"
-            small
-            @click="clickSelectFile()"
-          >
-            Select gcode file
-          </v-btn>
-          <v-btn
-            :disabled="!selectedFile"
-            class="ml-2"
-            color="green"
-            small
-            @click="uploadFile()"
-          >
-            Upload gcode file
-          </v-btn>
+        <v-col>
+          <v-row justify="end" align="center">
+            <strong class="mr-2">Drop or select GCODE to print</strong>
+            <br />
+            <input
+              ref="fileUpload"
+              :multiple="false"
+              accept=".gcode"
+              style="display: none"
+              type="file"
+              @change="updateFilesSelected()"
+            />
+            <v-chip-group v-if="selectedFile">
+              <v-chip close @click:close="deselectFile()">
+                {{ selectedFile.name }}
+                <strong class="pl-1">{{
+                  formatBytes(selectedFile.size)
+                }}</strong>
+              </v-chip>
+            </v-chip-group>
+
+            <v-btn
+              class="ml-2"
+              color="primary"
+              size="small"
+              @click="clickSelectFile()"
+            >
+              Select gcode file
+            </v-btn>
+            <v-btn
+              :disabled="!selectedFile"
+              class="ml-2"
+              color="gray"
+              size="small"
+              @click="uploadFile()"
+            >
+              Upload gcode file
+            </v-btn>
+          </v-row>
         </v-col>
       </v-row>
     </v-banner>
