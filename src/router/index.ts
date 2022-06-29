@@ -1,20 +1,24 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePrinterGrid from "../views/HomePrinterGrid.vue";
-import Settings from "../views/Settings.vue";
+import HomePrinterGrid from "@/views/HomePrinterGrid.vue";
+import Printers from "@/views/Printers.vue";
+import Settings from "@/views/Settings.vue";
 import UserManagementSettings from "@/views/settings/UserManagementSettings.vue";
 import PrinterGroupsSettings from "@/views/settings/PrinterGroupsSettings.vue";
-import PrinterGrid from "@/components/PrinterGrid/PrinterGrid.vue";
 import FdmSettings from "@/views/settings/FdmSettings.vue";
 import OtherSettings from "@/views/settings/OtherSettings.vue";
-// import PrintScheduling from "@/views/PrintScheduling.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/",
+      name: "Home",
+      component: HomePrinterGrid,
+    },
+    {
       path: "/printers",
       name: "Printers",
-      component: HomePrinterGrid,
+      component: Printers,
     },
     {
       path: "/settings",

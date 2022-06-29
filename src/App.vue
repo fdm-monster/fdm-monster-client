@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <NavigationDrawer />
+    <FileExplorerSideNav />
     <TopBar />
 
     <v-main>
@@ -8,7 +9,6 @@
     </v-main>
   </v-app>
 
-  <FileExplorerSideNav />
   <UpdatePrinterDialog />
   <CreatePrinterGroupDialog />
   <CreatePrinterDialog />
