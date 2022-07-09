@@ -23,7 +23,7 @@
     "axios": "0.27.2",
     "event-source-polyfill": "1.0.26",
     "formvuelate": "3.9.1",
-    "luxon": "2.4.0",
+    "luxon": "2.5.0",
     "pinia": "2.0.14",
     "roboto-fontface": "*",
     "validator": "13.7.0",
