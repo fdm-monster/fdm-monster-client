@@ -24,7 +24,7 @@
     "event-source-polyfill": "1.0.26",
     "formvuelate": "3.9.1",
     "luxon": "3.0.1",
-    "pinia": "2.0.14",
+    "pinia": "2.0.15",
     "roboto-fontface": "*",
     "validator": "13.7.0",
     "vee-validate": "4.5.11",
