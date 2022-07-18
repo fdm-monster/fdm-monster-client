@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@formvuelate/plugin-vee-validate": "3.9.1",
-    "@vee-validate/rules": "4.6.1",
+    "@vee-validate/rules": "4.6.2",
     "@vee-validate/zod": "4.6.1",
     "@vueuse/core": "8.9.4",
     "@vueuse/integrations": "8.9.4",

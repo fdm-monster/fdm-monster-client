@@ -759,10 +759,10 @@
     "@typescript-eslint/types" "5.13.0"
     eslint-visitor-keys "^3.0.0"
 
-"@vee-validate/rules@4.6.1":
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.6.1.tgz#4774b3e9dc5c504c5921bd5b661b823c3c5ee79b"
-  integrity sha512-L9nZob9EFHGz5r07tVaen6QOsL/c+LJpKu5LCtGRhx0S+M3mIIVOTzGbYK5qJrcLSgazXv/IKRWQwdahKw5RlQ==
+"@vee-validate/rules@4.6.2":
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.6.2.tgz#5632ee9693c41e7d342e044337826cabe2af9643"
+  integrity sha512-Tublk1ziB0Dg3LGpR7LlLCkDU8iJVK2RNr3FGiEDbeYM+x3g2y6c6vHfKMkUoN7OCnp0gRyE5aw68/owxGwwfw==
 
 "@vee-validate/zod@4.6.1":
   version "4.6.1"
