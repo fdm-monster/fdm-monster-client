@@ -4179,10 +4179,10 @@ validator@13.7.0:
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.7.0.tgz#4f9658ba13ba8f3d82ee881d3516489ea85c0857"
   integrity sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==
 
-vee-validate@4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-4.6.1.tgz#c86192ef96da528f3a5423de2d960fe744f0b5bf"
-  integrity sha512-8IVy8PHpezerEEsvSBArFXmAN/hymeYzCA8RdDsMiX+NmYtKnkLlgtHS86j6RZ/wGQRKoStNjBOZG07ZVNr53Q==
+vee-validate@4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-4.6.2.tgz#b6e02f3d565bd09968b67fa87d485f880cb987e2"
+  integrity sha512-DOOQn3lLgDQXuLogEaiv0WfaW7lNydODdmtB/RjkodioaJ1hjlwoM0zdsIGzMW/t35p04GdZfWM4UCd0gfTiLg==
   dependencies:
     "@vue/devtools-api" "^6.1.4"
 
