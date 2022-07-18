@@ -764,10 +764,10 @@
   resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.6.2.tgz#5632ee9693c41e7d342e044337826cabe2af9643"
   integrity sha512-Tublk1ziB0Dg3LGpR7LlLCkDU8iJVK2RNr3FGiEDbeYM+x3g2y6c6vHfKMkUoN7OCnp0gRyE5aw68/owxGwwfw==
 
-"@vee-validate/zod@4.6.1":
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/@vee-validate/zod/-/zod-4.6.1.tgz#1abb1b2fad003e0149801a1b582bb14af01b0040"
-  integrity sha512-r+lroGJEcpzCxKeqS8rQF26j5soIF7SOtGepj8xZdlABGiKHh9W/aT1PiWLrAFG38Lsca2r8XQb5sC3Ors3HjA==
+"@vee-validate/zod@4.6.2":
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/@vee-validate/zod/-/zod-4.6.2.tgz#285a61c6ee2bce6d28936e19f33d6816f348f335"
+  integrity sha512-yq2jcbbjN1D23RlhAGfywQ2wNkbjR7elC0L61dymq/GxQpXENXUNoPmskwlbqzcw9huTo6sBWHdkROtqB0uGdw==
 
 "@vitejs/plugin-vue-jsx@2.0.0":
   version "2.0.0"
