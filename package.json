@@ -40,7 +40,7 @@
     "@rushstack/eslint-patch": "1.1.4",
     "@types/event-source-polyfill": "1.0.0",
     "@types/jsdom": "16.2.14",
-    "@types/luxon": "2.4.0",
+    "@types/luxon": "3.0.0",
     "@types/node": "18.0.0",
     "@types/validator": "13.7.4",
     "@types/webfontloader": "1.6.34",
