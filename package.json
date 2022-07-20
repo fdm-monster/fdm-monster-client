@@ -68,7 +68,7 @@
     "vite": "3.0.2",
     "vitest": "0.18.1",
     "vue-cli-plugin-vuetify": "2.5.1",
-    "vue-tsc": "0.38.8",
+    "vue-tsc": "0.38.9",
     "vuetify-loader": "2.0.0-alpha.9"
   }
 }
