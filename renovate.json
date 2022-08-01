@@ -1,12 +1,15 @@
 {
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "assignees": ["davidzwa"],
   "labels": ["renovate"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["@vueuse/*"],
+      "groupName": "@vueuse",
       "automerge": true
     }
   ]
