@@ -119,7 +119,6 @@ import { Printer } from "@/models/printers/printer.model";
 import { PrintCompletionsService } from "@/backend/print-completions.service";
 import { PrinterCompletions } from "@/models/print-completions/print-completions.model";
 import { usePrintersStore } from "@/store/printers.store";
-import { floor } from "colord/helpers";
 
 interface Data {
   loadedCompletions: PrinterCompletions[];
@@ -172,7 +171,6 @@ export default defineComponent({
     },
   },
   methods: {
-    floor,
     async loadCompletions() {
       this.loadedCompletions = [];
       this.shownCompletions = [];
