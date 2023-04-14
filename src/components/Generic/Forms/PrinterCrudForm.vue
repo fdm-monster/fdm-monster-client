@@ -25,20 +25,6 @@
             label="IP/Host*"
           ></v-text-field>
         </validation-provider>
-
-        <validation-provider v-slot="{ errors }" name="Groups">
-          <!-- TODO Groups not defined -->
-          <v-select
-            v-model="formData.groups"
-            :error-messages="errors"
-            :items="printerGroupNames"
-            disabled
-            label="Groups"
-            multiple
-            no-data-text="No groups known"
-            required
-          ></v-select>
-        </validation-provider>
       </v-col>
       <v-col cols="12" md="6">
         <validation-provider v-slot="{ errors }" name="Enabled">
@@ -106,15 +92,6 @@
                 value="ws"
               ></v-select>
             </validation-provider>
-            <validation-provider v-slot="{ errors }" name="Display">
-              <v-checkbox
-                v-model="formData.display"
-                :error-messages="errors"
-                disabled
-                label="Display*"
-                required
-              ></v-checkbox>
-            </validation-provider>
           </v-col>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -156,8 +133,6 @@ export default defineComponent({
       const crudeData = this.printersStore.printer(this.printerId) as CreatePrinter;
       this.formData = PrintersService.convertPrinterToCreateForm(crudeData);
     }
-
-    await this.printersStore.loadPrinterGroups();
   },
   async mounted() {},
   props: {
@@ -167,9 +142,6 @@ export default defineComponent({
     formData: getDefaultCreatePrinter(),
   }),
   computed: {
-    printerGroupNames() {
-      return this.printersStore.printerGroupNames;
-    },
     printerNameRules() {
       return { required: true, max: this.appConstants.maxPrinterNameLength };
     },

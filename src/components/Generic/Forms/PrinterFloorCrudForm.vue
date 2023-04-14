@@ -56,14 +56,12 @@ export default defineComponent({
   },
   async created() {
     if (this.printerFloorId) {
-      const crudeData = this.printersStore.printerFloor(this.printerFloorId);
+      const crudeData = this.printersStore.floor(this.printerFloorId);
       this.formData = FloorService.convertPrinterFloorToCreateForm(crudeData);
-    } else if (this.printersStore.printerFloors?.length) {
-      const maxIndex = Math.max(...this.printersStore.printerFloors.map((pf) => pf.floor)) + 1;
+    } else if (this.printersStore.floors?.length) {
+      const maxIndex = Math.max(...this.printersStore.floors.map((pf) => pf.floor)) + 1;
       this.formData.floor = maxIndex.toString();
     }
-
-    await this.printersStore.loadPrinterGroups();
   },
   async mounted() {},
   props: {
@@ -87,7 +85,7 @@ export default defineComponent({
   watch: {
     [watchedId](val?: string) {
       if (!val) return;
-      const printerFloor = this.printersStore.printerFloor(val);
+      const printerFloor = this.printersStore.floor(val);
       this.formData = FloorService.convertPrinterFloorToCreateForm(printerFloor);
     },
   },

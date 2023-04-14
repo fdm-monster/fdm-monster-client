@@ -59,7 +59,7 @@ export class SocketIoService {
     }
 
     if (message.floors) {
-      this.printersStore.savePrinterFloors(message.floors);
+      this.printersStore.saveFloors(message.floors);
     }
 
     if (message.printers) {

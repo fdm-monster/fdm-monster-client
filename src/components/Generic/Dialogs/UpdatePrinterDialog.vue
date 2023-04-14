@@ -84,9 +84,7 @@ export default defineComponent({
       dialogsStore: useDialogsStore(),
     };
   },
-  async created() {
-    await this.printersStore.loadPrinterGroups();
-  },
+  async created() {},
   async mounted() {},
   props: {},
   data: (): Data => ({

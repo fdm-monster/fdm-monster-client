@@ -53,11 +53,11 @@ export const usePrintersStore = defineStore("Printers", {
         );
       };
     },
-    gridSortedPrinters(state) {
-      if (!state.printers?.length) return;
-      if (!state.selectedFloor) return;
+    gridSortedPrinters() {
+      if (!this.printers?.length) return [];
+      if (!this.selectedFloor) return [];
 
-      const positions = state.selectedFloor.printers;
+      const positions = this.selectedFloor.printers;
 
       // TODO introduce client setting for X/Y size
       const gridY = 4; // X
@@ -72,7 +72,7 @@ export const usePrintersStore = defineStore("Printers", {
           if (!position) {
             row.push(undefined);
           } else {
-            const printer = state.printers.find((p) => p.id === position.printerId);
+            const printer = this.printers.find((p) => p.id === position.printerId);
             row.push(printer || undefined);
           }
         }
@@ -160,7 +160,7 @@ export const usePrintersStore = defineStore("Printers", {
       this.floors.push(data);
       return data;
     },
-    savePrinterFloors(floors: Floor[]) {
+    saveFloors(floors: Floor[]) {
       this.floors = floors.sort((f, f2) => f.floor - f2.floor);
       if (!this.selectedFloor) {
         this.selectedFloor = this.floors[0];
@@ -203,6 +203,11 @@ export const usePrintersStore = defineStore("Printers", {
     async loadPrinters() {
       const data = await PrintersService.getPrinters();
       this.setPrinters(data);
+      return data;
+    },
+    async loadFloors() {
+      const data = await FloorService.getFloors();
+      this.saveFloors(data);
       return data;
     },
     async deletePrinter(printerId: string) {

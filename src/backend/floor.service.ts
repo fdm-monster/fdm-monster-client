@@ -22,7 +22,7 @@ export class FloorService extends BaseService {
     return newFormData;
   }
 
-  static convertCreateFormToPrinterFloor(formData: PreCreateFloor) {
+  static convertCreateFormToFloor(formData: PreCreateFloor) {
     const modifiedData: any = { ...formData };
 
     // Fix the string properties to become int
@@ -32,13 +32,13 @@ export class FloorService extends BaseService {
       throw new Error("Floor number did not convert to number.");
     }
 
-    return modifiedData as PrinterInFloor;
+    return modifiedData as Floor;
   }
 
   static async getFloors() {
     const path = `${ServerApi.floorRoute}/`;
 
-    return await this.getApi<PrinterInFloor[]>(path);
+    return (await this.getApi<Floor[]>(path)) as Floor[];
   }
 
   static async createFloor(floor: Floor) {

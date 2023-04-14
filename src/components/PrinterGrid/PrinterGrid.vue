@@ -16,18 +16,34 @@
       <v-col v-for="x in columns" :key="x" :cols="columnWidth" :sm="columnWidth">
         <v-row class="test-top" no-gutters>
           <v-col cols="6">
-            <PrinterGridTile :printer="getPrinter(x, y, 3)" />
+            <PrinterGridTile
+              :printer="getPrinter(2 * (x - 1), 2 * (y - 1))"
+              :x="2 * (x - 1)"
+              :y="2 * (y - 1)"
+            />
           </v-col>
           <v-col cols="6">
-            <PrinterGridTile :printer="getPrinter(x, y, 0)" />
+            <PrinterGridTile
+              :printer="getPrinter(2 * (x - 1) + 1, 2 * (y - 1))"
+              :x="2 * (x - 1) + 1"
+              :y="2 * (y - 1)"
+            />
           </v-col>
         </v-row>
         <v-row class="test-bottom" no-gutters>
           <v-col cols="6">
-            <PrinterGridTile :printer="getPrinter(x, y, 2)" />
+            <PrinterGridTile
+              :printer="getPrinter(2 * (x - 1), 2 * (y - 1) + 1)"
+              :x="2 * (x - 1)"
+              :y="2 * (y - 1) + 1"
+            />
           </v-col>
           <v-col cols="6">
-            <PrinterGridTile :printer="getPrinter(x, y, 1)" />
+            <PrinterGridTile
+              :printer="getPrinter(2 * (x - 1) + 1, 2 * (y - 1) + 1)"
+              :x="2 * (x - 1) + 1"
+              :y="2 * (y - 1) + 1"
+            />
           </v-col>
         </v-row>
       </v-col>
@@ -39,26 +55,24 @@
 import { defineComponent } from "vue";
 import { sseGroups, sseMessageGlobal } from "@/event-bus/sse.events";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
-import { PrinterGroup } from "@/models/printer-groups/printer-group.model";
-import { columnCount, rowCount, totalVuetifyColumnCount } from "@/constants/printer-grid.constants";
+import {
+  largeGridcolumnCount,
+  largeGridRowCount,
+  totalVuetifyColumnCount,
+} from "@/constants/printer-grid.constants";
 import { useOutletCurrentStore } from "@/store/outlet-current.store";
 import { usePrintersStore } from "@/store/printers.store";
+import { Printer } from "../../models/printers/printer.model";
 
 export default defineComponent({
   components: { PrinterGridTile },
   data(): {
-    columnWidth: number;
     maxColumnUnits: number;
-    columns: number;
-    rows: number;
-    groupMatrix: PrinterGroup[][];
+    printerMatrix: (Printer | undefined)[][];
   } {
     return {
-      columnWidth: 3,
       maxColumnUnits: totalVuetifyColumnCount,
-      columns: columnCount,
-      rows: rowCount,
-      groupMatrix: [],
+      printerMatrix: [],
     };
   },
   setup() {
@@ -70,11 +84,20 @@ export default defineComponent({
   async created() {
     this.calculateGrid();
     await this.printersStore.loadPrinters();
-    await this.printersStore.loadPrinterGroups();
+    await this.printersStore.loadFloors();
 
     this.updateGridMatrix();
   },
   computed: {
+    columnWidth() {
+      return totalVuetifyColumnCount / this.columns;
+    },
+    columns() {
+      return largeGridcolumnCount;
+    },
+    rows() {
+      return largeGridRowCount;
+    },
     printers() {
       return this.printersStore.printers;
     },
@@ -101,22 +124,14 @@ export default defineComponent({
     calculateGrid() {
       this.columnWidth = this.maxColumnUnits / this.columns;
     },
-    getPrinter(col: number, row: number, index: number) {
-      const x = col - 1;
-      const y = this.rows - row;
-
-      if (!this.groupMatrix?.length || !this.groupMatrix[x]) return;
-      const group = this.groupMatrix[x][y];
-      if (!group) return;
-
-      const printerInGroup = this.groupMatrix[x][y].printers?.find(
-        (p) => p.location === index.toString()
-      );
-      if (!printerInGroup) return;
-      return this.printersStore.printer(printerInGroup.printerId);
+    getPrinter(col: number, row: number) {
+      const x = col;
+      const y = row;
+      if (!this.printerMatrix?.length || !this.printerMatrix[x]) return undefined;
+      return this.printerMatrix[x][y];
     },
     updateGridMatrix() {
-      this.groupMatrix = this.printersStore.gridSortedPrinterGroups(4, 4);
+      this.printerMatrix = this.printersStore.gridSortedPrinters;
     },
     onSseMessage() {
       this.updateGridMatrix();

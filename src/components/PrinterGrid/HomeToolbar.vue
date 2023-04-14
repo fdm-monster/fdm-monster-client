@@ -72,7 +72,7 @@ export default defineComponent({
       },
     },
     floors() {
-      return this.printersStore.printerFloors;
+      return this.printersStore.floors;
     },
   },
   methods: {

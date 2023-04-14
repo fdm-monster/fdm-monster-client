@@ -86,12 +86,12 @@ export default defineComponent({
       if (!(await this.isValid())) return;
       const formData = this.formData();
       if (!formData) return;
-      const newPrinterFloorData = FloorService.convertCreateFormToPrinterFloor(formData);
+      const newPrinterFloorData = FloorService.convertCreateFormToFloor(formData);
       await this.printersStore.createPrinterFloor(newPrinterFloorData);
 
       this.$bus.emit(infoMessageEvent, `Printer floor ${newPrinterFloorData.name} created`);
       formData.name = newRandomNamePair();
-      const maxIndex = Math.max(...this.printersStore.printerFloors.map((pf) => pf.floor)) + 1;
+      const maxIndex = Math.max(...this.printersStore.floors.map((f) => f.floor)) + 1;
       formData.floor = maxIndex.toString();
       this.closeDialog();
     },
