@@ -18,7 +18,7 @@
     },
     {
       "paths": ["package.json"],
-      "matchPackageNames": ["vue", "vuex", "vue-router"],
+      "matchPackageNames": ["vue", "vue-router", "vee-validate", "vuetify"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
