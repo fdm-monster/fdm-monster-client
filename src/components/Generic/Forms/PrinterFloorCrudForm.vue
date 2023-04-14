@@ -32,15 +32,15 @@ import { ValidationProvider } from "vee-validate";
 import { AppConstants } from "@/constants/app.constants";
 import {
   getDefaultCreatePrinterFloor,
-  PreCreatePrinterFloor,
+  PreCreateFloor,
 } from "@/models/printer-floor/printer-floor.model";
-import { PrinterFloorService } from "@/backend/printer-floor.service";
+import { FloorService } from "../../../backend/floor.service";
 import { usePrintersStore } from "@/store/printers.store";
 
 const watchedId = "printerFloorId";
 
 interface Data {
-  formData: PreCreatePrinterFloor;
+  formData: PreCreateFloor;
 }
 
 export default defineComponent({
@@ -57,7 +57,7 @@ export default defineComponent({
   async created() {
     if (this.printerFloorId) {
       const crudeData = this.printersStore.printerFloor(this.printerFloorId);
-      this.formData = PrinterFloorService.convertPrinterFloorToCreateForm(crudeData);
+      this.formData = FloorService.convertPrinterFloorToCreateForm(crudeData);
     } else if (this.printersStore.printerFloors?.length) {
       const maxIndex = Math.max(...this.printersStore.printerFloors.map((pf) => pf.floor)) + 1;
       this.formData.floor = maxIndex.toString();
@@ -88,7 +88,7 @@ export default defineComponent({
     [watchedId](val?: string) {
       if (!val) return;
       const printerFloor = this.printersStore.printerFloor(val);
-      this.formData = PrinterFloorService.convertPrinterFloorToCreateForm(printerFloor);
+      this.formData = FloorService.convertPrinterFloorToCreateForm(printerFloor);
     },
   },
 });

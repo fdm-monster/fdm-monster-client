@@ -28,11 +28,11 @@
       <v-col>
         <v-list dense>
           <v-list-item-group v-model="selectedItem">
-            <v-list-item v-for="floor of printerFloors" :key="floor._id">
+            <v-list-item v-for="floor of floors" :key="floor._id">
               <v-list-item-content>
                 <v-list-item-title>{{ floor.name }}</v-list-item-title>
                 <v-list-item-subtitle>
-                  {{ floor.printerGroups.length || 0 }} assigned
+                  {{ floor.printers.length || 0 }} assigned
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action-text> Floor number: {{ floor.floor }}</v-list-item-action-text>
@@ -46,19 +46,19 @@
           <v-hover v-slot="{ hover }">
             <v-toolbar-title>
               <v-edit-dialog
-                v-if="selectedPrinterFloor"
+                v-if="selectedFloor"
                 @open="setEditedPrinterFloorName"
                 @save="updatePrinterFloorName"
               >
                 <v-btn color="secondary">
                   <v-icon v-if="hover" small>edit</v-icon>
-                  {{ selectedPrinterFloor.name }}
+                  {{ selectedFloor.name }}
                 </v-btn>
 
                 <template v-slot:input>
                   <v-text-field
-                    v-model="editedPrinterFloorName"
-                    :return-value.sync="editedPrinterFloorName"
+                    v-model="editedFloorName"
+                    :return-value.sync="editedFloorName"
                     counter
                     label="Edit"
                     single-line
@@ -73,19 +73,19 @@
           <v-hover v-slot="{ hover }">
             <v-toolbar-title>
               <v-edit-dialog
-                v-if="selectedPrinterFloor"
+                v-if="selectedFloor"
                 @open="setEditedPrinterFloorNumber"
                 @save="updatePrinterFloorNumber"
               >
                 <v-btn color="secondary">
                   <v-icon v-if="hover" small>edit</v-icon>
-                  {{ selectedPrinterFloor.floor }}
+                  {{ selectedFloor.floor }}
                 </v-btn>
 
                 <template v-slot:input>
                   <v-text-field
-                    v-model="editedPrinterFloorNumber"
-                    :return-value.sync="editedPrinterFloorNumber"
+                    v-model="editedFloorNumber"
+                    :return-value.sync="editedFloorNumber"
                     label="Edit"
                     single-line
                     type="number"
@@ -97,38 +97,38 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn v-if="selectedPrinterFloor" color="primary" @click="clickDeleteFloor()">
+          <v-btn v-if="selectedFloor" color="primary" @click="clickDeleteFloor()">
             <v-icon>delete</v-icon>
             Delete floor
           </v-btn>
         </v-toolbar>
 
-        <v-list v-if="selectedPrinterFloor">
+        <v-list v-if="selectedFloor">
           <v-list-item>
             <!-- New group -->
             <v-list-item-content>
               <v-select
-                :items="unassignedGroups"
+                :items="unassignedPrinters"
                 item-text="name"
                 label="Not assigned"
                 no-data-text="No printer groups left, create more"
                 outlined
                 return-object
-                @change="addPrinterGroupToFloor(selectedPrinterFloor, $event)"
+                @change="addPrinterToFloor(selectedFloor, $event)"
               ></v-select>
             </v-list-item-content>
           </v-list-item>
 
           <!-- Existing groups -->
-          <v-list-item v-for="x in showAddedGroups" :key="x">
-            <v-list-item-content v-if="printerGroupInFloor(selectedPrinterFloor, x)">
+          <v-list-item v-for="x in showAddedPrinters" :key="x">
+            <v-list-item-content v-if="printerInFloor(selectedFloor, x)">
               <v-list-item-title>
-                {{ printerGroupInFloor(selectedPrinterFloor, x).name }}
+                {{ printerInFloor(selectedFloor, x).printerName }}
               </v-list-item-title>
             </v-list-item-content>
 
-            <v-list-item-action v-if="printerGroupInFloor(selectedPrinterFloor, x)">
-              <v-btn @click="clearPrinterGroupFromFloor(selectedPrinterFloor, x)">
+            <v-list-item-action v-if="printerInFloor(selectedFloor, x)">
+              <v-btn @click="clearPrinterGroupFromFloor(selectedFloor, x)">
                 <v-icon>close</v-icon>
                 Clear
               </v-btn>
@@ -148,20 +148,20 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { PrinterGroup } from "@/models/printer-groups/printer-group.model";
-import { PrinterFloor } from "@/models/printer-floor/printer-floor.model";
+import { Floor } from "@/models/printer-floor/printer-floor.model";
 import { usePrintersStore } from "@/store/printers.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { Printer } from "../../models/printers/printer.model";
 
 interface Data {
-  editedPrinterFloorName: string;
-  editedPrinterFloorNumber: number;
+  editedFloorName: string;
+  editedFloorNumber: number;
   selectedItem: number;
 }
 
 export default defineComponent({
-  name: "PrinterFloorSettings",
+  name: "FloorSettings",
   setup: () => {
     return {
       printersStore: usePrintersStore(),
@@ -171,80 +171,83 @@ export default defineComponent({
   props: {},
   data: (): Data => ({
     selectedItem: 0,
-    editedPrinterFloorName: "",
-    editedPrinterFloorNumber: 0,
+    editedFloorName: "",
+    editedFloorNumber: 0,
   }),
   created() {},
   mounted() {},
   computed: {
-    printerFloors() {
-      return this.printersStore.printerFloors;
+    floors() {
+      return this.printersStore.floors;
     },
-    selectedPrinterFloor() {
-      return this.printersStore.printerFloors[this.selectedItem];
+    selectedFloor() {
+      return this.printersStore.floors[this.selectedItem];
     },
-    showAddedGroups() {
-      return this.selectedPrinterFloor.printerGroups?.length + 1;
+    showAddedPrinters() {
+      return this.selectedFloor.printers?.length + 1;
     },
-    unassignedGroups() {
-      return this.printersStore.floorlessGroups;
+    unassignedPrinters() {
+      return this.printersStore.floorlessPrinters;
     },
   },
   methods: {
-    printerGroupInFloor(floor: PrinterFloor, index: number): PrinterGroup | undefined {
-      if (!floor?.printerGroups) return;
+    printerInFloor(floor: Floor, index: number): Printer | undefined {
+      if (!floor?.printers) return;
 
-      const printerFloorGroup = floor.printerGroups[index - 1];
-      if (!printerFloorGroup) return;
-      return this.printersStore.printerGroup(printerFloorGroup.printerGroupId);
+      const floorPrinter = floor.printers[index - 1];
+      if (!floorPrinter) return;
+      return this.printersStore.printer(floorPrinter.printerId);
     },
     async createFloor() {
       this.dialogsStore.openDialog(DialogName.CreatePrinterFloorDialog);
     },
     setEditedPrinterFloorName() {
-      this.editedPrinterFloorName = this.selectedPrinterFloor.name;
+      this.editedFloorName = this.selectedFloor.name;
     },
     setEditedPrinterFloorNumber() {
-      this.editedPrinterFloorNumber = this.selectedPrinterFloor.floor;
+      this.editedFloorNumber = this.selectedFloor.floor;
     },
     async updatePrinterFloorName() {
-      if (!this.selectedPrinterFloor?._id) return;
-      const { _id: floorId } = this.selectedPrinterFloor;
-      await this.printersStore.updatePrinterFloorName({
+      if (!this.selectedFloor?._id) return;
+      const { _id: floorId } = this.selectedFloor;
+      await this.printersStore.updateFloorName({
         floorId,
-        name: this.editedPrinterFloorName,
+        name: this.editedFloorName,
       });
     },
     async updatePrinterFloorNumber() {
-      if (!this.selectedPrinterFloor?._id) return;
-      const { _id: floorId } = this.selectedPrinterFloor;
+      if (!this.selectedFloor?._id) return;
+      const { _id: floorId } = this.selectedFloor;
       await this.printersStore.updatePrinterFloorNumber({
         floorId,
-        floorNumber: this.editedPrinterFloorNumber,
+        floorNumber: this.editedFloorNumber,
       });
       // Adapt to potential sort change
       this.selectedItem = -1;
     },
     async clickDeleteFloor() {
-      if (!this.selectedPrinterFloor?._id) return;
+      if (!this.selectedFloor?._id) return;
 
-      await this.printersStore.deletePrinterFloor(this.selectedPrinterFloor._id);
+      await this.printersStore.deleteFloor(this.selectedFloor._id);
     },
-    async addPrinterGroupToFloor(floor: PrinterFloor, printerGroup: PrinterGroup) {
-      if (!this.selectedPrinterFloor._id || !printerGroup?._id) return;
+    async addPrinterToFloor(floor: Floor, printer: Printer) {
+      if (!this.selectedFloor._id || !printer?.id) return;
 
-      await this.printersStore.addPrinterGroupToFloor({
-        floorId: this.selectedPrinterFloor._id,
-        printerGroupId: printerGroup._id,
+      // TODO this will fail because X < 0 and Y < 0
+      await this.printersStore.addPrinterToFloor({
+        floorId: this.selectedFloor._id,
+        printerId: printer.id,
+        x: -1,
+        y: -1,
       });
     },
-    async clearPrinterGroupFromFloor(floor: PrinterFloor, index: number) {
-      const printerGroup = this.printerGroupInFloor(floor, index);
-      if (!floor?._id || !printerGroup?._id) return;
+    async clearPrinterGroupFromFloor(floor: Floor, index: number) {
+      const printer = this.printerInFloor(floor, index);
+      if (!floor?._id || !printer?.id) return;
 
-      await this.printersStore.deletePrinterGroupFromFloor({
+      await this.printersStore.deletePrinterFromFloor({
         floorId: floor._id,
-        printerGroupId: printerGroup._id,
+        printerId: printer.id,
       });
     },
   },

@@ -34,7 +34,7 @@
             </td>
             <td>{{ printer.enabled }}</td>
             <td>{{ printer.printerName }}</td>
-            <td>{{ groupOfPrinter(printer.id).name }}</td>
+            <td>{{ floorOfPrinter(printer.id).name }}</td>
           </tr>
         </draggable>
       </template>
@@ -242,8 +242,8 @@ export default defineComponent({
     },
   },
   methods: {
-    groupOfPrinter(printerId: string) {
-      return this.printersStore.groupOfPrinter(printerId);
+    floorOfPrinter(printerId: string) {
+      return this.printersStore.floorOfPrinter(printerId);
     },
     isVirtualFirmware(firmwareTag: string) {
       const firmwareTagUpper = firmwareTag?.toUpperCase();

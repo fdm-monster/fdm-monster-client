@@ -11,7 +11,6 @@
 
     <UpdatePrinterDialog />
     <CreatePrinterDialog />
-    <CreatePrinterGroupDialog />
     <CreatePrinterFloorDialog />
     <PrinterMaintenanceDialog />
     <BatchJsonCreateDialog />
@@ -27,7 +26,6 @@ import ErrorAlert from "@/components/Generic/AlertStack.vue";
 import UpdatePrinterDialog from "@/components/Generic/Dialogs/UpdatePrinterDialog.vue";
 import FileExplorerSideNav from "@/components/Generic/SideNavs/FileExplorerSideNav.vue";
 import CreatePrinterDialog from "@/components/Generic/Dialogs/CreatePrinterDialog.vue";
-import CreatePrinterGroupDialog from "@/components/Generic/Dialogs/CreatePrinterGroupDialog.vue";
 import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinterFloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
 import { useOutletCurrentStore } from "@/store/outlet-current.store";
@@ -49,7 +47,6 @@ export default defineComponent({
     NavigationDrawer,
     UpdatePrinterDialog,
     CreatePrinterDialog,
-    CreatePrinterGroupDialog,
     CreatePrinterFloorDialog,
     PrinterMaintenanceDialog,
     FileExplorerSideNav,

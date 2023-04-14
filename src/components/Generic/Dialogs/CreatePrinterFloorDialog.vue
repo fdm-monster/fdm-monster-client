@@ -36,7 +36,7 @@ import { infoMessageEvent } from "@/event-bus/alert.events";
 
 import { usePrintersStore } from "@/store/printers.store";
 import PrinterFloorCrudForm from "@/components/Generic/Forms/PrinterFloorCrudForm.vue";
-import { PrinterFloorService } from "@/backend/printer-floor.service";
+import { FloorService } from "../../../backend/floor.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
@@ -86,7 +86,7 @@ export default defineComponent({
       if (!(await this.isValid())) return;
       const formData = this.formData();
       if (!formData) return;
-      const newPrinterFloorData = PrinterFloorService.convertCreateFormToPrinterFloor(formData);
+      const newPrinterFloorData = FloorService.convertCreateFormToPrinterFloor(formData);
       await this.printersStore.createPrinterFloor(newPrinterFloorData);
 
       this.$bus.emit(infoMessageEvent, `Printer floor ${newPrinterFloorData.name} created`);

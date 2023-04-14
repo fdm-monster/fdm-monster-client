@@ -54,11 +54,6 @@ export class SocketIoService {
   }
 
   onMessage(message: SocketIoUpdateMessage) {
-    if (message.printerGroups) {
-      this.printersStore.savePrinterGroups(message.printerGroups);
-      this.$bus.emit(sseGroups, message.printerGroups);
-    }
-
     if (message.trackedUploads) {
       this.$bus.emit(uploadMessageEvent, InfoEventType.UPLOAD_BACKEND, message.trackedUploads);
     }
