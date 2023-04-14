@@ -25,13 +25,13 @@
           <v-row>
             <v-col>
               <v-icon>filter_list</v-icon>
-              Filtering {{ filteredFdmPrinters.length }} of {{ floorGroupFdmPrinters.length }} FDM
+              Filtering {{ filteredFdmPrinters.length }} of {{ floorFdmPrinters.length }} FDM
               printers (optional)
             </v-col>
             <v-col>
               <v-select
                 v-model="filteredFdmPrinters"
-                :items="floorGroupFdmPrinters"
+                :items="floorFdmPrinters"
                 clearable
                 item-text="printerName"
                 label="FDM Printers"
