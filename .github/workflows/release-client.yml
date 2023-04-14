@@ -28,7 +28,7 @@ jobs:
   publish:
     needs: checkversion
     runs-on: ubuntu-latest
-    environment: client_dist_release
+    environment: npm-release
     if: needs.check.outputs.foundClientVersion == 'false'
     steps:
       - uses: actions/checkout@v3
@@ -42,8 +42,11 @@ jobs:
         run: |
           echo "CLIENT_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
 
+      # Build bundle
       - run: yarn install --immutable --immutable-cache --check-cache
       - run: yarn run build
+
+      # Create github release
       - name: Create release
         uses: actions/create-release@v1
         id: create_release
@@ -56,13 +59,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - uses: JS-DevTools/npm-publish@v1
-        if: ${{ github.repository.name == 'fdm-monster-client' }}
-        with:
-          dry-run: true
-          token: ${{ secrets.NPM_TOKEN }}
-          package: package.json
-          
       - name: action-zip
         uses: montudor/action-zip@v1.0.0
         with:
@@ -78,6 +74,10 @@ jobs:
           asset_name: dist-client-${{ env.CLIENT_VERSION }}.zip
           asset_content_type: application/zip
 
-
-
-
+      # Publish to NPM
+      - uses: JS-DevTools/npm-publish@v1
+        if: ${{ github.repository.name == 'fdm-monster-client' }}
+        with:
+          dry-run: false
+          token: ${{ secrets.NPM_TOKEN }}
+          package: package.json
