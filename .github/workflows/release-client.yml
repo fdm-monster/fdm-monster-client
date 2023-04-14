@@ -46,6 +46,15 @@ jobs:
       - run: yarn install --immutable --immutable-cache --check-cache
       - run: yarn run build
 
+      # Clear fields that make installing harder
+      - name: Replace JSON Value
+        run: |
+          jq '.dependencies = {}' package.json > tmp.json && mv tmp.json package.json
+          jq '.devDependencies = {}' package.json > tmp.json && mv tmp.json package.json
+      - name: Output package.json
+        run: |
+          cat package.json
+
       # Create github release
       - name: Create release
         uses: actions/create-release@v1
