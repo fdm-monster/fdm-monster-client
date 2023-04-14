@@ -5,7 +5,7 @@
   "lockFileMaintenance": {"enabled": true, "extends": ["schedule:daily"]},
   "packageRules": [
     {
-      "paths": ["client-vue/package.json"],
+      "paths": ["package.json"],
       "matchPackageNames": ["vue", "vue-template-compiler"],
       "matchUpdateTypes": ["minor", "patch", "lockFileMaintenance"],
       "groupName": "vue",
@@ -17,7 +17,7 @@
       "automerge": true
     },
     {
-      "paths": ["client-vue/package.json"],
+      "paths": ["package.json"],
       "matchPackageNames": ["vue", "vuex", "vue-router"],
       "matchUpdateTypes": ["major"],
       "enabled": false
