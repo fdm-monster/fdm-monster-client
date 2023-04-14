@@ -82,7 +82,6 @@ export default defineComponent({
     };
   },
   async created() {
-    this.calculateGrid();
     await this.printersStore.loadPrinters();
     await this.printersStore.loadFloors();
 
@@ -121,9 +120,6 @@ export default defineComponent({
     },
   },
   methods: {
-    calculateGrid() {
-      this.columnWidth = this.maxColumnUnits / this.columns;
-    },
     getPrinter(col: number, row: number) {
       const x = col;
       const y = row;
