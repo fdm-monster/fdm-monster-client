@@ -1,0 +1,24 @@
+.*.swp
+._*
+.DS_Store
+.git
+.hg
+.npmrc
+.lock-wscript
+.svn
+.wafpickle-*
+config.gypi
+CVS
+npm-debug.log
+*.tgz
+
+# Custom
+*.ps1
+scripts
+src
+tests
+public
+.github
+*
+!dist/**/*
+!*.md
