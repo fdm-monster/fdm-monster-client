@@ -76,8 +76,6 @@ jobs:
 
       # Publish to NPM
       - uses: JS-DevTools/npm-publish@v1
-        if: ${{ github.repository.name == 'fdm-monster-client' }}
         with:
-          dry-run: false
           token: ${{ secrets.NPM_TOKEN }}
           package: package.json
