@@ -6,13 +6,12 @@
           <v-row>
             <v-col>
               <v-icon>filter_list</v-icon>
-              Filtering {{ filteredPrinterFloors.length }} of {{ printerFloors.length }} printer
-              floors (optional)
+              Filtering {{ filteredFloors.length }} of {{ floors.length }} floors (optional)
             </v-col>
             <v-col>
               <v-select
-                v-model="filteredPrinterFloors"
-                :items="printerFloors"
+                v-model="filteredFloors"
+                :items="floors"
                 clearable
                 item-text="name"
                 label="Printer Floors"
@@ -26,33 +25,13 @@
           <v-row>
             <v-col>
               <v-icon>filter_list</v-icon>
-              Filtering {{ filteredPrinterGroups.length }} of {{ printerGroups.length }} printer
-              groups (optional)
-            </v-col>
-            <v-col>
-              <v-select
-                v-model="filteredPrinterGroups"
-                :items="printerGroups"
-                clearable
-                item-text="name"
-                label="Printer groups"
-                multiple
-                return-object
-              >
-              </v-select>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col>
-              <v-icon>filter_list</v-icon>
-              Filtering {{ filteredFdmPrinters.length }} of {{ floorGroupFdmPrinters.length }} FDM
+              Filtering {{ filteredFdmPrinters.length }} of {{ floorFdmPrinters.length }} FDM
               printers (optional)
             </v-col>
             <v-col>
               <v-select
                 v-model="filteredFdmPrinters"
-                :items="floorGroupFdmPrinters"
+                :items="floorFdmPrinters"
                 clearable
                 item-text="printerName"
                 label="FDM Printers"
@@ -86,7 +65,6 @@
             <thead>
               <tr>
                 <th class="text-left">Printer name</th>
-                <th class="text-left">Printer group</th>
                 <th class="text-left">Printer floor</th>
                 <th class="text-left">Fail/ Success/ Total</th>
                 <th class="text-left">Last success</th>
@@ -98,8 +76,7 @@
             <tbody>
               <tr v-for="item in shownCompletions" :key="item.name">
                 <td>{{ printer(item._id)?.printerName }}</td>
-                <td>{{ groupOfPrinter(item._id)?.name }}</td>
-                <td>{{ floorOfPrinterGroup(groupOfPrinter(item._id)?._id)?.name }}</td>
+                <td>{{ floorOfPrinter(item._id)?.name }}</td>
                 <td>
                   &#215; {{ item.failureCount }} / &#128504; {{ item.successCount }}
                   <strong>~{{ item.printCount }}</strong>
@@ -137,8 +114,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { PrinterFloor } from "@/models/printer-floor/printer-floor.model";
-import { PrinterGroup } from "@/models/printer-groups/printer-group.model";
+import { Floor } from "@/models/printer-floor/printer-floor.model";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintCompletionsService } from "@/backend/print-completions.service";
 import { PrinterCompletions } from "@/models/print-completions/print-completions.model";
@@ -147,11 +123,9 @@ import { usePrintersStore } from "@/store/printers.store";
 interface Data {
   loadedCompletions: PrinterCompletions[];
   shownCompletions: PrinterCompletions[];
-  floorGroupFdmPrinters: Printer[];
+  floorFdmPrinters: Printer[];
   filteredFdmPrinters: Printer[];
-  filteredPrinterFloors: PrinterFloor[];
-  printerGroups: PrinterGroup[];
-  filteredPrinterGroups: PrinterGroup[];
+  filteredFloors: Floor[];
   printerNameSearch: string;
 }
 
@@ -167,12 +141,10 @@ export default defineComponent({
     return {
       loadedCompletions: [],
       shownCompletions: [],
-      // Final result of all groups/floors
-      floorGroupFdmPrinters: [],
+      // Final result of all floors
+      floorFdmPrinters: [],
       filteredFdmPrinters: [],
-      filteredPrinterFloors: [],
-      printerGroups: [],
-      filteredPrinterGroups: [],
+      filteredFloors: [],
       printerNameSearch: "",
     };
   },
@@ -180,25 +152,16 @@ export default defineComponent({
     await this.loadCompletions();
   },
   computed: {
-    printerFloors() {
-      return this.printersStore.printerFloors;
-    },
-    availablePrinterGroups() {
-      return this.printersStore.printerGroups;
+    floors() {
+      return this.printersStore.floors;
     },
   },
   watch: {
     printerFloors() {
       this.updateFloors();
     },
-    availablePrinterGroups() {
-      this.updateGroups();
-    },
-    filteredPrinterFloors() {
+    filteredFloors() {
       this.updateFloors();
-    },
-    filteredPrinterGroups() {
-      this.updateGroups();
     },
     filteredFdmPrinters() {
       this.updatePrinters();
@@ -217,37 +180,22 @@ export default defineComponent({
     printer(printerId: string) {
       return this.printersStore.printer(printerId);
     },
-    groupOfPrinter(printerId: string) {
-      return this.printersStore.groupOfPrinter(printerId);
-    },
-    floorOfPrinterGroup(printerGroupId: string) {
-      return this.printersStore.floorOfGroup(printerGroupId);
+    floorOfPrinter(printerId: string) {
+      return this.printersStore.floorOfPrinter(printerId);
     },
     updateFloors() {
-      if (!this.filteredPrinterFloors?.length) {
-        this.printerGroups = this.availablePrinterGroups;
-        return;
-      }
-      const flattenedGroupIds = this.filteredPrinterFloors.flatMap((pf) => {
-        return pf.printerGroups.map((pg) => pg.printerGroupId);
-      });
-      this.printerGroups = this.availablePrinterGroups.filter((pg) => {
-        if (!pg._id) return false;
-        return flattenedGroupIds.includes(pg._id);
-      });
-    },
-    updateGroups() {
-      let usedFilter = this.filteredPrinterGroups;
-      if (!this.filteredPrinterGroups.length) {
-        usedFilter = this.printerGroups;
-      }
-      const flattenedPrinterIds = usedFilter.flatMap((pg) => {
-        return pg.printers.map((p) => p.printerId);
-      });
-
-      this.floorGroupFdmPrinters = flattenedPrinterIds.map(
-        (fpId) => this.printersStore.printer(fpId)!
-      );
+      // TODO fix
+      // if (!this.filteredFloors?.length) {
+      //   this.printers = this.availablePrinterGroups;
+      //   return;
+      // }
+      // const flattenedGroupIds = this.filteredFloors.flatMap((f) => {
+      //   return f.printers.map((pg) => pg.printerGroupId);
+      // });
+      // this.printerGroups = this.availablePrinterGroups.filter((pg) => {
+      //   if (!pg._id) return false;
+      //   return flattenedGroupIds.includes(pg._id);
+      // });
     },
     updatePrinters() {
       const pIds = this.filteredFdmPrinters.map((p) => p.id);
@@ -257,7 +205,7 @@ export default defineComponent({
 
       const preSortPrinters = this.printerNameSearch?.length
         ? preSearchPrinters.filter((p) => {
-            const printer = this.floorGroupFdmPrinters.find((f) => f.id === p._id);
+            const printer = this.floorFdmPrinters.find((f) => f.id === p._id);
             if (!printer) return false;
 
             return (printer.printerName + printer.printerURL)

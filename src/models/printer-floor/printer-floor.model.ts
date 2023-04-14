@@ -1,28 +1,30 @@
 import { newRandomNamePair } from "@/constants/noun-adjectives.data";
 
-export interface PrinterFloorGroup {
+export interface PrinterInFloor {
   _id?: string;
-  printerGroupId: string;
+  printerId: string;
+  x: number;
+  y: number;
 }
 
-export interface PrinterFloor {
+export interface Floor {
   __v?: number;
-  _id?: string;
+  _id: string;
   name: string;
   floor: number;
-  printerGroups: PrinterFloorGroup[];
+  printers: PrinterInFloor[];
 }
 
-export interface PreCreatePrinterFloor {
+export interface PreCreateFloor {
   _id?: string;
   name: string;
   floor: string;
-  printerGroups: PrinterFloorGroup[];
+  printers: PrinterInFloor[];
 }
 
-export const getDefaultCreatePrinterFloor = (): PreCreatePrinterFloor => ({
+export const getDefaultCreatePrinterFloor = (): PreCreateFloor => ({
   _id: undefined,
   name: newRandomNamePair(),
   floor: "1",
-  printerGroups: [],
+  printers: [],
 });
