@@ -69,9 +69,9 @@
           {{ item.printerName || item.printerURL }}
         </v-chip>
       </template>
-      <template v-slot:item.group="{ item }">
+      <template v-slot:item.floor="{ item }">
         <v-chip v-if="item.id" color="primary" dark>
-          {{ groupOfPrinter(item.id)?.name }}
+          {{ floorOfPrinter(item.id)?.name }}
         </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
@@ -199,7 +199,7 @@ export default defineComponent({
         sortable: true,
         value: "printerName",
       },
-      { text: "Assigned Group", value: "group", sortable: false },
+      { text: "Floor", value: "floor", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
       { text: "", value: "data-table-expand" },
     ],

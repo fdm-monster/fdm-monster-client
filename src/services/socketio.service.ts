@@ -1,11 +1,14 @@
 import { io, Socket } from "socket.io-client";
-import Vue from "vue";
 import { VueBus } from "vue-bus";
 import {
   SocketIoTestPrinterMessage,
   SocketIoUpdateMessage,
 } from "@/models/sse-messages/printer-sse-message.model";
-import { sseGroups, sseMessageGlobal, sseTestPrinterUpdate } from "@/event-bus/sse.events";
+import {
+  socketIoFloors,
+  sseMessageGlobal,
+  sseTestPrinterUpdate,
+} from "../event-bus/socketio.events";
 import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
 import { updatedPrinterEvent } from "@/event-bus/printer.events";
 import { useOutletCurrentStore } from "@/store/outlet-current.store";
@@ -60,6 +63,7 @@ export class SocketIoService {
 
     if (message.floors) {
       this.printersStore.saveFloors(message.floors);
+      this.$bus.emit(socketIoFloors, message.floors);
     }
 
     if (message.printers) {
@@ -73,7 +77,6 @@ export class SocketIoService {
         this.$bus.emit(updatedPrinterEvent(p.id), p);
       });
     }
-
     const outletStore = useOutletCurrentStore();
     if (message.outletCurrentValues) {
       outletStore.setOutletCurrentValues(message.outletCurrentValues);
