@@ -52,7 +52,7 @@ import { generateInitials } from "@/constants/noun-adjectives.data";
 import { infoMessageEvent } from "@/event-bus/alert.events";
 import { usePrintersStore } from "@/store/printers.store";
 import { Printer } from "@/models/printers/printer.model";
-import { sseTestPrinterUpdate } from "@/event-bus/sse.events";
+import { sseTestPrinterUpdate } from "../../../event-bus/socketio.events";
 import {
   SocketIoTestPrinterMessage,
   TestProgressDetails,

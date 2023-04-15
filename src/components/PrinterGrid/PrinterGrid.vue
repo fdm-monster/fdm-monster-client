@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { sseGroups, sseMessageGlobal } from "@/event-bus/sse.events";
+import { socketIoFloors } from "../../event-bus/socketio.events";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
 import {
   largeGridcolumnCount,
@@ -129,15 +129,15 @@ export default defineComponent({
     updateGridMatrix() {
       this.printerMatrix = this.printersStore.gridSortedPrinters;
     },
-    onSseMessage() {
+    onSocketIoFloorMessage() {
       this.updateGridMatrix();
     },
   },
   async mounted() {
-    this.$bus.on(sseGroups, this.onSseMessage);
+    this.$bus.on(socketIoFloors, this.onSocketIoFloorMessage);
   },
   beforeDestroy() {
-    this.$bus.off(sseMessageGlobal, this.onSseMessage);
+    this.$bus.off(socketIoFloors, this.onSocketIoFloorMessage);
   },
 });
 </script>

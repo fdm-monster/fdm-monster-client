@@ -49,7 +49,7 @@
 import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
 import { Printer } from "@/models/printers/printer.model";
-import { sseTestPrinterUpdate } from "@/event-bus/sse.events";
+import { sseTestPrinterUpdate } from "../../../event-bus/socketio.events";
 import {
   SocketIoTestPrinterMessage,
   TestProgressDetails,

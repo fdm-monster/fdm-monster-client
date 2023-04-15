@@ -73,7 +73,7 @@ export const usePrintersStore = defineStore("Printers", {
             row.push(undefined);
           } else {
             const printer = this.printers.find((p) => p.id === position.printerId);
-            row.push(printer || undefined);
+            row.push(printer);
           }
         }
       }
@@ -164,6 +164,10 @@ export const usePrintersStore = defineStore("Printers", {
       this.floors = floors.sort((f, f2) => f.floor - f2.floor);
       if (!this.selectedFloor) {
         this.selectedFloor = this.floors[0];
+      } else {
+        const floorId = this.selectedFloor?._id;
+        const foundFloor = this.floors.find((f) => f._id === floorId);
+        this.selectedFloor = foundFloor ? this.floors[0] : foundFloor;
       }
     },
     async changeSelectedFloorByIndex(selectedPrinterFloorIndex: number) {
