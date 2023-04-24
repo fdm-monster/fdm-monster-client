@@ -1,6 +1,6 @@
 <template>
   <v-toolbar flat>
-    <v-toolbar-title>Printer Floors</v-toolbar-title>
+    <v-toolbar-title>Floors</v-toolbar-title>
     <v-btn-toggle
       :value="selectedFloorToggleIndex"
       class="ml-7"
