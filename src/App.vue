@@ -31,7 +31,7 @@ import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMainte
 import { useUploadsStore } from "@/store/uploads.store";
 import { usePrintersStore } from "@/store/printers.store";
 import { useServerSettingsStore } from "@/store/server-settings.store";
-import { SocketIoService } from "@/services/socketio.service";
+import { SocketIoService } from "./shared/socketio.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
 
