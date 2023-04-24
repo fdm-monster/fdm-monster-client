@@ -1,17 +1,5 @@
 <template>
   <div>
-    <v-row v-if="outletCurrentValues" class="ma-1" no-gutters>
-      <v-col v-for="x in columns" :key="x" style="margin-left: 20px">
-        <h3 v-if="selectedFloorLevel === 1">
-          <v-icon>bolt</v-icon>
-          {{ x === 1 || x === 2 ? outletCurrentValues.rack12 : outletCurrentValues.rack34 }}A / 16A
-        </h3>
-        <h3 v-else>
-          <v-icon>bolt</v-icon>
-          {{ outletCurrentValues.highRack }}A / 16A
-        </h3>
-      </v-col>
-    </v-row>
     <v-row v-for="y in rows" :key="y" class="ma-1" no-gutters>
       <v-col v-for="x in columns" :key="x" :cols="columnWidth" :sm="columnWidth">
         <v-row class="test-top" no-gutters>
@@ -60,7 +48,6 @@ import {
   largeGridRowCount,
   totalVuetifyColumnCount,
 } from "@/constants/printer-grid.constants";
-import { useOutletCurrentStore } from "@/store/outlet-current.store";
 import { usePrintersStore } from "@/store/printers.store";
 import { Printer } from "../../models/printers/printer.model";
 
@@ -77,7 +64,6 @@ export default defineComponent({
   },
   setup() {
     return {
-      outletCurrentStore: useOutletCurrentStore(),
       printersStore: usePrintersStore(),
     };
   },
@@ -102,21 +88,6 @@ export default defineComponent({
     },
     selectedFloorLevel() {
       return this.printersStore.selectedFloor?.floor;
-    },
-    outletCurrentValues() {
-      const outletValues = this.outletCurrentStore.outletCurrentValues;
-      if (!outletValues) return null;
-      if (!Object.keys(outletValues).includes("11-k2-prusa-rekhoog")) return null;
-
-      const highRack = outletValues["11-k2-prusa-rekhoog"].value;
-      const rack34 = outletValues["3-prusa-rek3laag-rek4laag"].value;
-      const rack12 = outletValues["8-prusa-rek1laag-rek2laag"].value;
-
-      return {
-        highRack,
-        rack34,
-        rack12,
-      };
     },
   },
   methods: {

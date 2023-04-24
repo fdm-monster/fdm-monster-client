@@ -7,7 +7,7 @@
       <v-toolbar-title>FDM Monster Settings</v-toolbar-title>
     </v-toolbar>
     <v-list subheader three-line>
-      <v-list-item>
+      <v-list-item v-if="!whitelistSettingsHidden()">
         <v-list-item-content>
           <v-list-item-title>IP Whitelist</v-list-item-title>
           <v-list-item-subtitle>
@@ -130,6 +130,7 @@ import { infoMessageEvent } from "@/event-bus/alert.events";
 import { PrinterFileCleanSettings } from "@/models/server-settings/printer-file-clean-settings.model";
 import { usePrintersStore } from "@/store/printers.store";
 import { isValidIPOrMask } from "@/utils/validation.utils";
+import { whitelistSettingsHidden } from "../../constants/experimental.constants";
 
 interface Data {
   ipAddress: string;
@@ -166,6 +167,9 @@ export default defineComponent({
   mounted() {},
   computed: {},
   methods: {
+    whitelistSettingsHidden() {
+      return whitelistSettingsHidden;
+    },
     removeIpWhitelist(removedIp: string) {
       this.whitelistedIpAddresses = this.whitelistedIpAddresses.filter(
         (ip) => ip.toLowerCase() !== removedIp.toLowerCase()

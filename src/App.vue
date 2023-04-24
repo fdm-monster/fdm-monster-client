@@ -28,11 +28,10 @@ import FileExplorerSideNav from "@/components/Generic/SideNavs/FileExplorerSideN
 import CreatePrinterDialog from "@/components/Generic/Dialogs/CreatePrinterDialog.vue";
 import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinterFloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
-import { useOutletCurrentStore } from "@/store/outlet-current.store";
 import { useUploadsStore } from "@/store/uploads.store";
 import { usePrintersStore } from "@/store/printers.store";
 import { useServerSettingsStore } from "@/store/server-settings.store";
-import { SocketIoService } from "@/services/socketio.service";
+import { SocketIoService } from "./shared/socketio.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
 
@@ -57,7 +56,6 @@ export default defineComponent({
     return {
       uploadsStore: useUploadsStore(),
       printersStore: usePrintersStore(),
-      outletCurrentStore: useOutletCurrentStore(),
       serverSettingsStore: useServerSettingsStore(),
       dialogsStore: useDialogsStore(),
     };

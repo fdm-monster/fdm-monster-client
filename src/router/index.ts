@@ -6,9 +6,9 @@ import Settings from "@/views/SettingsView.vue";
 import About from "@/views/AboutView.vue";
 import PrintTimeline from "@/views/PrintTimelineView.vue";
 import FdmSettings from "@/components/Settings/FdmSettings.vue";
-import OtherSettings from "@/components/Settings/OtherSettings.vue";
+import ServerRelatedSettings from "@/components/Settings/ServerRelatedSettings.vue";
 import UserManagementSettings from "@/components/Settings/UserManagementSettings.vue";
-import FloorSettings from "../components/Settings/FloorSettings.vue";
+import FloorSettings from "@/components/Settings/FloorSettings.vue";
 
 Vue.use(VueRouter);
 
@@ -44,8 +44,8 @@ const routes: Array<RouteConfig> = [
         component: FdmSettings,
       },
       {
-        path: "other",
-        component: OtherSettings,
+        path: "server-related",
+        component: ServerRelatedSettings,
       },
     ],
   },
