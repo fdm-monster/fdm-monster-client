@@ -4,20 +4,10 @@
       <v-avatar>
         <v-icon>settings</v-icon>
       </v-avatar>
-      <v-toolbar-title>Other Settings</v-toolbar-title>
+      <v-toolbar-title>Server related</v-toolbar-title>
     </v-toolbar>
     <v-list subheader three-line>
-      <v-subheader>Other Settings</v-subheader>
-
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Other Settings Subgroup</v-list-item-title>
-          <v-list-item-subtitle>
-            Some other settings will come here
-            <br />
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
+      <v-subheader>Commands and Server Settings</v-subheader>
 
       <v-list-item>
         <v-list-item-content>

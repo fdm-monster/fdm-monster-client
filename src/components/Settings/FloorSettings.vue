@@ -104,7 +104,7 @@
         </v-toolbar>
 
         <v-list v-if="selectedFloor">
-          <v-list-item>
+          <v-list-item v-if="!floorPrinterAssignmentHidden()">
             <!-- New group -->
             <v-list-item-content>
               <v-select
@@ -133,12 +133,6 @@
                 Clear
               </v-btn>
             </v-list-item-action>
-            <v-list-item-action v-else>
-              <v-btn color="primary" disabled>
-                <v-icon>add</v-icon>
-                Assign
-              </v-btn>
-            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-col>
@@ -153,6 +147,7 @@ import { usePrintersStore } from "@/store/printers.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { Printer } from "../../models/printers/printer.model";
+import { floorPrinterAssignmentHidden } from "../../constants/experimental.constants";
 
 interface Data {
   editedFloorName: string;
@@ -191,6 +186,9 @@ export default defineComponent({
     },
   },
   methods: {
+    floorPrinterAssignmentHidden() {
+      return floorPrinterAssignmentHidden;
+    },
     printerInFloor(floor: Floor, index: number): Printer | undefined {
       if (!floor?.printers) return;
 

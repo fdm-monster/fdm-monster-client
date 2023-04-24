@@ -64,7 +64,7 @@ export default defineComponent({
         path: "/settings/user-management",
       },
       { title: "FDM Monster settings", icon: "image", path: "/settings/system" },
-      { title: "Other", icon: "help", path: "/settings/other" },
+      { title: "Other", icon: "help", path: "/settings/server-related" },
     ],
   }),
   computed: {},
