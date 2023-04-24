@@ -14,24 +14,6 @@
       </v-btn>
     </v-btn-toggle>
     <v-spacer></v-spacer>
-
-    <div align="center" class="mt-4 ml-2">
-      <v-checkbox
-        v-model="bedTempOverrideEnabled"
-        label="Override BedTemp (0-100 degr)"
-        value="bedTempOverrideEnabled"
-      ></v-checkbox>
-    </div>
-    <div align="center" class="mt-8 ml-2">
-      <v-text-field
-        v-model="bedTempOverride"
-        :disabled="!bedTempOverrideEnabled"
-        max="100"
-        min="0"
-        outlined
-        type="number"
-      />
-    </div>
   </v-toolbar>
 </template>
 
@@ -55,22 +37,6 @@ export default defineComponent({
     };
   },
   computed: {
-    bedTempOverrideEnabled: {
-      get() {
-        return this.printersStore.bedTempOverride;
-      },
-      set(value: boolean) {
-        this.printersStore.setBedTempOverride(value);
-      },
-    },
-    bedTempOverride: {
-      get() {
-        return this.printersStore.bedTemp;
-      },
-      set(value: number) {
-        this.printersStore.setBedTemp(value);
-      },
-    },
     floors() {
       return this.printersStore.floors;
     },

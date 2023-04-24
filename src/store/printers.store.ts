@@ -7,7 +7,6 @@ import { PrinterFileService, PrintersService } from "@/backend";
 import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
 import { FloorService } from "../backend/floor.service";
 import { PrinterJobService } from "@/backend/printer-job.service";
-import { defaultBedTemp, defaultBedTempOverride } from "@/constants/app.constants";
 
 interface State {
   printers: Printer[];
@@ -16,8 +15,6 @@ interface State {
   floors: Floor[];
   selectedFloor?: Floor;
 
-  bedTempOverride: boolean;
-  bedTemp: number | null;
   sideNavPrinter?: Printer;
   updateDialogPrinter?: Printer;
   selectedPrinters: Printer[];
@@ -32,8 +29,6 @@ export const usePrintersStore = defineStore("Printers", {
     floors: [],
     selectedFloor: undefined,
 
-    bedTempOverride: defaultBedTempOverride,
-    bedTemp: defaultBedTemp,
     sideNavPrinter: undefined,
     updateDialogPrinter: undefined,
     selectedPrinters: [],
@@ -123,16 +118,6 @@ export const usePrintersStore = defineStore("Printers", {
     },
   },
   actions: {
-    setBedTemp(bedTemp: number = 50) {
-      this.bedTemp = bedTemp;
-    },
-    setBedTempOverride(bedTempOverride: boolean) {
-      this.bedTempOverride = bedTempOverride;
-    },
-    resetBedTempOverride() {
-      this.bedTemp = defaultBedTemp;
-      this.bedTempOverride = defaultBedTempOverride;
-    },
     async createPrinter(newPrinter: CreatePrinter) {
       const data = await PrintersService.createPrinter(newPrinter);
       this.printers.push(data);
@@ -375,9 +360,7 @@ export const usePrintersStore = defineStore("Printers", {
         return;
       }
 
-      const bedTemp = this.bedTempOverride ? this.bedTemp : null;
-      await PrinterFileService.selectAndPrintFile(printerId, fullPath, true, bedTemp);
-      this.resetBedTempOverride();
+      await PrinterFileService.selectAndPrintFile(printerId, fullPath, true);
     },
   },
 });

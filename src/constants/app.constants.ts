@@ -18,6 +18,3 @@ export const generateAppConstants = (): Readonly<AppConstants> =>
     maxPrinterGroupLocationY: 4,
     minPrinterFloorNameLength: 3,
   }) as Readonly<AppConstants>;
-
-export const defaultBedTempOverride = false;
-export const defaultBedTemp = 30;

@@ -28,7 +28,6 @@ import FileExplorerSideNav from "@/components/Generic/SideNavs/FileExplorerSideN
 import CreatePrinterDialog from "@/components/Generic/Dialogs/CreatePrinterDialog.vue";
 import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinterFloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
-import { useOutletCurrentStore } from "@/store/outlet-current.store";
 import { useUploadsStore } from "@/store/uploads.store";
 import { usePrintersStore } from "@/store/printers.store";
 import { useServerSettingsStore } from "@/store/server-settings.store";
@@ -57,7 +56,6 @@ export default defineComponent({
     return {
       uploadsStore: useUploadsStore(),
       printersStore: usePrintersStore(),
-      outletCurrentStore: useOutletCurrentStore(),
       serverSettingsStore: useServerSettingsStore(),
       dialogsStore: useDialogsStore(),
     };

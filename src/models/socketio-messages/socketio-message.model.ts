@@ -29,13 +29,6 @@ export interface UploadStates {
   failed: TrackedUpload[];
 }
 
-export interface OutletCurrentValues {
-  [k: string]: {
-    value: number;
-    time: string;
-  };
-}
-
 export interface SocketIoTestPrinterMessage {
   testPrinter: Printer;
   testProgress: TestProgressDetails;
@@ -45,5 +38,4 @@ export interface SocketIoUpdateMessage {
   printers: Printer[];
   trackedUploads: UploadStates;
   floors: Floor[];
-  outletCurrentValues: OutletCurrentValues;
 }

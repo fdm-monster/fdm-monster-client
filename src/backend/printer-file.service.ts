@@ -25,14 +25,9 @@ export class PrinterFileService extends BaseService {
     return (await this.getApi(path)) as PrinterFileCache;
   }
 
-  static async selectAndPrintFile(
-    printerId: string,
-    filePath: string,
-    print = true,
-    bedTemp: number | null = null
-  ) {
+  static async selectAndPrintFile(printerId: string, filePath: string, print = true) {
     const path = ServerApi.printerFilesSelectAndPrintRoute(printerId);
-    return await this.postApi(path, { filePath, print, bedTemp });
+    return await this.postApi(path, { filePath, print });
   }
 
   static async uploadStubFile(printerId: string, files: File[]) {
@@ -69,8 +64,6 @@ export class PrinterFileService extends BaseService {
     commands: FileUploadCommands = {
       select: true,
       print: true,
-      overrideBedTemp: false,
-      bedTemp: null,
     }
   ) {
     const path = ServerApi.printerFilesUploadRoute(printer.id);
@@ -84,9 +77,6 @@ export class PrinterFileService extends BaseService {
       }
       if (commands.print) {
         formData.append("print", "true");
-      }
-      if (commands.overrideBedTemp && !!commands.bedTemp) {
-        formData.append("bedTemp", commands.bedTemp.toString());
       }
     }
     formData.append("files[0]", file);

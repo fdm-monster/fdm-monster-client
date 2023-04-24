@@ -53,7 +53,7 @@ import { sseTestPrinterUpdate } from "../../../event-bus/socketio.events";
 import {
   SocketIoTestPrinterMessage,
   TestProgressDetails,
-} from "@/models/sse-messages/printer-sse-message.model";
+} from "../../../models/socketio-messages/socketio-message.model";
 import { PrintersService } from "@/backend";
 import { generateInitials } from "@/constants/noun-adjectives.data";
 import { updatedPrinterEvent } from "@/event-bus/printer.events";

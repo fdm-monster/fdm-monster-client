@@ -37,9 +37,7 @@ const bindDropConditionally = (el: HTMLElement, printers: Printer[], context?: V
         convertedUploads = convertPrinterMultiFileToQueue(
           firstPrinter,
           clonedFiles,
-          printedFilename,
-          printersStore.bedTempOverride,
-          printersStore.bedTemp
+          printedFilename
         );
       } else {
         if (clonedFiles.length > 1) {
@@ -50,15 +48,12 @@ const bindDropConditionally = (el: HTMLElement, printers: Printer[], context?: V
         convertedUploads = convertMultiPrinterFileToQueue(printers, clonedFile, {
           select: true,
           print: true,
-          overrideBedTemp: printersStore.bedTempOverride,
-          bedTemp: printersStore.bedTemp,
         });
       }
 
       uploadsStore.queueUploads(convertedUploads);
 
       printersStore.clearSelectedPrinters();
-      printersStore.resetBedTempOverride();
     };
   } else {
     el.ondrop = async (e) => {

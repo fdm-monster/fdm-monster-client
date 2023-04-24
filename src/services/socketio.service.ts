@@ -3,7 +3,7 @@ import { VueBus } from "vue-bus";
 import {
   SocketIoTestPrinterMessage,
   SocketIoUpdateMessage,
-} from "@/models/sse-messages/printer-sse-message.model";
+} from "../models/socketio-messages/socketio-message.model";
 import {
   socketIoFloors,
   sseMessageGlobal,
@@ -11,7 +11,6 @@ import {
 } from "../event-bus/socketio.events";
 import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
 import { updatedPrinterEvent } from "@/event-bus/printer.events";
-import { useOutletCurrentStore } from "@/store/outlet-current.store";
 import { usePrintersStore } from "@/store/printers.store";
 import { apiBase } from "@/backend/base.service";
 
@@ -76,10 +75,6 @@ export class SocketIoService {
         if (!p.id) return;
         this.$bus.emit(updatedPrinterEvent(p.id), p);
       });
-    }
-    const outletStore = useOutletCurrentStore();
-    if (message.outletCurrentValues) {
-      outletStore.setOutletCurrentValues(message.outletCurrentValues);
     }
   }
 }

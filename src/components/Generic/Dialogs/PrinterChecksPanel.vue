@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { TestProgressDetails } from "@/models/sse-messages/printer-sse-message.model";
+import { TestProgressDetails } from "../../../models/socketio-messages/socketio-message.model";
 
 interface Data {
   cols: 4;
