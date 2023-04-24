@@ -22,7 +22,6 @@
       </v-col>
       <v-col>
         <RefreshFilesAction :printer="printer" class="d-flex justify-end" />
-        <PrinterDeleteAction :printer="printer" class="d-flex justify-end" />
       </v-col>
     </v-row>
 
@@ -34,7 +33,6 @@
 import { defineComponent, PropType } from "vue";
 import FileControlList from "@/components/PrinterList/FileControlList.vue";
 import { Printer } from "@/models/printers/printer.model";
-import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
 import RefreshFilesAction from "@/components/Generic/Actions/RefreshFilesAction.vue";
 import { usePrintersStore } from "@/store/printers.store";
 
@@ -46,7 +44,6 @@ export default defineComponent({
   name: "PrinterDetails",
   components: {
     FileControlList,
-    PrinterDeleteAction,
     RefreshFilesAction,
   },
   setup: () => {

@@ -24,33 +24,30 @@
       show-expand
       @click:row="clickRow"
     >
-      <template v-if="reorder" v-slot:body="props">
-        <draggable :list="props.items" tag="tbody">
-          <slot></slot>
-          <tr v-for="(printer, index) in props.items" :key="index">
-            <td>
-              <v-icon class="reorder-row-icon">reorder</v-icon>
-              {{ printer.sortIndex }}
-            </td>
-            <td>{{ printer.enabled }}</td>
-            <td>{{ printer.printerName }}</td>
-            <td>{{ floorOfPrinter(printer.id).name }}</td>
-          </tr>
-        </draggable>
+      <template v-slot:no-results>
+        <div class="mt-4 mb-4">
+          <h3>No printer has been found. Create one here:</h3>
+          <PrinterCreateAction />
+        </div>
+      </template>
+      <template v-slot:no-data>
+        <div class="mt-4 mb-4">
+          <h3>No printer has been created yet. Create one here:</h3>
+          <PrinterCreateAction />
+        </div>
       </template>
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Filtering {{ printers.length || 0 }} printers</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-switch v-model="reorder" class="mt-5 mr-3" dark label="Sort mode" />
-
-          <v-btn class="ml-3" color="primary" type="button" @click="openImportJsonPrintersDialog()">
-            Import JSON Printers
-          </v-btn>
-
+          <v-toolbar-title>Showing {{ printers.length || 0 }} printers</v-toolbar-title>
           <v-btn class="ml-3" color="primary" type="button" @click="openCreatePrinterDialog()">
+            <v-icon>add</v-icon>
             Create Printer
           </v-btn>
+          <v-btn class="ml-3" color="primary" type="button" @click="openImportJsonPrintersDialog()">
+            <v-icon>publish</v-icon>
+            Import JSON Printers
+          </v-btn>
+          <v-spacer></v-spacer>
         </v-toolbar>
       </template>
       <template v-slot:item.enabled="{ item }">
@@ -79,6 +76,7 @@
         <PrinterConnectionAction :printer="item" />
         <PrinterEmergencyStopAction :printer="item" />
         <SyncPrinterNameAction :printer="item" />
+        <PrinterDeleteAction :printer="item" />
         <PrinterSettingsAction :printer="item" v-on:update:show="openEditDialog(item)" />
       </template>
       <template v-slot:expanded-item="{ headers, item }">
@@ -89,6 +87,7 @@
     </v-data-table>
 
     <v-data-table
+      v-if="firmwareUpdateSection()"
       key="id"
       :headers="firmwareTableHeaders"
       :items="firmwareUpdateStates"
@@ -131,7 +130,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Printer } from "@/models/printers/printer.model";
-import draggable from "vuedraggable";
 import { PrintersService } from "@/backend/printers.service";
 import PrinterDetails from "@/components/PrinterList/PrinterDetails.vue";
 import PrinterUrlAction from "@/components/Generic/Actions/PrinterUrlAction.vue";
@@ -147,9 +145,11 @@ import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameA
 import { usePrintersStore } from "@/store/printers.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { firmwareUpdateSection } from "../constants/experimental.constants";
+import PrinterCreateAction from "../components/Generic/Actions/PrinterCreateAction.vue";
+import PrinterDeleteAction from "../components/Generic/Actions/PrinterDeleteAction.vue";
 
 interface Data {
-  reorder: boolean;
   showJsonImportDialog: boolean;
   search: string;
   expanded: Printer[];
@@ -162,12 +162,13 @@ interface Data {
 export default defineComponent({
   name: "PrintersView",
   components: {
+    PrinterDeleteAction,
     PrinterDetails,
-    draggable,
     BatchJsonCreateDialog,
     PrinterUrlAction,
     PrinterSettingsAction,
     PrinterEmergencyStopAction,
+    PrinterCreateAction,
     SyncPrinterNameAction,
     PrinterConnectionAction,
   },
@@ -179,7 +180,6 @@ export default defineComponent({
   },
   props: {},
   data: (): Data => ({
-    reorder: false,
     firmwareUpdateStates: [],
     firmwareReleases: [],
     showJsonImportDialog: false,
@@ -242,6 +242,9 @@ export default defineComponent({
     },
   },
   methods: {
+    firmwareUpdateSection() {
+      return firmwareUpdateSection;
+    },
     floorOfPrinter(printerId: string) {
       return this.printersStore.floorOfPrinter(printerId);
     },

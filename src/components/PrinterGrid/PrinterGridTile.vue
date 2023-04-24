@@ -1,100 +1,115 @@
 <template>
-  <v-card
-    v-drop-upload="{ printers: [printer] }"
-    :class="{ 'tile-selected': selected, 'tile-unselected': unselected, 'tile-setup': printer }"
-    :disabled="!printer"
-    :style="{ 'background-color': printerStateColor }"
-    class="tile"
-    outlined
-    tile
-    @click="selectPrinter()"
-  >
-    <v-container v-if="printer" class="tile-inner">
-      <small class="small-resized-font">
-        {{ printer.printerName }}
-      </small>
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn class="float-right d-inline d-xl-none" icon v-bind="attrs" v-on="on">
-            <v-icon>more_vert</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item :close-on-click="true" @click="clickInfo()">
-            <v-icon>info</v-icon>
-            &nbsp;Details
-          </v-list-item>
-          <v-list-item :close-on-click="true" @click="clickOpenPrinterURL()">
-            <v-icon>directions</v-icon>
-            &nbsp;Visit OctoPrint
-          </v-list-item>
-          <v-list-item :close-on-click="true" @click="clickOpenSettings()">
-            <v-icon>settings</v-icon>
-            &nbsp;Edit Printer
-          </v-list-item>
-          <v-list-item :close-on-click="true" @click="clickEmergencyStop()">
-            <v-icon>stop</v-icon>
-            &nbsp;Emergency stop
-          </v-list-item>
-        </v-list>
-      </v-menu>
-
-      <v-btn class="float-right d-none d-xl-inline" icon @click.prevent.stop="clickInfo()">
-        <v-icon>info</v-icon>
-      </v-btn>
-      <v-btn class="float-right d-none d-xl-inline" icon @click.prevent.stop="clickEmergencyStop()">
-        <v-icon>stop</v-icon>
-      </v-btn>
-      <br />
-
-      <v-tooltip
-        :disabled="!printer.disabledReason"
-        close-delay="100"
-        color="danger"
-        open-delay="0"
-        top
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <small
-            class="xsmall-resized-font text--secondary d-lg-inline d-none"
-            v-bind="attrs"
-            v-on="on"
-          >
-            <span v-if="printer.disabledReason">
-              <small> MAINTENANCE</small>
-              <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
-            </span>
-            <span v-else>
-              <small>{{ printer.printerState.state?.toUpperCase() }}</small>
-            </span>
-          </small>
-        </template>
-        Maintenance reason: <br />
-        {{ printer.disabledReason }}
-      </v-tooltip>
-
-      <v-tooltip close-delay="1000" open-delay="0" right>
-        <template v-slot:activator="{ on, attrs }">
-          <div
-            :style="{ background: printerFilamentColorRgba }"
-            class="d-flex justify-end filament-abs-border"
-            v-bind="attrs"
-            v-on="on"
-          ></div>
-        </template>
-        <span>{{ printerFilamentColorName }}</span>
-      </v-tooltip>
-    </v-container>
-
-    <v-progress-linear
-      v-if="printer && printer.currentJob"
-      :value="printer.currentJob.progress"
-      absolute
-      bottom
-      color="green"
+  <div v-drop-printer-position="{ x, y, printerSet: printer }">
+    <v-card
+      v-drop-upload="{ printers: [printer] }"
+      :class="{ 'tile-selected': selected, 'tile-unselected': unselected, 'tile-setup': printer }"
+      :disabled="!printer"
+      :style="{
+        'background-color':
+          !gridStore.gridEditMode || !printer ? printerStateColor : 'rgba(1,1,1,0)',
+      }"
+      class="tile"
+      outlined
+      tile
+      @click="selectOrUnplacePrinter()"
     >
-    </v-progress-linear>
-  </v-card>
+      <v-container v-if="printer" class="tile-inner">
+        <small class="small-resized-font">
+          {{ printer.printerName }}
+        </small>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="float-right d-inline d-xl-none" icon v-bind="attrs" v-on="on">
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item :close-on-click="true" @click="clickInfo()">
+              <v-icon>info</v-icon>
+              &nbsp;Details
+            </v-list-item>
+            <v-list-item :close-on-click="true" @click="clickOpenPrinterURL()">
+              <v-icon>directions</v-icon>
+              &nbsp;Visit OctoPrint
+            </v-list-item>
+            <v-list-item :close-on-click="true" @click="clickOpenSettings()">
+              <v-icon>settings</v-icon>
+              &nbsp;Edit Printer
+            </v-list-item>
+            <v-list-item :close-on-click="true" @click="clickEmergencyStop()">
+              <v-icon>stop</v-icon>
+              &nbsp;Emergency stop
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <div v-if="!gridStore.gridEditMode" class="float-right d-none d-xl-inline">
+          <v-btn icon @click.prevent.stop="clickEmergencyStop()">
+            <v-icon>dangerous</v-icon>
+          </v-btn>
+          <v-btn icon @click.prevent.stop="clickInfo()">
+            <v-icon>menu_open</v-icon>
+          </v-btn>
+        </div>
+        <strong v-else class="float-end">
+          <v-icon>disabled_visible</v-icon>
+          Click to clear
+        </strong>
+        <br />
+
+        <v-tooltip
+          :disabled="!printer.disabledReason"
+          close-delay="100"
+          color="danger"
+          open-delay="0"
+          top
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <small
+              class="xsmall-resized-font text--secondary d-lg-inline d-none"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <span v-if="printer.disabledReason">
+                <small> MAINTENANCE</small>
+                <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
+              </span>
+              <span v-else>
+                <small>{{ printer.printerState.state?.toUpperCase() }}</small>
+              </span>
+            </small>
+          </template>
+          Maintenance reason: <br />
+          {{ printer.disabledReason }}
+        </v-tooltip>
+
+        <v-tooltip v-if="filamentColorParse()" close-delay="1000" open-delay="0" right>
+          <template v-slot:activator="{ on, attrs }">
+            <div
+              :style="{ background: printerFilamentColorRgba }"
+              class="d-flex justify-end filament-abs-border"
+              v-bind="attrs"
+              v-on="on"
+            ></div>
+          </template>
+          <span>{{ printerFilamentColorName }}</span>
+        </v-tooltip>
+      </v-container>
+      <v-container v-else-if="gridStore.gridEditMode">
+        <v-icon size="48">add</v-icon>
+        Place printer
+      </v-container>
+      <!--      <v-container v-else>  </v-container>-->
+
+      <v-progress-linear
+        v-if="printer && printer.currentJob"
+        :value="printer.currentJob.progress"
+        absolute
+        bottom
+        color="green"
+      >
+      </v-progress-linear>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -106,6 +121,9 @@ import { PrintersService } from "@/backend";
 import { usePrintersStore } from "@/store/printers.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { useGridStore } from "../../store/grid.store";
+import { FloorService } from "../../backend/floor.service";
+import { filamentColorParse } from "../../constants/experimental.constants";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 const maintenanceColor = "black";
@@ -117,10 +135,13 @@ export default defineComponent({
   components: {},
   props: {
     printer: Object as PropType<Printer>,
+    x: Number,
+    y: Number,
   },
   setup() {
     return {
       printersStore: usePrintersStore(),
+      gridStore: useGridStore(),
       dialogsStore: useDialogsStore(),
     };
   },
@@ -162,6 +183,9 @@ export default defineComponent({
     },
   },
   methods: {
+    filamentColorParse() {
+      return filamentColorParse;
+    },
     clickInfo() {
       this.printersStore.setSideNavPrinter(this.printer);
     },
@@ -175,12 +199,24 @@ export default defineComponent({
     },
     async clickEmergencyStop() {
       if (!this.printer) return;
-      if (confirm("Are you sure to abort the print? Please reconnect after.")) {
+      if (
+        confirm("Are you sure to abort the print in Emergency Stop mode? Please reconnect after.")
+      ) {
         await CustomGcodeService.postEmergencyM112Command(this.printer.id);
       }
     },
-    selectPrinter() {
-      if (!this.printer) return;
+    async selectOrUnplacePrinter() {
+      if (!this.printer?.id) return;
+
+      if (this.gridStore.gridEditMode) {
+        const floorId = this.printersStore.selectedFloor?._id;
+        if (!floorId) throw new Error("Cant clear printer, floor not selected");
+        await FloorService.deletePrinterFromFloor(
+          this.printersStore.selectedFloor!._id,
+          this.printer.id
+        );
+      }
+
       this.printersStore.toggleSelectedPrinter(this.printer);
     },
     printerFilamentColor() {

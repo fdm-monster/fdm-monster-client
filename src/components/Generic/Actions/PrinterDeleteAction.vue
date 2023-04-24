@@ -1,7 +1,6 @@
 <template>
-  <v-btn color="warning" outlined @click="deletePrinter()">
+  <v-btn class="ma-2" color="primary" fab small @click.prevent.stop="deletePrinter()">
     <v-icon>delete</v-icon>
-    <span class="d-none d-lg-inline">Delete printer</span>
   </v-btn>
 </template>
 
@@ -30,6 +29,7 @@ export default defineComponent({
   },
   methods: {
     async deletePrinter() {
+      if (!confirm("Are you sure to delete this printer?")) return;
       await this.printersStore.deletePrinter(this.printerId);
     },
   },

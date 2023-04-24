@@ -9,7 +9,7 @@ import { defineComponent, PropType } from "vue";
 import { Printer } from "@/models/printers/printer.model";
 
 export default defineComponent({
-  name: "PrinterUrlAction",
+  name: "PrinterSettingsAction",
   props: {
     printer: Object as PropType<Printer>,
   },
