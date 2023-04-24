@@ -13,6 +13,7 @@ import { registerFileDropDirective } from "@/directives/file-upload.directive";
 import { errorEvent } from "@/event-bus/alert.events";
 import { createPinia, PiniaVuePlugin } from "pinia";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
+import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
@@ -20,6 +21,7 @@ Vue.use(VueBus);
 
 configureVeeValidate();
 registerFileDropDirective();
+registerPrinterPlaceDirective();
 
 window.addEventListener("unhandledrejection", (event) => {
   if (event.reason?.isAxiosError) {

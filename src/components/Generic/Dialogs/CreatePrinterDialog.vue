@@ -13,7 +13,7 @@
         <v-card-text>
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
-              <PrinterCrudForm ref="printerCrudForm" @onChange="onFormChange" />
+              <PrinterCrudForm ref="printerCrudForm" />
             </v-col>
 
             <PrinterChecksPanel v-if="showChecksPanel" :cols="4" :test-progress="testProgress">

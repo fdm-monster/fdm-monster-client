@@ -1,7 +1,7 @@
 <template>
-  <BaseDialog :id="dialogId" max-width="500px">
+  <BaseDialog :id="dialogId" max-width="700px">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
-      <v-card>
+      <v-card class="pa-4">
         <v-card-title>
           <span class="text-h5"> Batch Import JSON printers </span>
         </v-card-title>
@@ -13,6 +13,7 @@
                   v-model="formData.json"
                   :error-messages="errors"
                   data-vv-validate-on="change|blur"
+                  rows="10"
                   @change="updatePrinterCount()"
                 >
                   <template v-slot:label>
@@ -20,9 +21,10 @@
                   </template>
                 </v-textarea>
               </validation-provider>
-              {{ numPrinters }} printers
+              {{ numPrinters }} printers found
             </v-col>
           </v-row>
+          <v-btn class="mt-2">Validate printers</v-btn>
         </v-card-text>
         <v-card-actions>
           <em class="red--text">* indicates required field</em>
@@ -118,7 +120,6 @@ export default defineComponent({
       const answer = confirm(`Are you sure to import ${numPrinters} printers?`);
       if (answer) {
         printers.forEach((p) => {
-          p.enabled = false;
           if (p["_id"]) {
             delete p["_id"];
           }
@@ -129,6 +130,13 @@ export default defineComponent({
           if (p["settingsApperance"]) {
             p.settingsAppearance = p["settingsApperance"];
             delete p["settingsApperance"];
+          }
+          if (p["name"]) {
+            if (!p.settingsAppearance) {
+              p.settingsAppearance = {};
+            }
+            p.settingsAppearance.name = p["name"];
+            delete p["name"];
           }
         });
         await PrintersService.batchImportPrinters(printers);

@@ -6,7 +6,7 @@
       <v-row style="margin-bottom: -5px">
         <v-col style="padding: 5px 0 0 15px">
           <v-chip-group class="d-inline-block">
-            <v-chip v-if="selectedPrinters.length === 0" small>No printers selected</v-chip>
+            <v-chip v-if="selectedPrinters.length === 0" small>No selected printers</v-chip>
             <v-chip
               v-for="selectedPrinter in selectedPrinters"
               :key="selectedPrinter.id"

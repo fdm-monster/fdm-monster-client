@@ -1,5 +1,21 @@
 <template>
   <div>
+    <div v-if="gridStore.gridEditMode" class="ml-4 mt-4 mb-0" style="cursor: move">
+      <span class="pr-4">
+        Drag and drop {{ printersStore.floorlessPrinters.length }} unplaced printer(s) here:
+      </span>
+      <div
+        v-for="printer of printersStore.floorlessPrinters"
+        :key="printer.id"
+        class="d-inline-block text-center mr-1 mb-1"
+        draggable="true"
+        style="width: 100px; height: 40px; border: 1px solid gray; border-radius: 2px"
+        @dragstart="onDragStart(printer, $event)"
+      >
+        <strong text-center>{{ printer.printerName }}</strong>
+      </div>
+      <div class="mt-4">Clear printers by clicking on their tile below:</div>
+    </div>
     <v-row v-for="y in rows" :key="y" class="ma-1" no-gutters>
       <v-col v-for="x in columns" :key="x" :cols="columnWidth" :sm="columnWidth">
         <v-row class="test-top" no-gutters>
@@ -50,6 +66,8 @@ import {
 } from "@/constants/printer-grid.constants";
 import { usePrintersStore } from "@/store/printers.store";
 import { Printer } from "../../models/printers/printer.model";
+import { useGridStore } from "../../store/grid.store";
+import { dragAppId, INTENT, PrinterPlace } from "../../constants/drag.constants";
 
 export default defineComponent({
   components: { PrinterGridTile },
@@ -65,6 +83,7 @@ export default defineComponent({
   setup() {
     return {
       printersStore: usePrintersStore(),
+      gridStore: useGridStore(),
     };
   },
   async created() {
@@ -91,6 +110,19 @@ export default defineComponent({
     },
   },
   methods: {
+    onDragStart(printer: Printer, ev: DragEvent) {
+      if (!ev.dataTransfer) return;
+      if (!printer.id) return;
+
+      ev.dataTransfer.setData(
+        "text",
+        JSON.stringify({
+          appId: dragAppId,
+          intent: INTENT.PRINTER_PLACE,
+          printerId: printer.id,
+        } as PrinterPlace)
+      );
+    },
     getPrinter(col: number, row: number) {
       const x = col;
       const y = row;
