@@ -209,8 +209,7 @@ export const usePrintersStore = defineStore("Printers", {
       if (viewedPrinterId) {
         this.sideNavPrinter = printers.find((p) => p.id === viewedPrinterId);
       }
-      this.printers = printers;
-      this.printers.sort((a: Printer, b: Printer) =>
+      this.printers = printers.sort((a: Printer, b: Printer) =>
         a.printerName?.toLowerCase()?.localeCompare(b?.printerName?.toLowerCase()) ? 1 : -1
       );
     },
