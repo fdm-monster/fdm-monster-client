@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import HomePrinterGrid from "@/views/PrinterGridView.vue";
-import Printers from "@/views/PrintersView.vue";
+import PrintersView from "@/components/PrinterList/PrintersView.vue";
 import Settings from "@/views/SettingsView.vue";
 import About from "@/views/AboutView.vue";
 import PrintTimeline from "@/views/PrintTimelineView.vue";
@@ -20,8 +20,8 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/printers",
-    name: "Printers",
-    component: Printers,
+    name: "PrintersView",
+    component: PrintersView,
   },
   {
     path: "/settings",

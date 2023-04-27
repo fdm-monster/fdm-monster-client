@@ -145,9 +145,9 @@ import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameA
 import { usePrintersStore } from "@/store/printers.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { firmwareUpdateSection } from "../constants/experimental.constants";
-import PrinterCreateAction from "../components/Generic/Actions/PrinterCreateAction.vue";
-import PrinterDeleteAction from "../components/Generic/Actions/PrinterDeleteAction.vue";
+import { firmwareUpdateSection } from "@/constants/experimental.constants";
+import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
+import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
 
 interface Data {
   showJsonImportDialog: boolean;
@@ -186,12 +186,6 @@ export default defineComponent({
     search: "",
     expanded: [],
     tableHeaders: [
-      {
-        text: "Order",
-        align: "start",
-        sortable: true,
-        value: "sortIndex",
-      },
       { text: "Enabled", value: "enabled" },
       {
         text: "Printer Name",
