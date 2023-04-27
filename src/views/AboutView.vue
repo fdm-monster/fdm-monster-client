@@ -25,6 +25,11 @@
         to set a base for FDM Monster Client<strong>©</strong> - the webapp.
         <br />
         <br />
+        <strong>Your server's version is: {{ serverVersion }}</strong>
+        <br />
+        <strong>Your clients's version is: {{ version }}</strong>
+        <br />
+        <br />
         <v-btn color="primary" @click="updateClientDist()"> Update Client</v-btn>
       </v-card-text>
       <v-card-title>
@@ -85,17 +90,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { AppService } from "../backend/app.service";
+import { version } from "../../package.json";
 
 export default defineComponent({
   name: "AboutView",
   components: {},
   setup: () => {
-    return {};
+    return {
+      serverVersion: ref(""),
+      version,
+    };
   },
   async created() {},
-  async mounted() {},
+  async mounted() {
+    this.serverVersion = (await AppService.getVersion()).version;
+  },
   props: {},
   computed: {},
   methods: {
