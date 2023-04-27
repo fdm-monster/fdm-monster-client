@@ -120,7 +120,9 @@ export const usePrintersStore = defineStore("Printers", {
     async createPrinter(newPrinter: CreatePrinter) {
       const data = await PrintersService.createPrinter(newPrinter);
       this.printers.push(data);
-      this.printers.sort((a: Printer, b: Printer) => (a.sortIndex > b.sortIndex ? 1 : -1));
+      this.printers.sort((a: Printer, b: Printer) =>
+        a.printerName?.toLowerCase()?.localeCompare(b?.printerName?.toLowerCase()) ? 1 : -1
+      );
       return data;
     },
     async createTestPrinter(newPrinter: CreatePrinter) {
@@ -128,7 +130,6 @@ export const usePrintersStore = defineStore("Printers", {
       this.testPrinters = data;
       return data;
     },
-    // TODO renamed
     toggleSelectedPrinter(printer: Printer) {
       const selectedPrinterIndex = this.selectedPrinters.findIndex((sp) => sp.id == printer.id);
       if (selectedPrinterIndex === -1) {

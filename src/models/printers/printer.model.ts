@@ -33,8 +33,8 @@ export interface Printer {
   currentJob: PrinterCurrentJob | PrinterJob;
 
   enabled: boolean;
+  dateAdded: number;
   disabledReason: string;
-  sortIndex: number;
   printerName: string;
   webSocketURL: string;
   apiKey: string;

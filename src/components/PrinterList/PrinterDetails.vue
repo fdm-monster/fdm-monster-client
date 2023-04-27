@@ -17,7 +17,6 @@
         WebSocket: {{ printer.webSocketState?.colour }} <br />
         Printer: {{ printer.printerState?.state }} <br />
         Files: {{ getPrinterFileCount() }} <br />
-        Sort Index: {{ printer.sortIndex }} <br />
         Id: {{ printer.id }}
       </v-col>
       <v-col>

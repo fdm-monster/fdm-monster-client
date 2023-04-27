@@ -10,7 +10,6 @@ export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
   printerHostPort: 80,
   websocketPrefix: "ws",
   printerHostName: "",
-  sortIndex: 0,
   apiKey: "",
   enabled: true,
   stepSize: 1,
@@ -23,7 +22,6 @@ export interface PreCreatePrinter {
   id?: string; // Only in case of update
 
   enabled: boolean;
-  sortIndex: number;
   printerName: string;
 
   websocketPrefix: WebSocketProtocol;
@@ -44,7 +42,6 @@ export interface CreatePrinter {
   id?: string; // Only in case of update
 
   enabled: boolean;
-  sortIndex: number;
   printerName: string;
 
   webSocketURL: string;
