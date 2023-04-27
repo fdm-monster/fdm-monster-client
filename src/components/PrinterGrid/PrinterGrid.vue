@@ -60,7 +60,7 @@ import { defineComponent } from "vue";
 import { socketIoFloors } from "../../event-bus/socketio.events";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
 import {
-  largeGridcolumnCount,
+  largeGridColumnCount,
   largeGridRowCount,
   totalVuetifyColumnCount,
 } from "@/constants/printer-grid.constants";
@@ -97,7 +97,7 @@ export default defineComponent({
       return totalVuetifyColumnCount / this.columns;
     },
     columns() {
-      return largeGridcolumnCount;
+      return largeGridColumnCount;
     },
     rows() {
       return largeGridRowCount;
