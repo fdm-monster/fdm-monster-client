@@ -198,6 +198,14 @@
     <v-list v-drop-upload="{ printers: [storedSideNavPrinter] }" dense subheader>
       <v-subheader inset>Files - drag 'n drop!</v-subheader>
 
+      <v-text-field
+        v-model="fileSearch"
+        class="ml-5 mr-5"
+        label="Search files..."
+        clearable
+        prepend-icon="search"
+      />
+
       <!-- Empty file list -->
       <v-list-item v-if="!filesListed.length">
         <v-list-item-avatar>
@@ -211,7 +219,13 @@
       <!-- Loading file list-->
       <v-progress-linear v-if="loading" indeterminate></v-progress-linear>
 
-      <v-list-item v-for="(file, index) in filesListed" :key="index" link>
+      <v-list-item
+        v-for="(file, index) in filesListed"
+        :key="index"
+        dense
+        link
+        style="padding-top: 0px"
+      >
         <v-list-item-avatar>
           <v-tooltip left>
             <template v-slot:activator="{ on, attrs }">
@@ -296,6 +310,7 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialogsStore } from "@/store/dialog.store";
 
 interface Data {
+  fileSearch?: string;
   shownFileBucket?: PrinterFileBucket;
   drawerOpened: boolean;
   loading: boolean;
@@ -314,6 +329,7 @@ export default defineComponent({
   async mounted() {},
   props: {},
   data: (): Data => ({
+    fileSearch: undefined,
     shownFileBucket: undefined,
     drawerOpened: false,
     loading: true,
@@ -335,7 +351,13 @@ export default defineComponent({
       return !!this.storedSideNavPrinter?.disabledReason?.length;
     },
     filesListed() {
-      return this.shownFileBucket?.files || [];
+      return (
+        this.shownFileBucket?.files.filter((f) =>
+          this.fileSearch?.length
+            ? `${f.name}${f.path}`.toLowerCase().includes(this.fileSearch)
+            : true
+        ) || []
+      );
     },
     isStoppable() {
       if (!this.storedSideNavPrinter) return false;
