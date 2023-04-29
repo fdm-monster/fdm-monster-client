@@ -175,6 +175,7 @@ export default defineComponent({
       this.loadedCompletions = [];
       this.shownCompletions = [];
       this.loadedCompletions = await PrintCompletionsService.getCompletions();
+      this.updateFloors();
       this.updatePrinters();
     },
     printer(printerId: string) {
@@ -184,27 +185,26 @@ export default defineComponent({
       return this.printersStore.floorOfPrinter(printerId);
     },
     updateFloors() {
-      // TODO fix
-      // if (!this.filteredFloors?.length) {
-      //   this.printers = this.availablePrinterGroups;
-      //   return;
-      // }
-      // const flattenedGroupIds = this.filteredFloors.flatMap((f) => {
-      //   return f.printers.map((pg) => pg.printerGroupId);
-      // });
-      // this.printerGroups = this.availablePrinterGroups.filter((pg) => {
-      //   if (!pg._id) return false;
-      //   return flattenedGroupIds.includes(pg._id);
-      // });
+      if (!this.filteredFloors?.length) {
+        this.floorFdmPrinters = this.printersStore.printers;
+        return;
+      }
+      const flattenedPrinterIds = this.filteredFloors.flatMap((f) => {
+        return f.printers.map((fp) => fp.printerId);
+      });
+      this.floorFdmPrinters = this.printersStore.printers.filter((fp) => {
+        if (!fp.id) return false;
+        return flattenedPrinterIds.includes(fp.id);
+      });
     },
     updatePrinters() {
       const pIds = this.filteredFdmPrinters.map((p) => p.id);
-      const preSearchPrinters = pIds.length
+      const preSearchPrints = pIds.length
         ? this.loadedCompletions.filter((c) => pIds.includes(c._id))
         : this.loadedCompletions;
 
-      const preSortPrinters = this.printerNameSearch?.length
-        ? preSearchPrinters.filter((p) => {
+      const preSortPrints = this.printerNameSearch?.length
+        ? preSearchPrints.filter((p) => {
             const printer = this.floorFdmPrinters.find((f) => f.id === p._id);
             if (!printer) return false;
 
@@ -212,9 +212,9 @@ export default defineComponent({
               .toLowerCase()
               .includes(this.printerNameSearch.toLowerCase());
           })
-        : preSearchPrinters;
+        : preSearchPrints;
 
-      this.shownCompletions = preSortPrinters.sort((p1, p2) => {
+      this.shownCompletions = preSortPrints.sort((p1, p2) => {
         if (p1.failureCount === p2.failureCount) {
           return p1.printCount > p2.printCount ? -1 : 1;
         }
