@@ -4,7 +4,7 @@ import HomePrinterGrid from "@/views/PrinterGridView.vue";
 import PrintersView from "@/components/PrinterList/PrintersView.vue";
 import Settings from "@/views/SettingsView.vue";
 import About from "@/views/AboutView.vue";
-import PrintTimeline from "@/views/PrintTimelineView.vue";
+import PrintStatisticsView from "@/components/PrintStatistics/PrintStatisticsView.vue";
 import FdmSettings from "@/components/Settings/FdmSettings.vue";
 import ServerRelatedSettings from "@/components/Settings/ServerRelatedSettings.vue";
 import UserManagementSettings from "@/components/Settings/UserManagementSettings.vue";
@@ -50,9 +50,9 @@ const routes: Array<RouteConfig> = [
     ],
   },
   {
-    path: "/scheduling",
-    name: "Print Timeline",
-    component: PrintTimeline,
+    path: "/statistics",
+    name: "Print Statistics",
+    component: PrintStatisticsView,
   },
   {
     path: "/about",
