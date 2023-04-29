@@ -45,7 +45,7 @@ export default defineComponent({
         ["home", "Devices", "/"],
         ["printer", "Printers", "/printers"],
         ["settings", "Settings", "/settings"],
-        ["timeline", "PrintScheduling", "/scheduling"],
+        ["timeline", "PrintStatistics", "/statistics"],
         ["contact_support", "About", "/about"],
       ],
     };
