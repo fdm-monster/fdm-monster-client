@@ -39,13 +39,17 @@
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Showing {{ printers.length || 0 }} printers</v-toolbar-title>
-          <v-btn class="ml-3" color="primary" type="button" @click="openCreatePrinterDialog()">
+          <v-btn class="ml-3" outlined type="button" @click="openImportJsonPrintersDialog()">
+            <v-icon>publish</v-icon>
+            Import OctoFarm Printers
+          </v-btn>
+          <v-btn class="ml-3" outlined type="button" @click="openCreatePrinterDialog()">
             <v-icon>add</v-icon>
             Create Printer
           </v-btn>
-          <v-btn class="ml-3" color="primary" type="button" @click="openImportJsonPrintersDialog()">
+          <v-btn class="ml-3" color="primary" type="button" @click="openYamlImportExportDialog()">
             <v-icon>publish</v-icon>
-            Import JSON Printers
+            Import/Export YAML
           </v-btn>
           <v-spacer></v-spacer>
         </v-toolbar>
@@ -122,8 +126,6 @@
         </v-btn>
       </template>
     </v-data-table>
-
-    <BatchJsonCreateDialog :show.sync="showJsonImportDialog" />
   </v-card>
 </template>
 
@@ -135,7 +137,6 @@ import PrinterDetails from "@/components/PrinterList/PrinterDetails.vue";
 import PrinterUrlAction from "@/components/Generic/Actions/PrinterUrlAction.vue";
 import PrinterSettingsAction from "@/components/Generic/Actions/PrinterSettingsAction.vue";
 import PrinterConnectionAction from "@/components/Generic/Actions/PrinterConnectionAction.vue";
-import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
 import PrinterEmergencyStopAction from "@/components/Generic/Actions/PrinterEmergencyStopAction.vue";
 import { PrinterFirmwareUpdateService } from "@/backend/printer-firmware-update.service";
 import { PrusaFirmwareReleaseModel } from "@/models/plugins/firmware-updates/prusa-firmware-release.model";
@@ -164,7 +165,6 @@ export default defineComponent({
   components: {
     PrinterDeleteAction,
     PrinterDetails,
-    BatchJsonCreateDialog,
     PrinterUrlAction,
     PrinterSettingsAction,
     PrinterEmergencyStopAction,
@@ -288,8 +288,10 @@ export default defineComponent({
       }
     },
     async openImportJsonPrintersDialog() {
-      this.showJsonImportDialog = true;
       this.dialogsStore.openDialog(DialogName.BatchJson);
+    },
+    async openYamlImportExportDialog() {
+      this.dialogsStore.openDialog(DialogName.YamlImportExport);
     },
     async toggleEnabled(event: any, printer: Printer) {
       if (!printer.id) {
