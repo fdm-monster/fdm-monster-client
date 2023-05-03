@@ -23,4 +23,10 @@ export class ServerPrivateService extends BaseService {
       "export-fdm-monster-" + Date.now() + ".yaml"
     );
   }
+
+  public static async uploadAndImportYaml(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return await this.postUploadApi("api/server/import-printers-floors-yaml", formData, {});
+  }
 }
