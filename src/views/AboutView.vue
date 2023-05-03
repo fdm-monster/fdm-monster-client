@@ -12,7 +12,7 @@
         The latest 3D Printing Farm server named FDM Monster has been tested for 2 years using a
         custom image for running 4 OctoPrint images on a Raspberry Pi.
         <br />
-        This version uses the famous framework
+        This version uses the famous
         <a href="https://nodejs.org/en" target="_blank">
           <strong>NodeJS framework</strong>
         </a>

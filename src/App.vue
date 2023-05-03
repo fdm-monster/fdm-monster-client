@@ -14,6 +14,7 @@
     <CreatePrinterFloorDialog />
     <PrinterMaintenanceDialog />
     <BatchJsonCreateDialog />
+    <YamlImportExportDialog />
     <FileExplorerSideNav />
   </v-app>
 </template>
@@ -34,6 +35,7 @@ import { useServerSettingsStore } from "@/store/server-settings.store";
 import { SocketIoService } from "./shared/socketio.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
+import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
 
 interface Data {
   socketIoClient?: SocketIoService;
@@ -42,6 +44,7 @@ interface Data {
 export default defineComponent({
   name: "AppView",
   components: {
+    YamlImportExportDialog,
     TopBar,
     NavigationDrawer,
     UpdatePrinterDialog,
