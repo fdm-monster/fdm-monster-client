@@ -105,6 +105,7 @@ export default defineComponent({
       if (this.exportFloorGrid) {
         this.exportPrinters = true;
       }
+
       await ServerPrivateService.downloadYamlExport({
         exportPrinters: this.exportPrinters,
         exportFloorGrid: this.exportFloorGrid,
@@ -113,6 +114,8 @@ export default defineComponent({
         floorComparisonStrategiesByPriority: "floor",
         notes: this.notes,
       });
+      this.$bus.emit(infoMessageEvent, "Downloaded the YAML file");
+      this.notes = "";
     },
     async uploadAndImportYamlFile() {
       if (!this.importFile) {
