@@ -16,13 +16,20 @@
 
         <div>
           <div v-if="isImportMode" class="pl-2">
-            <v-file-input v-model="importFile" accept=".yaml" label="Select a YAML file for import"></v-file-input>
+            <v-file-input
+              v-model="importFile"
+              accept=".yaml"
+              label="Select a YAML file for import"
+            ></v-file-input>
           </div>
           <div v-else>
             <v-checkbox v-model="exportFloors" class="pa-0 ma-0 mt-2 ml-2" label="Include floors" />
             <v-checkbox v-model="exportPrinters" class="pa-0 ma-0 ml-2" label="Include printers" />
-            <v-checkbox v-model="exportFloorGrid" class="pa-0 ma-0 ml-2"
-              label="Include grid positions (auto-includes printers)" />
+            <v-checkbox
+              v-model="exportFloorGrid"
+              class="pa-0 ma-0 ml-2"
+              label="Include grid positions (auto-includes printers)"
+            />
 
             Include notes (for yourself):
             <v-textarea v-model="notes" rows="1"></v-textarea>
@@ -73,8 +80,8 @@ export default defineComponent({
       dialogsStore: useDialogsStore(),
     };
   },
-  async created() { },
-  async mounted() { },
+  async created() {},
+  async mounted() {},
   props: {},
   data: (): Data => ({
     dialogId: DialogName.YamlImportExport,
