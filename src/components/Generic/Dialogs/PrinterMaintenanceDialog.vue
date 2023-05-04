@@ -104,7 +104,7 @@ export default defineComponent({
       "X Axis",
       "Y Axis",
       "Rented",
-      "Rambo",
+      "Motherboard",
       "Other",
       "Clean",
     ],
