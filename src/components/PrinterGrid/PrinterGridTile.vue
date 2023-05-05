@@ -98,7 +98,7 @@
         <v-icon size="48">add</v-icon>
         Place printer
       </v-container>
-      <!--      <v-container v-else>  </v-container>-->
+      <v-container v-else> asdasd </v-container>
 
       <v-progress-linear
         v-if="printer && printer.currentJob"

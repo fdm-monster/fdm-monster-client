@@ -5,7 +5,6 @@ import {
   Floor,
   getDefaultCreatePrinterFloor,
   PreCreateFloor,
-  PrinterInFloor,
 } from "@/models/printer-floor/printer-floor.model";
 
 export class FloorService extends BaseService {

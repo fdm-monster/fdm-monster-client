@@ -16,40 +16,9 @@
       </div>
       <div class="mt-4">Clear printers by clicking on their tile below:</div>
     </div>
-    <v-row v-for="y in rows" :key="y" class="ma-1" no-gutters>
-      <v-col v-for="x in columns" :key="x" :cols="columnWidth" :sm="columnWidth">
-        <v-row class="test-top" no-gutters>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1), 2 * (y - 1))"
-              :x="2 * (x - 1)"
-              :y="2 * (y - 1)"
-            />
-          </v-col>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1) + 1, 2 * (y - 1))"
-              :x="2 * (x - 1) + 1"
-              :y="2 * (y - 1)"
-            />
-          </v-col>
-        </v-row>
-        <v-row class="test-bottom" no-gutters>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1), 2 * (y - 1) + 1)"
-              :x="2 * (x - 1)"
-              :y="2 * (y - 1) + 1"
-            />
-          </v-col>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1) + 1, 2 * (y - 1) + 1)"
-              :x="2 * (x - 1) + 1"
-              :y="2 * (y - 1) + 1"
-            />
-          </v-col>
-        </v-row>
+    <v-row v-for="y of rows" :key="y" class="ma-1" no-gutters>
+      <v-col v-for="x of columns" :key="x" :cols="columnWidth" :sm="columnWidth" no-gutters>
+        <PrinterGridTile :printer="getPrinter(x, y)" :x="x" :y="y" />
       </v-col>
     </v-row>
   </div>
@@ -59,11 +28,7 @@
 import { defineComponent } from "vue";
 import { socketIoFloors } from "../../event-bus/socketio.events";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
-import {
-  largeGridColumnCount,
-  largeGridRowCount,
-  totalVuetifyColumnCount,
-} from "@/constants/printer-grid.constants";
+import { gridCols, gridRows, totalVuetifyColumnCount } from "@/constants/printer-grid.constants";
 import { usePrintersStore } from "@/store/printers.store";
 import { Printer } from "../../models/printers/printer.model";
 import { useGridStore } from "../../store/grid.store";
@@ -94,13 +59,13 @@ export default defineComponent({
   },
   computed: {
     columnWidth() {
-      return totalVuetifyColumnCount / this.columns;
+      return totalVuetifyColumnCount / 12;
     },
     columns() {
-      return largeGridColumnCount;
+      return [...Array(gridCols).keys()];
     },
     rows() {
-      return largeGridRowCount;
+      return [...Array(gridRows).keys()];
     },
     printers() {
       return this.printersStore.printers;
@@ -124,10 +89,11 @@ export default defineComponent({
       );
     },
     getPrinter(col: number, row: number) {
-      const x = col;
-      const y = row;
-      if (!this.printerMatrix?.length || !this.printerMatrix[x]) return undefined;
-      return this.printerMatrix[x][y];
+      if (!this.printerMatrix?.length || !this.printerMatrix[col - 1]) {
+        console.log("escape", this.printerMatrix[row - 1], row - 1);
+        return undefined;
+      }
+      return this.printerMatrix[col - 1][row - 1];
     },
     updateGridMatrix() {
       this.printerMatrix = this.printersStore.gridSortedPrinters;
@@ -147,12 +113,10 @@ export default defineComponent({
 
 <style>
 .test-bottom {
-  border: 1px solid transparent;
-  margin: 0 20px 10px 20px !important;
+  //border: 1px solid transparent; //margin: 0 20px 10px 20px !important;
 }
 
 .test-top {
-  border: 1px solid transparent;
-  margin: 0 20px 0 20px !important;
+  //border: 1px solid transparent; //margin: 0 20px 0 20px !important;
 }
 </style>
