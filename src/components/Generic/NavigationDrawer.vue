@@ -7,7 +7,7 @@
             <v-img
               :src="require('@/assets/logo.png')"
               alt="FDM Monster Logo"
-              class="shrink mr-2 pt-3"
+              class="shrink mr-1 pt-3 ml-1"
               contain
               transition="scale-transition"
               width="40"
