@@ -91,8 +91,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { AppService } from "../backend/app.service";
-import { version } from "../../package.json";
+import { AppService } from "../../backend/app.service";
+import { version } from "../../../package.json";
 
 export default defineComponent({
   name: "AboutView",
