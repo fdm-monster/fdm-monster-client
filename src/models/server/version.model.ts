@@ -5,6 +5,7 @@ export interface VersionModel {
   isNode: boolean;
   isPm2: boolean;
   os: string;
+  monsterPi: string | null;
   update: {
     synced: boolean;
     updateAvailable: boolean;

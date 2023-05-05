@@ -29,6 +29,10 @@
         <br />
         <strong>Your clients's version is: {{ version }}</strong>
         <br />
+        <strong v-if="monsterPiVersion"
+          >Your MonsterPi version is: {{ monsterPiVersion }}<br />
+        </strong>
+
         <br />
         <v-btn color="primary" @click="updateClientDist()"> Update Client</v-btn>
       </v-card-text>
@@ -100,12 +104,15 @@ export default defineComponent({
   setup: () => {
     return {
       serverVersion: ref(""),
+      monsterPiVersion: ref<string | null>(""),
       version,
     };
   },
   async created() {},
   async mounted() {
-    this.serverVersion = (await AppService.getVersion()).version;
+    const versionSpec = await AppService.getVersion();
+    this.serverVersion = versionSpec.version;
+    this.monsterPiVersion = versionSpec.monsterPi;
   },
   props: {},
   computed: {},
