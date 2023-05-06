@@ -90,8 +90,7 @@ export default defineComponent({
     },
     getPrinter(col: number, row: number) {
       if (!this.printerMatrix?.length || !this.printerMatrix[col - 1]) {
-        console.log("escape", this.printerMatrix[row - 1], row - 1);
-        return undefined;
+        return;
       }
       return this.printerMatrix[col - 1][row - 1];
     },
