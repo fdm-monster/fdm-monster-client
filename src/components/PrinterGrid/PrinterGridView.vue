@@ -29,16 +29,33 @@
           </v-chip-group>
           <br />
           <v-btn
+            :disabled="!hasPrintersSelected"
+            color="primary"
+            x-small
+            @click="batchReprintFiles()"
+          >
+            <v-icon class="pr-2" small>refresh</v-icon>
+            Batch reprint
+          </v-btn>
+          <v-btn
             :color="hasPrintersSelected ? 'primary' : 'secondary'"
+            class="ml-2"
             x-small
             @click="clearSelectedPrinters()"
           >
+            <v-icon class="pr-2" small>delete</v-icon>
             Clear all ({{ selectedPrinters.length }})
           </v-btn>
           <v-btn class="ml-2" color="primary" x-small @click="$refs.fileUpload.click()">
             Select gcode file
           </v-btn>
-          <v-btn :disabled="!selectedFile" class="ml-2" color="green" x-small @click="uploadFile()">
+          <v-btn
+            :disabled="!selectedFile"
+            class="ml-2 mr-5"
+            color="green"
+            x-small
+            @click="uploadFile()"
+          >
             Upload gcode file
           </v-btn>
           <input
@@ -109,6 +126,9 @@ export default defineComponent({
     formatBytes: formatBytes,
     clearSelectedPrinters() {
       this.printersStore.clearSelectedPrinters();
+    },
+    async batchReprintFiles() {
+      await this.printersStore.batchReprintFiles();
     },
     async uploadFile() {
       const selectedPrinters = this.selectedPrinters;
