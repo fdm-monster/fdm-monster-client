@@ -3,6 +3,9 @@ export interface IFeatureFlag {
   version: number;
 }
 
-export interface FeaturesModel {
+export class FeaturesModel {
   batchReprintCalls?: IFeatureFlag;
 }
+
+export type TFeatureFlags = keyof FeaturesModel;
+export const featureFlagsList: TFeatureFlags[] = ["batchReprintCalls"];

@@ -29,6 +29,7 @@
           </v-chip-group>
           <br />
           <v-btn
+            v-if="isBatchReprintFeatureAvailable"
             :disabled="!hasPrintersSelected"
             color="primary"
             x-small
@@ -85,6 +86,7 @@ import { convertMultiPrinterFileToQueue } from "@/utils/uploads-state.utils";
 import HomeToolbar from "@/components/PrinterGrid/HomeToolbar.vue";
 import { usePrintersStore } from "@/store/printers.store";
 import { useUploadsStore } from "@/store/uploads.store";
+import { useFeatureStore } from "../../store/features.store";
 
 export default defineComponent({
   name: "PrinterGridView",
@@ -93,6 +95,7 @@ export default defineComponent({
     return {
       printersStore: usePrintersStore(),
       uploadsStore: useUploadsStore(),
+      featureStore: useFeatureStore(),
     };
   },
   async created() {},
@@ -108,6 +111,9 @@ export default defineComponent({
     };
   },
   computed: {
+    isBatchReprintFeatureAvailable(): boolean {
+      return this.featureStore.hasFeature("batchReprintCalls");
+    },
     hasPrintersSelected(): boolean {
       return this.selectedPrinters?.length > 0;
     },
