@@ -36,6 +36,7 @@ import { SocketIoService } from "./shared/socketio.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
 import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
+import { useFeatureStore } from "./store/features.store";
 
 interface Data {
   socketIoClient?: SocketIoService;
@@ -60,6 +61,7 @@ export default defineComponent({
       uploadsStore: useUploadsStore(),
       printersStore: usePrintersStore(),
       serverSettingsStore: useServerSettingsStore(),
+      featureStore: useFeatureStore(),
       dialogsStore: useDialogsStore(),
     };
   },
@@ -67,6 +69,7 @@ export default defineComponent({
     this.uploadsStore._injectEventBus(this.$bus);
 
     await this.serverSettingsStore.loadServerSettings();
+    await this.featureStore.loadFeatures();
     await this.connectSocketIoClient();
   },
   async mounted() {},

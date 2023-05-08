@@ -8,6 +8,7 @@ export class ServerApi {
   static floorRoute = `${ServerApi.base}/floor`;
   static printCompletionRoute = `${ServerApi.base}/print-completion`;
   static printerFilesRoute = `${ServerApi.base}/printer-files`;
+  static printerFilesBatchReprintRoute = `${ServerApi.printerFilesRoute}/batch/reprint-files`;
   static printerFilesUploadStubRoute = `${ServerApi.base}/printer-files/upload-stub`;
   static serverPrivateRoute = `${ServerApi.base}/server`;
   static serverRestartCommandRoute = `${ServerApi.serverPrivateRoute}/restart`;

@@ -287,9 +287,10 @@ export const usePrintersStore = defineStore("Printers", {
       }
     },
     async clearPrinterFiles(printerId: string) {
-      // TODO diagnostics
-      if (!printerId) return;
-      // TODO axios type, TODO OpenAPI
+      if (!printerId) {
+        throw new Error("No printerId was provided");
+        return;
+      }
       const result = (await PrinterFileService.clearFiles(printerId)) as ClearedFilesResult;
       if (!result?.failedFiles) {
         throw new Error("No failed files were returned");
@@ -312,7 +313,6 @@ export const usePrintersStore = defineStore("Printers", {
           printerId,
           ...fileList,
         };
-        // TODO test: sorted and set
         this.printerFileBuckets.push(fileBucket);
       } else {
         fileBucket.files = fileList.files;
@@ -351,6 +351,18 @@ export const usePrintersStore = defineStore("Printers", {
           await PrinterJobService.stopPrintJob(printer.id);
         }
       }
+    },
+    async batchReprintFiles() {
+      const printerIds = this.selectedPrinters.map((p) => p.id);
+      if (!printerIds.length) {
+        throw new Error("No printers selected to reprint files");
+        return;
+      }
+
+      this.clearSelectedPrinters();
+
+      const results = await PrinterFileService.batchReprintFiles(printerIds);
+      console.debug(results);
     },
     async selectAndPrintFile({ printerId, fullPath }: { printerId: string; fullPath: string }) {
       if (!printerId) return;
