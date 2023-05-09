@@ -154,7 +154,7 @@
         :disabled="!isStoppable"
         class="extra-dense-list-item"
         link
-        @click.prevent.stop="clickEmergencyStop()"
+        @click.prevent.stop="clickStopPrint()"
       >
         <v-list-item-avatar>
           <v-icon>stop</v-icon>
@@ -296,18 +296,19 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Printer } from "@/models/printers/printer.model";
-import { generateInitials } from "@/constants/noun-adjectives.data";
-import { PrinterFileService, PrintersService } from "@/backend";
-import { PrinterFile } from "@/models/printers/printer-file.model";
-import { PrinterFileBucket } from "@/models/printers/printer-file-bucket.model";
-import { isPrinterStoppable } from "@/utils/printer-state.utils";
-import { formatBytes } from "@/utils/file-size.util";
-import { CustomGcodeService } from "@/backend/custom-gcode.service";
+import { Printer } from "../../models/printers/printer.model";
+import { generateInitials } from "../../constants/noun-adjectives.data";
+import { PrinterFileService, PrintersService } from "../../backend";
+import { PrinterFile } from "../../models/printers/printer-file.model";
+import { PrinterFileBucket } from "../../models/printers/printer-file-bucket.model";
+import { isPrinterStoppable } from "../../utils/printer-state.utils";
+import { formatBytes } from "../../utils/file-size.util";
+import { CustomGcodeService } from "../../backend/custom-gcode.service";
 
-import { usePrintersStore } from "@/store/printers.store";
-import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { useDialogsStore } from "@/store/dialog.store";
+import { usePrintersStore } from "../../store/printers.store";
+import { DialogName } from "./Dialogs/dialog.constants";
+import { useDialogsStore } from "../../store/dialog.store";
+import { PrinterJobService } from "../../backend/printer-job.service";
 
 interface Data {
   fileSearch?: string;
@@ -457,6 +458,13 @@ export default defineComponent({
         printerId: this.printerId,
         fullPath: file.path,
       });
+    },
+    async clickStopPrint() {
+      if (!this.printerId) return;
+
+      if (confirm("Are you sure to cancel the current print job?")) {
+        await PrinterJobService.stopPrintJob(this.printerId);
+      }
     },
     async clickEmergencyStop() {
       if (!this.printerId) return;

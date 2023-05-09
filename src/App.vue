@@ -25,7 +25,7 @@ import NavigationDrawer from "@/components/Generic/NavigationDrawer.vue";
 import TopBar from "@/components/Generic/TopBar.vue";
 import ErrorAlert from "@/components/Generic/AlertStack.vue";
 import UpdatePrinterDialog from "@/components/Generic/Dialogs/UpdatePrinterDialog.vue";
-import FileExplorerSideNav from "@/components/Generic/SideNavs/FileExplorerSideNav.vue";
+import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
 import CreatePrinterDialog from "@/components/Generic/Dialogs/CreatePrinterDialog.vue";
 import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinterFloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
