@@ -4,7 +4,7 @@
       <v-avatar>
         <v-icon>settings</v-icon>
       </v-avatar>
-      <v-toolbar-title>Printer Floor Management</v-toolbar-title>
+      <v-toolbar-title>Floor Management</v-toolbar-title>
     </v-toolbar>
 
     <v-list subheader three-line>
