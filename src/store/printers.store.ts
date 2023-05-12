@@ -7,7 +7,7 @@ import { PrinterFileService, PrintersService } from "@/backend";
 import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
 import { FloorService } from "../backend/floor.service";
 import { PrinterJobService } from "@/backend/printer-job.service";
-import { largeGridColumnCount, largeGridRowCount } from "../constants/printer-grid.constants";
+import { useSettingsStore } from "./settings.store";
 
 interface State {
   printers: Printer[];
@@ -54,14 +54,16 @@ export const usePrintersStore = defineStore("Printers", {
       if (!this.selectedFloor) return [];
 
       const positions = this.selectedFloor.printers;
-      const gridY = largeGridRowCount * 2; // X
-      const gridX = largeGridColumnCount * 2; // Y
+
+      const settingsStore = useSettingsStore();
+      const gridCols = settingsStore.gridCols;
+      const gridRows = settingsStore.gridRows;
 
       const matrix: (Printer | undefined)[][] = [];
-      for (let i = 0; i < gridY; i++) {
+      for (let i = 0; i < gridCols; i++) {
         const row: (Printer | undefined)[] = [];
         matrix.push(row);
-        for (let j = 0; j < gridX; j++) {
+        for (let j = 0; j < gridRows; j++) {
           const position = positions.find((p) => p.x === i && p.y === j);
           if (!position) {
             row.push(undefined);

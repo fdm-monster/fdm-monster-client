@@ -51,6 +51,11 @@ export default defineComponent({
   data: (): Data => ({
     items: [
       {
+        title: "Grid",
+        icon: "grid_on",
+        path: "/settings/grid",
+      },
+      {
         title: "Floors",
         icon: "house_siding",
         path: "/settings/floors",

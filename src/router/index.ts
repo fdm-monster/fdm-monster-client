@@ -9,6 +9,7 @@ import FdmSettings from "@/components/Settings/FdmSettings.vue";
 import ServerRelatedSettings from "@/components/Settings/ServerRelatedSettings.vue";
 import UserManagementSettings from "@/components/Settings/UserManagementSettings.vue";
 import FloorSettings from "@/components/Settings/FloorSettings.vue";
+import GridSettings from "../components/Settings/GridSettings.vue";
 
 Vue.use(VueRouter);
 
@@ -29,7 +30,11 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: "",
-        redirect: "floors",
+        redirect: "grid",
+      },
+      {
+        path: "grid",
+        component: GridSettings,
       },
       {
         path: "floors",

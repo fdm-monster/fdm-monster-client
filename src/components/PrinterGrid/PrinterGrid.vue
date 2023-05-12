@@ -59,15 +59,12 @@
 import { defineComponent } from "vue";
 import { socketIoFloors } from "../../event-bus/socketio.events";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
-import {
-  largeGridColumnCount,
-  largeGridRowCount,
-  totalVuetifyColumnCount,
-} from "@/constants/printer-grid.constants";
+import { totalVuetifyColumnCount } from "@/constants/printer-grid.constants";
 import { usePrintersStore } from "@/store/printers.store";
 import { Printer } from "../../models/printers/printer.model";
 import { useGridStore } from "../../store/grid.store";
 import { dragAppId, INTENT, PrinterPlace } from "../../constants/drag.constants";
+import { useSettingsStore } from "../../store/settings.store";
 
 export default defineComponent({
   components: { PrinterGridTile },
@@ -83,6 +80,7 @@ export default defineComponent({
   setup() {
     return {
       printersStore: usePrintersStore(),
+      settingsStore: useSettingsStore(),
       gridStore: useGridStore(),
     };
   },
@@ -97,10 +95,10 @@ export default defineComponent({
       return totalVuetifyColumnCount / this.columns;
     },
     columns() {
-      return largeGridColumnCount;
+      return this.settingsStore.gridCols / 2;
     },
     rows() {
-      return largeGridRowCount;
+      return this.settingsStore.gridRows / 2;
     },
     printers() {
       return this.printersStore.printers;
