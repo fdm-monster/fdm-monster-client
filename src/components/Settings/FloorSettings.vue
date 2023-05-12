@@ -8,7 +8,7 @@
     </v-toolbar>
 
     <v-list subheader three-line>
-      <v-subheader>Printer Floors</v-subheader>
+      <v-subheader>Floors</v-subheader>
 
       <v-list-item>
         <v-list-item-content>

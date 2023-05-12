@@ -31,7 +31,7 @@ import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinter
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
 import { useUploadsStore } from "@/store/uploads.store";
 import { usePrintersStore } from "@/store/printers.store";
-import { useServerSettingsStore } from "@/store/server-settings.store";
+import { useSettingsStore } from "./store/settings.store";
 import { SocketIoService } from "./shared/socketio.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
@@ -60,16 +60,16 @@ export default defineComponent({
     return {
       uploadsStore: useUploadsStore(),
       printersStore: usePrintersStore(),
-      serverSettingsStore: useServerSettingsStore(),
+      settingsStore: useSettingsStore(),
       featureStore: useFeatureStore(),
       dialogsStore: useDialogsStore(),
     };
   },
   async created() {
-    this.uploadsStore._injectEventBus(this.$bus);
-
-    await this.serverSettingsStore.loadServerSettings();
+    await this.settingsStore.loadSettings();
     await this.featureStore.loadFeatures();
+
+    this.uploadsStore._injectEventBus(this.$bus);
     await this.connectSocketIoClient();
   },
   async mounted() {},

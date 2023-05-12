@@ -2,18 +2,23 @@
   <div v-drop-printer-position="{ x, y, printerSet: printer }">
     <v-card
       v-drop-upload="{ printers: [printer] }"
-      :class="{ 'tile-selected': selected, 'tile-unselected': unselected, 'tile-setup': printer }"
+      :class="{
+        'tile-large': largeTilesEnabled,
+        'tile-selected': selected,
+        'tile-unselected': unselected,
+        'tile-setup': printer,
+      }"
       :disabled="!printer"
       :style="{
         'background-color':
           !gridStore.gridEditMode || !printer ? printerStateColor : 'rgba(1,1,1,0)',
       }"
-      class="tile"
+      class="tile fill-height"
       outlined
       tile
       @click="selectOrUnplacePrinter()"
     >
-      <v-container v-if="printer" class="tile-inner">
+      <v-container v-if="printer" class="tile-inner fill-height">
         <small class="small-resized-font">
           {{ printer.printerName }}
         </small>
@@ -124,6 +129,7 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useGridStore } from "../../store/grid.store";
 import { FloorService } from "../../backend/floor.service";
 import { filamentColorParse } from "../../constants/experimental.constants";
+import { useSettingsStore } from "../../store/settings.store";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 const maintenanceColor = "black";
@@ -141,6 +147,7 @@ export default defineComponent({
   setup() {
     return {
       printersStore: usePrintersStore(),
+      settingsStore: useSettingsStore(),
       gridStore: useGridStore(),
       dialogsStore: useDialogsStore(),
     };
@@ -175,6 +182,9 @@ export default defineComponent({
         return defaultFilamentGradient;
       }
       return `${foundColor.color.hex}`;
+    },
+    largeTilesEnabled() {
+      return this.settingsStore.largeTiles;
     },
     printerStateColor() {
       if (!this.printer) return defaultColor;
@@ -239,6 +249,10 @@ export default defineComponent({
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
+}
+
+.tile-large {
+  min-height: 200px;
 }
 
 .tile-inner {
