@@ -30,6 +30,7 @@ export interface Printer {
   hostState: HostState;
   apiAccessibility: ApiAccessibility;
   webSocketState: WebsocketState;
+  lastMessageReceivedDate: string;
   currentJob: PrinterCurrentJob | PrinterJob;
 
   enabled: boolean;

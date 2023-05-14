@@ -71,9 +71,7 @@
         </v-chip>
       </template>
       <template v-slot:item.floor="{ item }">
-        <v-chip v-if="item.id" color="primary" dark>
-          {{ floorOfPrinter(item.id)?.name }}
-        </v-chip>
+        <v-chip v-if="item.id" color="primary" dark> {{ floorOfPrinter(item.id)?.name }} </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
         <PrinterUrlAction :printer="item" />
@@ -82,6 +80,10 @@
         <SyncPrinterNameAction :printer="item" />
         <PrinterDeleteAction :printer="item" />
         <PrinterSettingsAction :printer="item" v-on:update:show="openEditDialog(item)" />
+        <span v-if="item.lastMessageReceivedDate">
+          Updated {{ diffSeconds(item.lastMessageReceivedDate) }} seconds ago
+        </span>
+        <span v-else> No update received (silence)</span>
       </template>
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length">
@@ -236,6 +238,13 @@ export default defineComponent({
     },
   },
   methods: {
+    diffSeconds(dateString: string) {
+      if (!dateString?.length) return;
+      const date = new Date(dateString);
+      const now = new Date();
+      const diff = (now.getTime() - date.getTime()) / 1000;
+      return diff; // new Intl.DateTimeFormat("default", { dateStyle: "long" }).format(date)
+    },
     firmwareUpdateSection() {
       return firmwareUpdateSection;
     },
