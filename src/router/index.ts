@@ -6,7 +6,7 @@ import Settings from "../components/Settings/SettingsView.vue";
 import AboutHelp from "../components/AboutHelp/AboutView.vue";
 import PrintStatisticsView from "@/components/PrintStatistics/PrintStatisticsView.vue";
 import FdmSettings from "@/components/Settings/FdmSettings.vue";
-import ServerRelatedSettings from "@/components/Settings/ServerRelatedSettings.vue";
+import EmergencyCommands from "../components/Settings/EmergencyCommands.vue";
 import UserManagementSettings from "@/components/Settings/UserManagementSettings.vue";
 import FloorSettings from "@/components/Settings/FloorSettings.vue";
 import GridSettings from "../components/Settings/GridSettings.vue";
@@ -49,8 +49,8 @@ const routes: Array<RouteConfig> = [
         component: FdmSettings,
       },
       {
-        path: "server-related",
-        component: ServerRelatedSettings,
+        path: "emergency-commands",
+        component: EmergencyCommands,
       },
     ],
   },
