@@ -8102,12 +8102,12 @@ pify@^2.2.0:
   integrity sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==
 
 pinia@^2.0.23:
-  version "2.0.36"
-  resolved "https://registry.yarnpkg.com/pinia/-/pinia-2.0.36.tgz#65130f3b94cc7fe25156308634010fab893dff24"
-  integrity sha512-4UKApwjlmJH+VuHKgA+zQMddcCb3ezYnyewQ9NVrsDqZ/j9dMv5+rh+1r48whKNdpFkZAWVxhBp5ewYaYX9JcQ==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/pinia/-/pinia-2.1.1.tgz#542c6bb8a7c27b342082f431bccd6124b63c5b55"
+  integrity sha512-Y2CgpcUtD8Ogdvo5LW5g20ykSZgnVDMgTSZFr40EvO6HB8axQk+0lHa1UrRah9wworFaxjovwRlY/wRICWj/KQ==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
-    vue-demi "*"
+    vue-demi ">=0.14.2"
 
 pirates@^4.0.4:
   version "4.0.5"
@@ -10083,10 +10083,10 @@ vue-cli-plugin-vuetify@2.5.8:
     semver "^7.1.2"
     shelljs "^0.8.3"
 
-vue-demi@*:
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.1.tgz#1ed9af03a27642762bfed83d8750805302d0398d"
-  integrity sha512-rt+yuCtXvscYot9SQQj3WKZJVSriPNqVkpVBNEHPzSgBv7QIYzsS410VqVgvx8f9AAPgjg+XPKvmV3vOqqkJQQ==
+vue-demi@>=0.14.2:
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.2.tgz#beafa208d71827f84cff8291ef1d3fee2173700f"
+  integrity sha512-KZLwJIXhq5damlmP6AAgsUA6Zkk6pGW7+fuGV4KYdilOEEv1bPlolr6Fw3pts83cfxHWyYU/s2Z+orNaCDqZ4A==
 
 vue-eslint-parser@^9.1.1, vue-eslint-parser@^9.3.0:
   version "9.3.0"
