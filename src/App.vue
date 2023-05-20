@@ -30,7 +30,7 @@ import CreatePrinterDialog from "@/components/Generic/Dialogs/CreatePrinterDialo
 import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinterFloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
 import { useUploadsStore } from "@/store/uploads.store";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "./store/printer.store";
 import { useSettingsStore } from "./store/settings.store";
 import { SocketIoService } from "./shared/socketio.service";
 import { useDialogsStore } from "@/store/dialog.store";
@@ -59,7 +59,7 @@ export default defineComponent({
   setup: () => {
     return {
       uploadsStore: useUploadsStore(),
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       settingsStore: useSettingsStore(),
       featureStore: useFeatureStore(),
       dialogsStore: useDialogsStore(),

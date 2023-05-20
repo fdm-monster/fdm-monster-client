@@ -128,7 +128,7 @@ import { PrinterFileService, SettingsService } from "@/backend";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
 import { infoMessageEvent } from "@/event-bus/alert.events";
 import { PrinterFileCleanSettings } from "../../models/settings/printer-file-clean-settings.model";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { isValidIPOrMask } from "@/utils/validation.utils";
 import { whitelistSettingsHidden } from "../../constants/experimental.constants";
 
@@ -143,7 +143,7 @@ export default defineComponent({
   name: "FdmSettings",
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       ipAddressRule: (val: string) => (isValidIPOrMask(val) ? true : "Not a valid IP Address"),
     };
   },

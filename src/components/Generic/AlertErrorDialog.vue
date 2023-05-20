@@ -31,7 +31,7 @@ import { defineComponent } from "vue";
 import { AxiosError } from "axios";
 import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "@/event-bus/alert.events";
 import { FailedQueuedUpload } from "@/models/uploads/queued-upload.model";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 
 interface Data {
@@ -46,7 +46,7 @@ export default defineComponent({
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       uploadsStore: useUploadsStore(),
     };
   },

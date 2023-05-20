@@ -84,7 +84,7 @@ import { formatBytes } from "@/utils/file-size.util";
 import { infoMessageEvent } from "@/event-bus/alert.events";
 import { convertMultiPrinterFileToQueue } from "@/utils/uploads-state.utils";
 import HomeToolbar from "@/components/PrinterGrid/HomeToolbar.vue";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 import { useFeatureStore } from "../../store/features.store";
 
@@ -93,7 +93,7 @@ export default defineComponent({
   components: { PrinterGrid, HomeToolbar },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       uploadsStore: useUploadsStore(),
       featureStore: useFeatureStore(),
     };

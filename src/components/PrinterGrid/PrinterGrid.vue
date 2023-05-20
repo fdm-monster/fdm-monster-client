@@ -2,10 +2,10 @@
   <div>
     <div v-if="gridStore.gridEditMode" class="ml-4 mt-4 mb-0" style="cursor: move">
       <span class="pr-4">
-        Drag and drop {{ printersStore.floorlessPrinters.length }} unplaced printer(s) here:
+        Drag and drop {{ printerStore.floorlessPrinters.length }} unplaced printer(s) here:
       </span>
       <div
-        v-for="printer of printersStore.floorlessPrinters"
+        v-for="printer of printerStore.floorlessPrinters"
         :key="printer.id"
         class="d-inline-block text-center mr-1 mb-1"
         draggable="true"
@@ -60,11 +60,12 @@ import { defineComponent } from "vue";
 import { socketIoFloors } from "../../event-bus/socketio.events";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
 import { totalVuetifyColumnCount } from "@/constants/printer-grid.constants";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { Printer } from "../../models/printers/printer.model";
 import { useGridStore } from "../../store/grid.store";
 import { dragAppId, INTENT, PrinterPlace } from "../../constants/drag.constants";
 import { useSettingsStore } from "../../store/settings.store";
+import { useFloorStore } from "../../store/floor.store";
 
 export default defineComponent({
   components: { PrinterGridTile },
@@ -79,14 +80,15 @@ export default defineComponent({
   },
   setup() {
     return {
-      printersStore: usePrintersStore(),
+      printerStore: usePrinterStore(),
+      floorStore: useFloorStore(),
       settingsStore: useSettingsStore(),
       gridStore: useGridStore(),
     };
   },
   async created() {
-    await this.printersStore.loadPrinters();
-    await this.printersStore.loadFloors();
+    await this.printerStore.loadPrinters();
+    await this.floorStore.loadFloors();
 
     this.updateGridMatrix();
   },
@@ -101,10 +103,10 @@ export default defineComponent({
       return this.settingsStore.gridRows / 2;
     },
     printers() {
-      return this.printersStore.printers;
+      return this.printerStore.printers;
     },
     selectedFloorLevel() {
-      return this.printersStore.selectedFloor?.floor;
+      return this.floorStore.selectedFloor?.floor;
     },
   },
   methods: {
@@ -128,7 +130,7 @@ export default defineComponent({
       return this.printerMatrix[x][y];
     },
     updateGridMatrix() {
-      this.printerMatrix = this.printersStore.gridSortedPrinters;
+      this.printerMatrix = this.floorStore.gridSortedPrinters;
     },
     onSocketIoFloorMessage() {
       this.updateGridMatrix();

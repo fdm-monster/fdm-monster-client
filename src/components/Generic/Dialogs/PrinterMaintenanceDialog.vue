@@ -53,7 +53,7 @@ import { defineComponent } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { PrintersService } from "@/backend";
 import { Printer } from "@/models/printers/printer.model";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialogsStore } from "@/store/dialog.store";
@@ -72,7 +72,7 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
     };
   },

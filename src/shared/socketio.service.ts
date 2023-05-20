@@ -11,8 +11,9 @@ import {
 } from "../event-bus/socketio.events";
 import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
 import { updatedPrinterEvent } from "@/event-bus/printer.events";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../store/printer.store";
 import { apiBase } from "@/backend/base.service";
+import { useFloorStore } from "../store/floor.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -25,7 +26,8 @@ enum IO_MESSAGES {
 export class SocketIoService {
   socket: Socket;
   $bus: VueBus;
-  printersStore = usePrintersStore();
+  printerStore = usePrinterStore();
+  floorStore = useFloorStore();
 
   setupSocketConnection($bus: VueBus) {
     this.socket = io(apiBase); // Same-origin policy);
@@ -61,12 +63,12 @@ export class SocketIoService {
     }
 
     if (message.floors) {
-      this.printersStore.saveFloors(message.floors);
+      this.floorStore.saveFloors(message.floors);
       this.$bus.emit(socketIoFloors, message.floors);
     }
 
     if (message.printers) {
-      this.printersStore.setPrinters(message.printers);
+      this.printerStore.setPrinters(message.printers);
 
       // Emit the global update
       this.$bus.emit(sseMessageGlobal, message);

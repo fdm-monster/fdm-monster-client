@@ -13,8 +13,6 @@ interface State {
   printers: Printer[];
   testPrinters?: Printer;
   printerFileBuckets: PrinterFileBucket[];
-  floors: Floor[];
-  selectedFloor?: Floor;
 
   sideNavPrinter?: Printer;
   updateDialogPrinter?: Printer;
@@ -22,13 +20,11 @@ interface State {
   maintenanceDialogPrinter?: Printer;
 }
 
-export const usePrintersStore = defineStore("Printers", {
+export const usePrinterStore = defineStore("Printers", {
   state: (): State => ({
     printers: [],
     testPrinters: undefined,
     printerFileBuckets: [],
-    floors: [],
-    selectedFloor: undefined,
 
     sideNavPrinter: undefined,
     updateDialogPrinter: undefined,
@@ -36,50 +32,6 @@ export const usePrintersStore = defineStore("Printers", {
     maintenanceDialogPrinter: undefined,
   }),
   getters: {
-    sortedFloors(state) {
-      return state.floors.sort((f, f2) => f.floor - f2.floor);
-    },
-    floor(state) {
-      return (floorId: string) => state.floors.find((pf) => pf._id === floorId);
-    },
-    floorOfPrinter() {
-      return (printerId: string) => {
-        return this.floors.find((f: Floor) =>
-          f.printers.map((pid) => pid.printerId).includes(printerId)
-        );
-      };
-    },
-    gridSortedPrinters() {
-      if (!this.printers?.length) return [];
-      if (!this.selectedFloor) return [];
-
-      const positions = this.selectedFloor.printers;
-
-      const settingsStore = useSettingsStore();
-      const gridCols = settingsStore.gridCols;
-      const gridRows = settingsStore.gridRows;
-
-      const matrix: (Printer | undefined)[][] = [];
-      for (let i = 0; i < gridCols; i++) {
-        const row: (Printer | undefined)[] = [];
-        matrix.push(row);
-        for (let j = 0; j < gridRows; j++) {
-          const position = positions.find((p) => p.x === i && p.y === j);
-          if (!position) {
-            row.push(undefined);
-          } else {
-            const printer = this.printers.find((p) => p.id === position.printerId);
-            row.push(printer);
-          }
-        }
-      }
-      return matrix;
-    },
-    floorlessPrinters(state): Printer[] {
-      return state.printers.filter(
-        (p) => !this.floors.find((f) => f.printers.find((fp) => fp.printerId === p.id))
-      );
-    },
     printer() {
       return (printerId?: string) => this.printers.find((p) => p.id === printerId);
     },
@@ -91,11 +43,6 @@ export const usePrintersStore = defineStore("Printers", {
         // If flags are falsy, we can skip the printer => it's still connecting
         (p) =>
           p.printerState.flags && (p.printerState.flags.printing || p.printerState.flags.printing)
-      );
-    },
-    unpositionedPrinters(): Printer[] {
-      return this.printers.filter(
-        (p) => !this.floors.find((f) => f.printers.find((fp) => fp.printerId === p.id))
       );
     },
     isSelectedPrinter(state) {
@@ -113,9 +60,6 @@ export const usePrintersStore = defineStore("Printers", {
     },
     printerFiles() {
       return (printerId?: string) => this.printerFileBucket(printerId)?.files;
-    },
-    floorNames(state) {
-      return state.floors.map((f) => f.name);
     },
   },
   actions: {
@@ -141,31 +85,6 @@ export const usePrintersStore = defineStore("Printers", {
       } else {
         this.selectedPrinters.splice(selectedPrinterIndex, 1);
       }
-    },
-    async createPrinterFloor(newPrinterFloor: Floor) {
-      const data = await FloorService.createFloor(newPrinterFloor);
-      this.floors.push(data);
-      return data;
-    },
-    saveFloors(floors: Floor[]) {
-      this.floors = floors.sort((f, f2) => f.floor - f2.floor);
-      if (!this.selectedFloor) {
-        this.selectedFloor = this.floors[0];
-      } else {
-        const floorId = this.selectedFloor?._id;
-        const foundFloor = this.floors.find((f) => f._id === floorId);
-        this.selectedFloor = foundFloor ? this.floors[0] : foundFloor;
-      }
-    },
-    async changeSelectedFloorByIndex(selectedPrinterFloorIndex: number) {
-      if (!this.floors?.length) return;
-      if (this.floors.length <= selectedPrinterFloorIndex) return;
-
-      const newFloor = this.floors[selectedPrinterFloorIndex];
-      // TODO throw warning?
-      if (!newFloor) return;
-      this.selectedFloor = newFloor;
-      return newFloor;
     },
     clearSelectedPrinters() {
       this.selectedPrinters = [];
@@ -194,11 +113,6 @@ export const usePrintersStore = defineStore("Printers", {
     async loadPrinters() {
       const data = await PrintersService.getPrinters();
       this.setPrinters(data);
-      return data;
-    },
-    async loadFloors() {
-      const data = await FloorService.getFloors();
-      this.saveFloors(data);
       return data;
     },
     async deletePrinter(printerId: string) {
@@ -231,61 +145,6 @@ export const usePrintersStore = defineStore("Printers", {
         this.printers[printerIndex] = printer;
       } else {
         console.warn("Printer was not purged as it did not occur in state", printerId);
-      }
-    },
-    /* Floors */
-    async deleteFloor(floorId: string) {
-      await FloorService.deleteFloor(floorId);
-      this._popPrinterFloor(floorId);
-    },
-    async updateFloorName({ floorId, name }: { floorId: string; name: string }) {
-      const floor = await FloorService.updateFloorName(floorId, name);
-      this._replaceFloor(floor);
-      return floor;
-    },
-    async updatePrinterFloorNumber({
-      floorId,
-      floorNumber,
-    }: {
-      floorId: string;
-      floorNumber: number;
-    }) {
-      const floor = await FloorService.updateFloorNumber(floorId, floorNumber);
-      this._replaceFloor(floor);
-      return floor;
-    },
-    async addPrinterToFloor({
-      floorId,
-      printerId,
-      x,
-      y,
-    }: {
-      floorId: string;
-      printerId: string;
-      x: number;
-      y: number;
-    }) {
-      const result = await FloorService.addPrinterToFloor(floorId, {
-        printerId,
-        x,
-        y,
-      });
-      this._replaceFloor(result);
-    },
-    async deletePrinterFromFloor({ floorId, printerId }: { floorId: string; printerId: string }) {
-      const result = await FloorService.deletePrinterFromFloor(floorId, printerId);
-      this._replaceFloor(result);
-    },
-    _popPrinterFloor(floorId: string) {
-      const foundFloorIndex = this.floors.findIndex((pg) => pg._id === floorId);
-      if (foundFloorIndex !== -1) {
-        this.floors.splice(foundFloorIndex, 1);
-      }
-    },
-    _replaceFloor(printerFloor: Floor) {
-      const foundFloorIndex = this.floors.findIndex((pf) => pf._id === printerFloor._id);
-      if (foundFloorIndex !== -1) {
-        this.floors[foundFloorIndex] = printerFloor;
       }
     },
     async clearPrinterFiles(printerId: string) {
@@ -358,7 +217,6 @@ export const usePrintersStore = defineStore("Printers", {
       const printerIds = this.selectedPrinters.map((p) => p.id);
       if (!printerIds.length) {
         throw new Error("No printers selected to reprint files");
-        return;
       }
 
       this.clearSelectedPrinters();

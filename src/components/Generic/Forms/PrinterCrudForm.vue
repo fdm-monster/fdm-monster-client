@@ -109,7 +109,7 @@ import {
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
 import { PrintersService } from "@/backend";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 
 const watchedId = "printerId";
 
@@ -124,7 +124,7 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       appConstants: inject("appConstants") as AppConstants,
     };
   },

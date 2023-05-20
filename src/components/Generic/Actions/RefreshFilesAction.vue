@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 import { defineComponent, PropType } from "vue";
 import { Printer } from "@/models/printers/printer.model";
 
@@ -19,7 +19,7 @@ export default defineComponent({
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
     };
   },
   async created() {},

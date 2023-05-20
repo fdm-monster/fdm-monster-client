@@ -2,7 +2,8 @@ import { Printer } from "prettier";
 import Vue, { Directive } from "vue";
 import { isPrinterPlaceDataTransfer, PrinterPlace } from "../constants/drag.constants";
 import { FloorService } from "../backend/floor.service";
-import { usePrintersStore } from "../store/printers.store";
+import { usePrinterStore } from "../store/printer.store";
+import { useFloorStore } from "../store/floor.store";
 
 interface PrinterBindingValue {
   printerSet: Printer | null;
@@ -18,7 +19,8 @@ const bindDropConditionally = (
   bindingValue: PrinterBindingValue,
   context?: Vue
 ) => {
-  const printerStore = usePrintersStore();
+  const printerStore = usePrinterStore();
+  const floorStore = useFloorStore();
 
   const printerSet = bindingValue?.printerSet;
   // If a printer is placed, we will not (yet) allow placing another printer
@@ -45,7 +47,7 @@ const bindDropConditionally = (
         return;
       }
 
-      const floorId = printerStore.selectedFloor?._id;
+      const floorId = floorStore.selectedFloor?._id;
       if (!floorId?.length) throw new Error("Floor is not set");
       const printerId = data.printerId;
       if (!printerId?.length) throw new Error("PrinterId was not provided");

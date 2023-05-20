@@ -82,7 +82,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 
 interface Data {
   search?: string;
@@ -94,7 +94,7 @@ export default defineComponent({
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
     };
   },
   async created() {},

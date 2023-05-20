@@ -5,11 +5,11 @@ import {
   convertPrinterMultiFileToQueue,
 } from "@/utils/uploads-state.utils";
 import { infoMessageEvent } from "@/event-bus/alert.events";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 
 const bindDropConditionally = (el: HTMLElement, printers: Printer[], context?: Vue) => {
-  const printersStore = usePrintersStore();
+  const printersStore = usePrinterStore();
   const uploadsStore = useUploadsStore();
   if (printers?.length) {
     const isSinglePrinter = printers.length === 1;

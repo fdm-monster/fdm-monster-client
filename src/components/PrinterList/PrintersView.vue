@@ -145,12 +145,13 @@ import { PrusaFirmwareReleaseModel } from "@/models/plugins/firmware-updates/pru
 import { PrinterFirmwareStateModel } from "@/models/plugins/firmware-updates/printer-firmware-state.model";
 import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameAction.vue";
 
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { firmwareUpdateSection } from "@/constants/experimental.constants";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
 import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
+import { useFloorStore } from "../../store/floor.store";
 
 interface Data {
   showJsonImportDialog: boolean;
@@ -176,7 +177,8 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printerStore: usePrinterStore(),
+      floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
     };
   },
@@ -224,7 +226,7 @@ export default defineComponent({
   async mounted() {},
   computed: {
     printers() {
-      return this.printersStore.printers;
+      return this.printerStore.printers;
     },
     latestReleaseVersion() {
       if (!this.firmwareReleases?.length) return null;
@@ -249,7 +251,7 @@ export default defineComponent({
       return firmwareUpdateSection;
     },
     floorOfPrinter(printerId: string) {
-      return this.printersStore.floorOfPrinter(printerId);
+      return this.floorStore.floorOfPrinter(printerId);
     },
     isVirtualFirmware(firmwareTag: string) {
       const firmwareTagUpper = firmwareTag?.toUpperCase();
@@ -282,7 +284,7 @@ export default defineComponent({
       await PrinterFirmwareUpdateService.flashFirmwareUpdate(printer.id);
     },
     openEditDialog(printer: Printer) {
-      this.printersStore.setUpdateDialogPrinter(printer);
+      this.printerStore.setUpdateDialogPrinter(printer);
       this.dialogsStore.openDialog(DialogName.UpdatePrinterDialog);
     },
     openCreatePrinterDialog() {
