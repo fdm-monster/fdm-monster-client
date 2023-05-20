@@ -14,6 +14,7 @@ import { updatedPrinterEvent } from "@/event-bus/printer.events";
 import { usePrinterStore } from "../store/printer.store";
 import { apiBase } from "@/backend/base.service";
 import { useFloorStore } from "../store/floor.store";
+import { usePrinterStateStore } from "../store/printer-state.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -28,6 +29,7 @@ export class SocketIoService {
   $bus: VueBus;
   printerStore = usePrinterStore();
   floorStore = useFloorStore();
+  printerStateStore = usePrinterStateStore();
 
   setupSocketConnection($bus: VueBus) {
     this.socket = io(apiBase); // Same-origin policy);
@@ -60,6 +62,15 @@ export class SocketIoService {
   onMessage(message: SocketIoUpdateMessage) {
     if (message.trackedUploads) {
       this.$bus.emit(uploadMessageEvent, InfoEventType.UPLOAD_BACKEND, message.trackedUploads);
+    }
+
+    if (message.socketStates) {
+      this.printerStateStore.setSocketStates(message.socketStates);
+    }
+
+    if (message.printerEvents) {
+      this.printerStateStore.setPrinterEvents(message.printerEvents);
+      console.debug(this.printerStateStore.operationalPrintersById);
     }
 
     if (message.floors) {

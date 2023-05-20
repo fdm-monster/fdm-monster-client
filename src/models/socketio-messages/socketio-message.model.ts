@@ -34,8 +34,21 @@ export interface SocketIoTestPrinterMessage {
   testProgress: TestProgressDetails;
 }
 
+export interface SocketState {
+  socketState: string;
+  apiState: string;
+}
+
+export interface PrinterEvents {
+  current: any;
+  events: any;
+  plugins: any;
+}
+
 export interface SocketIoUpdateMessage {
   printers: Printer[];
+  socketStates: { [printerId: string]: SocketState };
+  printerEvents: { [printerId: string]: PrinterEvents };
   trackedUploads: UploadStates;
   floors: Floor[];
 }

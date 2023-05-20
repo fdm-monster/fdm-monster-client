@@ -30,7 +30,10 @@
 import { defineComponent, inject } from "vue";
 import { ValidationProvider } from "vee-validate";
 import { AppConstants } from "@/constants/app.constants";
-import { getDefaultCreateFloor, PreCreateFloor } from "../../../models/floors/floor.model";
+import {
+  getDefaultCreateFloor,
+  PreCreateFloor,
+} from "../../../models/floors/floor.model";
 import { FloorService } from "../../../backend/floor.service";
 import { usePrinterStore } from "../../../store/printer.store";
 import { useFloorStore } from "../../../store/floor.store";
