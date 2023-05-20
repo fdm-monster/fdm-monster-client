@@ -33,7 +33,7 @@ import { defineComponent, PropType } from "vue";
 import FileControlList from "@/components/PrinterList/FileControlList.vue";
 import { Printer } from "@/models/printers/printer.model";
 import RefreshFilesAction from "@/components/Generic/Actions/RefreshFilesAction.vue";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 
 interface Data {
   dragging: boolean;
@@ -47,7 +47,7 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
     };
   },
   async created() {},

@@ -35,7 +35,8 @@ import {
   PreCreateFloor,
 } from "@/models/printer-floor/printer-floor.model";
 import { FloorService } from "../../../backend/floor.service";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
+import { useFloorStore } from "../../../store/floor.store";
 
 const watchedId = "printerFloorId";
 
@@ -50,16 +51,17 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printerStore: usePrinterStore(),
+      floorStore: useFloorStore(),
       appConstants: inject("appConstants") as AppConstants,
     };
   },
   async created() {
     if (this.printerFloorId) {
-      const crudeData = this.printersStore.floor(this.printerFloorId);
+      const crudeData = this.floorStore.floor(this.printerFloorId);
       this.formData = FloorService.convertPrinterFloorToCreateForm(crudeData);
-    } else if (this.printersStore.floors?.length) {
-      const maxIndex = Math.max(...this.printersStore.floors.map((pf) => pf.floor)) + 1;
+    } else if (this.floorStore.floors?.length) {
+      const maxIndex = Math.max(...this.floorStore.floors.map((pf) => pf.floor)) + 1;
       this.formData.floor = maxIndex.toString();
     }
   },
@@ -85,7 +87,7 @@ export default defineComponent({
   watch: {
     [watchedId](val?: string) {
       if (!val) return;
-      const printerFloor = this.printersStore.floor(val);
+      const printerFloor = this.floorStore.floor(val);
       this.formData = FloorService.convertPrinterFloorToCreateForm(printerFloor);
     },
   },

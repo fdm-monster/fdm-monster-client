@@ -50,7 +50,7 @@ import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
 import { generateInitials } from "@/constants/noun-adjectives.data";
 import { infoMessageEvent } from "@/event-bus/alert.events";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 import { Printer } from "@/models/printers/printer.model";
 import { sseTestPrinterUpdate } from "../../../event-bus/socketio.events";
 import {
@@ -79,7 +79,7 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
     };
   },

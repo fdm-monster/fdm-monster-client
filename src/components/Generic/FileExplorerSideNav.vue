@@ -305,7 +305,7 @@ import { isPrinterStoppable } from "../../utils/printer-state.utils";
 import { formatBytes } from "../../utils/file-size.util";
 import { CustomGcodeService } from "../../backend/custom-gcode.service";
 
-import { usePrintersStore } from "../../store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
 import { useDialogsStore } from "../../store/dialog.store";
 import { PrinterJobService } from "../../backend/printer-job.service";
@@ -322,7 +322,7 @@ export default defineComponent({
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
     };
   },

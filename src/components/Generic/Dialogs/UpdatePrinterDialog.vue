@@ -60,7 +60,7 @@ import { updatedPrinterEvent } from "@/event-bus/printer.events";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import PrinterCrudForm from "@/components/Generic/Forms/PrinterCrudForm.vue";
 import { infoMessageEvent } from "@/event-bus/alert.events";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialogsStore } from "@/store/dialog.store";
@@ -80,7 +80,7 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
     };
   },

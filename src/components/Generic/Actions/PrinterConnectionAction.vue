@@ -26,14 +26,14 @@
 import { defineComponent, PropType } from "vue";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 
 export default defineComponent({
   name: "PrinterConnectionAction",
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
     };
   },
   async created() {},

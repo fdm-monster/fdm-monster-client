@@ -114,7 +114,8 @@ import { Floor } from "@/models/printer-floor/printer-floor.model";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintCompletionsService } from "@/backend/print-completions.service";
 import { PrinterCompletions } from "@/models/print-completions/print-completions.model";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
+import { useFloorStore } from "../../store/floor.store";
 
 interface Data {
   loadedCompletions: PrinterCompletions[];
@@ -130,7 +131,8 @@ export default defineComponent({
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printerStore: usePrinterStore(),
+      floorStore: useFloorStore(),
     };
   },
   data(): Data {
@@ -149,7 +151,7 @@ export default defineComponent({
   },
   computed: {
     floors() {
-      return this.printersStore.floors;
+      return this.floorStore.floors;
     },
   },
   watch: {
@@ -175,20 +177,20 @@ export default defineComponent({
       this.updatePrinters();
     },
     printer(printerId: string) {
-      return this.printersStore.printer(printerId);
+      return this.printerStore.printer(printerId);
     },
     floorOfPrinter(printerId: string) {
-      return this.printersStore.floorOfPrinter(printerId);
+      return this.floorStore.floorOfPrinter(printerId);
     },
     updateFloors() {
       if (!this.filteredFloors?.length) {
-        this.floorFdmPrinters = this.printersStore.printers;
+        this.floorFdmPrinters = this.printerStore.printers;
         return;
       }
       const flattenedPrinterIds = this.filteredFloors.flatMap((f) => {
         return f.printers.map((fp) => fp.printerId);
       });
-      this.floorFdmPrinters = this.printersStore.printers.filter((fp) => {
+      this.floorFdmPrinters = this.printerStore.printers.filter((fp) => {
         if (!fp.id) return false;
         return flattenedPrinterIds.includes(fp.id);
       });

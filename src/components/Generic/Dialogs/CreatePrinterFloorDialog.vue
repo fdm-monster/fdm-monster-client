@@ -34,12 +34,13 @@ import { ValidationObserver } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/constants/noun-adjectives.data";
 import { infoMessageEvent } from "@/event-bus/alert.events";
 
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 import PrinterFloorCrudForm from "@/components/Generic/Forms/PrinterFloorCrudForm.vue";
 import { FloorService } from "../../../backend/floor.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { useFloorStore } from "../../../store/floor.store";
 
 type Data = WithDialog;
 
@@ -51,7 +52,8 @@ export default defineComponent({
   },
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printerStore: usePrinterStore(),
+      floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
     };
   },
@@ -86,12 +88,12 @@ export default defineComponent({
       if (!(await this.isValid())) return;
       const formData = this.formData();
       if (!formData) return;
-      const newPrinterFloorData = FloorService.convertCreateFormToFloor(formData);
-      await this.printersStore.createPrinterFloor(newPrinterFloorData);
+      const floorData = FloorService.convertCreateFormToFloor(formData);
+      await this.floorStore.createFloor(floorData);
 
-      this.$bus.emit(infoMessageEvent, `Printer floor ${newPrinterFloorData.name} created`);
+      this.$bus.emit(infoMessageEvent, `Printer floor ${floorData.name} created`);
       formData.name = newRandomNamePair();
-      const maxIndex = Math.max(...this.printersStore.floors.map((f) => f.floor)) + 1;
+      const maxIndex = Math.max(...this.floorStore.floors.map((f) => f.floor)) + 1;
       formData.floor = maxIndex.toString();
       this.closeDialog();
     },

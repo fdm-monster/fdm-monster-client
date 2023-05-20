@@ -123,13 +123,14 @@ import { Printer } from "@/models/printers/printer.model";
 import RAL_CODES from "@/constants/ral.reference.json";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 import { PrintersService } from "@/backend";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useGridStore } from "../../store/grid.store";
 import { FloorService } from "../../backend/floor.service";
 import { filamentColorParse } from "../../constants/experimental.constants";
 import { useSettingsStore } from "../../store/settings.store";
+import { useFloorStore } from "../../store/floor.store";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 const maintenanceColor = "black";
@@ -146,7 +147,8 @@ export default defineComponent({
   },
   setup() {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
+      floorStore: useFloorStore(),
       settingsStore: useSettingsStore(),
       gridStore: useGridStore(),
       dialogsStore: useDialogsStore(),
@@ -219,10 +221,10 @@ export default defineComponent({
       if (!this.printer?.id) return;
 
       if (this.gridStore.gridEditMode) {
-        const floorId = this.printersStore.selectedFloor?._id;
+        const floorId = this.floorStore.selectedFloor?._id;
         if (!floorId) throw new Error("Cant clear printer, floor not selected");
         await FloorService.deletePrinterFromFloor(
-          this.printersStore.selectedFloor!._id,
+          this.floorStore.selectedFloor!._id,
           this.printer.id
         );
       }

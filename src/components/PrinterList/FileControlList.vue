@@ -18,14 +18,14 @@
 import { defineComponent, PropType } from "vue";
 import { PrinterFile } from "@/models/printers/printer-file.model";
 import { PrinterFileCache } from "@/models/printers/printer-file-cache.model";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 
 export default defineComponent({
   name: "FileControlList",
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
     };
   },
   async created() {},

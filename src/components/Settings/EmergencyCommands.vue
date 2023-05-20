@@ -57,7 +57,7 @@
 import { defineComponent } from "vue";
 import { ServerPrivateService } from "@/backend/server-private.service";
 import { BatchService } from "../../backend/batch.service";
-import { usePrintersStore } from "../../store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { useFeatureStore } from "../../store/features.store";
 
 interface Data {
@@ -68,7 +68,7 @@ export default defineComponent({
   name: "EmergencyCommands",
   setup: () => {
     return {
-      printerStore: usePrintersStore(),
+      printerStore: usePrinterStore(),
       featureStore: useFeatureStore(),
     };
   },

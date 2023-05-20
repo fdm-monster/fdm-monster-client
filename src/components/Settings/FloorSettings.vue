@@ -143,11 +143,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Floor } from "@/models/printer-floor/printer-floor.model";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { Printer } from "../../models/printers/printer.model";
 import { floorPrinterAssignmentHidden } from "../../constants/experimental.constants";
+import { useFloorStore } from "../../store/floor.store";
 
 interface Data {
   editedFloorName: string;
@@ -159,7 +160,8 @@ export default defineComponent({
   name: "FloorSettings",
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
+      floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
     };
   },
@@ -173,16 +175,16 @@ export default defineComponent({
   mounted() {},
   computed: {
     floors() {
-      return this.printersStore.floors;
+      return this.floorStore.floors;
     },
     selectedFloor() {
-      return this.printersStore.floors[this.selectedItem];
+      return this.floorStore.floors[this.selectedItem];
     },
     showAddedPrinters() {
       return this.selectedFloor.printers?.length + 1;
     },
     unassignedPrinters() {
-      return this.printersStore.floorlessPrinters;
+      return this.floorStore.floorlessPrinters;
     },
   },
   methods: {
@@ -208,7 +210,7 @@ export default defineComponent({
     async updatePrinterFloorName() {
       if (!this.selectedFloor?._id) return;
       const { _id: floorId } = this.selectedFloor;
-      await this.printersStore.updateFloorName({
+      await this.floorStore.updateFloorName({
         floorId,
         name: this.editedFloorName,
       });
@@ -216,7 +218,7 @@ export default defineComponent({
     async updatePrinterFloorNumber() {
       if (!this.selectedFloor?._id) return;
       const { _id: floorId } = this.selectedFloor;
-      await this.printersStore.updatePrinterFloorNumber({
+      await this.floorStore.updateFloorNumber({
         floorId,
         floorNumber: this.editedFloorNumber,
       });
@@ -226,13 +228,13 @@ export default defineComponent({
     async clickDeleteFloor() {
       if (!this.selectedFloor?._id) return;
 
-      await this.printersStore.deleteFloor(this.selectedFloor._id);
+      await this.floorStore.deleteFloor(this.selectedFloor._id);
     },
     async addPrinterToFloor(floor: Floor, printer: Printer) {
       if (!this.selectedFloor._id || !printer?.id) return;
 
       // TODO this will fail because X < 0 and Y < 0
-      await this.printersStore.addPrinterToFloor({
+      await this.floorStore.addPrinterToFloor({
         floorId: this.selectedFloor._id,
         printerId: printer.id,
         x: -1,
@@ -243,7 +245,7 @@ export default defineComponent({
       const printer = this.printerInFloor(floor, index);
       if (!floor?._id || !printer?.id) return;
 
-      await this.printersStore.deletePrinterFromFloor({
+      await this.floorStore.deletePrinterFromFloor({
         floorId: floor._id,
         printerId: printer.id,
       });

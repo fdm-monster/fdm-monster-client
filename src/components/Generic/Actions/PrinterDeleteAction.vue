@@ -7,14 +7,14 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Printer } from "@/models/printers/printer.model";
-import { usePrintersStore } from "@/store/printers.store";
+import { usePrinterStore } from "../../../store/printer.store";
 
 export default defineComponent({
   name: "PrinterDeleteAction",
   components: {},
   setup: () => {
     return {
-      printersStore: usePrintersStore(),
+      printersStore: usePrinterStore(),
     };
   },
   async created() {},
