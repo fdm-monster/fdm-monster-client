@@ -110,7 +110,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Floor } from "@/models/printer-floor/printer-floor.model";
+import { Floor } from "../../models/floors/floor.model";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintCompletionsService } from "@/backend/print-completions.service";
 import { PrinterCompletions } from "@/models/print-completions/print-completions.model";

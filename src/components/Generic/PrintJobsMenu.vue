@@ -85,7 +85,7 @@ import { defineComponent } from "vue";
 import { usePrinterStore } from "../../store/printer.store";
 
 interface Data {
-  search?: string;
+  search: string;
   menu: boolean;
 }
 
@@ -130,7 +130,7 @@ export default defineComponent({
   },
   watch: {
     menu() {
-      this.search = undefined;
+      this.search = "";
     },
   },
 });

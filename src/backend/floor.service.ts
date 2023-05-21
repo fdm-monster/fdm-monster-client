@@ -1,16 +1,12 @@
 import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { newRandomNamePair } from "@/constants/noun-adjectives.data";
-import {
-  Floor,
-  getDefaultCreatePrinterFloor,
-  PreCreateFloor,
-} from "@/models/printer-floor/printer-floor.model";
+import { Floor, getDefaultCreateFloor, PreCreateFloor } from "../models/floors/floor.model";
 
 export class FloorService extends BaseService {
   static convertPrinterFloorToCreateForm(printerFloor?: Floor): PreCreateFloor {
     // Inverse transformation
-    const newFormData = getDefaultCreatePrinterFloor();
+    const newFormData = getDefaultCreateFloor();
 
     newFormData._id = printerFloor?._id;
     newFormData.name = printerFloor?.name || newRandomNamePair();

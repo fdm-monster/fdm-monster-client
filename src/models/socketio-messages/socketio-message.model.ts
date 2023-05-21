@@ -1,5 +1,5 @@
 import { Printer } from "@/models/printers/printer.model";
-import { Floor } from "@/models/printer-floor/printer-floor.model";
+import { Floor } from "../floors/floor.model";
 
 export interface TestProgressDetails {
   connected: boolean;

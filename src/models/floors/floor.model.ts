@@ -22,7 +22,7 @@ export interface PreCreateFloor {
   printers: PrinterInFloor[];
 }
 
-export const getDefaultCreatePrinterFloor = (): PreCreateFloor => ({
+export const getDefaultCreateFloor = (): PreCreateFloor => ({
   _id: undefined,
   name: newRandomNamePair(),
   floor: "1",
