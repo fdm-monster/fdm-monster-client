@@ -2,10 +2,10 @@
   <div>
     <div v-if="gridStore.gridEditMode" class="ml-4 mt-4 mb-0" style="cursor: move">
       <span class="pr-4">
-        Drag and drop {{ printerStore.floorlessPrinters.length }} unplaced printer(s) here:
+        Drag and drop {{ floorStore.floorlessPrinters.length }} unplaced printer(s) here:
       </span>
       <div
-        v-for="printer of printerStore.floorlessPrinters"
+        v-for="printer of floorStore.floorlessPrinters"
         :key="printer.id"
         class="d-inline-block text-center mr-1 mb-1"
         draggable="true"

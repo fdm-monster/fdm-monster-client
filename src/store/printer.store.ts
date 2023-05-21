@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
 import { Printer } from "@/models/printers/printer.model";
 import { PrinterFileBucket } from "@/models/printers/printer-file-bucket.model";
-import { Floor } from "@/models/printer-floor/printer-floor.model";
 import { ClearedFilesResult } from "@/models/printers/printer-file.model";
 import { PrinterFileService, PrintersService } from "@/backend";
 import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
-import { FloorService } from "../backend/floor.service";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { useSettingsStore } from "./settings.store";
 

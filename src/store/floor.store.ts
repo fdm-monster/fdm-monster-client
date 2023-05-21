@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Floor } from "../models/printer-floor/printer-floor.model";
+import { Floor } from "../models/floors/floor.model";
 import { useSettingsStore } from "./settings.store";
 import { Printer } from "../models/printers/printer.model";
 import { usePrinterStore } from "./printer.store";

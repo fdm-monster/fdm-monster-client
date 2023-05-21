@@ -31,9 +31,9 @@ import { defineComponent, inject } from "vue";
 import { ValidationProvider } from "vee-validate";
 import { AppConstants } from "@/constants/app.constants";
 import {
-  getDefaultCreatePrinterFloor,
+  getDefaultCreateFloor,
   PreCreateFloor,
-} from "@/models/printer-floor/printer-floor.model";
+} from "../../../models/floors/floor.model";
 import { FloorService } from "../../../backend/floor.service";
 import { usePrinterStore } from "../../../store/printer.store";
 import { useFloorStore } from "../../../store/floor.store";
@@ -70,7 +70,7 @@ export default defineComponent({
     printerFloorId: String,
   },
   data: (): Data => ({
-    formData: getDefaultCreatePrinterFloor(),
+    formData: getDefaultCreateFloor(),
   }),
   computed: {
     printerFloorNameRules() {
