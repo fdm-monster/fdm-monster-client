@@ -210,17 +210,5 @@ export const usePrinterStore = defineStore("Printers", {
       const results = await PrinterFileService.batchReprintFiles(printerIds);
       console.debug(results);
     },
-    async selectAndPrintFile({ printerId, fullPath }: { printerId: string; fullPath: string }) {
-      if (!printerId) return;
-      const printer = this.printer(printerId);
-      if (!printer) return;
-
-      if (printer.printerState.flags.printing || !printer.apiAccessibility.accessible) {
-        alert("This printer is printing or not connected! Either way printing is not an option.");
-        return;
-      }
-
-      await PrinterFileService.selectAndPrintFile(printerId, fullPath, true);
-    },
   },
 });

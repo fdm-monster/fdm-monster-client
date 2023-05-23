@@ -83,6 +83,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { usePrinterStore } from "../../store/printer.store";
+import { usePrinterStateStore } from "../../store/printer-state.store";
 
 interface Data {
   search: string;
@@ -95,6 +96,7 @@ export default defineComponent({
   setup: () => {
     return {
       printersStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
     };
   },
   async created() {},
@@ -106,10 +108,10 @@ export default defineComponent({
   }),
   computed: {
     activePrintJobs() {
-      return this.printersStore.printersWithJob.filter((p) => {
-        const fileNameSearch = p.currentJob.fileName?.toLowerCase() || "";
-        const printerUrlSearch = p.printerURL?.toLowerCase() || "";
-        const searchSearch = p.printerName?.toLowerCase() || "";
+      return this.printerStateStore.printersWithJob.filter((p) => {
+        const fileNameSearch = p.job.fileName?.toLowerCase() || "";
+        const printerUrlSearch = p.printer.printerURL?.toLowerCase() || "";
+        const searchSearch = p.printer.printerName?.toLowerCase() || "";
 
         const combineSearch = `${fileNameSearch} ${printerUrlSearch} ${searchSearch}`;
         return !this.search || combineSearch.includes(this.search.toLowerCase());

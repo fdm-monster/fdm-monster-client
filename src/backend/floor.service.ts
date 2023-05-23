@@ -1,11 +1,7 @@
 import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { newRandomNamePair } from "@/constants/noun-adjectives.data";
-import {
-  Floor,
-  getDefaultCreateFloor,
-  PreCreateFloor,
-} from "../models/floors/floor.model";
+import { Floor, getDefaultCreateFloor, PreCreateFloor } from "../models/floors/floor.model";
 
 export class FloorService extends BaseService {
   static convertPrinterFloorToCreateForm(printerFloor?: Floor): PreCreateFloor {

@@ -70,7 +70,6 @@ export class SocketIoService {
 
     if (message.printerEvents) {
       this.printerStateStore.setPrinterEvents(message.printerEvents);
-      console.debug(this.printerStateStore.operationalPrintersById);
     }
 
     if (message.floors) {

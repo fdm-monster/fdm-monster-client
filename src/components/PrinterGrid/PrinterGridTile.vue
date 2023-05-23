@@ -79,7 +79,7 @@
                 <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
               </span>
               <span v-else>
-                <small>{{ printer.printerState.state?.toUpperCase() }}</small>
+                <small>{{ printerState.text?.toUpperCase() }}</small>
               </span>
             </small>
           </template>
@@ -106,8 +106,8 @@
       <!--      <v-container v-else>  </v-container>-->
 
       <v-progress-linear
-        v-if="printer && printer.currentJob"
-        :value="printer.currentJob.progress"
+        v-if="currentJob"
+        :value="currentJob.progress"
         absolute
         bottom
         color="green"
@@ -131,6 +131,8 @@ import { FloorService } from "../../backend/floor.service";
 import { filamentColorParse } from "../../constants/experimental.constants";
 import { useSettingsStore } from "../../store/settings.store";
 import { useFloorStore } from "../../store/floor.store";
+import { interpretStates } from "../../shared/printer-state.constants";
+import { usePrinterStateStore } from "../../store/printer-state.store";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 const maintenanceColor = "black";
@@ -147,7 +149,8 @@ export default defineComponent({
   },
   setup() {
     return {
-      printersStore: usePrinterStore(),
+      printerStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
       floorStore: useFloorStore(),
       settingsStore: useSettingsStore(),
       gridStore: useGridStore(),
@@ -157,13 +160,13 @@ export default defineComponent({
   computed: {
     selected() {
       if (!this.printer) return false;
-      return this.printersStore.isSelectedPrinter(this.printer?.id);
+      return this.printerStore.isSelectedPrinter(this.printer?.id);
     },
     unselected() {
-      return this.printersStore.selectedPrinters?.length && !this.selected;
+      return this.printerStore.selectedPrinters?.length && !this.selected;
     },
     printers() {
-      return this.printersStore.printers;
+      return this.printerStore.printers;
     },
     printerFilamentColorName() {
       const printerColor = this.printerFilamentColor();
@@ -188,10 +191,23 @@ export default defineComponent({
     largeTilesEnabled() {
       return this.settingsStore.largeTiles;
     },
+    printerState() {
+      if (!this.printer?.id) return null;
+      if (this.printer.disabledReason?.length) return null;
+
+      const printerEvents = this.printerStateStore.printerEventsById[this.printer.id];
+      const socketState = this.printerStateStore.socketStatesById[this.printer.id];
+      const states = interpretStates(this.printer, socketState, printerEvents?.current);
+      return states;
+    },
     printerStateColor() {
-      if (!this.printer) return defaultColor;
-      if (this.printer.disabledReason?.length) return maintenanceColor;
-      return this.printer?.printerState.colour.hex || defaultColor;
+      const states = this.printerState;
+      if (!states) return defaultColor;
+      return states.rgb || defaultColor;
+    },
+    currentJob() {
+      if (!this.printer?.id) return;
+      return this.printerStateStore.printerJobsById[this.printer?.id];
     },
   },
   methods: {
@@ -199,14 +215,14 @@ export default defineComponent({
       return filamentColorParse;
     },
     clickInfo() {
-      this.printersStore.setSideNavPrinter(this.printer);
+      this.printerStore.setSideNavPrinter(this.printer);
     },
     clickOpenPrinterURL() {
       if (!this.printer) return;
       PrintersService.openPrinterURL(this.printer.printerURL);
     },
     clickOpenSettings() {
-      this.printersStore.setUpdateDialogPrinter(this.printer);
+      this.printerStore.setUpdateDialogPrinter(this.printer);
       this.dialogsStore.openDialog(DialogName.UpdatePrinterDialog);
     },
     async clickEmergencyStop() {
@@ -228,7 +244,7 @@ export default defineComponent({
         return;
       }
 
-      this.printersStore.toggleSelectedPrinter(this.printer);
+      this.printerStore.toggleSelectedPrinter(this.printer);
     },
     printerFilamentColor() {
       const ralCode = this.printer?.lastPrintedFile.parsedVisualizationRAL;

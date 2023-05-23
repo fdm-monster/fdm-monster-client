@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { Printer } from "../models/printers/printer.model";
 import { PrinterEvents, SocketState } from "../models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "./printer.store";
+import { PrinterCurrentJob, PrinterJob } from "../models/printers/printer-current-job.model";
+import { PrinterFileService } from "../backend";
 
 interface State {
   printerIds: string[];
@@ -16,10 +18,10 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     socketStatesById: {},
   }),
   getters: {
-    operationalPrintersById(state) {
+    operationalPrintersById() {
       const printerStore = usePrinterStore();
       const printersById: { [printerId: string]: Printer } = {};
-      state.printerIds.forEach((id) => {
+      this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         if (printerEvents?.current?.payload?.state?.flags?.operational) {
           const printer = printerStore.printer(id);
@@ -32,14 +34,14 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       });
       return printersById;
     },
-    isPrinterOnline() {
+    isPrinterOperational(): (printerId: string) => boolean {
       return (printerId: string) => {
-        return Object.keys(this.onlinePrinters).includes(printerId);
+        return Object.keys(this.operationalPrintersById).includes(printerId);
       };
     },
-    printingPrintersById(state) {
+    printingPrintersById() {
       const printersById: { [printerId: string]: PrinterEvents } = {};
-      state.printerIds.forEach((id) => {
+      this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         if (printerEvents?.current?.payload?.state?.flags?.printing) {
           printersById[id] = printerEvents;
@@ -47,15 +49,23 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       });
       return printersById;
     },
-    isPrinterPrinting() {
+    isPrinterPrinting(): (printerId: string) => boolean {
       return (printerId: string) => {
         return Object.keys(this.printingPrintersById).includes(printerId);
       };
     },
-    onlinePrinters(state) {
+    isPrinterStoppable(): (printerId: string) => boolean {
+      return (printerId: string) => {
+        const printerEvents = this.printerEventsById[printerId];
+        if (!printerEvents) return false;
+        const flags = printerEvents?.current?.payload.state.flags;
+        return flags?.printing || flags?.paused;
+      };
+    },
+    onlinePrinters() {
       const printerStore = usePrinterStore();
       const onlinePrinters: { [printerId: string]: Printer } = {};
-      state.printerIds.forEach((id) => {
+      this.printerIds.forEach((id) => {
         const socketState = this.socketStatesById[id];
         if (socketState?.socketState === "opened") {
           const printer = printerStore.printer(id);
@@ -70,17 +80,47 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       });
       return onlinePrinters;
     },
-    printersWithJob(state) {
+    isPrinterOnline() {
+      return (printerId: string) => {
+        return Object.keys(this.onlinePrinters).includes(printerId);
+      };
+    },
+    printerJobsById() {
       const printerStore = usePrinterStore();
-      return this.printingPrintersById.filter(
-        (p) => {
-          if (!this.isPrinterPrinting(p.id)) return false;
-
-          const printerEvents = this.printerEventsById[p.id];
-          return printerEvents?.current?.payload?.job?.file?.name;
+      const printersWithJobById: { [k: string]: PrinterJob | PrinterCurrentJob } = {};
+      this.printerIds.forEach((id) => {
+        const printerEvents = this.printerEventsById[id];
+        const flags = printerEvents?.current?.payload?.state?.flags;
+        if (flags?.printing || flags?.paused) {
+          const printer = printerStore.printer(id);
+          if (printer) {
+            printersWithJobById[printer.id] = printerEvents?.current?.payload?.state;
+          } else {
+            throw new Error(`PrinterStore contains no printer with id ${id} but events are known`);
+          }
         }
-        // p.printerState.flags && (p.printerState.flags.printing || p.printerState.flags.printing)
-      );
+      });
+      return printersWithJobById;
+    },
+    printersWithJob() {
+      const printerStore = usePrinterStore();
+      const printersWithJobById: { printer: Printer; job: any }[] = [];
+      this.printerIds.forEach((id) => {
+        const printerEvents = this.printerEventsById[id];
+        const flags = printerEvents?.current?.payload?.state?.flags;
+        if (flags?.printing || flags?.paused) {
+          const printer = printerStore.printer(id);
+          if (printer) {
+            printersWithJobById.push({
+              printer,
+              job: printerEvents?.current?.payload?.state,
+            });
+          } else {
+            throw new Error(`PrinterStore contains no printer with id ${id} but events are known`);
+          }
+        }
+      });
+      return printersWithJobById;
     },
   },
   actions: {
@@ -95,6 +135,19 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     deletePrinterEvents(printerId: string) {
       delete this.printerEventsById[printerId];
       this.printerIds = Object.keys(this.printerEventsById);
+    },
+    async selectAndPrintFile({ printerId, fullPath }: { printerId: string; fullPath: string }) {
+      if (!printerId) return;
+      const printerStore = usePrinterStore();
+      const printer = printerStore.printer(printerId);
+      if (!printer) return;
+
+      if (this.isPrinterPrinting(printerId)) {
+        alert("This printer is printing or not connected! Either way printing is not an option.");
+        return;
+      }
+
+      await PrinterFileService.selectAndPrintFile(printerId, fullPath, true);
     },
   },
 });

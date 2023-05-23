@@ -132,6 +132,7 @@ import { PrinterFileCleanSettings } from "../../models/settings/printer-file-cle
 import { usePrinterStore } from "../../store/printer.store";
 import { isValidIPOrMask } from "@/utils/validation.utils";
 import { whitelistSettingsHidden } from "../../constants/experimental.constants";
+import { usePrinterStateStore } from "../../store/printer-state.store";
 
 interface Data {
   ipAddress: string;
@@ -145,6 +146,7 @@ export default defineComponent({
   setup: () => {
     return {
       printersStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
       ipAddressRule: (val: string) => (isValidIPOrMask(val) ? true : "Not a valid IP Address"),
     };
   },
@@ -203,12 +205,12 @@ export default defineComponent({
       this.$bus.emit(infoMessageEvent, `Successfully purged all references to printer files!`);
     },
     async bulkDisableGCodeAnalysis() {
-      const printers = this.printersStore.onlinePrinters;
+      const printers = this.printerStateStore.onlinePrinters;
       this.$bus.emit(
         infoMessageEvent,
         `Trying to disable gcode analysis for ${printers.length} online printers.`
       );
-      for (const printer of printers) {
+      for (const printer of Object.values(printers)) {
         await PrinterSettingsService.setGCodeAnalysis(printer.id, false);
       }
       this.$bus.emit(

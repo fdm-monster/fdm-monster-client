@@ -12,7 +12,6 @@ export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
   printerHostName: "",
   apiKey: "",
   enabled: true,
-  stepSize: 1,
 });
 
 /**
@@ -30,9 +29,6 @@ export interface PreCreatePrinter {
   printerHostPort: number;
 
   apiKey: string;
-
-  // Baby-stepping
-  stepSize: 0.1 | 1 | 10 | 100;
 }
 
 /**
@@ -48,7 +44,4 @@ export interface CreatePrinter {
   printerURL: string;
 
   apiKey: string;
-
-  // Baby-stepping
-  stepSize: 0.1 | 1 | 10 | 100;
 }

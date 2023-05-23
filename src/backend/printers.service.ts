@@ -37,8 +37,6 @@ export class PrintersService extends BaseService {
     newFormData.printerName = printer.printerName || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
     newFormData.enabled = printer.enabled;
-    newFormData.stepSize = printer.stepSize;
-
     return newFormData;
   }
 
