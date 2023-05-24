@@ -35,8 +35,8 @@ export interface SocketIoTestPrinterMessage {
 }
 
 export interface SocketState {
-  socketState: string;
-  apiState: string;
+  socket: string;
+  api: string;
 }
 
 export interface PrinterEvents {

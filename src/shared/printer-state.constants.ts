@@ -57,8 +57,8 @@ export function interpretStates(
   }
 
   // Basic necessity to parse API/Websocket states
-  const responding = socketState?.apiState === "responding";
-  const authFail = socketState?.apiState === "authFail";
+  const responding = socketState?.api === "responding";
+  const authFail = socketState?.api === "authFail";
   if (!responding || !socketState) {
     return {
       ...state,
@@ -69,8 +69,8 @@ export function interpretStates(
   }
 
   // First level: API/socket
-  const socketOpened = socketState.socketState === "opened" || socketState.socketState === "silent";
-  const socketAuthing = socketState.socketState === "authenticating";
+  const socketOpened = socketState.socket === "opened" || socketState.socket === "silent";
+  const socketAuthing = socketState.socket === "authenticating";
 
   // Backend has concluded that things are not retryable
   if (!responding) {
@@ -78,7 +78,7 @@ export function interpretStates(
       ...state,
       color: COLOR.danger,
       rgb: RGB.Red,
-      text: authFail ? "API key wrong" : socketState.apiState,
+      text: authFail ? "API key wrong" : socketState.api,
     };
   }
 
@@ -91,7 +91,10 @@ export function interpretStates(
       text: "No API",
     };
   }
-  if (!socketOpened || !printerState) {
+
+  const currentState = printerState.current?.payload.state;
+  const flags = currentState?.flags;
+  if (!socketOpened || !flags) {
     const s = socketOpened ? 1 : 0;
     const sa = socketAuthing ? 1 : 0;
     const p = printerState ? 1 : 0;
@@ -111,23 +114,28 @@ export function interpretStates(
   //     text: LABEL.Disconnected,
   //     description: printerState.text || "Please check if the USB cable was disconnected/broken",
   //   };
-  // } else
-  if (printerState.flags.error || printerState.flags.closedOrError) {
+
+  if (!flags) {
+    console.error("No flags", flags);
+    return;
+  }
+
+  if (flags.error || flags.closedOrError) {
     return {
       ...state,
       color: COLOR.danger,
       rgb: RGB.Red,
       text: LABEL.Error,
-      description: printerState.desc,
+      description: currentState.error,
     };
-  } else if (printerState.flags.paused || printerState.flags.pausing) {
+  } else if (flags.paused || flags.pausing) {
     return {
       ...state,
       color: COLOR.success,
       rgb: RGB.Brown,
       text: LABEL.Paused,
     };
-  } else if (printerState.flags.printing) {
+  } else if (flags.printing) {
     return {
       ...state,
       color: COLOR.success,
@@ -140,7 +148,7 @@ export function interpretStates(
       color: COLOR.dark,
       rgb: RGB.DarkGray,
       text: LABEL.Operational,
-      description: printerState.desc,
+      description: currentState.error,
     };
   }
 }

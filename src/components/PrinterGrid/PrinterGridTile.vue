@@ -103,8 +103,6 @@
         <v-icon size="48">add</v-icon>
         Place printer
       </v-container>
-      <!--      <v-container v-else>  </v-container>-->
-
       <v-progress-linear
         v-if="currentJob"
         :value="currentJob.progress"
@@ -197,7 +195,7 @@ export default defineComponent({
 
       const printerEvents = this.printerStateStore.printerEventsById[this.printer.id];
       const socketState = this.printerStateStore.socketStatesById[this.printer.id];
-      const states = interpretStates(this.printer, socketState, printerEvents?.current);
+      const states = interpretStates(this.printer, socketState, printerEvents);
       return states;
     },
     printerStateColor() {

@@ -2,7 +2,6 @@ export type PSTATE = string;
 export type CATEGORY = string;
 export type ColourLabel = "dark" | "success" | "warning" | "danger" | "secondary";
 
-
 export interface StateFlags {
   operational: boolean;
   printing?: boolean;
@@ -18,12 +17,21 @@ export interface StateFlags {
 }
 
 export interface PrinterState {
-  state: PSTATE;
-  desc: string;
-  flags: StateFlags;
-  colour: {
-    name: ColourLabel;
-    hex: string;
-    category: CATEGORY;
+  current: {
+    payload: {
+      progress: {
+        completion: number;
+        filepos: number;
+        printTime: number;
+        printTimeLeft: number;
+        printTimeLeftOrigin: string;
+      };
+      state: {
+        flags: StateFlags;
+        error: string;
+        text: string;
+      };
+      receivedAt: number;
+    };
   };
 }

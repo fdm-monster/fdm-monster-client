@@ -19,7 +19,7 @@
           {{ storedSideNavPrinter.printerName }}
           <strong> ({{ isEnabled ? "enabled" : "disabled" }}) </strong>
           <strong v-if="isOperational" class="float-end">
-            {{ storedSideNavPrinter.printerState.state }}
+            {{ printerState.text }}
           </strong>
           <strong v-if="!storedSideNavPrinter.enabled || !isOnline" class="float-end">
             OFFLINE/DISABLED
@@ -354,7 +354,8 @@ export default defineComponent({
         return false;
       }
       return (
-        this.shownFileBucket?.files?.length && this.printerStateStore.onlinePrinters[this.printerId]
+        this.shownFileBucket?.files?.length &&
+        this.printerStateStore.isPrinterOnline(this.printerId)
       );
     },
     printerState() {

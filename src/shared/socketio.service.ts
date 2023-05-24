@@ -64,14 +64,6 @@ export class SocketIoService {
       this.$bus.emit(uploadMessageEvent, InfoEventType.UPLOAD_BACKEND, message.trackedUploads);
     }
 
-    if (message.socketStates) {
-      this.printerStateStore.setSocketStates(message.socketStates);
-    }
-
-    if (message.printerEvents) {
-      this.printerStateStore.setPrinterEvents(message.printerEvents);
-    }
-
     if (message.floors) {
       this.floorStore.saveFloors(message.floors);
       this.$bus.emit(socketIoFloors, message.floors);
@@ -87,6 +79,18 @@ export class SocketIoService {
         if (!p.id) return;
         this.$bus.emit(updatedPrinterEvent(p.id), p);
       });
+    }
+
+    if (message.socketStates) {
+      console.debug(`Got ${Object.keys(message.socketStates).length} socketStates update`);
+      this.printerStateStore.setSocketStates(message.socketStates);
+      // console.debug(message.socketStates);
+    }
+
+    if (message.printerEvents) {
+      console.debug(`Got ${Object.keys(message.printerEvents).length} printerEvents update`);
+      this.printerStateStore.setPrinterEvents(message.printerEvents);
+      // console.debug(message.printerEvents);
     }
   }
 }

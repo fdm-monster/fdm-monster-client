@@ -67,7 +67,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       const onlinePrinters: { [printerId: string]: Printer } = {};
       this.printerIds.forEach((id) => {
         const socketState = this.socketStatesById[id];
-        if (socketState?.socketState === "opened") {
+        if (socketState?.socket === "opened") {
           const printer = printerStore.printer(id);
           if (printer) {
             onlinePrinters[id] = printer;
