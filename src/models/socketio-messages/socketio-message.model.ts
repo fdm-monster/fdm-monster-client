@@ -1,5 +1,6 @@
 import { Printer } from "@/models/printers/printer.model";
 import { Floor } from "../floors/floor.model";
+import { ById } from "../../utils/types/byid.utils";
 
 export interface TestProgressDetails {
   connected: boolean;
@@ -45,10 +46,13 @@ export interface PrinterEvents {
   plugins: any;
 }
 
+export type SocketStateById = ById<SocketState>;
+export type PrinterEventsById = ById<PrinterEvents>;
+
 export interface SocketIoUpdateMessage {
   printers: Printer[];
-  socketStates: { [printerId: string]: SocketState };
-  printerEvents: { [printerId: string]: PrinterEvents };
+  socketStates: SocketStateById;
+  printerEvents: PrinterEventsById;
   trackedUploads: UploadStates;
   floors: Floor[];
 }
