@@ -56,7 +56,6 @@ import {
 } from "@/models/socketio-messages/socketio-message.model";
 import { PrintersService } from "@/backend";
 import { generateInitials } from "@/constants/noun-adjectives.data";
-import { updatedPrinterEvent } from "@/event-bus/printer.events";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import PrinterCrudForm from "@/components/Generic/Forms/PrinterCrudForm.vue";
 import { infoMessageEvent } from "@/event-bus/alert.events";
@@ -176,7 +175,6 @@ export default defineComponent({
         updatedPrinter,
       });
 
-      this.$bus.emit(updatedPrinterEvent(printerId as string), updatedData);
       this.$bus.emit(infoMessageEvent, `Printer ${updatedPrinter.printerName} updated`);
 
       this.closeDialog();
