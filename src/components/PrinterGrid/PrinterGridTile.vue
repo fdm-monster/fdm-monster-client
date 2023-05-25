@@ -86,18 +86,6 @@
           Maintenance reason: <br />
           {{ printer.disabledReason }}
         </v-tooltip>
-
-        <v-tooltip v-if="filamentColorParse()" close-delay="1000" open-delay="0" right>
-          <template v-slot:activator="{ on, attrs }">
-            <div
-              :style="{ background: printerFilamentColorRgba }"
-              class="d-flex justify-end filament-abs-border"
-              v-bind="attrs"
-              v-on="on"
-            ></div>
-          </template>
-          <span>{{ printerFilamentColorName }}</span>
-        </v-tooltip>
       </v-container>
       <v-container v-else-if="gridStore.gridEditMode">
         <v-icon size="48">add</v-icon>

@@ -92,6 +92,7 @@ export function interpretStates(
     };
   }
 
+  const isUsbConnected = printerState?.current?.payload.state.flags.operational;
   const currentState = printerState.current?.payload.state;
   const flags = currentState?.flags;
   if (!socketOpened || !flags) {
@@ -102,7 +103,7 @@ export function interpretStates(
       ...state,
       color: COLOR.danger,
       rgb: RGB.Red,
-      text: !p ? "No USB" : `S${s} SA${sa} | P${p}`,
+      text: !isUsbConnected ? "No USB Connected" : `S${s} SA${sa} | P${p}`,
     };
   }
 
