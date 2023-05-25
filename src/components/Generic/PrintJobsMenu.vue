@@ -49,20 +49,22 @@
             <v-list-item-action>
               <v-progress-circular
                 :size="60"
-                :value="printer.currentJob.progress"
+                :value="currentJob(printer.id)?.progress"
                 :width="5"
                 color="green"
               >
-                {{ truncateProgress(printer.currentJob.progress) + "%" || "" }}
+                {{ truncateProgress(currentJob(printer.id)?.progress) + "%" || "" }}
               </v-progress-circular>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>
-                {{ printer.currentJob.fileName }}
+                {{ currentJob(printer.id)?.fileName }}
               </v-list-item-title>
               <v-list-item-subtitle>
                 Elapsed:
-                <strong>{{ Math.round(printer.currentJob.printTimeElapsed / 60) }} minutes</strong>
+                <strong
+                  >{{ Math.round(currentJob(printer.id)?.printTimeElapsed / 60) }} minutes</strong
+                >
                 <br />
                 Printer: <strong>{{ printer.printerName }}</strong>
               </v-list-item-subtitle>
@@ -119,6 +121,12 @@ export default defineComponent({
     },
     activePrintCount() {
       return this.activePrintJobs.length || 0;
+    },
+    currentJob() {
+      return (printerId: string) => {
+        if (!printerId?.length) return;
+        return this.printerStateStore.printerJobsById[printerId];
+      };
     },
   },
   methods: {

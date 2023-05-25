@@ -18,6 +18,22 @@
       tile
       @click="selectOrUnplacePrinter()"
     >
+      <v-icon
+        v-if="printerState?.text.includes('API')"
+        color="primary"
+        size="70"
+        style="opacity: 0.2; position: absolute; top: 5%; right: 10%"
+      >
+        wifi_off
+      </v-icon>
+      <v-icon
+        v-if="printerState?.text.includes('USB')"
+        color="primary"
+        size="70"
+        style="opacity: 0.2; position: absolute; top: 5%; right: 10%"
+      >
+        usb_off
+      </v-icon>
       <v-container v-if="printer" class="tile-inner fill-height">
         <small class="small-resized-font">
           {{ printer.printerName }}
@@ -92,12 +108,14 @@
         Place printer
       </v-container>
       <v-progress-linear
-        v-if="currentJob"
-        :value="currentJob.progress"
+        v-if="currentJob?.progress"
+        :value="currentJob.progress.completion"
         absolute
         bottom
         color="green"
+        height="10"
       >
+        <span class="xsmall-resized-font">{{ currentPrintingFilePath }}</span>
       </v-progress-linear>
     </v-card>
   </div>
@@ -106,7 +124,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { Printer } from "@/models/printers/printer.model";
-import RAL_CODES from "@/constants/ral.reference.json";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 import { PrintersService } from "@/backend";
 import { usePrinterStore } from "../../store/printer.store";
@@ -114,16 +131,12 @@ import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useGridStore } from "../../store/grid.store";
 import { FloorService } from "../../backend/floor.service";
-import { filamentColorParse } from "../../constants/experimental.constants";
 import { useSettingsStore } from "../../store/settings.store";
 import { useFloorStore } from "../../store/floor.store";
 import { interpretStates } from "../../shared/printer-state.constants";
 import { usePrinterStateStore } from "../../store/printer-state.store";
 
 const defaultColor = "rgba(100,100,100,0.1)";
-const maintenanceColor = "black";
-const defaultFilamentGradient =
-  "repeating-linear-gradient(-30deg, #222, #555 5px, #444 5px, #555 6px)";
 
 export default defineComponent({
   name: "PrinterGridTile",
@@ -154,26 +167,6 @@ export default defineComponent({
     printers() {
       return this.printerStore.printers;
     },
-    printerFilamentColorName() {
-      const printerColor = this.printerFilamentColor();
-      if (!printerColor) {
-        return "UNKNOWN";
-      }
-      return `${this.printer?.lastPrintedFile.parsedColor}`;
-    },
-    printerFilamentColorRgba() {
-      const ralCode = this.printer?.lastPrintedFile.parsedVisualizationRAL;
-      if (!ralCode) {
-        return defaultFilamentGradient;
-      }
-
-      const ralString = ralCode.toString();
-      const foundColor = Object.values(RAL_CODES).find((r) => r.code === ralString);
-      if (!foundColor) {
-        return defaultFilamentGradient;
-      }
-      return `${foundColor.color.hex}`;
-    },
     largeTilesEnabled() {
       return this.settingsStore.largeTiles;
     },
@@ -192,14 +185,15 @@ export default defineComponent({
       return states.rgb || defaultColor;
     },
     currentJob() {
-      if (!this.printer?.id) return;
+      if (!this.printer?.id?.length) return;
       return this.printerStateStore.printerJobsById[this.printer?.id];
+    },
+    currentPrintingFilePath() {
+      if (!this.printer?.id?.length) return;
+      return this.printerStateStore.printingFilePathsByPrinterId[this.printer?.id];
     },
   },
   methods: {
-    filamentColorParse() {
-      return filamentColorParse;
-    },
     clickInfo() {
       this.printerStore.setSideNavPrinter(this.printer);
     },
@@ -231,15 +225,6 @@ export default defineComponent({
       }
 
       this.printerStore.toggleSelectedPrinter(this.printer);
-    },
-    printerFilamentColor() {
-      const ralCode = this.printer?.lastPrintedFile.parsedVisualizationRAL;
-      if (!ralCode) {
-        return undefined;
-      }
-
-      const ralString = ralCode.toString();
-      return Object.values(RAL_CODES).find((r) => r.code === ralString);
     },
   },
 });

@@ -17,25 +17,29 @@
       <v-list-item-content v-if="storedSideNavPrinter">
         <v-list-item-title>
           {{ storedSideNavPrinter.printerName }}
-          <strong> ({{ isEnabled ? "enabled" : "disabled" }}) </strong>
-          <strong v-if="isOperational" class="float-end">
-            {{ printerState.text }}
+
+          <strong v-if="!isEnabled || !isOnline" class="d-flex justify-center static-disabled">
+            {{ isEnabled ? "Enabled" : "Disabled" }} -
+            {{ !isOnline ? "Offline" : printerState.text }}
           </strong>
-          <strong v-if="!storedSideNavPrinter.enabled || !isOnline" class="float-end">
-            OFFLINE/DISABLED
+          <strong
+            v-if="(isEnabled && printerState?.text && isOperational && isOnline) || !isOperational"
+            class="pulsating-red d-flex justify-center"
+          >
+            Enabled - {{ printerState?.text }}
           </strong>
-          <strong v-if="isOperational && isOnline" class="float-end pulsating-red">
-            {{ printerState.text }}
-          </strong>
+          <span v-if="printerState?.description">
+            {{ printerState?.description }}
+          </span>
         </v-list-item-title>
         <v-list-item-subtitle v-if="currentJob">
-          <span v-if="currentJob.progress" class="d-flex justify-center">
+          <span v-if="currentJob?.progress" class="d-flex justify-center">
             Progress:
-            {{ truncateProgress(storedSideNavPrinter.currentJob.progress) }}%
+            {{ truncateProgress(currentJob?.progress.completion) }}%
           </span>
           <v-progress-linear
-            v-if="currentJob"
-            :value="truncateProgress(currentJob.progress)"
+            v-if="currentJob?.progress"
+            :value="truncateProgress(currentJob.progress?.completion)"
             class="mt-1 mb-1"
             height="8px"
           >
@@ -44,10 +48,10 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn outlined small v-bind="attrs" v-on="on">
-                {{ currentJob.fileName }}
+                {{ currentPrintingFilePath }}
               </v-btn>
             </template>
-            <span>{{ currentJob.fileName }}</span>
+            <span>{{ currentPrintingFilePath }}</span>
           </v-tooltip>
         </v-list-item-subtitle>
       </v-list-item-content>
@@ -290,6 +294,7 @@ import { useDialogsStore } from "../../store/dialog.store";
 import { PrinterJobService } from "../../backend/printer-job.service";
 import { usePrinterStateStore } from "../../store/printer-state.store";
 import { interpretStates } from "../../shared/printer-state.constants";
+import { useSettingsStore } from "../../store/settings.store";
 
 interface Data {
   fileSearch?: string;
@@ -364,22 +369,35 @@ export default defineComponent({
       }
       return this.printerStateStore.printerJobsById[this.printerId];
     },
+    currentPrintingFilePath() {
+      if (!this.printerId) {
+        throw new Error("Printer ID not set, cannot get current printing file name");
+      }
+      return this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
+    },
     printerState() {
       if (!this.printerId || !this.storedSideNavPrinter) return null;
 
       const printerEvents = this.printerStateStore.printerEventsById[this.printerId];
       const socketState = this.printerStateStore.socketStatesById[this.printerId];
-      const states = interpretStates(
-        this.storedSideNavPrinter,
-        socketState,
-        printerEvents?.current
-      );
+      const states = interpretStates(this.storedSideNavPrinter, socketState, printerEvents);
+
+      const debugInterpretedState = useSettingsStore().debugSettings?.showInterpretedPrinterState;
+      if (debugInterpretedState) {
+        console.debug(
+          "[FileExplorerSideNav] rendered for printerId",
+          this.printerId,
+          states?.text,
+          states?.color,
+          states?.rgb
+        );
+      }
       return states;
     },
   },
   methods: {
     formatBytes: formatBytes,
-    truncateProgress(progress: number) {
+    truncateProgress(progress?: number) {
       if (!progress) return "";
       return progress?.toFixed(1);
     },
@@ -387,9 +405,9 @@ export default defineComponent({
       if (!this.printerId) {
         return false;
       }
-      // Completed job will not disappear (yet)
-      if (this.printerStateStore.isPrinterOperational(this.printerId)) return false;
-      return this.currentJob?.fileName === file.name;
+
+      const jobFilePath = this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
+      return jobFilePath === file.name;
     },
     avatarInitials() {
       const viewedPrinter = this.storedSideNavPrinter;

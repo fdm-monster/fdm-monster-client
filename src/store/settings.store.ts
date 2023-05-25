@@ -2,13 +2,27 @@ import { defineStore } from "pinia";
 import { FrontendSettings, SettingsDto } from "../models/settings/settings.model";
 import { SettingsService } from "@/backend";
 
+export interface DebugSettings {
+  showPrinterStateUpdateSideNav: boolean;
+  showInterpretedPrinterState: boolean;
+  showJobsRendered: boolean;
+}
+
 export interface SettingsState {
   settings?: SettingsDto;
+  debugSettings: DebugSettings;
 }
 
 export const useSettingsStore = defineStore({
   id: "Settings",
-  state: (): SettingsState => ({ settings: undefined }),
+  state: (): SettingsState => ({
+    settings: undefined,
+    debugSettings: {
+      showPrinterStateUpdateSideNav: false,
+      showInterpretedPrinterState: false,
+      showJobsRendered: false,
+    },
+  }),
   actions: {
     async loadSettings(): Promise<SettingsDto> {
       const response = await SettingsService.getServerSettings();
