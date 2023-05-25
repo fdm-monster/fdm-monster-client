@@ -28,14 +28,14 @@
             {{ printerState.text }}
           </strong>
         </v-list-item-title>
-        <v-list-item-subtitle v-if="storedSideNavPrinter.currentJob">
-          <span v-if="storedSideNavPrinter.currentJob.progress" class="d-flex justify-center">
+        <v-list-item-subtitle v-if="currentJob">
+          <span v-if="currentJob.progress" class="d-flex justify-center">
             Progress:
             {{ truncateProgress(storedSideNavPrinter.currentJob.progress) }}%
           </span>
           <v-progress-linear
-            v-if="storedSideNavPrinter.currentJob"
-            :value="truncateProgress(storedSideNavPrinter.currentJob.progress)"
+            v-if="currentJob"
+            :value="truncateProgress(currentJob.progress)"
             class="mt-1 mb-1"
             height="8px"
           >
@@ -44,10 +44,10 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn outlined small v-bind="attrs" v-on="on">
-                {{ currentJob().fileName }}
+                {{ currentJob.fileName }}
               </v-btn>
             </template>
-            <span>{{ currentJob().fileName }}</span>
+            <span>{{ currentJob.fileName }}</span>
           </v-tooltip>
         </v-list-item-subtitle>
       </v-list-item-content>
@@ -358,6 +358,12 @@ export default defineComponent({
         this.printerStateStore.isPrinterOnline(this.printerId)
       );
     },
+    currentJob() {
+      if (!this.printerId) {
+        throw new Error("Printer ID not set, cannot get current job");
+      }
+      return this.printerStateStore.printerJobsById[this.printerId];
+    },
     printerState() {
       if (!this.printerId || !this.storedSideNavPrinter) return null;
 
@@ -383,13 +389,7 @@ export default defineComponent({
       }
       // Completed job will not disappear (yet)
       if (this.printerStateStore.isPrinterOperational(this.printerId)) return false;
-      return this.currentJob()?.fileName === file.name;
-    },
-    currentJob() {
-      if (!this.printerId) {
-        throw new Error("Printer ID not set, cannot get current job");
-      }
-      return this.printerStateStore.printerJobsById[this.printerId];
+      return this.currentJob?.fileName === file.name;
     },
     avatarInitials() {
       const viewedPrinter = this.storedSideNavPrinter;
