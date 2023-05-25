@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { VueBus } from "vue-bus";
 import {
+  PrinterEventsById,
   SocketIoTestPrinterMessage,
   SocketIoUpdateMessage,
 } from "../models/socketio-messages/socketio-message.model";
@@ -82,15 +83,11 @@ export class SocketIoService {
     }
 
     if (message.socketStates) {
-      console.debug(`Got ${Object.keys(message.socketStates).length} socketStates update`);
       this.printerStateStore.setSocketStates(message.socketStates);
-      // console.debug(message.socketStates);
     }
 
     if (message.printerEvents) {
-      console.debug(`Got ${Object.keys(message.printerEvents).length} printerEvents update`);
-      this.printerStateStore.setPrinterEvents(message.printerEvents);
-      // console.debug(message.printerEvents);
+      this.printerStateStore.setPrinterEvents(message.printerEvents as PrinterEventsById);
     }
   }
 }

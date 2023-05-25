@@ -1,14 +1,20 @@
 import { defineStore } from "pinia";
 import { Printer } from "../models/printers/printer.model";
-import { PrinterEvents, SocketState } from "../models/socketio-messages/socketio-message.model";
+import {
+  PrinterEvents,
+  PrinterEventsById,
+  SocketState,
+  SocketStateById,
+} from "../models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "./printer.store";
 import { PrinterCurrentJob, PrinterJob } from "../models/printers/printer-current-job.model";
 import { PrinterFileService } from "../backend";
+import { ById } from "../utils/types/byid.utils";
 
 interface State {
   printerIds: string[];
-  printerEventsById: { [printerId: string]: PrinterEvents };
-  socketStatesById: { [printerId: string]: SocketState };
+  printerEventsById: PrinterEventsById;
+  socketStatesById: SocketStateById;
 }
 
 export const usePrinterStateStore = defineStore("PrinterState", {
@@ -20,7 +26,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
   getters: {
     operationalPrintersById() {
       const printerStore = usePrinterStore();
-      const printersById: { [printerId: string]: Printer } = {};
+      const printersById: ById<Printer> = {};
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         if (printerEvents?.current?.payload?.state?.flags?.operational) {
@@ -40,7 +46,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       };
     },
     printingPrintersById() {
-      const printersById: { [printerId: string]: PrinterEvents } = {};
+      const printersById: PrinterEventsById = {};
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         if (printerEvents?.current?.payload?.state?.flags?.printing) {
@@ -64,7 +70,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
     onlinePrinters() {
       const printerStore = usePrinterStore();
-      const onlinePrinters: { [printerId: string]: Printer } = {};
+      const onlinePrinters: ById<Printer> = {};
       this.printerIds.forEach((id) => {
         const socketState = this.socketStatesById[id];
         if (socketState?.socket === "opened") {
@@ -87,7 +93,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
     printerJobsById() {
       const printerStore = usePrinterStore();
-      const printersWithJobById: { [k: string]: PrinterJob | PrinterCurrentJob } = {};
+      const printersWithJobById: ById<PrinterJob | PrinterCurrentJob> = {};
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         const flags = printerEvents?.current?.payload?.state?.flags;
@@ -124,11 +130,11 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
   },
   actions: {
-    setSocketStates(socketStates: { [printerId: string]: SocketState }) {
+    setSocketStates(socketStates: SocketStateById) {
       this.socketStatesById = socketStates;
       this.printerIds = Object.keys(socketStates);
     },
-    setPrinterEvents(printerEvents: { [printerId: string]: PrinterEvents }) {
+    setPrinterEvents(printerEvents: PrinterEventsById) {
       this.printerEventsById = printerEvents;
       // TODO check id's different from printer events and socket states
     },
