@@ -64,14 +64,13 @@ export function interpretStates(
       ...state,
       color: COLOR.secondary,
       rgb: RGB.Red,
-      text: "-",
+      text: "Could not connect to API",
     };
   }
 
   // First level: API/socket
   const socketOpened = socketState.socket === "opened" || socketState.socket === "silent";
   const socketAuthing = socketState.socket === "authenticating";
-
   // Backend has concluded that things are not retryable
   if (!responding) {
     return {
@@ -103,6 +102,7 @@ export function interpretStates(
       ...state,
       color: COLOR.danger,
       rgb: RGB.Red,
+      // TODO provide shorter alternative that fits smaller tile mode?
       text: !isUsbConnected ? "No USB Connected" : `S${s} SA${sa} | P${p}`,
     };
   }
