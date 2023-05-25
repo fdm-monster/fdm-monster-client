@@ -5,13 +5,8 @@ import {
   SocketIoTestPrinterMessage,
   SocketIoUpdateMessage,
 } from "../models/socketio-messages/socketio-message.model";
-import {
-  socketIoFloors,
-  sseMessageGlobal,
-  sseTestPrinterUpdate,
-} from "../event-bus/socketio.events";
+import { sseTestPrinterUpdate } from "../event-bus/socketio.events";
 import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
-import { updatedPrinterEvent } from "@/event-bus/printer.events";
 import { usePrinterStore } from "../store/printer.store";
 import { apiBase } from "@/backend/base.service";
 import { useFloorStore } from "../store/floor.store";
@@ -67,19 +62,10 @@ export class SocketIoService {
 
     if (message.floors) {
       this.floorStore.saveFloors(message.floors);
-      this.$bus.emit(socketIoFloors, message.floors);
     }
 
     if (message.printers) {
       this.printerStore.setPrinters(message.printers);
-
-      // Emit the global update
-      this.$bus.emit(sseMessageGlobal, message);
-
-      message.printers.forEach((p) => {
-        if (!p.id) return;
-        this.$bus.emit(updatedPrinterEvent(p.id), p);
-      });
     }
 
     if (message.socketStates) {
