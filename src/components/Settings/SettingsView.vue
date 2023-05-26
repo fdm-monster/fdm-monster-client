@@ -65,7 +65,7 @@ export default defineComponent({
         icon: "group",
         path: "/settings/user-management",
       },
-      { title: "FDM Monster settings", icon: "image", path: "/settings/system" },
+      { title: "OctoPrint Settings", icon: "image", path: "/settings/octoprint" },
       { title: "Emergency Commands", icon: "warning", path: "/settings/emergency-commands" },
     ],
   }),
