@@ -86,6 +86,7 @@
               :disabled="!fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
               min="0"
               outlined
+              label="Amount of days to keep files"
               type="number"
             />
             <v-btn color="primary" @click="setFileCleanSettings()">save file clean settings</v-btn>
