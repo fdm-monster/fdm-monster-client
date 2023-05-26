@@ -4,7 +4,7 @@
       <v-avatar>
         <v-icon>settings</v-icon>
       </v-avatar>
-      <v-toolbar-title>FDM Monster Settings</v-toolbar-title>
+      <v-toolbar-title>OctoPrint Settings</v-toolbar-title>
     </v-toolbar>
     <v-list subheader three-line>
       <v-list-item v-if="!whitelistSettingsHidden()">
