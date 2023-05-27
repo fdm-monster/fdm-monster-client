@@ -63,7 +63,7 @@ export function interpretStates(
   const responding = socketState?.api === "responding";
   const authFail = socketState?.api === "authFail";
   if (!responding || !socketState) {
-    const noResponse = socketState.api === "noResponse";
+    const noResponse = socketState?.api === "noResponse";
     return {
       ...state,
       color: COLOR.secondary,
