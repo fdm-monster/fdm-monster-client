@@ -37,7 +37,7 @@ export function interpretStates(
   printerState: PrinterState
 ) {
   const settingsStore = useSettingsStore();
-  const debugPrinterInterpreteState = settingsStore.debugSettings.showInterpretedPrinterState;
+  const debugPrinterInterpretState = settingsStore.debugSettings.showInterpretedPrinterState;
   const state = {};
 
   // Disabled/maintenance printers
@@ -63,17 +63,16 @@ export function interpretStates(
   const responding = socketState?.api === "responding";
   const authFail = socketState?.api === "authFail";
   if (!responding || !socketState) {
+    const noResponse = socketState.api === "noResponse";
     return {
       ...state,
       color: COLOR.secondary,
       rgb: RGB.Red,
-      text: "Could not connect to API",
+      text: authFail ? "API key wrong" : noResponse ? "API unreachable" : socketState?.api || "-",
     };
   }
 
-  // First level: API/socket
-  const socketOpened = socketState.socket === "opened" || socketState.socket === "silent";
-  const socketAuthing = socketState.socket === "authenticating";
+  // First level: API
   // Backend has concluded that things are not retryable
   if (!responding) {
     return {
@@ -84,14 +83,16 @@ export function interpretStates(
     };
   }
 
-  const isUsbConnected = printerState?.current?.payload.state.flags.operational;
+  // Second level: socket state
+  const socketOpened = socketState.socket === "opened" || socketState.socket === "silent";
+  const socketAuthing = socketState.socket === "authenticating";
   const currentState = printerState.current?.payload.state;
   const flags = currentState?.flags;
   if (!socketOpened || !flags) {
     const s = socketOpened ? 1 : 0;
     const sa = socketAuthing ? 1 : 0;
     const p = printerState ? 1 : 0;
-    if (debugPrinterInterpreteState)
+    if (debugPrinterInterpretState)
       console.debug(
         `Socket opened ${s}, socketAuthing ${sa} printerState ${p}, 
       currentState: ${currentState}, FLAGS ${flags}`
@@ -100,8 +101,8 @@ export function interpretStates(
       ...state,
       color: COLOR.danger,
       rgb: RGB.Red,
-      // TODO provide shorter alternative that fits smaller tile mode?
-      text: !isUsbConnected ? "No USB Connected" : `S${s} SA${sa} | P${p}`,
+      // TODO this should not result in S/SA/P label, but in a more descriptive label
+      text: !printerState ? "No USB" : `S${s} SA${sa} | P${p}`,
     };
   }
 
