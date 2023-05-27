@@ -20,10 +20,10 @@
 
           <strong v-if="!isEnabled || !isOnline" class="d-flex justify-center static-disabled">
             {{ isEnabled ? "Enabled" : "Disabled" }} -
-            {{ !isOnline ? "Offline" : printerState.text }}
+            {{ !isOnline ? "Offline" : printerState.text?.toUpperCase() }}
           </strong>
           <strong
-            v-if="(isEnabled && printerState?.text && isOperational && isOnline) || !isOperational"
+            v-if="isEnabled && printerState?.text && isOperational && isOnline"
             class="pulsating-red d-flex justify-center"
           >
             Enabled - {{ printerState?.text }}
