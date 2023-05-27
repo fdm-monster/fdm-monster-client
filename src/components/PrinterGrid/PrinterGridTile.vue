@@ -34,7 +34,7 @@
       >
         usb_off
       </v-icon>
-      <v-container v-if="printer" class="tile-inner fill-height">
+      <v-container v-if="printerId" class="tile-inner fill-height">
         <small class="small-resized-font">
           {{ printer.printerName }}
         </small>
@@ -67,8 +67,8 @@
           <!-- Connect USB -->
           <v-btn
             v-if="
-              !printerStateStore.isPrinterOperational(printer.id) &&
-              printerStateStore.isApiResponding(printer.id)
+              !printerStateStore.isPrinterOperational(printerId) &&
+              printerStateStore.isApiResponding(printerId)
             "
             icon
             @click.prevent.stop="clickConnectUsb()"
@@ -77,7 +77,7 @@
           </v-btn>
 
           <!-- Emergency stop button -->
-          <v-tooltip bottom v-if="printerStateStore.isPrinterOperational(printer.id)">
+          <v-tooltip v-if="printerStateStore.isPrinterOperational(printerId)" bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 elevation="4"
@@ -97,8 +97,8 @@
 
           <!-- Refresh connectivity button -->
           <v-tooltip
+            v-if="printer.enabled && printerStateStore.isPrinterNotOnline(printerId)"
             bottom
-            v-if="printer.enabled && printerStateStore.isPrinterNotOnline(printer.id)"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -127,7 +127,7 @@
         <br />
 
         <v-tooltip
-          :disabled="!printer.disabledReason"
+          :disabled="!printer?.disabledReason"
           close-delay="100"
           color="danger"
           open-delay="0"
@@ -139,7 +139,7 @@
               v-bind="attrs"
               v-on="on"
             >
-              <span v-if="printer.disabledReason">
+              <span v-if="printer?.disabledReason">
                 <small> MAINTENANCE</small>
                 <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
               </span>
@@ -172,7 +172,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Printer } from "@/models/printers/printer.model";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 import { PrintersService } from "@/backend";
 import { usePrinterStore } from "../../store/printer.store";
@@ -185,6 +184,7 @@ import { useFloorStore } from "../../store/floor.store";
 import { interpretStates } from "../../shared/printer-state.constants";
 import { usePrinterStateStore } from "../../store/printer-state.store";
 import { infoMessageEvent } from "../../event-bus/alert.events";
+import { Printer } from "../../models/printers/printer.model";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
@@ -207,9 +207,12 @@ export default defineComponent({
     };
   },
   computed: {
+    printerId() {
+      return this.printer?.id;
+    },
     selected() {
-      if (!this.printer?.id) return false;
-      return this.printerStore.isSelectedPrinter(this.printer?.id);
+      if (!this.printerId) return false;
+      return this.printerStore.isSelectedPrinter(this.printerId);
     },
     unselected() {
       return this.printerStore.selectedPrinters?.length && !this.selected;
@@ -218,14 +221,14 @@ export default defineComponent({
       return this.settingsStore.largeTiles;
     },
     printerState() {
-      if (!this.printer?.id) return;
-      const printer = this.printerStore.printer(this.printer.id);
+      if (!this.printerId?.length) return;
+      const printer = this.printerStore.printer(this.printerId);
       if (!printer) return;
 
       if (printer.disabledReason?.length) return null;
 
-      const printerEvents = this.printerStateStore.printerEventsById[this.printer.id];
-      const socketState = this.printerStateStore.socketStatesById[this.printer.id];
+      const printerEvents = this.printerStateStore.printerEventsById[this.printerId];
+      const socketState = this.printerStateStore.socketStatesById[this.printerId];
       const states = interpretStates(printer, socketState, printerEvents);
       return states;
     },
@@ -235,12 +238,12 @@ export default defineComponent({
       return states.rgb || defaultColor;
     },
     currentJob() {
-      if (!this.printer?.id?.length) return;
-      return this.printerStateStore.printerJobsById[this.printer?.id];
+      if (!this.printerId?.length) return;
+      return this.printerStateStore.printerJobsById[this.printerId];
     },
     currentPrintingFilePath() {
-      if (!this.printer?.id?.length) return;
-      return this.printerStateStore.printingFilePathsByPrinterId[this.printer?.id];
+      if (!this.printerId?.length) return;
+      return this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
     },
   },
   methods: {
@@ -248,8 +251,8 @@ export default defineComponent({
       this.printerStore.setSideNavPrinter(this.printer);
     },
     async clickRefreshSocket() {
-      if (!this.printer) return;
-      await PrintersService.refreshSocket(this.printer.id);
+      if (!this.printerId?.length) return;
+      await PrintersService.refreshSocket(this.printerId);
       this.$bus.emit(infoMessageEvent, "Refreshing OctoPrint connection state");
     },
     clickOpenPrinterURL() {
@@ -261,25 +264,23 @@ export default defineComponent({
       this.dialogsStore.openDialog(DialogName.UpdatePrinterDialog);
     },
     async clickEmergencyStop() {
-      if (!this.printer) return;
+      if (!this.printerId?.length) return;
       if (
         confirm("Are you sure to abort the print in Emergency Stop mode? Please reconnect after.")
       ) {
-        await CustomGcodeService.postEmergencyM112Command(this.printer.id);
+        await CustomGcodeService.postEmergencyM112Command(this.printerId);
       }
     },
     async clickConnectUsb() {
-      if (!this.printer) return;
-
-      await PrintersService.sendPrinterConnectCommand(this.printer.id);
+      if (!this.printerId?.length) return;
+      await PrintersService.sendPrinterConnectCommand(this.printerId);
     },
     async selectOrUnplacePrinter() {
-      if (!this.printer?.id) return;
-
+      if (!this.printer || !this.printerId) return;
       if (this.gridStore.gridEditMode) {
         const floorId = this.floorStore.selectedFloor?._id;
         if (!floorId) throw new Error("Cant clear printer, floor not selected");
-        await FloorService.deletePrinterFromFloor(floorId, this.printer.id);
+        await FloorService.deletePrinterFromFloor(floorId, this.printerId);
 
         return;
       }
