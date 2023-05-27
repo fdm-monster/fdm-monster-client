@@ -64,6 +64,7 @@
           </v-list>
         </v-menu>
         <div v-if="!gridStore.gridEditMode" class="float-right d-none d-xl-inline">
+          <!-- Connect USB -->
           <v-btn
             v-if="
               !printerStateStore.isPrinterOperational(printer.id) &&
@@ -75,11 +76,13 @@
             <v-icon>usb</v-icon>
           </v-btn>
 
-          <v-tooltip bottom>
+          <!-- Emergency stop button -->
+          <v-tooltip bottom v-if="printerStateStore.isPrinterOperational(printer.id)">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                v-if="printerStateStore.isPrinterOperational(printer.id)"
+                elevation="4"
                 icon
+                size="36"
                 v-bind="attrs"
                 v-on="on"
                 @click.prevent.stop="clickEmergencyStop()"
@@ -87,12 +90,15 @@
                 <v-icon>dangerous</v-icon>
               </v-btn>
             </template>
-            <span>Send an emergency stop, causing USB to be disconnected.</span>
+            <template v-slot:default>
+              <span>Send an emergency stop, causing USB to be disconnected.</span>
+            </template>
           </v-tooltip>
-          <v-tooltip bottom>
+
+          <!-- Refresh connectivity button -->
+          <v-tooltip bottom v-if="printerStateStore.isPrinterNotOnline(printer.id)">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                v-if="printerStateStore.isPrinterNotOnline(printer.id)"
                 elevation="4"
                 icon
                 size="36"
