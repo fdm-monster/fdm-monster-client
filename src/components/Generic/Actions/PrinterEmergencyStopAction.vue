@@ -3,12 +3,8 @@
     <template v-slot:badge>
       <v-icon>bolt</v-icon>
     </template>
-    <v-btn
-      :color="printer.printerState.colour.name"
-      fab
-      small
-      @click.c.capture.native.stop="clickEmergencyStop()"
-    >
+    <!--    :color="printer.printerState.colour.name"-->
+    <v-btn fab small @click.c.capture.native.stop="clickEmergencyStop()">
       <v-icon>stop</v-icon>
     </v-btn>
   </v-badge>
