@@ -64,9 +64,49 @@
           </v-list>
         </v-menu>
         <div v-if="!gridStore.gridEditMode" class="float-right d-none d-xl-inline">
-          <v-btn icon @click.prevent.stop="clickEmergencyStop()">
-            <v-icon>dangerous</v-icon>
+          <v-btn
+            v-if="
+              !printerStateStore.isPrinterOperational(printer.id) &&
+              printerStateStore.isApiResponding(printer.id)
+            "
+            icon
+            @click.prevent.stop="clickConnectUsb()"
+          >
+            <v-icon>usb</v-icon>
           </v-btn>
+
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-if="printerStateStore.isPrinterOperational(printer.id)"
+                icon
+                v-bind="attrs"
+                v-on="on"
+                @click.prevent.stop="clickEmergencyStop()"
+              >
+                <v-icon>dangerous</v-icon>
+              </v-btn>
+            </template>
+            <span>Send an emergency stop, causing USB to be disconnected.</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-if="printerStateStore.isPrinterNotOnline(printer.id)"
+                elevation="4"
+                icon
+                size="36"
+                v-bind="attrs"
+                v-on="on"
+                @click.prevent.stop="clickRefreshSocket()"
+              >
+                <v-icon>autorenew</v-icon>
+              </v-btn>
+            </template>
+            <template v-slot:default>
+              <span>Retry connecting to OctoPrint API</span>
+            </template>
+          </v-tooltip>
           <v-btn icon @click.prevent.stop="clickInfo()">
             <v-icon>menu_open</v-icon>
           </v-btn>
@@ -135,6 +175,7 @@ import { useSettingsStore } from "../../store/settings.store";
 import { useFloorStore } from "../../store/floor.store";
 import { interpretStates } from "../../shared/printer-state.constants";
 import { usePrinterStateStore } from "../../store/printer-state.store";
+import { infoMessageEvent } from "../../event-bus/alert.events";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
@@ -197,6 +238,11 @@ export default defineComponent({
     clickInfo() {
       this.printerStore.setSideNavPrinter(this.printer);
     },
+    async clickRefreshSocket() {
+      if (!this.printer) return;
+      await PrintersService.refreshSocket(this.printer.id);
+      this.$bus.emit(infoMessageEvent, "Refreshing OctoPrint connection state");
+    },
     clickOpenPrinterURL() {
       if (!this.printer) return;
       PrintersService.openPrinterURL(this.printer.printerURL);
@@ -212,6 +258,11 @@ export default defineComponent({
       ) {
         await CustomGcodeService.postEmergencyM112Command(this.printer.id);
       }
+    },
+    async clickConnectUsb() {
+      if (!this.printer) return;
+
+      await PrintersService.sendPrinterConnectCommand(this.printer.id);
     },
     async selectOrUnplacePrinter() {
       if (!this.printer?.id) return;

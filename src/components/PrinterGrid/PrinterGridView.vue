@@ -141,7 +141,7 @@ export default defineComponent({
     async uploadFile() {
       const selectedPrinters = this.selectedPrinters;
       const accessiblePrinters = selectedPrinters.filter((p) =>
-        this.printerStateStore.isPrinterOnline(p.id)
+        this.printerStateStore.isApiResponding(p.id)
       );
 
       if (!this.selectedFile) return;

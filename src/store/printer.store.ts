@@ -62,7 +62,7 @@ export const usePrinterStore = defineStore("Printers", {
       const printerStateStore = usePrinterStateStore();
       const selectedPrinterIndex = this.selectedPrinters.findIndex((sp) => sp.id == printer.id);
       if (selectedPrinterIndex === -1) {
-        if (printerStateStore.isPrinterOnline(printer.id)) {
+        if (printerStateStore.isApiResponding(printer.id)) {
           this.selectedPrinters.push(printer);
         }
       } else {

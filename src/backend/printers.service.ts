@@ -79,6 +79,11 @@ export class PrintersService extends BaseService {
     return (await this.postApi(path)) as any;
   }
 
+  static async refreshSocket(printerId: string) {
+    const path = `${ServerApi.refreshSocketRoute(printerId)}`;
+    return (await this.postApi(path)) as any;
+  }
+
   static async sendPrinterConnectCommand(printerId: string) {
     const path = ServerApi.printerSerialConnectRoute(printerId);
 

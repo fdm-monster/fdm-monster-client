@@ -72,7 +72,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       const onlinePrinters: ById<Printer> = {};
       this.printerIds.forEach((id) => {
         const socketState = this.socketStatesById[id];
-        if (socketState?.socket === "opened") {
+        if (socketState?.api === "responding") {
           const printer = printerStore.printer(id);
           if (printer) {
             onlinePrinters[id] = printer;
@@ -85,9 +85,14 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       });
       return onlinePrinters;
     },
-    isPrinterOnline() {
+    isApiResponding() {
       return (printerId: string) => {
         return Object.keys(this.onlinePrinters).includes(printerId);
+      };
+    },
+    isPrinterNotOnline() {
+      return (printerId: string) => {
+        return !this.isApiResponding(printerId);
       };
     },
     printerJobsById() {

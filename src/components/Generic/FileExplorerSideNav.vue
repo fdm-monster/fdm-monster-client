@@ -330,7 +330,7 @@ export default defineComponent({
       return this.storedSideNavPrinter?.id;
     },
     isOnline() {
-      return this.printerId ? this.printerStateStore.isPrinterOnline(this.printerId) : false;
+      return this.printerId ? this.printerStateStore.isApiResponding(this.printerId) : false;
     },
     isOperational() {
       return this.printerId ? this.printerStateStore.isPrinterOperational(this.printerId) : false;
@@ -360,7 +360,7 @@ export default defineComponent({
       }
       return (
         this.shownFileBucket?.files?.length &&
-        this.printerStateStore.isPrinterOnline(this.printerId)
+        this.printerStateStore.isApiResponding(this.printerId)
       );
     },
     currentJob() {
@@ -457,7 +457,7 @@ export default defineComponent({
       this.loading = true;
       const printerId = viewedPrinter.id;
       // Offline printer fallback
-      if (this.printerStateStore.isPrinterOnline(printerId)) {
+      if (this.printerStateStore.isApiResponding(printerId)) {
         const fileCache = await this.printersStore.loadPrinterFiles({
           printerId,
           recursive: false,
