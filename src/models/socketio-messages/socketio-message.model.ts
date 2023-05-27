@@ -1,6 +1,7 @@
 import { Printer } from "@/models/printers/printer.model";
 import { Floor } from "../floors/floor.model";
 import { ById } from "../../utils/types/byid.utils";
+import { PrinterState } from "../printers/visual-state.model";
 
 export interface TestProgressDetails {
   connected: boolean;
@@ -40,11 +41,7 @@ export interface SocketState {
   api: string;
 }
 
-export interface PrinterEvents {
-  current: any;
-  events: any;
-  plugins: any;
-}
+export type PrinterEvents = PrinterState;
 
 export type SocketStateById = ById<SocketState>;
 export type PrinterEventsById = ById<PrinterEvents>;

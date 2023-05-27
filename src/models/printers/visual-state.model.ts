@@ -1,37 +1,18 @@
-export type PSTATE = string;
-export type CATEGORY = string;
-export type ColourLabel = "dark" | "success" | "warning" | "danger" | "secondary";
-
-export interface StateFlags {
-  operational: boolean;
-  printing?: boolean;
-  cancelling?: boolean;
-  pausing?: boolean;
-  resuming?: boolean;
-  finishing?: boolean;
-  closedOrError?: boolean;
-  error?: boolean;
-  paused?: boolean;
-  ready?: boolean;
-  sdReady?: boolean;
-}
+import { CurrentOrHistoryPayload } from "./printer-current-job.model";
 
 export interface PrinterState {
+  connected: {
+    payload: any;
+    receivedAt: number;
+  };
+  plugins: any[];
+  events: any[];
   current: {
-    payload: {
-      progress: {
-        completion: number;
-        filepos: number;
-        printTime: number;
-        printTimeLeft: number;
-        printTimeLeftOrigin: string;
-      };
-      state: {
-        flags: StateFlags;
-        error: string;
-        text: string;
-      };
-      receivedAt: number;
-    };
+    payload: CurrentOrHistoryPayload;
+    receivedAt: number;
+  };
+  history: {
+    payload: CurrentOrHistoryPayload;
+    receivedAt: number;
   };
 }

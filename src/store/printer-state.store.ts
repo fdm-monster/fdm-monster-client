@@ -5,10 +5,10 @@ import {
   SocketStateById,
 } from "../models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "./printer.store";
-import { PrinterJob } from "../models/printers/printer-current-job.model";
 import { PrinterFileService } from "../backend";
 import { ById } from "../utils/types/byid.utils";
 import { useSettingsStore } from "./settings.store";
+import { CurrentOrHistoryPayload } from "../models/printers/printer-current-job.model";
 
 interface State {
   printerIds: string[];
@@ -98,7 +98,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     printerJobsById() {
       const printerStore = usePrinterStore();
       const jobsRendered = useSettingsStore().debugSettings.showJobsRendered;
-      const printersWithJobById: ById<PrinterJob> = {};
+      const printersWithJobById: ById<CurrentOrHistoryPayload> = {};
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         const flags = printerEvents?.current?.payload?.state?.flags;

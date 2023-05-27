@@ -22,7 +22,7 @@ export interface Temp {
   tool1?: number;
 }
 
-export interface PrinterJob {
+export interface CurrentOrHistoryPayload {
   busyFiles: BusyFile[];
   currentZ?: number;
   markings: Marking[];
