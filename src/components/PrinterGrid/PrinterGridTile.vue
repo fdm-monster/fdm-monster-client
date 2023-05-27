@@ -208,25 +208,25 @@ export default defineComponent({
   },
   computed: {
     selected() {
-      if (!this.printer) return false;
+      if (!this.printer?.id) return false;
       return this.printerStore.isSelectedPrinter(this.printer?.id);
     },
     unselected() {
       return this.printerStore.selectedPrinters?.length && !this.selected;
     },
-    printers() {
-      return this.printerStore.printers;
-    },
     largeTilesEnabled() {
       return this.settingsStore.largeTiles;
     },
     printerState() {
-      if (!this.printer?.id) return null;
-      if (this.printer.disabledReason?.length) return null;
+      if (!this.printer?.id) return;
+      const printer = this.printerStore.printer(this.printer.id);
+      if (!printer) return;
+
+      if (printer.disabledReason?.length) return null;
 
       const printerEvents = this.printerStateStore.printerEventsById[this.printer.id];
       const socketState = this.printerStateStore.socketStatesById[this.printer.id];
-      const states = interpretStates(this.printer, socketState, printerEvents);
+      const states = interpretStates(printer, socketState, printerEvents);
       return states;
     },
     printerStateColor() {
