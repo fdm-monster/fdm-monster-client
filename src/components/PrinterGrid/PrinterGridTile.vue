@@ -96,7 +96,10 @@
           </v-tooltip>
 
           <!-- Refresh connectivity button -->
-          <v-tooltip bottom v-if="printerStateStore.isPrinterNotOnline(printer.id)">
+          <v-tooltip
+            bottom
+            v-if="printer.enabled && printerStateStore.isPrinterNotOnline(printer.id)"
+          >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 elevation="4"

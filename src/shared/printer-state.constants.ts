@@ -86,7 +86,7 @@ export function interpretStates(
   // Second level: socket state
   const socketOpened = socketState.socket === "opened" || socketState.socket === "silent";
   const socketAuthing = socketState.socket === "authenticating";
-  const currentState = printerState.current?.payload.state;
+  const currentState = printerState?.current?.payload.state;
   const flags = currentState?.flags;
   if (!socketOpened || !flags) {
     const s = socketOpened ? 1 : 0;
