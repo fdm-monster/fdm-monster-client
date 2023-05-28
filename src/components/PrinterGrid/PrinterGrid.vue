@@ -57,25 +57,22 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { socketIoFloors } from "../../event-bus/socketio.events";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
 import { totalVuetifyColumnCount } from "@/constants/printer-grid.constants";
-import { usePrinterStore } from "../../store/printer.store";
-import { Printer } from "../../models/printers/printer.model";
-import { useGridStore } from "../../store/grid.store";
-import { dragAppId, INTENT, PrinterPlace } from "../../constants/drag.constants";
-import { useSettingsStore } from "../../store/settings.store";
-import { useFloorStore } from "../../store/floor.store";
+import { usePrinterStore } from "@/store/printer.store";
+import { Printer } from "@/models/printers/printer.model";
+import { useGridStore } from "@/store/grid.store";
+import { dragAppId, INTENT, PrinterPlace } from "@/constants/drag.constants";
+import { useSettingsStore } from "@/store/settings.store";
+import { useFloorStore } from "@/store/floor.store";
 
 export default defineComponent({
   components: { PrinterGridTile },
   data(): {
     maxColumnUnits: number;
-    printerMatrix: (Printer | undefined)[][];
   } {
     return {
       maxColumnUnits: totalVuetifyColumnCount,
-      printerMatrix: [],
     };
   },
   setup() {
@@ -89,10 +86,11 @@ export default defineComponent({
   async created() {
     await this.printerStore.loadPrinters();
     await this.floorStore.loadFloors();
-
-    this.updateGridMatrix();
   },
   computed: {
+    printerMatrix() {
+      return this.floorStore.gridSortedPrinters;
+    },
     columnWidth() {
       return totalVuetifyColumnCount / this.columns;
     },
@@ -132,16 +130,9 @@ export default defineComponent({
     updateGridMatrix() {
       this.printerMatrix = this.floorStore.gridSortedPrinters;
     },
-    onSocketIoFloorMessage() {
-      this.updateGridMatrix();
-    },
   },
-  async mounted() {
-    this.$bus.on(socketIoFloors, this.onSocketIoFloorMessage);
-  },
-  beforeDestroy() {
-    this.$bus.off(socketIoFloors, this.onSocketIoFloorMessage);
-  },
+  async mounted() {},
+  beforeDestroy() {},
 });
 </script>
 

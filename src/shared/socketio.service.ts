@@ -4,13 +4,13 @@ import {
   PrinterEventsById,
   SocketIoTestPrinterMessage,
   SocketIoUpdateMessage,
-} from "../models/socketio-messages/socketio-message.model";
-import { sseTestPrinterUpdate } from "../event-bus/socketio.events";
+} from "@/models/socketio-messages/socketio-message.model";
+import { socketIoTestPrinterUpdate } from "@/event-bus/socketio.events";
 import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
-import { usePrinterStore } from "../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { apiBase } from "@/backend/base.service";
-import { useFloorStore } from "../store/floor.store";
-import { usePrinterStateStore } from "../store/printer-state.store";
+import { useFloorStore } from "@/store/floor.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -48,7 +48,7 @@ export class SocketIoService {
       const { testPrinter, testProgress } = message;
       if (!testPrinter?.correlationToken) return;
 
-      this.$bus.emit(sseTestPrinterUpdate(testPrinter.correlationToken), {
+      this.$bus.emit(socketIoTestPrinterUpdate(testPrinter.correlationToken), {
         testPrinter,
         testProgress,
       });

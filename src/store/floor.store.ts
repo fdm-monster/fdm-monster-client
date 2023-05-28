@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { Floor } from "../models/floors/floor.model";
+import { Floor } from "@/models/floors/floor.model";
 import { useSettingsStore } from "./settings.store";
-import { Printer } from "../models/printers/printer.model";
+import { Printer } from "@/models/printers/printer.model";
 import { usePrinterStore } from "./printer.store";
-import { FloorService } from "../backend/floor.service";
+import { FloorService } from "@/backend/floor.service";
 
 export interface State {
   floors: Floor[];
@@ -79,13 +79,9 @@ export const useFloorStore = defineStore("Floors", {
     },
     saveFloors(floors: Floor[]) {
       this.floors = floors.sort((f, f2) => f.floor - f2.floor);
-      if (!this.selectedFloor) {
-        this.selectedFloor = this.floors[0];
-      } else {
-        const floorId = this.selectedFloor?._id;
-        const foundFloor = this.floors.find((f) => f._id === floorId);
-        this.selectedFloor = !foundFloor ? this.floors[0] : foundFloor;
-      }
+      const floorId = this.selectedFloor?._id;
+      const foundFloor = this.floors.find((f) => f._id === floorId);
+      this.selectedFloor = !foundFloor ? this.floors[0] : foundFloor;
     },
     async deleteFloor(floorId: string) {
       await FloorService.deleteFloor(floorId);

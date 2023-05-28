@@ -33,8 +33,7 @@ export class ServerApi {
   static restartOctoPrintRoute = (id: string) =>
     `${ServerApi.getPrinterRoute(id)}/restart-octoprint`;
 
-  static refreshSocketRoute = (id: string) =>
-    `${ServerApi.getPrinterRoute(id)}/refresh-socket`;
+  static refreshSocketRoute = (id: string) => `${ServerApi.getPrinterRoute(id)}/refresh-socket`;
   static getPrinterSettingsRoute = (id: string) => `${ServerApi.printerSettingsRoute}/${id}`;
   static setPrinterSettingsGCodeAnalysisRoute = (id: string) =>
     `${ServerApi.getPrinterSettingsRoute(id)}/gcode-analysis`;
