@@ -48,7 +48,6 @@ export function interpretStates(
         color: COLOR.danger,
         rgb: RGB.Black,
         text: LABEL.Maintenance,
-        description: printer.disabledReason,
       };
     }
     return {

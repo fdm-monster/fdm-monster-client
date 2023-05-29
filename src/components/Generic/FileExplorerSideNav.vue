@@ -28,9 +28,6 @@
           >
             Enabled - {{ printerState?.text }}
           </strong>
-          <span v-if="printerState?.description">
-            {{ printerState?.description }}
-          </span>
         </v-list-item-title>
         <v-list-item-subtitle v-if="currentJob">
           <span v-if="currentJob?.progress" class="d-flex justify-center">
