@@ -1,19 +1,16 @@
 import { io, Socket } from "socket.io-client";
 import { VueBus } from "vue-bus";
 import {
+  PrinterEventsById,
   SocketIoTestPrinterMessage,
   SocketIoUpdateMessage,
-} from "../models/socketio-messages/socketio-message.model";
-import {
-  socketIoFloors,
-  sseMessageGlobal,
-  sseTestPrinterUpdate,
-} from "../event-bus/socketio.events";
+} from "@/models/socketio-messages/socketio-message.model";
+import { socketIoTestPrinterUpdate } from "@/event-bus/socketio.events";
 import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
-import { updatedPrinterEvent } from "@/event-bus/printer.events";
-import { usePrinterStore } from "../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { apiBase } from "@/backend/base.service";
-import { useFloorStore } from "../store/floor.store";
+import { useFloorStore } from "@/store/floor.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -28,6 +25,7 @@ export class SocketIoService {
   $bus: VueBus;
   printerStore = usePrinterStore();
   floorStore = useFloorStore();
+  printerStateStore = usePrinterStateStore();
 
   setupSocketConnection($bus: VueBus) {
     this.socket = io(apiBase); // Same-origin policy);
@@ -50,7 +48,7 @@ export class SocketIoService {
       const { testPrinter, testProgress } = message;
       if (!testPrinter?.correlationToken) return;
 
-      this.$bus.emit(sseTestPrinterUpdate(testPrinter.correlationToken), {
+      this.$bus.emit(socketIoTestPrinterUpdate(testPrinter.correlationToken), {
         testPrinter,
         testProgress,
       });
@@ -64,19 +62,18 @@ export class SocketIoService {
 
     if (message.floors) {
       this.floorStore.saveFloors(message.floors);
-      this.$bus.emit(socketIoFloors, message.floors);
     }
 
     if (message.printers) {
       this.printerStore.setPrinters(message.printers);
+    }
 
-      // Emit the global update
-      this.$bus.emit(sseMessageGlobal, message);
+    if (message.socketStates) {
+      this.printerStateStore.setSocketStates(message.socketStates);
+    }
 
-      message.printers.forEach((p) => {
-        if (!p.id) return;
-        this.$bus.emit(updatedPrinterEvent(p.id), p);
-      });
+    if (message.printerEvents) {
+      this.printerStateStore.setPrinterEvents(message.printerEvents as PrinterEventsById);
     }
   }
 }

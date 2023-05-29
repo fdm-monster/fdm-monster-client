@@ -10,8 +10,8 @@
       <v-icon v-if="isPrinterOperational(printer)">check</v-icon>
       <v-icon v-else>close</v-icon>
     </template>
+    <!--    :color="printer.printerState.colour.name"-->
     <v-btn
-      :color="printer.printerState.colour.name"
       :disabled="isPrinterPrinting()"
       fab
       small
@@ -27,6 +27,7 @@ import { defineComponent, PropType } from "vue";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
 import { usePrinterStore } from "../../../store/printer.store";
+import { usePrinterStateStore } from "../../../store/printer-state.store";
 
 export default defineComponent({
   name: "PrinterConnectionAction",
@@ -34,6 +35,7 @@ export default defineComponent({
   setup: () => {
     return {
       printersStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
     };
   },
   async created() {},
@@ -48,10 +50,16 @@ export default defineComponent({
   },
   methods: {
     isPrinterOperational() {
-      return this.printersStore.isPrinterOperational(this.printerId);
+      if (!this.printerId) {
+        return false;
+      }
+      return this.printerStateStore.isPrinterOperational(this.printerId);
     },
     isPrinterPrinting() {
-      return this.printersStore.isPrinterPrinting(this.printerId);
+      if (!this.printerId) {
+        return false;
+      }
+      return this.printerStateStore.isPrinterPrinting(this.printerId);
     },
     async togglePrinterConnection() {
       if (this.isPrinterOperational()) {

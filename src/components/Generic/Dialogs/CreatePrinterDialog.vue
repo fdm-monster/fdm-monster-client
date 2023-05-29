@@ -52,7 +52,7 @@ import { generateInitials } from "@/constants/noun-adjectives.data";
 import { infoMessageEvent } from "@/event-bus/alert.events";
 import { usePrinterStore } from "../../../store/printer.store";
 import { Printer } from "@/models/printers/printer.model";
-import { sseTestPrinterUpdate } from "../../../event-bus/socketio.events";
+import { socketIoTestPrinterUpdate } from "../../../event-bus/socketio.events";
 import {
   SocketIoTestPrinterMessage,
   TestProgressDetails,
@@ -129,7 +129,7 @@ export default defineComponent({
       const testPrinter = PrintersService.convertCreateFormToPrinter(formData);
       const result: Printer = await this.printersStore.createTestPrinter(testPrinter);
       if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
-      this.$bus.on(sseTestPrinterUpdate(result.correlationToken), this.onTestPrinterUpdate);
+      this.$bus.on(socketIoTestPrinterUpdate(result.correlationToken), this.onTestPrinterUpdate);
     },
     isPasteDisabled() {
       if (!this.isClipboardApiAvailable()) {

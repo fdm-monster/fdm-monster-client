@@ -87,6 +87,7 @@ import HomeToolbar from "@/components/PrinterGrid/HomeToolbar.vue";
 import { usePrinterStore } from "../../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 import { useFeatureStore } from "../../store/features.store";
+import { usePrinterStateStore } from "../../store/printer-state.store";
 
 export default defineComponent({
   name: "PrinterGridView",
@@ -94,6 +95,7 @@ export default defineComponent({
   setup: () => {
     return {
       printersStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
       uploadsStore: useUploadsStore(),
       featureStore: useFeatureStore(),
     };
@@ -138,7 +140,9 @@ export default defineComponent({
     },
     async uploadFile() {
       const selectedPrinters = this.selectedPrinters;
-      const accessiblePrinters = selectedPrinters.filter((p) => p.apiAccessibility.accessible);
+      const accessiblePrinters = selectedPrinters.filter((p) =>
+        this.printerStateStore.isApiResponding(p.id)
+      );
 
       if (!this.selectedFile) return;
 

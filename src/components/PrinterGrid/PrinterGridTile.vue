@@ -18,7 +18,23 @@
       tile
       @click="selectOrUnplacePrinter()"
     >
-      <v-container v-if="printer" class="tile-inner fill-height">
+      <v-icon
+        v-if="printerState?.text.includes('API')"
+        color="primary"
+        size="70"
+        style="opacity: 0.2; position: absolute; top: 5%; right: 10%"
+      >
+        wifi_off
+      </v-icon>
+      <v-icon
+        v-if="printerState?.text.includes('USB')"
+        color="primary"
+        size="70"
+        style="opacity: 0.2; position: absolute; top: 5%; right: 10%"
+      >
+        usb_off
+      </v-icon>
+      <v-container v-if="printerId" class="tile-inner fill-height">
         <small class="small-resized-font">
           {{ printer.printerName }}
         </small>
@@ -48,9 +64,58 @@
           </v-list>
         </v-menu>
         <div v-if="!gridStore.gridEditMode" class="float-right d-none d-xl-inline">
-          <v-btn icon @click.prevent.stop="clickEmergencyStop()">
-            <v-icon>dangerous</v-icon>
+          <!-- Connect USB -->
+          <v-btn
+            v-if="
+              !printerStateStore.isPrinterOperational(printerId) &&
+              printerStateStore.isApiResponding(printerId)
+            "
+            icon
+            @click.prevent.stop="clickConnectUsb()"
+          >
+            <v-icon>usb</v-icon>
           </v-btn>
+
+          <!-- Emergency stop button -->
+          <v-tooltip v-if="printerStateStore.isPrinterOperational(printerId)" bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                elevation="4"
+                icon
+                size="36"
+                v-bind="attrs"
+                v-on="on"
+                @click.prevent.stop="clickEmergencyStop()"
+              >
+                <v-icon>dangerous</v-icon>
+              </v-btn>
+            </template>
+            <template v-slot:default>
+              <span>Send an emergency stop, causing USB to be disconnected.</span>
+            </template>
+          </v-tooltip>
+
+          <!-- Refresh connectivity button -->
+          <v-tooltip
+            v-if="printer.enabled && printerStateStore.isPrinterNotOnline(printerId)"
+            bottom
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                elevation="4"
+                icon
+                size="36"
+                v-bind="attrs"
+                v-on="on"
+                @click.prevent.stop="clickRefreshSocket()"
+              >
+                <v-icon>autorenew</v-icon>
+              </v-btn>
+            </template>
+            <template v-slot:default>
+              <span>Retry connecting to OctoPrint API</span>
+            </template>
+          </v-tooltip>
           <v-btn icon @click.prevent.stop="clickInfo()">
             <v-icon>menu_open</v-icon>
           </v-btn>
@@ -62,7 +127,7 @@
         <br />
 
         <v-tooltip
-          :disabled="!printer.disabledReason"
+          :disabled="!printer?.disabledReason"
           close-delay="100"
           color="danger"
           open-delay="0"
@@ -74,44 +139,32 @@
               v-bind="attrs"
               v-on="on"
             >
-              <span v-if="printer.disabledReason">
+              <span v-if="printer?.disabledReason">
                 <small> MAINTENANCE</small>
                 <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
               </span>
               <span v-else>
-                <small>{{ printer.printerState.state?.toUpperCase() }}</small>
+                <small>{{ printerState.text?.toUpperCase() }}</small>
               </span>
             </small>
           </template>
           Maintenance reason: <br />
           {{ printer.disabledReason }}
         </v-tooltip>
-
-        <v-tooltip v-if="filamentColorParse()" close-delay="1000" open-delay="0" right>
-          <template v-slot:activator="{ on, attrs }">
-            <div
-              :style="{ background: printerFilamentColorRgba }"
-              class="d-flex justify-end filament-abs-border"
-              v-bind="attrs"
-              v-on="on"
-            ></div>
-          </template>
-          <span>{{ printerFilamentColorName }}</span>
-        </v-tooltip>
       </v-container>
       <v-container v-else-if="gridStore.gridEditMode">
         <v-icon size="48">add</v-icon>
         Place printer
       </v-container>
-      <!--      <v-container v-else>  </v-container>-->
-
       <v-progress-linear
-        v-if="printer && printer.currentJob"
-        :value="printer.currentJob.progress"
+        v-if="currentJob?.progress"
+        :value="currentJob.progress.completion"
         absolute
         bottom
         color="green"
+        height="10"
       >
+        <span class="xsmall-resized-font">{{ currentPrintingFilePath }}</span>
       </v-progress-linear>
     </v-card>
   </div>
@@ -119,8 +172,6 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Printer } from "@/models/printers/printer.model";
-import RAL_CODES from "@/constants/ral.reference.json";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 import { PrintersService } from "@/backend";
 import { usePrinterStore } from "../../store/printer.store";
@@ -128,14 +179,14 @@ import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useGridStore } from "../../store/grid.store";
 import { FloorService } from "../../backend/floor.service";
-import { filamentColorParse } from "../../constants/experimental.constants";
 import { useSettingsStore } from "../../store/settings.store";
 import { useFloorStore } from "../../store/floor.store";
+import { interpretStates } from "../../shared/printer-state.constants";
+import { usePrinterStateStore } from "../../store/printer-state.store";
+import { infoMessageEvent } from "../../event-bus/alert.events";
+import { Printer } from "../../models/printers/printer.model";
 
 const defaultColor = "rgba(100,100,100,0.1)";
-const maintenanceColor = "black";
-const defaultFilamentGradient =
-  "repeating-linear-gradient(-30deg, #222, #555 5px, #444 5px, #555 6px)";
 
 export default defineComponent({
   name: "PrinterGridTile",
@@ -147,7 +198,8 @@ export default defineComponent({
   },
   setup() {
     return {
-      printersStore: usePrinterStore(),
+      printerStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
       floorStore: useFloorStore(),
       settingsStore: useSettingsStore(),
       gridStore: useGridStore(),
@@ -155,89 +207,85 @@ export default defineComponent({
     };
   },
   computed: {
+    printerId() {
+      return this.printer?.id;
+    },
     selected() {
-      if (!this.printer) return false;
-      return this.printersStore.isSelectedPrinter(this.printer?.id);
+      if (!this.printerId) return false;
+      return this.printerStore.isSelectedPrinter(this.printerId);
     },
     unselected() {
-      return this.printersStore.selectedPrinters?.length && !this.selected;
-    },
-    printers() {
-      return this.printersStore.printers;
-    },
-    printerFilamentColorName() {
-      const printerColor = this.printerFilamentColor();
-      if (!printerColor) {
-        return "UNKNOWN";
-      }
-      return `${this.printer?.lastPrintedFile.parsedColor}`;
-    },
-    printerFilamentColorRgba() {
-      const ralCode = this.printer?.lastPrintedFile.parsedVisualizationRAL;
-      if (!ralCode) {
-        return defaultFilamentGradient;
-      }
-
-      const ralString = ralCode.toString();
-      const foundColor = Object.values(RAL_CODES).find((r) => r.code === ralString);
-      if (!foundColor) {
-        return defaultFilamentGradient;
-      }
-      return `${foundColor.color.hex}`;
+      return this.printerStore.selectedPrinters?.length && !this.selected;
     },
     largeTilesEnabled() {
       return this.settingsStore.largeTiles;
     },
+    printerState() {
+      if (!this.printerId?.length) return;
+      const printer = this.printerStore.printer(this.printerId);
+      if (!printer) return;
+
+      if (printer.disabledReason?.length) return null;
+
+      const printerEvents = this.printerStateStore.printerEventsById[this.printerId];
+      const socketState = this.printerStateStore.socketStatesById[this.printerId];
+      const states = interpretStates(printer, socketState, printerEvents);
+      return states;
+    },
     printerStateColor() {
-      if (!this.printer) return defaultColor;
-      if (this.printer.disabledReason?.length) return maintenanceColor;
-      return this.printer?.printerState.colour.hex || defaultColor;
+      const states = this.printerState;
+      if (!states) return defaultColor;
+      return states.rgb || defaultColor;
+    },
+    currentJob() {
+      if (!this.printerId?.length) return;
+      return this.printerStateStore.printerJobsById[this.printerId];
+    },
+    currentPrintingFilePath() {
+      if (!this.printerId?.length) return;
+      return this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
     },
   },
   methods: {
-    filamentColorParse() {
-      return filamentColorParse;
-    },
     clickInfo() {
-      this.printersStore.setSideNavPrinter(this.printer);
+      this.printerStore.setSideNavPrinter(this.printer);
+    },
+    async clickRefreshSocket() {
+      if (!this.printerId?.length) return;
+      await PrintersService.refreshSocket(this.printerId);
+      this.$bus.emit(infoMessageEvent, "Refreshing OctoPrint connection state");
     },
     clickOpenPrinterURL() {
       if (!this.printer) return;
       PrintersService.openPrinterURL(this.printer.printerURL);
     },
     clickOpenSettings() {
-      this.printersStore.setUpdateDialogPrinter(this.printer);
+      this.printerStore.setUpdateDialogPrinter(this.printer);
       this.dialogsStore.openDialog(DialogName.UpdatePrinterDialog);
     },
     async clickEmergencyStop() {
-      if (!this.printer) return;
+      if (!this.printerId?.length) return;
       if (
         confirm("Are you sure to abort the print in Emergency Stop mode? Please reconnect after.")
       ) {
-        await CustomGcodeService.postEmergencyM112Command(this.printer.id);
+        await CustomGcodeService.postEmergencyM112Command(this.printerId);
       }
     },
+    async clickConnectUsb() {
+      if (!this.printerId?.length) return;
+      await PrintersService.sendPrinterConnectCommand(this.printerId);
+    },
     async selectOrUnplacePrinter() {
-      if (!this.printer?.id) return;
-
+      if (!this.printer || !this.printerId) return;
       if (this.gridStore.gridEditMode) {
         const floorId = this.floorStore.selectedFloor?._id;
         if (!floorId) throw new Error("Cant clear printer, floor not selected");
-        await FloorService.deletePrinterFromFloor(floorId, this.printer.id);
+        await FloorService.deletePrinterFromFloor(floorId, this.printerId);
 
         return;
       }
 
-      this.printersStore.toggleSelectedPrinter(this.printer);
-    },
-    printerFilamentColor() {
-      const ralCode = this.printer?.lastPrintedFile.parsedVisualizationRAL;
-      if (!ralCode) {
-        return undefined;
-      }
-
-      const ralString = ralCode.toString();
-      return Object.values(RAL_CODES).find((r) => r.code === ralString);
+      this.printerStore.toggleSelectedPrinter(this.printer);
     },
   },
 });

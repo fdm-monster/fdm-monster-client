@@ -7,6 +7,7 @@ export class FeaturesModel {
   batchReprintCalls?: IFeatureFlag;
   batchConnectUsbCalls?: IFeatureFlag;
   batchConnectSocketCalls?: IFeatureFlag;
+  newSockets?: IFeatureFlag;
 }
 
 export type TFeatureFlags = keyof FeaturesModel;
@@ -14,4 +15,5 @@ export const featureFlagsList: TFeatureFlags[] = [
   "batchReprintCalls",
   "batchConnectUsbCalls",
   "batchConnectSocketCalls",
+  "newSockets",
 ];

@@ -37,8 +37,6 @@ export class PrintersService extends BaseService {
     newFormData.printerName = printer.printerName || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
     newFormData.enabled = printer.enabled;
-    newFormData.stepSize = printer.stepSize;
-
     return newFormData;
   }
 
@@ -78,6 +76,11 @@ export class PrintersService extends BaseService {
 
   static async restartOctoPrint(printerId: string) {
     const path = `${ServerApi.restartOctoPrintRoute(printerId)}`;
+    return (await this.postApi(path)) as any;
+  }
+
+  static async refreshSocket(printerId: string) {
+    const path = `${ServerApi.refreshSocketRoute(printerId)}`;
     return (await this.postApi(path)) as any;
   }
 

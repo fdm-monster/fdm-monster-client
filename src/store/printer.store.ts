@@ -5,7 +5,7 @@ import { ClearedFilesResult } from "@/models/printers/printer-file.model";
 import { PrinterFileService, PrintersService } from "@/backend";
 import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
 import { PrinterJobService } from "@/backend/printer-job.service";
-import { useSettingsStore } from "./settings.store";
+import { usePrinterStateStore } from "./printer-state.store";
 
 interface State {
   printers: Printer[];
@@ -33,25 +33,9 @@ export const usePrinterStore = defineStore("Printers", {
     printer() {
       return (printerId?: string) => this.printers.find((p) => p.id === printerId);
     },
-    onlinePrinters(state) {
-      return state.printers.filter((p) => p.apiAccessibility.accessible);
-    },
-    printersWithJob(state) {
-      return state.printers.filter(
-        // If flags are falsy, we can skip the printer => it's still connecting
-        (p) =>
-          p.printerState.flags && (p.printerState.flags.printing || p.printerState.flags.printing)
-      );
-    },
     isSelectedPrinter(state) {
       return (printerId?: string) =>
         !!state.selectedPrinters.find((p: Printer) => p.id === printerId);
-    },
-    isPrinterOperational() {
-      return (printerId?: string) => this.printer(printerId)?.printerState?.flags?.operational;
-    },
-    isPrinterPrinting() {
-      return (printerId?: string) => this.printer(printerId)?.printerState?.flags?.printing;
     },
     printerFileBucket() {
       return (printerId?: string) => this.printerFileBuckets.find((p) => p.printerId === printerId);
@@ -75,9 +59,10 @@ export const usePrinterStore = defineStore("Printers", {
       return data;
     },
     toggleSelectedPrinter(printer: Printer) {
+      const printerStateStore = usePrinterStateStore();
       const selectedPrinterIndex = this.selectedPrinters.findIndex((sp) => sp.id == printer.id);
       if (selectedPrinterIndex === -1) {
-        if (printer.apiAccessibility.accessible) {
+        if (printerStateStore.isApiResponding(printer.id)) {
           this.selectedPrinters.push(printer);
         }
       } else {
@@ -200,15 +185,18 @@ export const usePrinterStore = defineStore("Printers", {
       return this.printerFiles(printerId);
     },
     async sendStopJobCommand(printerId?: string) {
+      const printerStateStore = usePrinterStateStore();
       if (!printerId) return;
       const printer = this.printer(printerId);
       if (!printer) return;
 
-      if (printer.printerState.flags.printing) {
-        const answer = confirm("The printer is still printing - are you sure to stop it?");
-        if (answer) {
-          await PrinterJobService.stopPrintJob(printer.id);
-        }
+      const question = !printerStateStore.isPrinterPrinting(printerId)
+        ? "The printer is still printing - are you sure to stop it?"
+        : "The printer seems idle - do you want to command it to stop anyway?";
+
+      const answer = confirm(question);
+      if (answer) {
+        await PrinterJobService.stopPrintJob(printer.id);
       }
     },
     async batchReprintFiles() {
@@ -221,18 +209,6 @@ export const usePrinterStore = defineStore("Printers", {
 
       const results = await PrinterFileService.batchReprintFiles(printerIds);
       console.debug(results);
-    },
-    async selectAndPrintFile({ printerId, fullPath }: { printerId: string; fullPath: string }) {
-      if (!printerId) return;
-      const printer = this.printer(printerId);
-      if (!printer) return;
-
-      if (printer.printerState.flags.printing || !printer.apiAccessibility.accessible) {
-        alert("This printer is printing or not connected! Either way printing is not an option.");
-        return;
-      }
-
-      await PrinterFileService.selectAndPrintFile(printerId, fullPath, true);
     },
   },
 });

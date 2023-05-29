@@ -74,15 +74,11 @@ export class PrinterFileService extends BaseService {
     const path = ServerApi.printerFilesUploadRoute(printer.id);
 
     const formData = new FormData();
-
-    // Cant print more than 1 file at a time
-    if (!printer.printerState.flags.printing) {
-      if (commands.select) {
-        formData.append("select", "true");
-      }
-      if (commands.print) {
-        formData.append("print", "true");
-      }
+    if (commands.select) {
+      formData.append("select", "true");
+    }
+    if (commands.print) {
+      formData.append("print", "true");
     }
     formData.append("files[0]", file);
 
