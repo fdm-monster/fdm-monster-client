@@ -120,7 +120,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
     printersWithJob() {
       const printerStore = usePrinterStore();
-      const printersWithJobById: { printer: Printer; job: any }[] = [];
+      const printersWithJobById: { printer: Printer; job: CurrentOrHistoryPayload }[] = [];
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         const flags = printerEvents?.current?.payload?.state?.flags;
@@ -129,7 +129,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
           if (printer) {
             printersWithJobById.push({
               printer,
-              job: printerEvents?.current?.payload?.state,
+              job: printerEvents?.current?.payload,
             });
           } else {
             throw new Error(`PrinterStore contains no printer with id ${id} but events are known`);
