@@ -117,7 +117,7 @@
       <v-subheader inset>Commands</v-subheader>
 
       <v-list-item
-        :disabled="isStoppable"
+        :disabled="!storedSideNavPrinter?.enabled || !isOnline"
         class="extra-dense-list-item"
         link
         @click.prevent.stop="togglePrinterConnection()"
