@@ -61,7 +61,7 @@ jobs:
         id: create_release
         with:
           draft: false
-          prerelease: ${{ contains(env.SERVER_VERSION, 'rc') || contains(env.SERVER_VERSION, 'unstable') }}
+          prerelease: ${{ contains(env.CLIENT_VERSION, 'rc') || contains(env.CLIENT_VERSION, 'unstable') }}
           release_name: "fdm-monster-client ${{ env.CLIENT_VERSION }}"
           tag_name: ${{ env.CLIENT_VERSION }}
           body: "Release notes not added" # ${{ steps.build_changelog.outputs.changelog }}
