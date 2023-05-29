@@ -142,6 +142,7 @@ export default defineComponent({
       this.closeDialog();
     },
     closeDialog() {
+      this.selectedQuickItems = [];
       this.dialogsStore.closeDialog(this.dialogId);
       this.printersStore.setMaintenanceDialogPrinter();
     },
