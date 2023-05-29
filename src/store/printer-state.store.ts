@@ -64,7 +64,6 @@ export const usePrinterStateStore = defineStore("PrinterState", {
         const printerEvents = this.printerEventsById[printerId];
         if (!printerEvents) return false;
         const flags = printerEvents?.current?.payload.state.flags;
-        console.log(flags);
         return flags?.printing || flags?.paused;
       };
     },
