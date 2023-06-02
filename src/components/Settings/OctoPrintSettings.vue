@@ -127,7 +127,7 @@
 import { defineComponent } from "vue";
 import { PrinterFileService, SettingsService } from "@/backend";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
-import { infoMessageEvent } from "@/event-bus/alert.events";
+import { infoMessageEvent } from "../../shared/alert.events";
 import { PrinterFileCleanSettings } from "../../models/settings/printer-file-clean-settings.model";
 import { usePrinterStore } from "../../store/printer.store";
 import { isValidIPOrMask } from "@/utils/validation.utils";

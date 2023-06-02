@@ -183,7 +183,7 @@ import { useSettingsStore } from "../../store/settings.store";
 import { useFloorStore } from "../../store/floor.store";
 import { interpretStates } from "../../shared/printer-state.constants";
 import { usePrinterStateStore } from "../../store/printer-state.store";
-import { infoMessageEvent } from "../../event-bus/alert.events";
+import { infoMessageEvent } from "../../shared/alert.events";
 import { Printer } from "../../models/printers/printer.model";
 
 const defaultColor = "rgba(100,100,100,0.1)";

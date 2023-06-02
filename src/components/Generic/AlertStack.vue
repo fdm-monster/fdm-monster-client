@@ -59,7 +59,7 @@ import {
   infoMessageEvent,
   uploadMessageEvent,
   errorEvent,
-} from "@/event-bus/alert.events";
+} from "../../shared/alert.events";
 import { TrackedUpload, UploadStates } from "@/models/socketio-messages/socketio-message.model";
 import AlertErrorDialog from "@/components/Generic/AlertErrorDialog.vue";
 import { useUploadsStore } from "@/store/uploads.store";

@@ -4,7 +4,7 @@ import { FileUploadCommands } from "@/models/printers/file-upload-commands.model
 import { PrinterFileCache } from "@/models/printers/printer-file-cache.model";
 import { ClearedFilesResult, PrinterFile } from "@/models/printers/printer-file.model";
 import Vue from "vue";
-import { InfoEventType, uploadMessageEvent } from "@/event-bus/alert.events";
+import { InfoEventType, uploadMessageEvent } from "../shared/alert.events";
 import { Printer } from "@/models/printers/printer.model";
 import { AxiosProgressEvent } from "axios";
 

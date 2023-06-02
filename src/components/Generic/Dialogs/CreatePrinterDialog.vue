@@ -16,7 +16,7 @@
               <PrinterCrudForm ref="printerCrudForm" />
             </v-col>
 
-            <PrinterChecksPanel v-if="showChecksPanel" :cols="4" :test-progress="testProgress">
+            <PrinterChecksPanel v-if="showChecksPanel" :cols="4">
               <v-btn @click="showChecksPanel = false">Hide checks</v-btn>
             </PrinterChecksPanel>
           </v-row>
@@ -49,25 +49,19 @@
 import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
 import { generateInitials } from "@/constants/noun-adjectives.data";
-import { infoMessageEvent } from "@/event-bus/alert.events";
+import { infoMessageEvent } from "../../../shared/alert.events";
 import { usePrinterStore } from "../../../store/printer.store";
-import { Printer } from "@/models/printers/printer.model";
-import { socketIoTestPrinterUpdate } from "../../../event-bus/socketio.events";
-import {
-  SocketIoTestPrinterMessage,
-  TestProgressDetails,
-} from "../../../models/socketio-messages/socketio-message.model";
 import { PrintersService } from "@/backend";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import PrinterCrudForm from "@/components/Generic/Forms/PrinterCrudForm.vue";
 import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialogsStore } from "@/store/dialog.store";
+import { useTestPrinterStore } from "../../../store/test-printer.store";
 
 interface Data extends WithDialog {
   showChecksPanel: boolean;
   copyPasteConnectionString: string;
-  testProgress?: TestProgressDetails;
 }
 
 export default defineComponent({
@@ -80,6 +74,7 @@ export default defineComponent({
   setup: () => {
     return {
       printersStore: usePrinterStore(),
+      testPrinterStore: useTestPrinterStore(),
       dialogsStore: useDialogsStore(),
     };
   },
@@ -87,7 +82,6 @@ export default defineComponent({
   async mounted() {},
   props: {},
   data: (): Data => ({
-    testProgress: undefined,
     showChecksPanel: false,
     copyPasteConnectionString: "",
     dialogId: DialogName.CreatePrinterDialog,
@@ -115,21 +109,21 @@ export default defineComponent({
     },
     openTestPanel() {
       this.showChecksPanel = true;
-      this.testProgress = undefined;
-    },
-    async onTestPrinterUpdate(payload: SocketIoTestPrinterMessage) {
-      this.testProgress = payload.testProgress;
     },
     async testPrinter() {
       if (!(await this.isValid())) return;
-
-      this.openTestPanel();
       const formData = this.formData();
       if (!formData) return;
+
       const testPrinter = PrintersService.convertCreateFormToPrinter(formData);
-      const result: Printer = await this.printersStore.createTestPrinter(testPrinter);
-      if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
-      this.$bus.on(socketIoTestPrinterUpdate(result.correlationToken), this.onTestPrinterUpdate);
+      if (!testPrinter) return;
+      this.openTestPanel();
+
+      await this.testPrinterStore.createTestPrinter(testPrinter);
+      // const result: Printer =
+      // if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
+      // socketIoTestPrinterUpdate(result.correlationToken)
+      // this.$bus.on("test-printer-state", this.onTestPrinterUpdate);
     },
     isPasteDisabled() {
       if (!this.isClipboardApiAvailable()) {
@@ -175,9 +169,7 @@ export default defineComponent({
     },
   },
   watch: {
-    dialogOpenedState(newValue: boolean) {
-      this.testProgress = undefined;
-    },
+    dialogOpenedState(newValue: boolean) {},
   },
 });
 </script>

@@ -29,7 +29,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { AxiosError } from "axios";
-import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "@/event-bus/alert.events";
+import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "../../shared/alert.events";
 import { FailedQueuedUpload } from "@/models/uploads/queued-upload.model";
 import { usePrinterStore } from "../../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";

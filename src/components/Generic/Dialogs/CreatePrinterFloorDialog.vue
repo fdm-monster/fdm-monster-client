@@ -32,7 +32,7 @@
 import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/constants/noun-adjectives.data";
-import { infoMessageEvent } from "@/event-bus/alert.events";
+import { infoMessageEvent } from "../../../shared/alert.events";
 
 import { usePrinterStore } from "../../../store/printer.store";
 import PrinterFloorCrudForm from "@/components/Generic/Forms/PrinterFloorCrudForm.vue";

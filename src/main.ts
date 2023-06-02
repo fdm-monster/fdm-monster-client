@@ -10,7 +10,7 @@ import VueBus from "vue-bus";
 import { configureVeeValidate } from "@/plugins/veevalidate";
 import { generateAppConstants } from "@/constants/app.constants";
 import { registerFileDropDirective } from "@/directives/file-upload.directive";
-import { errorEvent } from "@/event-bus/alert.events";
+import { errorEvent } from "./shared/alert.events";
 import { createPinia, PiniaVuePlugin } from "pinia";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
