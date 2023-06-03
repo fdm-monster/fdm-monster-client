@@ -126,11 +126,9 @@ export default defineComponent({
       if (!testPrinter) return;
       this.openTestPanel();
 
-      await this.testPrinterStore.createTestPrinter(testPrinter);
-      // const result: Printer =
-      // if (!result.correlationToken) throw new Error("Test Printer CorrelationToken was empty.");
-      // socketIoTestPrinterUpdate(result.correlationToken)
-      // this.$bus.on("test-printer-state", this.onTestPrinterUpdate);
+      this.testPrinterStore.clearEvents();
+      const { correlationToken } = await this.testPrinterStore.createTestPrinter(testPrinter);
+      this.testPrinterStore.currentCorrelationToken = correlationToken;
     },
     isClipboardApiAvailable() {
       return navigator.clipboard;

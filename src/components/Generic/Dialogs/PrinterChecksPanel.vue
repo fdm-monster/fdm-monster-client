@@ -1,11 +1,7 @@
 <template>
   <v-col :cols="cols">
     <strong>Checks:</strong>
-    <v-alert
-      type="success"
-      v-for="(item, index) of testPrinterStore.testPrinterEvents"
-      :key="index"
-    >
+    <v-alert type="success" v-for="(item, index) of testPrinterStore.getEvents()" :key="index">
       <small>{{ item.event }} {{ item.payload }}</small>
     </v-alert>
   </v-col>
@@ -27,10 +23,14 @@ export default defineComponent({
       testPrinterStore: useTestPrinterStore(),
     };
   },
-  props: {},
   data: (): Data => ({
     cols: 4,
   }),
+  computed: {
+    getEvents() {
+      return this.testPrinterStore.getEvents();
+    },
+  },
   methods: {
     isSet(value: boolean) {
       return value === false || value === true;
