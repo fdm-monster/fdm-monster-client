@@ -2,61 +2,19 @@
   <v-col :cols="cols">
     <strong>Checks:</strong>
     <v-alert
-      v-if="testProgress && isSet(testProgress.connected)"
-      :type="testProgress.connected ? 'success' : 'error'"
+      v-for="(item, index) of testPrinterStore.getEvents()"
+      :key="index"
       dense
-      text
+      :type="item.failure ? 'error' : 'success'"
     >
-      <small>Connected</small>
+      <small>{{ item.event }} {{ item.payload }}</small>
     </v-alert>
-    <v-alert
-      v-if="testProgress && isSet(testProgress.isOctoPrint)"
-      :type="testProgress.isOctoPrint ? 'success' : 'error'"
-      dense
-      text
-    >
-      <small>Is OctoPrint</small>
-    </v-alert>
-    <v-alert
-      v-if="testProgress && isSet(testProgress.apiOk)"
-      :type="testProgress.apiOk ? 'success' : 'error'"
-      dense
-      text
-    >
-      <small>API ok</small>
-    </v-alert>
-    <v-alert
-      v-if="testProgress && isSet(testProgress.apiKeyNotGlobal)"
-      :type="testProgress.apiKeyNotGlobal ? 'success' : 'error'"
-      dense
-      text
-    >
-      <small>Key not Global API Key</small>
-    </v-alert>
-    <v-alert
-      v-if="testProgress && isSet(testProgress.apiKeyOk)"
-      :type="testProgress.apiKeyOk ? 'success' : 'error'"
-      dense
-      text
-    >
-      <small>Key accepted</small>
-    </v-alert>
-    <v-alert
-      v-if="testProgress && isSet(testProgress.websocketBound)"
-      :type="testProgress.websocketBound ? 'success' : 'error'"
-      dense
-      text
-    >
-      <small>WebSocket bound</small>
-    </v-alert>
-
-    <slot></slot>
   </v-col>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { TestProgressDetails } from "@/models/socketio-messages/socketio-message.model";
+import { defineComponent } from "vue";
+import { useTestPrinterStore } from "../../../store/test-printer.store";
 
 interface Data {
   cols: 4;
@@ -65,12 +23,19 @@ interface Data {
 export default defineComponent({
   name: "PrinterChecksPanel",
   components: {},
-  props: {
-    testProgress: Object as PropType<TestProgressDetails>,
+  setup: () => {
+    return {
+      testPrinterStore: useTestPrinterStore(),
+    };
   },
   data: (): Data => ({
     cols: 4,
   }),
+  computed: {
+    getEvents() {
+      return this.testPrinterStore.getEvents();
+    },
+  },
   methods: {
     isSet(value: boolean) {
       return value === false || value === true;

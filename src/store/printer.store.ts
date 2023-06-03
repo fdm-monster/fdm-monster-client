@@ -9,7 +9,6 @@ import { usePrinterStateStore } from "./printer-state.store";
 
 interface State {
   printers: Printer[];
-  testPrinters?: Printer;
   printerFileBuckets: PrinterFileBucket[];
 
   sideNavPrinter?: Printer;
@@ -21,7 +20,6 @@ interface State {
 export const usePrinterStore = defineStore("Printers", {
   state: (): State => ({
     printers: [],
-    testPrinters: undefined,
     printerFileBuckets: [],
 
     sideNavPrinter: undefined,
@@ -51,11 +49,6 @@ export const usePrinterStore = defineStore("Printers", {
       this.printers.sort((a: Printer, b: Printer) =>
         a.printerName?.toLowerCase()?.localeCompare(b?.printerName?.toLowerCase()) ? 1 : -1
       );
-      return data;
-    },
-    async createTestPrinter(newPrinter: CreatePrinter) {
-      const data = await PrintersService.testConnection(newPrinter);
-      this.testPrinters = data;
       return data;
     },
     toggleSelectedPrinter(printer: Printer) {

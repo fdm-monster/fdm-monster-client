@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { VueBus } from "vue-bus";
 import { FailedQueuedUpload, QueuedUpload } from "@/models/uploads/queued-upload.model";
 import { PrinterFileService } from "@/backend";
-import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "@/event-bus/alert.events";
+import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "../shared/alert.events";
 
 export interface UploadsState {
   $bus?: VueBus;

@@ -60,7 +60,7 @@ import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { WithDialog } from "@/utils/dialog.utils";
 import { ServerPrivateService } from "../../../backend/server-private.service";
-import { infoMessageEvent } from "../../../event-bus/alert.events";
+import { infoMessageEvent } from "../../../shared/alert.events";
 
 interface Data extends WithDialog {
   selectedMode: number;

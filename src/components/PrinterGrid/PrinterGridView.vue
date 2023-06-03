@@ -81,7 +81,7 @@ import PrinterGrid from "@/components/PrinterGrid/PrinterGrid.vue";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
 import { formatBytes } from "@/utils/file-size.util";
-import { infoMessageEvent } from "@/event-bus/alert.events";
+import { infoMessageEvent } from "../../shared/alert.events";
 import { convertMultiPrinterFileToQueue } from "@/utils/uploads-state.utils";
 import HomeToolbar from "@/components/PrinterGrid/HomeToolbar.vue";
 import { usePrinterStore } from "../../store/printer.store";

@@ -1,6 +1,5 @@
 import { newRandomNamePair } from "@/constants/noun-adjectives.data";
 
-export type WebSocketProtocol = "ws" | "wss";
 export type HttpProtocol = "http" | "https";
 
 export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
@@ -8,7 +7,6 @@ export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
   printerName: newRandomNamePair(),
   printerHostPrefix: "http",
   printerHostPort: 80,
-  websocketPrefix: "ws",
   printerHostName: "",
   apiKey: "",
   enabled: true,
@@ -23,7 +21,6 @@ export interface PreCreatePrinter {
   enabled: boolean;
   printerName: string;
 
-  websocketPrefix: WebSocketProtocol;
   printerHostPrefix: HttpProtocol;
   printerHostName: string;
   printerHostPort: number;
@@ -40,7 +37,6 @@ export interface CreatePrinter {
   enabled: boolean;
   printerName: string;
 
-  webSocketURL: string;
   printerURL: string;
 
   apiKey: string;

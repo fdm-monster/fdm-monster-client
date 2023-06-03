@@ -4,7 +4,7 @@ import {
   convertMultiPrinterFileToQueue,
   convertPrinterMultiFileToQueue,
 } from "@/utils/uploads-state.utils";
-import { infoMessageEvent } from "@/event-bus/alert.events";
+import { infoMessageEvent } from "../shared/alert.events";
 import { usePrinterStore } from "../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 

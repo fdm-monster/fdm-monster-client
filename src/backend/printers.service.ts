@@ -6,7 +6,6 @@ import {
   getDefaultCreatePrinter,
   HttpProtocol,
   PreCreatePrinter,
-  WebSocketProtocol,
 } from "@/models/printers/crud/create-printer.model";
 import { newRandomNamePair } from "@/constants/noun-adjectives.data";
 
@@ -28,12 +27,10 @@ export class PrintersService extends BaseService {
     const newFormData = getDefaultCreatePrinter();
 
     const printerURL = new URL(printer.printerURL);
-    const webSocketURL = new URL(printer.webSocketURL);
     newFormData.id = printer.id;
     newFormData.printerHostPort = parseInt(printerURL.port) || 80;
     newFormData.printerHostName = printerURL.hostname;
     newFormData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
-    newFormData.websocketPrefix = webSocketURL.protocol.replace(":", "") as WebSocketProtocol;
     newFormData.printerName = printer.printerName || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
     newFormData.enabled = printer.enabled;
@@ -49,15 +46,12 @@ export class PrintersService extends BaseService {
   static convertCreateFormToPrinter(formData: PreCreatePrinter) {
     const modifiedData: any = { ...formData };
 
-    const { printerHostPrefix, websocketPrefix, printerHostName, printerHostPort } = formData;
+    const { printerHostPrefix, printerHostName, printerHostPort } = formData;
     const printerURL = new URL(`${printerHostPrefix}://${printerHostName}:${printerHostPort}`);
-    const webSocketURL = new URL(`${websocketPrefix}://${printerHostName}:${printerHostPort}`);
 
     delete modifiedData.printerHostName;
     delete modifiedData.printerHostPrefix;
-    delete modifiedData.websocketPrefix;
     modifiedData.printerURL = printerURL;
-    modifiedData.webSocketURL = webSocketURL;
 
     return modifiedData as CreatePrinter;
   }
