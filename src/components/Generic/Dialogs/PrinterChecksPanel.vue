@@ -1,7 +1,12 @@
 <template>
   <v-col :cols="cols">
     <strong>Checks:</strong>
-    <v-alert type="success" v-for="(item, index) of testPrinterStore.getEvents()" :key="index">
+    <v-alert
+      v-for="(item, index) of testPrinterStore.getEvents()"
+      :key="index"
+      dense
+      :type="item.failure ? 'error' : 'success'"
+    >
       <small>{{ item.event }} {{ item.payload }}</small>
     </v-alert>
   </v-col>

@@ -36,7 +36,7 @@ export const useTestPrinterStore = defineStore("TestPrinter", {
           .map((e) => ({
             event: e.event === "WS_STATE_UPDATED" ? "Socket" : "API",
             payload: e.payload,
-            failure: e.payload.includes("failure"),
+            failure: ["authFail", "aborted"].includes(e.payload),
           }));
     },
   },
