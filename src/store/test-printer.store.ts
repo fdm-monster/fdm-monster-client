@@ -2,10 +2,16 @@ import { defineStore } from "pinia";
 import { CreatePrinter } from "../models/printers/crud/create-printer.model";
 import { PrintersService } from "../backend";
 
+export interface TestEvent {
+  correlationToken: string;
+  event: string;
+  payload: string;
+}
+
 interface State {
   currentCorrelationToken?: string;
   testPrinter?: CreatePrinter;
-  testPrinterEvents?: Record<string, any>[];
+  testPrinterEvents?: TestEvent[];
 }
 
 export const useTestPrinterStore = defineStore("TestPrinter", {
@@ -17,9 +23,21 @@ export const useTestPrinterStore = defineStore("TestPrinter", {
   getters: {
     getEvents() {
       return () =>
-        this.testPrinterEvents?.filter(
-          (e) => e.correlationToken === this.currentCorrelationToken
-        ) || [];
+        (
+          this.testPrinterEvents?.filter(
+            (e) => e.correlationToken === this.currentCorrelationToken
+          ) || []
+        )
+          .filter(
+            (e) =>
+              (e.event !== "API_STATE_UPDATED" || e.payload !== "unset") &&
+              (e.event !== "WS_STATE_UPDATED" || e.payload !== "unopened")
+          )
+          .map((e) => ({
+            event: e.event === "WS_STATE_UPDATED" ? "Socket" : "API",
+            payload: e.payload,
+            failure: e.payload.includes("failure"),
+          }));
     },
   },
   actions: {
@@ -31,7 +49,7 @@ export const useTestPrinterStore = defineStore("TestPrinter", {
       const data = await PrintersService.testConnection(newPrinter);
       return data;
     },
-    saveEvent(event: Record<string, any>) {
+    saveEvent(event: TestEvent) {
       this.testPrinterEvents?.push(event);
     },
   },

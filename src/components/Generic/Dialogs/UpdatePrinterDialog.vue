@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialogId" :max-width="showChecksPanel ? '700px' : '600px'">
+  <BaseDialog :id="dialogId" :max-width="showChecksPanel ? '900px' : '600px'">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card v-if="storedUpdatedPrinter">
         <v-card-title>
@@ -160,7 +160,7 @@ export default defineComponent({
       const updatedPrinter = PrintersService.convertCreateFormToPrinter(formData);
       const printerId = updatedPrinter.id;
 
-      const updatedData = await this.printersStore.updatePrinter({
+      await this.printersStore.updatePrinter({
         printerId: printerId as string,
         updatedPrinter,
       });

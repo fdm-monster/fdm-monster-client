@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialogId" :max-width="showChecksPanel ? '700px' : '600px'">
+  <BaseDialog :id="dialogId" :max-width="showChecksPanel ? '900px' : '600px'">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card>
         <v-card-title>
