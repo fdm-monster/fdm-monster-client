@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FDM Monster Vue Client (serve)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "run",
+        "serve"
+      ],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
