@@ -91,7 +91,7 @@
 <script lang="ts">
 import { defineComponent, inject } from "vue";
 import { ValidationProvider } from "vee-validate";
-import { AppConstants } from "@/constants/app.constants";
+import { AppConstants } from "../../../shared/app.constants";
 import {
   CreatePrinter,
   getDefaultCreatePrinter,

@@ -48,7 +48,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
-import { generateInitials } from "@/constants/noun-adjectives.data";
+import { generateInitials } from "../../../shared/noun-adjectives.data";
 import { infoMessageEvent } from "../../../shared/alert.events";
 import { usePrinterStore } from "../../../store/printer.store";
 import { PrintersService } from "@/backend";

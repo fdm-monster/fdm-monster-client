@@ -50,7 +50,7 @@ import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
-import { generateInitials } from "@/constants/noun-adjectives.data";
+import { generateInitials } from "../../../shared/noun-adjectives.data";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import PrinterCrudForm from "@/components/Generic/Forms/PrinterCrudForm.vue";
 import { infoMessageEvent } from "../../../shared/alert.events";

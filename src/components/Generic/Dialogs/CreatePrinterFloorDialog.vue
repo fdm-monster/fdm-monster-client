@@ -31,7 +31,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
-import { generateInitials, newRandomNamePair } from "@/constants/noun-adjectives.data";
+import { generateInitials, newRandomNamePair } from "../../../shared/noun-adjectives.data";
 import { infoMessageEvent } from "../../../shared/alert.events";
 
 import { usePrinterStore } from "../../../store/printer.store";

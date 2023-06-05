@@ -58,11 +58,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
-import { totalVuetifyColumnCount } from "@/constants/printer-grid.constants";
+import { totalVuetifyColumnCount } from "../../shared/printer-grid.constants";
 import { usePrinterStore } from "@/store/printer.store";
 import { Printer } from "@/models/printers/printer.model";
 import { useGridStore } from "@/store/grid.store";
-import { dragAppId, INTENT, PrinterPlace } from "@/constants/drag.constants";
+import { dragAppId, INTENT, PrinterPlace } from "../../shared/drag.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFloorStore } from "@/store/floor.store";
 

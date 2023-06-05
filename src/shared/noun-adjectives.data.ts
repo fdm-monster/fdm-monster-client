@@ -1,5 +1,5 @@
-import adjectives from "@/assets/adjectives.json";
-import nouns from "@/assets/nouns.json";
+import adjectives from "../assets/adjectives.json";
+import nouns from "../assets/nouns.json";
 
 function capitalize(val: string) {
   if (!val) return "";
