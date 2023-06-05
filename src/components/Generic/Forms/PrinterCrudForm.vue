@@ -81,17 +81,6 @@
                 value="http"
               ></v-select>
             </validation-provider>
-
-            <validation-provider v-slot="{ errors }" name="WebsocketPrefix">
-              <v-select
-                v-model="formData.websocketPrefix"
-                :error-messages="errors"
-                :items="['ws', 'wss']"
-                label="Insecure/Secure Websocket"
-                required
-                value="ws"
-              ></v-select>
-            </validation-provider>
           </v-col>
         </v-expansion-panel-content>
       </v-expansion-panel>
