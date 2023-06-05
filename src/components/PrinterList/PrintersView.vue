@@ -71,7 +71,7 @@
         </v-chip>
       </template>
       <template v-slot:item.floor="{ item }">
-        <v-chip v-if="item.id" color="primary" dark> {{ floorOfPrinter(item.id)?.name }} </v-chip>
+        <v-chip v-if="item.id" color="primary" dark> {{ floorOfPrinter(item.id)?.name }}</v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
         <PrinterUrlAction :printer="item" />
@@ -91,43 +91,6 @@
         </td>
       </template>
     </v-data-table>
-
-    <v-data-table
-      v-if="firmwareUpdateSection()"
-      key="id"
-      :headers="firmwareTableHeaders"
-      :items="firmwareUpdateStates"
-      class="disabled-highlight"
-    >
-      <template v-slot:top>
-        <v-toolbar flat prominent>
-          <v-toolbar-title>
-            <div>Showing firmware update status</div>
-            <small>Latest (downloaded) firmware: {{ latestReleaseVersion }}</small>
-            <br />
-            <v-btn color="primary" small @click="loadFirmwareData">Scan printers (SLOW)</v-btn>
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-      </template>
-      <template v-slot:no-data> No firmware information loaded.</template>
-      <template v-slot:no-results> No results</template>
-      <template v-slot:item.actions="{ item }">
-        <v-btn :disabled="isPluginInstalled(item)" @click="installPlugin(item)">
-          Install plugin
-        </v-btn>
-        <v-btn @click="restartOctoPrint(item)"> Restart OctoPrint</v-btn>
-        <v-btn @click="configureFirmwareUpdaterSettings(item)"> Configure</v-btn>
-        <v-btn
-          :disabled="isVirtualFirmware(item.firmware) || !isUpdatableFirmware(item.firmware)"
-          color="primary"
-          @click="flashFirmwareUpdate(item)"
-        >
-          <v-icon>updates</v-icon>
-          Update {{ isVirtualFirmware(item.firmware) ? "(VIRTUAL)" : "" }}
-        </v-btn>
-      </template>
-    </v-data-table>
   </v-card>
 </template>
 
@@ -140,7 +103,6 @@ import PrinterUrlAction from "@/components/Generic/Actions/PrinterUrlAction.vue"
 import PrinterSettingsAction from "@/components/Generic/Actions/PrinterSettingsAction.vue";
 import PrinterConnectionAction from "@/components/Generic/Actions/PrinterConnectionAction.vue";
 import PrinterEmergencyStopAction from "@/components/Generic/Actions/PrinterEmergencyStopAction.vue";
-import { PrinterFirmwareUpdateService } from "@/backend/printer-firmware-update.service";
 import { PrusaFirmwareReleaseModel } from "@/models/plugins/firmware-updates/prusa-firmware-release.model";
 import { PrinterFirmwareStateModel } from "@/models/plugins/firmware-updates/printer-firmware-state.model";
 import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameAction.vue";
@@ -148,7 +110,6 @@ import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameA
 import { usePrinterStore } from "../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { firmwareUpdateSection } from "@/constants/experimental.constants";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
 import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
 import { useFloorStore } from "../../store/floor.store";
@@ -220,9 +181,7 @@ export default defineComponent({
       { text: "Actions", value: "actions", sortable: false },
     ],
   }),
-  async created() {
-    this.firmwareReleases = await PrinterFirmwareUpdateService.getFirmwareReleases();
-  },
+  async created() {},
   async mounted() {},
   computed: {
     printers() {
@@ -245,10 +204,7 @@ export default defineComponent({
       const date = new Date(dateString);
       const now = new Date();
       const diff = (now.getTime() - date.getTime()) / 1000;
-      return diff; // new Intl.DateTimeFormat("default", { dateStyle: "long" }).format(date)
-    },
-    firmwareUpdateSection() {
-      return firmwareUpdateSection;
+      return diff;
     },
     floorOfPrinter(printerId: string) {
       return this.floorStore.floorOfPrinter(printerId);
@@ -267,21 +223,8 @@ export default defineComponent({
       const firmwarePluginState = this.firmwareUpdateStates.find((f) => f.id === printer.id);
       return firmwarePluginState?.pluginInstalled || false;
     },
-    async loadFirmwareData() {
-      const updateStates = await PrinterFirmwareUpdateService.loadFirmwareUpdateState();
-      this.firmwareUpdateStates = updateStates?.firmwareStates || [];
-    },
-    async installPlugin(printer: Printer) {
-      await PrinterFirmwareUpdateService.installPlugin(printer.id);
-    },
     async restartOctoPrint(printer: Printer) {
       await PrintersService.restartOctoPrint(printer.id);
-    },
-    async configureFirmwareUpdaterSettings(printer: Printer) {
-      await PrinterFirmwareUpdateService.configureFirmwareUpdaterSettings(printer.id);
-    },
-    async flashFirmwareUpdate(printer: Printer) {
-      await PrinterFirmwareUpdateService.flashFirmwareUpdate(printer.id);
     },
     openEditDialog(printer: Printer) {
       this.printerStore.setUpdateDialogPrinter(printer);
