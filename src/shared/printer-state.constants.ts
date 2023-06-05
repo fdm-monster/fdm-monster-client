@@ -127,7 +127,7 @@ export function interpretStates(
       ...state,
       color: COLOR.danger,
       rgb: RGB.Red,
-      text: currentState.text || LABEL.Error,
+      text: currentState.text?.replace("Offline", "Disconnected") || LABEL.Error,
       description: currentState.error,
     };
   } else if (flags.paused || flags.pausing) {
