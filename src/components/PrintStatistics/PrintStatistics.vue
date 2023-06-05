@@ -12,7 +12,7 @@
             :items="floors"
             clearable
             item-text="name"
-            label="Printer Floors"
+            label="Floors"
             multiple
             return-object
           >
