@@ -1,6 +1,6 @@
 import { Printer } from "prettier";
 import Vue, { Directive } from "vue";
-import { isPrinterPlaceDataTransfer, PrinterPlace } from "../constants/drag.constants";
+import { isPrinterPlaceDataTransfer, PrinterPlace } from "../shared/drag.constants";
 import { FloorService } from "../backend/floor.service";
 import { usePrinterStore } from "../store/printer.store";
 import { useFloorStore } from "../store/floor.store";

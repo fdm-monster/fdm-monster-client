@@ -7,7 +7,7 @@ import {
   HttpProtocol,
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
-import { newRandomNamePair } from "@/constants/noun-adjectives.data";
+import { newRandomNamePair } from "../shared/noun-adjectives.data";
 
 export class PrintersService extends BaseService {
   static applyLoginDetailsPatchForm(

@@ -59,7 +59,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useSettingsStore } from "../../store/settings.store";
-import { colOptions, rowOptions } from "@/constants/printer-grid.constants";
+import { colOptions, rowOptions } from "../../shared/printer-grid.constants";
 
 interface Data {
   property: number;

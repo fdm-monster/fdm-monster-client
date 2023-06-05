@@ -1,4 +1,4 @@
-import { newRandomNamePair } from "@/constants/noun-adjectives.data";
+import { newRandomNamePair } from "../../../shared/noun-adjectives.data";
 
 export type HttpProtocol = "http" | "https";
 

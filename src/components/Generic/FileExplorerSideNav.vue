@@ -279,7 +279,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Printer } from "../../models/printers/printer.model";
-import { generateInitials } from "../../constants/noun-adjectives.data";
+import { generateInitials } from "../../shared/noun-adjectives.data";
 import { PrinterFileService, PrintersService } from "../../backend";
 import { PrinterFile } from "../../models/printers/printer-file.model";
 import { PrinterFileBucket } from "../../models/printers/printer-file-bucket.model";

@@ -131,7 +131,7 @@ import { infoMessageEvent } from "../../shared/alert.events";
 import { PrinterFileCleanSettings } from "../../models/settings/printer-file-clean-settings.model";
 import { usePrinterStore } from "../../store/printer.store";
 import { isValidIPOrMask } from "@/utils/validation.utils";
-import { whitelistSettingsHidden } from "../../constants/experimental.constants";
+import { whitelistSettingsHidden } from "../../shared/experimental.constants";
 import { usePrinterStateStore } from "../../store/printer-state.store";
 
 interface Data {

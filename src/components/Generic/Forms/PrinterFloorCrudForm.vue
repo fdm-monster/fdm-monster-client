@@ -29,7 +29,7 @@
 <script lang="ts">
 import { defineComponent, inject } from "vue";
 import { ValidationProvider } from "vee-validate";
-import { AppConstants } from "@/constants/app.constants";
+import { AppConstants } from "../../../shared/app.constants";
 import { getDefaultCreateFloor, PreCreateFloor } from "../../../models/floors/floor.model";
 import { FloorService } from "../../../backend/floor.service";
 import { usePrinterStore } from "../../../store/printer.store";

@@ -147,7 +147,7 @@ import { usePrinterStore } from "../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { Printer } from "../../models/printers/printer.model";
-import { floorPrinterAssignmentHidden } from "../../constants/experimental.constants";
+import { floorPrinterAssignmentHidden } from "../../shared/experimental.constants";
 import { useFloorStore } from "../../store/floor.store";
 
 interface Data {
