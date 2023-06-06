@@ -80,6 +80,8 @@
         <SyncPrinterNameAction :printer="item" />
         <PrinterDeleteAction :printer="item" />
         <PrinterSettingsAction :printer="item" v-on:update:show="openEditDialog(item)" />
+      </template>
+      <template v-slot:item.socketupdate="{ item }">
         <span v-if="item.lastMessageReceivedDate">
           Updated {{ diffSeconds(item.lastMessageReceivedDate) }} seconds ago
         </span>
@@ -160,6 +162,7 @@ export default defineComponent({
       },
       { text: "Floor", value: "floor", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
+      { text: "Socket Update", value: "socketupdate", sortable: false },
       { text: "", value: "data-table-expand" },
     ],
     firmwareTableHeaders: [
