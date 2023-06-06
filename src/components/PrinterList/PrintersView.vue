@@ -80,8 +80,10 @@
         <SyncPrinterNameAction :printer="item" />
         <PrinterDeleteAction :printer="item" />
         <PrinterSettingsAction :printer="item" v-on:update:show="openEditDialog(item)" />
-        <span v-if="item.lastMessageReceivedDate">
-          Updated {{ diffSeconds(item.lastMessageReceivedDate) }} seconds ago
+      </template>
+      <template v-slot:item.socketupdate="{ item }">
+        <span v-if="currentEventReceivedAt[item.id]">
+          Updated {{ diffSeconds(currentEventReceivedAt[item.id]) }} seconds ago
         </span>
         <span v-else> No update received (silence)</span>
       </template>
@@ -113,6 +115,7 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
 import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
 import { useFloorStore } from "../../store/floor.store";
+import { usePrinterStateStore } from "../../store/printer-state.store";
 
 interface Data {
   showJsonImportDialog: boolean;
@@ -139,6 +142,7 @@ export default defineComponent({
   setup: () => {
     return {
       printerStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
       floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
     };
@@ -160,6 +164,7 @@ export default defineComponent({
       },
       { text: "Floor", value: "floor", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
+      { text: "Socket Update", value: "socketupdate", sortable: false },
       { text: "", value: "data-table-expand" },
     ],
     firmwareTableHeaders: [
@@ -187,23 +192,15 @@ export default defineComponent({
     printers() {
       return this.printerStore.printers;
     },
-    latestReleaseVersion() {
-      if (!this.firmwareReleases?.length) return null;
-      const copiedReleases = [...this.firmwareReleases];
-      const result = copiedReleases.sort(
-        (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
-      );
-
-      if (!result?.length) return "?";
-      return result[0].tag_name;
+    currentEventReceivedAt() {
+      return this.printerStateStore.printerCurrentEventReceivedAtById;
     },
   },
   methods: {
-    diffSeconds(dateString: string) {
-      if (!dateString?.length) return;
-      const date = new Date(dateString);
-      const now = new Date();
-      const diff = (now.getTime() - date.getTime()) / 1000;
+    diffSeconds(timestamp: number) {
+      if (!timestamp) return;
+      const now = Date.now();
+      const diff = (now - timestamp) / 1000;
       return diff;
     },
     floorOfPrinter(printerId: string) {

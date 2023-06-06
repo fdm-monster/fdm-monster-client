@@ -9,15 +9,14 @@
       <v-col>
         Name: {{ printer.printerName }} <br />
         URL: {{ printer.printerURL }} <br />
-        Host: {{ printer.hostState?.state }} -
-        <small>
-          <strong>{{ printer.hostState?.desc }}</strong>
-        </small>
+        Host:
+        <v-chip small>{{ apiState }}</v-chip>
         <br />
-        WebSocket: {{ printer.webSocketState?.colour }} <br />
-        Printer: {{ printer.printerState?.state }} <br />
-        Files: {{ getPrinterFileCount() }} <br />
-        Id: {{ printer.id }}
+        WebSocket:
+        <v-chip small>{{ socketState }}</v-chip>
+        <br />
+        Printer:
+        <v-chip small>{{ printerTextState }}</v-chip>
       </v-col>
       <v-col>
         <RefreshFilesAction :printer="printer" class="d-flex justify-end" />
@@ -34,6 +33,7 @@ import FileControlList from "@/components/PrinterList/FileControlList.vue";
 import { Printer } from "@/models/printers/printer.model";
 import RefreshFilesAction from "@/components/Generic/Actions/RefreshFilesAction.vue";
 import { usePrinterStore } from "../../store/printer.store";
+import { usePrinterStateStore } from "../../store/printer-state.store";
 
 interface Data {
   dragging: boolean;
@@ -48,6 +48,7 @@ export default defineComponent({
   setup: () => {
     return {
       printersStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
     };
   },
   async created() {},
@@ -62,13 +63,20 @@ export default defineComponent({
     printerId() {
       return this.printer?.id;
     },
-  },
-  methods: {
-    getPrinterFileCount() {
-      if (!this.printer) return undefined;
-      return this.printersStore.printerFileBucket(this.printer.id)?.files.length || 0;
+    socketState() {
+      if (!this.printerId) return;
+      return this.printerStateStore.socketStatesById[this.printerId]?.socket;
+    },
+    apiState() {
+      if (!this.printerId) return;
+      return this.printerStateStore.socketStatesById[this.printerId]?.api;
+    },
+    printerTextState() {
+      if (!this.printerId) return;
+      return this.printerStateStore.printerEventsById[this.printerId]?.current?.payload?.state.text;
     },
   },
+  methods: {},
   watch: {},
 });
 </script>

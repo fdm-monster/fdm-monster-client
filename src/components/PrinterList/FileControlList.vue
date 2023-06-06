@@ -3,7 +3,8 @@
     <strong>Files:</strong>
     <v-list color="primary">
       <v-list-item v-for="file in fileList.files" :key="file.path">
-        {{ file.path }} - {{ file.date }}
+        {{ file.path }}
+        <small class="ml-4 mr-4">{{ new Date(file.date).toUTCString() }}</small>
         <v-btn @click="deleteFile(file)">
           <v-icon>delete</v-icon>
           <v-spacer></v-spacer>

@@ -1,3 +1,5 @@
+import { PrinterFileCache } from "./printer-file-cache.model";
+
 export interface LoginDetails {
   apiKey: string;
   printerURL: string;
@@ -24,4 +26,6 @@ export interface Printer {
   webSocketURL: string;
   apiKey: string;
   printerURL: string;
+
+  fileList: PrinterFileCache;
 }

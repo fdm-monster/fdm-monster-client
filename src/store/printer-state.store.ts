@@ -67,6 +67,16 @@ export const usePrinterStateStore = defineStore("PrinterState", {
         return flags?.printing || flags?.paused;
       };
     },
+    printerCurrentEventReceivedAtById() {
+      const printerCurrentEventReceivedAtById: ById<number> = {};
+      this.printerIds.forEach((id) => {
+        const printerEvents = this.printerEventsById[id];
+        if (printerEvents?.current?.receivedAt) {
+          printerCurrentEventReceivedAtById[id] = printerEvents.current.receivedAt;
+        }
+      });
+      return printerCurrentEventReceivedAtById;
+    },
     onlinePrinters() {
       const printerStore = usePrinterStore();
       const onlinePrinters: ById<Printer> = {};
