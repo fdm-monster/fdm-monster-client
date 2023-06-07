@@ -10,6 +10,7 @@ import EmergencyCommands from "../components/Settings/EmergencyCommands.vue";
 import UserManagementSettings from "@/components/Settings/UserManagementSettings.vue";
 import FloorSettings from "@/components/Settings/FloorSettings.vue";
 import GridSettings from "../components/Settings/GridSettings.vue";
+import SoftwareUpgradeSettings from "../components/Settings/SoftwareUpgradeSettings.vue";
 
 Vue.use(VueRouter);
 
@@ -51,6 +52,10 @@ const routes: Array<RouteConfig> = [
       {
         path: "emergency-commands",
         component: EmergencyCommands,
+      },
+      {
+        path: "software-upgrade",
+        component: SoftwareUpgradeSettings,
       },
     ],
   },
