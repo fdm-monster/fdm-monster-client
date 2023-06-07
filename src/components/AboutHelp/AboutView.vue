@@ -31,9 +31,8 @@
       <strong v-if="monsterPiVersion"
         >Your MonsterPi version is: {{ monsterPiVersion }}<br />
       </strong>
-
       <br />
-      <v-btn color="primary" @click="updateClientDist()"> Update Client</v-btn>
+      <v-btn outlined to="/settings/software-upgrade"> Visit Upgrade Settings</v-btn>
     </v-card-text>
     <v-card-title>
       Bug reports
@@ -114,16 +113,7 @@ export default defineComponent({
   },
   props: {},
   computed: {},
-  methods: {
-    async updateClientDist() {
-      if (!confirm("Are you sure? This might cause breaking changes, if the server is outdated"))
-        return;
-
-      console.debug("Updating client");
-      await AppService.updateClientDist();
-      location.reload();
-    },
-  },
+  methods: {},
   watch: {},
 });
 </script>
