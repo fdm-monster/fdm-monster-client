@@ -14,8 +14,8 @@ import { errorEvent } from "@/shared/alert.events";
 import { createPinia, PiniaVuePlugin } from "pinia";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
-import { BrowserTracing } from "@sentry/vue";
 import * as Sentry from "@sentry/vue";
+import { BrowserTracing } from "@sentry/vue";
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
