@@ -23,6 +23,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": isProduction ? "warn" : "off",
     "@typescript-eslint/no-empty-function": isProduction ? "warn" : "off",
     "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/ban-ts-comment": "warn",
     "vue/valid-v-slot": [
       "error",
       {
