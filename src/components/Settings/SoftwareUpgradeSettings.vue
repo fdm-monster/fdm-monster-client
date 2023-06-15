@@ -74,6 +74,16 @@
           </v-btn>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title> Enable anonymous diagnostics:</v-list-item-title>
+          <v-list-item-subtitle>
+            <strong>false</strong>
+            <br />
+            <v-btn @click="">
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-card>
 </template>
