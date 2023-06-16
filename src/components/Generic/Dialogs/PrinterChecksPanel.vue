@@ -1,7 +1,7 @@
 <template>
   <v-col :cols="cols">
     <strong>Checks:</strong>
-    <v-alert v-for="(item, index) of getEvents()" :key="index" dense :type="item.color">
+    <v-alert v-for="(item, index) of getEvents()" :key="index" :type="item.color" dense>
       <small>{{ item.label }} {{ item.text }}</small>
     </v-alert>
   </v-col>
@@ -33,18 +33,10 @@ export default defineComponent({
   methods: {
     getEvents() {
       return this.testPrinterStore.getEvents().map((e) => {
-        let color = e.failure ? errorCol : successCol;
-        const label = e.event;
-        let text = e.payload;
-        if (text === "authFail") {
-          color = errorCol;
-          text = "authentication failed";
-        }
-
         return {
-          label,
-          text,
-          color,
+          label: e.event,
+          text: e.payload,
+          color: e.failure ? errorCol : successCol,
         };
       });
     },
