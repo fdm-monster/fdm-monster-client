@@ -76,15 +76,15 @@
       </v-list-item>
       <v-list-item v-if="hasAnonymousDiagnosticsToggleFeature">
         <v-list-item-content>
-          <v-list-item-title>Anonymous diagnostic reports:</v-list-item-title>
+          <v-list-item-title>Remote Sentry diagnostic reports:</v-list-item-title>
           <v-list-item-subtitle>
             <v-checkbox
-              v-model="anonymousDiagnosticsEnabled"
-              label="Enable anonymous diagnostic reports (Sentry)"
+              v-model="sentryDiagnosticsEnabled"
+              label="Enable remote Sentry diagnostic reports"
             />
 
             <br />
-            <v-btn color="primary" @click="saveAnonymousDiagnosticsSettings()">
+            <v-btn color="primary" @click="saveSentryDiagnosticsSettings()">
               <v-icon class="pr-2">save</v-icon>
               Save
             </v-btn>
@@ -113,7 +113,7 @@ const current = ref<IRelease>();
 const minimum = ref<IRelease>();
 const selectedRelease = ref<string>();
 const hasAnonymousDiagnosticsToggleFeature = ref(false);
-const anonymousDiagnosticsEnabled = ref(false);
+const sentryDiagnosticsEnabled = ref(false);
 
 onMounted(async () => {
   const clientReleases = await AppService.getClientReleases();
@@ -130,8 +130,7 @@ onMounted(async () => {
     features.anonymousDiagnosticsToggle?.available || false;
 
   await settingsStore.loadSettings();
-  anonymousDiagnosticsEnabled.value =
-    settingsStore.serverSettings?.anonymousDiagnosticsEnabled || false;
+  sentryDiagnosticsEnabled.value = settingsStore.serverSettings?.sentryDiagnosticsEnabled || false;
 });
 
 function isCurrentRelease(release: IRelease) {
@@ -155,8 +154,8 @@ async function clickUpdateClient(tagName: string) {
   location.reload();
 }
 
-async function saveAnonymousDiagnosticsSettings() {
-  await SettingsService.setAnonymousDiagnosticsSettings(anonymousDiagnosticsEnabled.value);
-  setSentryEnabled(anonymousDiagnosticsEnabled.value);
+async function saveSentryDiagnosticsSettings() {
+  await SettingsService.setSentryDiagnosticsSettings(sentryDiagnosticsEnabled.value);
+  setSentryEnabled(sentryDiagnosticsEnabled.value);
 }
 </script>
