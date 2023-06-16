@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { FrontendSettings, SettingsDto } from "../models/settings/settings.model";
 import { SettingsService } from "@/backend";
+import { ServerSettings } from "../models/settings/serverSettings";
 
 export interface DebugSettings {
   showPrinterStateUpdateSideNav: boolean;
@@ -36,6 +37,9 @@ export const useSettingsStore = defineStore({
     },
   },
   getters: {
+    serverSettings(): ServerSettings | undefined {
+      return this.settings?.server;
+    },
     largeTiles(): boolean {
       return this.settings?.frontend?.largeTiles || false;
     },

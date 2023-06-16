@@ -28,9 +28,10 @@
       <br />
       <strong>Your clients's version is: {{ version }}</strong>
       <br />
-      <strong v-if="monsterPiVersion"
-        >Your MonsterPi version is: {{ monsterPiVersion }}<br />
+      <strong v-if="monsterPiVersion">
+        Your MonsterPi version is: {{ monsterPiVersion }}<br />
       </strong>
+      <strong v-else> No MonsterPi distro detected. </strong>
       <br />
       <v-btn outlined to="/settings/software-upgrade"> Visit Upgrade Settings</v-btn>
     </v-card-text>

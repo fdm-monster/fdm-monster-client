@@ -11,7 +11,7 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title> Current versions:</v-list-item-title>
-            <v-list-item-subtitle>
+            <v-list-item-action-text>
               <strong>Your server's version is: {{ serverVersion }}</strong>
               <br />
               <strong>Your clients's version is: {{ version }}</strong>
@@ -19,7 +19,8 @@
               <strong v-if="monsterPiVersion">
                 Your MonsterPi version is: {{ monsterPiVersion }}<br />
               </strong>
-            </v-list-item-subtitle>
+              <strong v-else> No MonsterPi distro detected. </strong>
+            </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-content>

@@ -1,4 +1,4 @@
-import { ServerModel } from "./server.model";
+import { ServerSettings } from "./serverSettings";
 import { PrinterFileCleanSettings } from "./printer-file-clean-settings.model";
 
 export type PrinterFileCleanSubSetting = {
@@ -13,7 +13,7 @@ export interface FrontendSettings {
 
 export interface SettingsDto {
   id: string;
-  server: ServerModel;
+  server: ServerSettings;
   frontend: FrontendSettings;
   printerFileClean: PrinterFileCleanSettings;
   timeout: any; // TODO model

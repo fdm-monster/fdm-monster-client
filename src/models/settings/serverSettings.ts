@@ -3,8 +3,9 @@ export interface WhitelistSettings {
   whitelistEnabled: boolean;
 }
 
-export interface ServerModel extends WhitelistSettings {
+export interface ServerSettings extends WhitelistSettings {
   registration: boolean;
   port: number;
   loginRequired: boolean;
+  anonymousDiagnosticsEnabled: boolean;
 }
