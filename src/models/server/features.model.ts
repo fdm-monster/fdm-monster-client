@@ -8,6 +8,7 @@ export class FeaturesModel {
   batchConnectUsbCalls?: IFeatureFlag;
   batchConnectSocketCalls?: IFeatureFlag;
   newSockets?: IFeatureFlag;
+  anonymousDiagnosticsToggle?: IFeatureFlag;
 }
 
 export type TFeatureFlags = keyof FeaturesModel;

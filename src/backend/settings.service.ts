@@ -4,9 +4,9 @@ import {
   FrontendSettings,
   PrinterFileCleanSubSetting,
   SettingsDto,
-} from "../models/settings/settings.model";
-import { PrinterFileCleanSettings } from "../models/settings/printer-file-clean-settings.model";
-import { WhitelistSettings } from "../models/settings/serverSettings";
+} from "@/models/settings/settings.model";
+import { PrinterFileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
+import { WhitelistSettings } from "@/models/settings/serverSettings";
 
 export class SettingsService extends BaseService {
   static async getServerSettings() {
@@ -19,6 +19,11 @@ export class SettingsService extends BaseService {
     const path = `${ServerApi.frontendSettingsRoute}`;
 
     return (await this.putApi(path, frontendSettings as FrontendSettings)) as SettingsDto;
+  }
+
+  static async setAnonymousDiagnosticsSettings(enabled: boolean) {
+    const path = `${ServerApi.serverAnonymousDiagnosticSettingRoute}`;
+    return await this.patchApi(path, { enabled });
   }
 
   static async setWhitelistSettings(subSettings: WhitelistSettings) {

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { FrontendSettings, SettingsDto } from "../models/settings/settings.model";
+import { FrontendSettings, SettingsDto } from "@/models/settings/settings.model";
 import { SettingsService } from "@/backend";
-import { ServerSettings } from "../models/settings/serverSettings";
+import { ServerSettings } from "@/models/settings/serverSettings";
 
 export interface DebugSettings {
   showPrinterStateUpdateSideNav: boolean;
