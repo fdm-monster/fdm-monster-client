@@ -68,7 +68,7 @@ export default defineComponent({
   },
   async created() {
     await this.settingsStore.loadSettings();
-    const enabled = this.settingsStore.serverSettings?.anonymousDiagnosticsEnabled;
+    const enabled = this.settingsStore.serverSettings?.sentryDiagnosticsEnabled;
     setSentryEnabled(!!enabled);
 
     await this.featureStore.loadFeatures();
