@@ -225,8 +225,6 @@ export default defineComponent({
       const printer = this.printerStore.printer(this.printerId);
       if (!printer) return;
 
-      if (printer.disabledReason?.length) return null;
-
       const printerEvents = this.printerStateStore.printerEventsById[this.printerId];
       const socketState = this.printerStateStore.socketStatesById[this.printerId];
       const states = interpretStates(printer, socketState, printerEvents);
