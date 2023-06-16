@@ -19,6 +19,7 @@ export class ServerApi {
   static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
   static frontendSettingsRoute = `${ServerApi.serverSettingsRoute}/frontend`;
   static serverWhitelistSettingRoute = `${ServerApi.serverSettingsRoute}/whitelist`;
+  static serverAnonymousDiagnosticSettingRoute = `${ServerApi.serverSettingsRoute}/anonymous-diagnostics`;
   static serverRestartRoute = `${ServerApi.serverSettingsRoute}/restart`;
   static customGCodeSettingsRoutes = `${ServerApi.settingsRoute}/custom-gcode`;
   static pluginRoute = `${ServerApi.base}/plugin`;

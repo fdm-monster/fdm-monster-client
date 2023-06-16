@@ -37,6 +37,7 @@ import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
 import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
 import { useFeatureStore } from "./store/features.store";
+import { setSentryEnabled } from "./utils/sentry.util";
 
 interface Data {
   socketIoClient?: SocketIoService;
@@ -67,8 +68,12 @@ export default defineComponent({
   },
   async created() {
     await this.settingsStore.loadSettings();
+    const enabled = this.settingsStore.serverSettings?.anonymousDiagnosticsEnabled;
+    setSentryEnabled(!!enabled);
+
     await this.featureStore.loadFeatures();
 
+    // TODO replace with useEventBus
     this.uploadsStore._injectEventBus(this.$bus);
     await this.connectSocketIoClient();
   },
