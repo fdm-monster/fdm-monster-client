@@ -21,8 +21,8 @@ export class SettingsService extends BaseService {
     return (await this.putApi(path, frontendSettings as FrontendSettings)) as SettingsDto;
   }
 
-  static async setAnonymousDiagnosticsSettings(enabled: boolean) {
-    const path = `${ServerApi.serverAnonymousDiagnosticSettingRoute}`;
+  static async setSentryDiagnosticsSettings(enabled: boolean) {
+    const path = `${ServerApi.serverSentryDiagnosticsSettingRoute}`;
     return await this.patchApi(path, { enabled });
   }
 

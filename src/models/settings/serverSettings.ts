@@ -7,5 +7,5 @@ export interface ServerSettings extends WhitelistSettings {
   registration: boolean;
   port: number;
   loginRequired: boolean;
-  anonymousDiagnosticsEnabled: boolean;
+  sentryDiagnosticsEnabled: boolean;
 }
