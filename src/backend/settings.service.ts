@@ -6,7 +6,7 @@ import {
   SettingsDto,
 } from "../models/settings/settings.model";
 import { PrinterFileCleanSettings } from "../models/settings/printer-file-clean-settings.model";
-import { WhitelistSettings } from "../models/settings/server.model";
+import { WhitelistSettings } from "../models/settings/serverSettings";
 
 export class SettingsService extends BaseService {
   static async getServerSettings() {
