@@ -84,7 +84,10 @@
             />
 
             <br />
-            <v-btn color="primary" @click="saveAnonymousDiagnosticsSettings()">Save</v-btn>
+            <v-btn color="primary" @click="saveAnonymousDiagnosticsSettings()">
+              <v-icon class="pr-2">save</v-icon>
+              Save
+            </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
