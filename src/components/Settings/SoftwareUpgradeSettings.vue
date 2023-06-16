@@ -99,6 +99,7 @@ import { IRelease } from "@/models/server/client-releases.model";
 import { compare, minor } from "semver";
 import { SettingsService } from "@/backend";
 import { useSettingsStore } from "@/store/settings.store";
+import { setSentryEnabled } from "@/utils/sentry.util";
 
 const settingsStore = useSettingsStore();
 const serverVersion = ref("");
@@ -153,5 +154,6 @@ async function clickUpdateClient(tagName: string) {
 
 async function saveAnonymousDiagnosticsSettings() {
   await SettingsService.setAnonymousDiagnosticsSettings(anonymousDiagnosticsEnabled.value);
+  setSentryEnabled(anonymousDiagnosticsEnabled.value);
 }
 </script>
