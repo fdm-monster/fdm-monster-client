@@ -19,6 +19,7 @@
               <strong v-if="monsterPiVersion">
                 Your MonsterPi version is: {{ monsterPiVersion }}<br />
               </strong>
+              <strong v-else> No MonsterPi distro detected. </strong>
             </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
