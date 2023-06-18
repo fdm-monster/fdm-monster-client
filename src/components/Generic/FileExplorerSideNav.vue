@@ -133,6 +133,20 @@
       </v-list-item>
 
       <v-list-item
+        v-if="featureStore.hasFeature('pauseResumePrinterCommand')"
+        :disabled="!isFileBeingPrinted"
+        class="extra-dense-list-item"
+        link
+        @click.prevent.stop="isPaused ? clickResumePrint() : clickPausePrint()"
+      >
+        <v-list-item-avatar>
+          <v-icon v-if="!isPaused">pause</v-icon>
+          <v-icon v-if="isPaused">play_circle_outline</v-icon>
+        </v-list-item-avatar>
+        <v-list-item-content>{{ isPaused ? "Resume print" : "Pause print" }}</v-list-item-content>
+      </v-list-item>
+
+      <v-list-item
         :disabled="!isStoppable"
         class="extra-dense-list-item"
         link
@@ -284,7 +298,6 @@ import { PrinterFileService, PrintersService } from "../../backend";
 import { PrinterFile } from "../../models/printers/printer-file.model";
 import { PrinterFileBucket } from "../../models/printers/printer-file-bucket.model";
 import { formatBytes } from "../../utils/file-size.util";
-import { CustomGcodeService } from "../../backend/custom-gcode.service";
 import { usePrinterStore } from "../../store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
 import { useDialogsStore } from "../../store/dialog.store";
@@ -292,6 +305,8 @@ import { PrinterJobService } from "../../backend/printer-job.service";
 import { usePrinterStateStore } from "../../store/printer-state.store";
 import { interpretStates } from "../../shared/printer-state.constants";
 import { useSettingsStore } from "../../store/settings.store";
+import { featureFlagsList } from "@/models/server/features.model";
+import { useFeatureStore } from "@/store/features.store";
 
 interface Data {
   fileSearch?: string;
@@ -308,6 +323,7 @@ export default defineComponent({
       printersStore: usePrinterStore(),
       printerStateStore: usePrinterStateStore(),
       dialogsStore: useDialogsStore(),
+      featureStore: useFeatureStore(),
     };
   },
   async created() {},
@@ -351,6 +367,10 @@ export default defineComponent({
       if (!this.storedSideNavPrinter || !this.printerId) return false;
       return this.printerStateStore.isPrinterStoppable(this.printerId);
     },
+    isPaused() {
+      if (!this.storedSideNavPrinter || !this.printerId) return false;
+      return this.printerStateStore.isPrinterPaused(this.printerId);
+    },
     canBeCleared() {
       if (!this.printerId) {
         return false;
@@ -393,6 +413,9 @@ export default defineComponent({
     },
   },
   methods: {
+    featureFlagsList() {
+      return featureFlagsList;
+    },
     formatBytes: formatBytes,
     truncateProgress(progress?: number) {
       if (!progress) return "";
@@ -486,12 +509,14 @@ export default defineComponent({
         await PrinterJobService.stopPrintJob(this.printerId);
       }
     },
-    async clickEmergencyStop() {
+    async clickPausePrint() {
       if (!this.printerId) return;
 
-      if (confirm("Are you sure to abort the print? Please reconnect after.")) {
-        await CustomGcodeService.postEmergencyM112Command(this.printerId);
-      }
+      await PrinterJobService.pausePrintJob(this.printerId);
+    },
+    async clickResumePrint() {
+      if (!this.printerId) return;
+      await PrinterJobService.resumePrintJob(this.printerId);
     },
     async clickClearFiles() {
       if (!this.printerId) return;
