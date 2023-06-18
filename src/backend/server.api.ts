@@ -69,4 +69,6 @@ export class ServerApi {
 
   static printerJobRoute = (id: string) => `${ServerApi.getPrinterRoute(id)}/job`;
   static printerStopJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/stop`;
+  static printerPauseJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/pause`;
+  static printerResumeJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/resume`;
 }

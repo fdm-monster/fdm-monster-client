@@ -9,6 +9,7 @@ export class FeaturesModel {
   batchConnectSocketCalls?: IFeatureFlag;
   newSockets?: IFeatureFlag;
   anonymousDiagnosticsToggle?: IFeatureFlag;
+  pauseResumePrinterCommand?: IFeatureFlag;
 }
 
 export type TFeatureFlags = keyof FeaturesModel;
