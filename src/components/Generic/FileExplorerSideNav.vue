@@ -74,6 +74,24 @@
     <v-list v-drop-upload="{ printers: [storedSideNavPrinter] }" dense subheader>
       <v-subheader inset>Manage FDM Monster instance</v-subheader>
 
+      <v-list-item class="extra-dense-list-item" link @click.prevent.stop="openPrinterURL()">
+        <v-list-item-avatar>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-img
+                :src="require('@/assets/octoprint-logo.png')"
+                alt="Octoprint Logo"
+                v-bind="attrs"
+                v-on="on"
+              />
+            </template>
+            <span>Open Octoprint Instance Page</span>
+          </v-tooltip>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <span>Open Octoprint Instance</span>
+        </v-list-item-content>
+      </v-list-item>
       <v-list-item class="extra-dense-list-item" link @click.prevent.stop="toggleEnabled()">
         <v-list-item-avatar>
           <v-tooltip bottom>
