@@ -1,21 +1,32 @@
 <template>
   <div>
-    <div v-if="gridStore.gridEditMode" class="ml-4 mt-4 mb-0" style="cursor: move">
-      <span class="pr-4">
-        Drag and drop {{ floorStore.floorlessPrinters.length }} unplaced printer(s) here:
-      </span>
-      <div
-        v-for="printer of floorStore.floorlessPrinters"
-        :key="printer.id"
-        class="d-inline-block text-center mr-1 mb-1"
-        draggable="true"
-        style="width: 100px; height: 40px; border: 1px solid gray; border-radius: 2px"
-        @dragstart="onDragStart(printer, $event)"
-      >
-        <strong text-center>{{ printer.printerName }}</strong>
-      </div>
-      <div class="mt-4">Clear printers by clicking on their tile below:</div>
-    </div>
+    <v-banner v-if="gridStore.gridEditMode" style="cursor: move">
+      <v-row style="margin-bottom: -5px">
+        <v-col>
+          <span>
+            Drag {{ floorStore.floorlessPrinters.length }} unplaced printer(s) from here to place it
+            on the grid.
+          </span>
+          <v-chip-group>
+            <v-chip
+              v-for="printer of floorStore.floorlessPrinters"
+              :key="printer.id"
+              draggable
+              small
+              @dragstart="onDragStart(printer, $event)"
+            >
+              {{ printer.printerName }}
+            </v-chip>
+          </v-chip-group>
+        </v-col>
+        <v-col>
+          <div>
+            Clear printers by clicking on
+            <strong> <v-icon>disabled_visible</v-icon> Click to clear </strong>
+          </div>
+        </v-col>
+      </v-row>
+    </v-banner>
     <v-row v-for="y in rows" :key="y" class="ma-1" no-gutters>
       <v-col v-for="x in columns" :key="x" :cols="columnWidth" :sm="columnWidth">
         <v-row class="test-top" no-gutters>

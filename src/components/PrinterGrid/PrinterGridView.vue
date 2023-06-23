@@ -2,7 +2,7 @@
   <div>
     <HomeToolbar />
 
-    <v-banner v-drop-upload="{ printers: selectedPrinters }">
+    <v-banner v-drop-upload="{ printers: selectedPrinters }" v-if="!gridStore.gridEditMode">
       <v-row style="margin-bottom: -5px">
         <v-col style="padding: 5px 0 0 15px">
           <v-chip-group class="d-inline-block">
@@ -88,12 +88,14 @@ import { usePrinterStore } from "../../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 import { useFeatureStore } from "../../store/features.store";
 import { usePrinterStateStore } from "../../store/printer-state.store";
+import { useGridStore } from "../../store/grid.store";
 
 export default defineComponent({
   name: "PrinterGridView",
   components: { PrinterGrid, HomeToolbar },
   setup: () => {
     return {
+      gridStore: useGridStore(),
       printersStore: usePrinterStore(),
       printerStateStore: usePrinterStateStore(),
       uploadsStore: useUploadsStore(),
