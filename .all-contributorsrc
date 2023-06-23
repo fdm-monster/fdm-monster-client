@@ -16,6 +16,15 @@
         "maintenance",
         "userTesting"
       ]
+    },
+    {
+      "login": "Abdullah-Abuzaid",
+      "name": "Abdullah Abuzaid",
+      "avatar_url": "https://avatars.githubusercontent.com/u/61384954?v=4",
+      "profile": "https://github.com/Abdullah-Abuzaid",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -23,5 +32,7 @@
   "projectOwner": "fdm-monster",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs",
+  "commitConvention": "angular"
 }
