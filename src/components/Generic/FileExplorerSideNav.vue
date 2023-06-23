@@ -79,13 +79,13 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-img
-                :src="require('@/assets/octoprint-logo.png')"
+                :src="require('@/assets/octoprint_logo_rgb_100px.png')"
                 alt="Octoprint Logo"
                 v-bind="attrs"
                 v-on="on"
               />
             </template>
-            <span>Open Octoprint Instance Page</span>
+            <span>Open OctoPrint</span>
           </v-tooltip>
         </v-list-item-avatar>
         <v-list-item-content>
