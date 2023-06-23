@@ -10,9 +10,21 @@
   >
     <v-list-item>
       <v-list-item-avatar>
-        <v-btn color="primary" fab @click="openPrinterURL()" @click.middle="openPrinterURL()">
-          {{ avatarInitials() }}
-        </v-btn>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              fab
+              v-bind="attrs"
+              @click="openPrinterURL()"
+              v-on="on"
+              @click.middle="openPrinterURL()"
+            >
+              {{ avatarInitials() }}
+            </v-btn>
+          </template>
+          <span>Visit the OctoPrint associated to this printer</span>
+        </v-tooltip>
       </v-list-item-avatar>
       <v-list-item-content v-if="storedSideNavPrinter">
         <v-list-item-title>
@@ -74,6 +86,25 @@
     <v-list v-drop-upload="{ printers: [storedSideNavPrinter] }" dense subheader>
       <v-subheader inset>Manage FDM Monster instance</v-subheader>
 
+      <v-tooltip left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item
+            class="extra-dense-list-item"
+            link
+            @click.prevent.stop="openPrinterURL()"
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-list-item-avatar>
+              <v-icon>$vuetify.icons.octoprint</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <span>Open OctoPrint</span>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <span>Visit the OctoPrint associated to this printer</span>
+      </v-tooltip>
       <v-list-item class="extra-dense-list-item" link @click.prevent.stop="toggleEnabled()">
         <v-list-item-avatar>
           <v-tooltip bottom>
