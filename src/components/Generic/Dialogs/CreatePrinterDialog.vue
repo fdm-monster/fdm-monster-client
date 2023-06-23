@@ -161,6 +161,7 @@ export default defineComponent({
     closeDialog() {
       this.showChecksPanel = false;
       this.testPrinterStore.clearEvents();
+      this.printerCrudForm().resetForm();
       this.dialogsStore.closeDialog(this.dialogId);
       this.copyPasteConnectionString = "";
     },

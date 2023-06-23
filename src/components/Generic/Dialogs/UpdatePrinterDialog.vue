@@ -172,6 +172,7 @@ export default defineComponent({
     closeDialog() {
       this.showChecksPanel = false;
       this.testPrinterStore.clearEvents();
+      this.printerUpdateForm().resetForm();
       this.dialogsStore.closeDialog(this.dialogId);
       this.printersStore.setUpdateDialogPrinter(undefined);
       this.copyPasteConnectionString = "";
