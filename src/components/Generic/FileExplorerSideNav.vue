@@ -165,7 +165,7 @@
 
       <v-list-item
         v-if="featureStore.hasFeature('pauseResumePrinterCommand')"
-        :disabled="!isFileBeingPrinted"
+        :disabled="!currentJob || !isOnline"
         class="extra-dense-list-item"
         link
         @click.prevent.stop="isPaused ? clickResumePrint() : clickPausePrint()"
