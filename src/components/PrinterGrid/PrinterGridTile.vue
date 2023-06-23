@@ -120,10 +120,12 @@
             <v-icon>menu_open</v-icon>
           </v-btn>
         </div>
-        <strong v-else class="float-end">
-          <v-icon>disabled_visible</v-icon>
-          Click to clear
-        </strong>
+        <div v-else class="float-end">
+          <strong class="pl-5 pr-5" color="primary">
+            <v-icon>disabled_visible</v-icon>
+            Click to clear
+          </strong>
+        </div>
         <br />
 
         <v-tooltip
