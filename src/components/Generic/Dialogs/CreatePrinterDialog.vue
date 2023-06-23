@@ -159,6 +159,8 @@ export default defineComponent({
       this.closeDialog();
     },
     closeDialog() {
+      this.showChecksPanel = false;
+      this.testPrinterStore.clearEvents();
       this.dialogsStore.closeDialog(this.dialogId);
       this.copyPasteConnectionString = "";
     },
