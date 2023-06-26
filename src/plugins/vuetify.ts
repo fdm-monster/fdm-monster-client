@@ -34,8 +34,6 @@ export default new Vuetify({
   },
   icons: {
     iconfont: "md",
-    values: {
-      octoprint: "directions",
-    },
+    values: {},
   },
 });

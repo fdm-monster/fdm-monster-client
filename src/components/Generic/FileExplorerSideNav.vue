@@ -95,8 +95,8 @@
             v-on="on"
             @click.prevent.stop="openPrinterURL()"
           >
-            <v-list-item-avatar>
-              <v-icon>$vuetify.icons.octoprint</v-icon>
+            <v-list-item-avatar size="20px" class="ml-3 mr-6 ma-5">
+              <v-img src="/img/octoprint-tentacle.svg"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
               <span>Open OctoPrint</span>
