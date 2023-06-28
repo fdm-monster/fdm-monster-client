@@ -70,7 +70,7 @@
             @click="clickUpdateClient(selectedRelease)"
           >
             <v-icon>upgrade</v-icon>
-            Upgrade/downgrade client
+            Upgrade client
           </v-btn>
         </v-list-item-content>
       </v-list-item>
