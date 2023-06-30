@@ -35,6 +35,9 @@
           <v-btn :disabled="invalid" color="gray" text @click="quickCopyConnectionString()">
             Copy
           </v-btn>
+          <v-btn :disabled="invalid" color="gray" text @click="duplicatePrinter()">
+            Duplicate
+          </v-btn>
           <v-btn :disabled="invalid" color="warning" text @click="testPrinter()">
             Test connection
           </v-btn>
@@ -176,6 +179,17 @@ export default defineComponent({
       this.dialogsStore.closeDialog(this.dialogId);
       this.printersStore.setUpdateDialogPrinter(undefined);
       this.copyPasteConnectionString = "";
+    },
+
+    async duplicatePrinter() {
+      if (!(await this.isValid())) return;
+      const formData = this.formData();
+      if (!formData) return;
+      const newPrinterData = PrintersService.convertCreateFormToPrinter(formData);
+      await this.printersStore.createPrinter(newPrinterData);
+      this.$bus.emit(infoMessageEvent, `Printer ${newPrinterData.printerName} created`);
+      console.error("TODO: duplicate printer");
+      this.closeDialog();
     },
   },
   watch: {
