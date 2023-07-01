@@ -239,7 +239,7 @@ export default defineComponent({
       }
     },
     async openImportJsonPrintersDialog() {
-      this.dialogsStore.openDialog(DialogName.BatchJson);
+      this.dialogsStore.openDialog(DialogName.BatchJsonCreate);
     },
     async openYamlImportExportDialog() {
       this.dialogsStore.openDialog(DialogName.YamlImportExport);
