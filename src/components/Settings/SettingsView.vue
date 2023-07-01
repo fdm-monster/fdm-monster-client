@@ -1,7 +1,7 @@
 <template>
   <v-row no-gutters>
     <div>
-      <v-navigation-drawer>
+      <v-navigation-drawer permanent="true">
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="text-h6"> Settings</v-list-item-title>
