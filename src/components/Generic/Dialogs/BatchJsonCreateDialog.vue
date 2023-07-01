@@ -89,7 +89,7 @@ export default defineComponent({
       json: "",
     },
     numPrinters: 0,
-    dialogId: DialogName.BatchJson,
+    dialogId: DialogName.BatchJsonCreate,
   }),
   computed: {
     validationObserver() {

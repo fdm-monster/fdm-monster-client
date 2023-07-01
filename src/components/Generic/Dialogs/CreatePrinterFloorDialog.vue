@@ -61,7 +61,7 @@ export default defineComponent({
   async mounted() {},
   props: {},
   data: (): Data => ({
-    dialogId: DialogName.CreatePrinterFloorDialog,
+    dialogId: DialogName.CreateFloorDialog,
   }),
   computed: {
     validationObserver() {
