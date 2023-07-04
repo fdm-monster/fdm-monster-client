@@ -30,7 +30,11 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title> Server upgrade</v-list-item-title>
-          <v-list-item-subtitle>Please contact MTB3D for a server upgrade.</v-list-item-subtitle>
+          <v-list-item-subtitle>
+            Please visit
+            <a href="https://docs.fdm-monster.net">docs.fdm-monster.net</a>
+            for instructions on how to upgrade the server.
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -74,23 +78,6 @@
           </v-btn>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item v-if="hasAnonymousDiagnosticsToggleFeature">
-        <v-list-item-content>
-          <v-list-item-title>Remote Sentry diagnostic reports:</v-list-item-title>
-          <v-list-item-subtitle>
-            <v-checkbox
-              v-model="sentryDiagnosticsEnabled"
-              label="Enable remote Sentry diagnostic reports"
-            />
-
-            <br />
-            <v-btn color="primary" @click="saveSentryDiagnosticsSettings()">
-              <v-icon class="pr-2">save</v-icon>
-              Save
-            </v-btn>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
     </v-list>
   </v-card>
 </template>
@@ -100,11 +87,7 @@ import { onMounted, ref } from "vue";
 import { version as packageJsonVersion } from "../../../package.json";
 import { IRelease } from "@/models/server/client-releases.model";
 import { compare, minor } from "semver";
-import { SettingsService } from "@/backend";
-import { useSettingsStore } from "@/store/settings.store";
-import { setSentryEnabled } from "@/utils/sentry.util";
 
-const settingsStore = useSettingsStore();
 const serverVersion = ref("");
 const monsterPiVersion = ref<string | null>("");
 const version = ref(packageJsonVersion);
@@ -112,8 +95,6 @@ const releases = ref<IRelease[]>([]);
 const current = ref<IRelease>();
 const minimum = ref<IRelease>();
 const selectedRelease = ref<string>();
-const hasAnonymousDiagnosticsToggleFeature = ref(false);
-const sentryDiagnosticsEnabled = ref(false);
 
 onMounted(async () => {
   const clientReleases = await AppService.getClientReleases();
@@ -125,12 +106,6 @@ onMounted(async () => {
   const versionSpec = await AppService.getVersion();
   serverVersion.value = versionSpec.version;
   monsterPiVersion.value = versionSpec.monsterPi;
-  const features = await AppService.getFeatures();
-  hasAnonymousDiagnosticsToggleFeature.value =
-    features.anonymousDiagnosticsToggle?.available || false;
-
-  await settingsStore.loadSettings();
-  sentryDiagnosticsEnabled.value = settingsStore.serverSettings?.sentryDiagnosticsEnabled || false;
 });
 
 function isCurrentRelease(release: IRelease) {
@@ -152,10 +127,5 @@ async function clickUpdateClient(tagName: string) {
 
   await AppService.updateClientDistGithub(tagName);
   location.reload();
-}
-
-async function saveSentryDiagnosticsSettings() {
-  await SettingsService.setSentryDiagnosticsSettings(sentryDiagnosticsEnabled.value);
-  setSentryEnabled(sentryDiagnosticsEnabled.value);
 }
 </script>
