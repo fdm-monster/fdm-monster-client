@@ -29,4 +29,12 @@ export class ServerPrivateService extends BaseService {
     formData.append("file", file);
     return await this.postUploadApi("api/server/import-printers-floors-yaml", formData, {});
   }
+
+  public static async downloadLogDump() {
+    const response = await this.postApi("api/server/dump-fdm-monster-logs");
+    await downloadFileByBlob(
+      (response as any).data as any,
+      "logs-fdm-monster-" + Date.now() + ".zip"
+    );
+  }
 }
