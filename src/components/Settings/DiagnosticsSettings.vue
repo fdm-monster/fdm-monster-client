@@ -29,7 +29,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider />
-      <v-list-item>
+      <v-list-item v-if="hasLogDumpFeature">
         <v-list-item-content>
           <v-list-item-title>Logs Dump</v-list-item-title>
           <v-list-item-subtitle>
@@ -58,11 +58,13 @@ import { ServerPrivateService } from "../../backend/server-private.service";
 
 const settingsStore = useSettingsStore();
 const hasAnonymousDiagnosticsToggleFeature = ref(false);
+const hasLogDumpFeature = ref(false);
 const sentryDiagnosticsEnabled = ref(false);
 onMounted(async () => {
   const features = await AppService.getFeatures();
   hasAnonymousDiagnosticsToggleFeature.value =
     features.anonymousDiagnosticsToggle?.available || false;
+  hasLogDumpFeature.value = features.logDumpZip?.available || false;
 
   await settingsStore.loadSettings();
   sentryDiagnosticsEnabled.value = settingsStore.serverSettings?.sentryDiagnosticsEnabled || false;
