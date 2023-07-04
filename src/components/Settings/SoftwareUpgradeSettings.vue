@@ -102,7 +102,7 @@ onMounted(async () => {
   minimum.value = clientReleases.minimum;
   releases.value = clientReleases.filter((release) => {
     const isMinimumVersion = minor(release.tag_name) === minor(minimum.value.tag_name);
-    const isReleaseCandidate = release.prerelease && release.tag_name.includes('rc');
+    const isReleaseCandidate = release.prerelease || release.tag_name.includes("rc");
     const isUnstable = release.draft || release.prerelease;
     return isMinimumVersion && !isReleaseCandidate && !isUnstable;
   });
