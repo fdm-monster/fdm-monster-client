@@ -11,6 +11,7 @@ import UserManagementSettings from "@/components/Settings/UserManagementSettings
 import FloorSettings from "@/components/Settings/FloorSettings.vue";
 import GridSettings from "../components/Settings/GridSettings.vue";
 import SoftwareUpgradeSettings from "../components/Settings/SoftwareUpgradeSettings.vue";
+import DiagnosticsSettings from "../components/Settings/DiagnosticsSettings.vue";
 
 Vue.use(VueRouter);
 
@@ -56,6 +57,10 @@ const routes: Array<RouteConfig> = [
       {
         path: "software-upgrade",
         component: SoftwareUpgradeSettings,
+      },
+      {
+        path: "diagnostics",
+        component: DiagnosticsSettings,
       },
     ],
   },

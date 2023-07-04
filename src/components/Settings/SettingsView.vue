@@ -68,6 +68,7 @@ export default defineComponent({
       { title: "OctoPrint Settings", icon: "image", path: "/settings/octoprint" },
       { title: "Emergency Commands", icon: "warning", path: "/settings/emergency-commands" },
       { title: "Software Upgrade", icon: "upgrade", path: "/settings/software-upgrade" },
+      { title: "Diagnostics", icon: "bug_report", path: "/settings/diagnostics" },
     ],
   }),
   computed: {},

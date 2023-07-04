@@ -40,10 +40,10 @@ See [Vue Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Contributors ✨
 
-These are the people involved in the project:
+These are the people involved in the project.  Find the meaning of the emoji keys [here](https://allcontributors.org/docs/en/emoji-key).
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
@@ -54,6 +54,7 @@ These are the people involved in the project:
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/davidzwa"><img src="https://avatars.githubusercontent.com/u/6005355?v=4?s=100" width="100px;" alt="David Zwart"/><br /><sub><b>David Zwart</b></sub></a><br /><a href="https://github.com/fdm-monster/fdm-monster-client/issues?q=author%3Adavidzwa" title="Bug reports">🐛</a> <a href="https://github.com/fdm-monster/fdm-monster-client/commits?author=davidzwa" title="Code">💻</a> <a href="#maintenance-davidzwa" title="Maintenance">🚧</a> <a href="#userTesting-davidzwa" title="User Testing">📓</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Abdullah-Abuzaid"><img src="https://avatars.githubusercontent.com/u/61384954?v=4?s=100" width="100px;" alt="Abdullah Abuzaid"/><br /><sub><b>Abdullah Abuzaid</b></sub></a><br /><a href="https://github.com/fdm-monster/fdm-monster-client/commits?author=Abdullah-Abuzaid" title="Code">💻</a> <a href="https://github.com/fdm-monster/fdm-monster-client/issues?q=author%3AAbdullah-Abuzaid" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/timmiedinnie"><img src="https://avatars.githubusercontent.com/u/3026022?v=4?s=100" width="100px;" alt="Tim Dinh"/><br /><sub><b>Tim Dinh</b></sub></a><br /><a href="https://github.com/fdm-monster/fdm-monster-client/commits?author=timmiedinnie" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
