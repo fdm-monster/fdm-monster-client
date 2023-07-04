@@ -54,7 +54,7 @@
           <v-list-item-action>
             <v-radio-group v-model="selectedRelease">
               <v-radio
-                v-for="release in releases"
+                v-for="release in filteredReleases"
                 :key="release.tag_name"
                 :disabled="isCurrentRelease(release) || isDowngrade(release, current)"
                 :label="`${release.tag_name}${
@@ -66,6 +66,17 @@
               ></v-radio>
             </v-radio-group>
           </v-list-item-action>
+          <div>
+            <v-alert v-if="showPrereleases" color="primary" max-width="500px">
+              You are viewing prereleases, please install such versions at your own risk!</v-alert
+            >
+          </div>
+          <div>
+            <v-checkbox
+              label="Show prerelease versions (unstable)"
+              v-model="showPrereleases"
+            ></v-checkbox>
+          </div>
           <v-btn
             :disabled="!selectedRelease?.length || selectedRelease === current?.tag_name"
             class="mt-2"
@@ -83,7 +94,7 @@
 </template>
 <script lang="ts" setup>
 import { AppService } from "@/backend/app.service";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { version as packageJsonVersion } from "../../../package.json";
 import { IRelease } from "@/models/server/client-releases.model";
 import { compare, minor } from "semver";
@@ -95,24 +106,34 @@ const releases = ref<IRelease[]>([]);
 const current = ref<IRelease>();
 const minimum = ref<IRelease>();
 const selectedRelease = ref<string>();
+const showPrereleases = ref<boolean>(false);
+const loadedClientReleases = ref<IRelease[]>([]);
 
 onMounted(async () => {
   const clientReleases = await AppService.getClientReleases();
   current.value = clientReleases.current;
   minimum.value = clientReleases.minimum;
-  releases.value = clientReleases.filter((release) => {
-    const isMinimumVersion = minor(release.tag_name) === minor(minimum.value.tag_name);
-    const isReleaseCandidate = release.prerelease || release.tag_name.includes("rc");
-    const isUnstable = release.draft || release.prerelease;
-    return isMinimumVersion && !isReleaseCandidate && !isUnstable;
-  });
+  loadedClientReleases.value = clientReleases.releases;
+
   const versionSpec = await AppService.getVersion();
   serverVersion.value = versionSpec.version;
   monsterPiVersion.value = versionSpec.monsterPi;
 });
 
+const filteredReleases = computed(() => {
+  return loadedClientReleases.value.filter((release) => {
+    const isMinimumVersion = minor(release.tag_name) === minor(minimum.value!.tag_name);
+    const isReleaseCandidate =
+      release.prerelease ||
+      release.tag_name.includes("rc") ||
+      release.tag_name.includes("unstable");
+    const isDraft = release.draft;
+    return isMinimumVersion && (showPrereleases.value || !isReleaseCandidate) && !isDraft;
+  });
+});
+
 function isCurrentRelease(release: IRelease) {
-  return release.tag_name === this.current?.tag_name;
+  return release.tag_name === current.value?.tag_name;
 }
 
 function isDowngrade(release: IRelease, current?: IRelease) {
