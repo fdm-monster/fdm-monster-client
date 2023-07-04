@@ -100,9 +100,12 @@ onMounted(async () => {
   const clientReleases = await AppService.getClientReleases();
   current.value = clientReleases.current;
   minimum.value = clientReleases.minimum;
-  releases.value = clientReleases.releases.filter(
-    (r) => minor(r.tag_name) === minor(minimum.value.tag_name)
-  );
+  releases.value = clientReleases.filter((release) => {
+    const isMinimumVersion = minor(release.tag_name) === minor(minimum.value.tag_name);
+    const isReleaseCandidate = release.prerelease && release.tag_name.includes('rc');
+    const isUnstable = release.draft || release.prerelease;
+    return isMinimumVersion && !isReleaseCandidate && !isUnstable;
+  });
   const versionSpec = await AppService.getVersion();
   serverVersion.value = versionSpec.version;
   monsterPiVersion.value = versionSpec.monsterPi;
