@@ -22,6 +22,29 @@
 
       <v-list-item>
         <v-list-item-content>
+          <v-list-item-title>Batch disabling</v-list-item-title>
+          <v-list-item-subtitle>
+            Disable all printers in batch (will not affect print)
+            <br />
+            <v-btn color="primary" @click="batchToggleEnabled(false)">Batch disable</v-btn>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Batch enabling</v-list-item-title>
+          <v-list-item-subtitle>
+            Enabling all printers in batch (will not affect print and it will skip printers in
+            maintenance mode)
+            <br />
+            <v-btn color="primary" @click="batchToggleEnabled(true)">Batch enable</v-btn>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
           <v-list-item-title>Batch USB connect</v-list-item-title>
           <v-list-item-subtitle>
             Connect all USB devices
@@ -89,6 +112,14 @@ export default defineComponent({
   methods: {
     async restartServer() {
       await ServerPrivateService.restartServer();
+    },
+    async batchToggleEnabled(enabled: boolean) {
+      if (!confirm("Are you sure you want to toggle all printers?")) {
+        return;
+      }
+
+      const printerIds = this.printerStore.printers.map((p) => p.id);
+      await BatchService.batchToggleEnabled(printerIds, enabled);
     },
     async connectUSBs() {
       if (!confirm("Are you sure you want to connect all USBs?")) {
