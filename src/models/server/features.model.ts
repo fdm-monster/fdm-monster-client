@@ -5,11 +5,13 @@ export interface IFeatureFlag {
 
 export class FeaturesModel {
   batchReprintCalls?: IFeatureFlag;
-  batchConnectUsbCalls?: IFeatureFlag;
   batchConnectSocketCalls?: IFeatureFlag;
+  batchConnectUsbCalls?: IFeatureFlag;
   newSockets?: IFeatureFlag;
   anonymousDiagnosticsToggle?: IFeatureFlag;
   pauseResumePrinterCommand?: IFeatureFlag;
+  logDumpZip?: IFeatureFlag;
+  batchTogglePrinterEnabled?: IFeatureFlag;
 }
 
 export type TFeatureFlags = keyof FeaturesModel;

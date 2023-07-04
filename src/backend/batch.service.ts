@@ -8,4 +8,8 @@ export class BatchService extends BaseService {
   static async batchConnectSocket(printerIds: string[]) {
     return await this.postApi(`api/batch/connect/socket`, { printerIds });
   }
+
+  static async batchToggleEnabled(printerIds: string[], enabled: boolean) {
+    return await this.postApi(`api/batch/toggle-enabled`, { printerIds, enabled });
+  }
 }
