@@ -32,9 +32,6 @@ export class ServerPrivateService extends BaseService {
 
   public static async downloadLogDump() {
     const response = await this.postApi("api/server/dump-fdm-monster-logs");
-    await downloadFileByBlob(
-      (response as any).data as any,
-      "logs-fdm-monster-" + Date.now() + ".zip"
-    );
+    await downloadFileByBlob(response as any as any, "logs-fdm-monster-" + Date.now() + ".zip");
   }
 }
