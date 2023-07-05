@@ -108,15 +108,6 @@ export function interpretStates(
     };
   }
 
-  // if (printerState?.expired) {
-  //   return {
-  //     ...state,
-  //     color: COLOR.danger,
-  //     rgb: RGB.Red,
-  //     text: LABEL.Disconnected,
-  //     description: printerState.text || "Please check if the USB cable was disconnected/broken",
-  //   };
-
   if (!flags) {
     console.error("No flags", flags);
     return;
