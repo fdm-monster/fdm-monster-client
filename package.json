@@ -32,7 +32,7 @@
     "vue-bus": "1.2.1",
     "vue-router": "3.6.5",
     "vuedraggable": "2.24.3",
-    "vuetify": "2.6.15"
+    "vuetify": "2.7.0"
   },
   "devDependencies": {
     "@fontsource/roboto": "^5.0.3",
