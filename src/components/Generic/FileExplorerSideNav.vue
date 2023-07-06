@@ -616,7 +616,7 @@ export default defineComponent({
     clickSettings() {
       if (!this.storedSideNavPrinter) return;
       this.printersStore.setUpdateDialogPrinter(this.storedSideNavPrinter);
-      this.dialogsStore.openDialog(DialogName.UpdatePrinterDialog);
+      this.dialogsStore.openDialog(DialogName.CreatePrinterDialog);
       this.closeDrawer();
     },
     async clickPrintFile(file: PrinterFile) {

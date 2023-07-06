@@ -225,7 +225,7 @@ export default defineComponent({
     },
     openEditDialog(printer: Printer) {
       this.printerStore.setUpdateDialogPrinter(printer);
-      this.dialogsStore.openDialog(DialogName.UpdatePrinterDialog);
+      this.dialogsStore.openDialog(DialogName.CreatePrinterDialog);
     },
     openCreatePrinterDialog() {
       this.dialogsStore.openDialog(DialogName.CreatePrinterDialog);
