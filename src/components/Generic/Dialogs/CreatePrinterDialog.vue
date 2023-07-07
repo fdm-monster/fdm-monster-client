@@ -1,5 +1,9 @@
 <template>
-  <BaseDialog :id="dialogId" :max-width="showChecksPanel ? '900px' : '600px'">
+  <BaseDialog
+    :id="dialogId"
+    :max-width="showChecksPanel ? '900px' : '600px'"
+    :dialogCloseEvent="clearForm"
+  >
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card>
         <v-card-title>
@@ -212,8 +216,6 @@ export default defineComponent({
       } else {
         this.createPrinter(createPrinter);
       }
-      this.printerCrudForm().resetForm();
-      this.validationObserver.reset();
       this.closeDialog();
     },
     closeDialog() {
@@ -221,6 +223,14 @@ export default defineComponent({
       this.testPrinterStore.clearEvents();
       this.printerCrudForm().resetForm();
       this.dialogsStore.closeDialog(this.dialogId);
+      this.printersStore.updateDialogPrinter = undefined;
+      this.copyPasteConnectionString = "";
+    },
+
+    clearForm() {
+      this.showChecksPanel = false;
+      this.testPrinterStore.clearEvents();
+      this.printerCrudForm().resetForm();
       this.printersStore.updateDialogPrinter = undefined;
       this.copyPasteConnectionString = "";
     },
