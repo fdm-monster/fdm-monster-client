@@ -46,6 +46,10 @@ export default defineComponent({
       type: String,
       default: "400px",
     },
+    dialogCloseEvent: {
+      type: Function,
+      default: () => {},
+    },
   },
   computed: {
     showingDialog() {
@@ -57,6 +61,7 @@ export default defineComponent({
   methods: {
     closeDialog() {
       console.log(`[BaseDialog ${this.id}] Close triggered`);
+      this.dialogCloseEvent();
       this.dialogsStore.closeDialog(this.id);
     },
   },
