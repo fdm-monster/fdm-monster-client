@@ -21,6 +21,7 @@
           <v-text-field
             v-model="formData.printerHostName"
             :error-messages="errors"
+            @paste="onHostNamePaste"
             hint="Examples: 'my.printer.com', 'localhost' or '192.x.x.x'"
             label="IP/Host*"
           ></v-text-field>
@@ -145,6 +146,23 @@ export default defineComponent({
   methods: {
     resetForm() {
       this.formData = getDefaultCreatePrinter();
+    },
+
+    onHostNamePaste(pasted: ClipboardEvent) {
+      try {
+        if (pasted.clipboardData != undefined) {
+          const text = pasted.clipboardData.getData("text");
+          const parsedUrl = new URL(text);
+          if (PrintersService.isValidPrinterUrl(parsedUrl)) {
+            /* Because @paste Event is handled after v-model data bind so the textfield gets updated two times first when
+             we update the v-model and then the textfield value adds the pasted value */
+            pasted.preventDefault();
+            PrintersService.applyPastedPrinterUrl(parsedUrl, this.formData);
+          }
+        }
+      } catch {
+        console.log("Invalid Printer URL");
+      }
     },
   },
   watch: {
