@@ -8,6 +8,7 @@ import {
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
 import { newRandomNamePair } from "../shared/noun-adjectives.data";
+import validator from "validator";
 
 export class PrintersService extends BaseService {
   static applyLoginDetailsPatchForm(
@@ -20,6 +21,47 @@ export class PrintersService extends BaseService {
     formData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
     formData.printerName = patch.printerName || newRandomNamePair();
     formData.apiKey = patch.apiKey;
+  }
+
+  static applyPastedPrinterUrl(printerURL: URL, formData: PreCreatePrinter) {
+    formData.printerHostPort = parseInt(printerURL.port) || 80;
+    formData.printerHostName = printerURL.hostname;
+    formData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
+  }
+
+  static validPort(port: string | undefined) {
+    const isNumber = /^\d+$/;
+
+    if (port == undefined) return false;
+    try {
+      console.log(port);
+      return Number.parseInt(port) <= 65535 && isNumber.test(port);
+    } catch {
+      console.log("Invalid Port");
+      return false;
+    }
+  }
+
+  static validHostname(hostname: string | undefined) {
+    if (hostname == undefined) return false;
+    return validator.isFQDN(hostname) || validator.isIP(hostname) || hostname === "localhost";
+  }
+
+  static validProtocol(protocol: string | undefined) {
+    if (protocol == undefined) return false;
+
+    return ["https", "http"].includes(protocol);
+  }
+
+  static isValidPrinterUrl(printerUrl: URL | undefined) {
+    if (printerUrl == undefined) return false;
+
+    if (
+      this.validHostname(printerUrl.hostname) &&
+      this.validProtocol(printerUrl.protocol.replace(":", "")) &&
+      this.validPort(printerUrl.port)
+    )
+      return true;
   }
 
   static convertPrinterToCreateForm(printer: CreatePrinter) {
