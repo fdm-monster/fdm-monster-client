@@ -10,7 +10,7 @@
     </v-main>
 
     <PrinterDialog />
-    <CreatePrinterFloorDialog />
+    <FloorDialog />
     <PrinterMaintenanceDialog />
     <BatchJsonCreateDialog />
     <YamlImportExportDialog />
@@ -25,7 +25,7 @@ import TopBar from "@/components/Generic/TopBar.vue";
 import ErrorAlert from "@/components/Generic/AlertStack.vue";
 import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
 import PrinterDialog from "./components/Generic/Dialogs/PrinterDialog.vue";
-import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinterFloorDialog.vue";
+import FloorDialog from "./components/Generic/Dialogs/FloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
 import { useUploadsStore } from "@/store/uploads.store";
 import { usePrinterStore } from "./store/printer.store";
@@ -48,7 +48,7 @@ export default defineComponent({
     TopBar,
     NavigationDrawer,
     PrinterDialog,
-    CreatePrinterFloorDialog,
+    FloorDialog,
     PrinterMaintenanceDialog,
     FileExplorerSideNav,
     ErrorAlert,

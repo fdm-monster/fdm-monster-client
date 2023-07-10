@@ -38,20 +38,20 @@ import { usePrinterStore } from "../../../store/printer.store";
 import PrinterFloorCrudForm from "@/components/Generic/Forms/PrinterFloorCrudForm.vue";
 import { FloorService } from "../../../backend/floor.service";
 import { useDialogsStore } from "@/store/dialog.store";
-import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useFloorStore } from "../../../store/floor.store";
-
-type Data = WithDialog;
+import { useDialog } from "../../../shared/dialog.composable";
 
 export default defineComponent({
-  name: "CreatePrinterFloorDialog",
+  name: "FloorDialog",
   components: {
     ValidationObserver,
     PrinterFloorCrudForm,
   },
   setup: () => {
+    const dialog = useDialog(DialogName.CreateFloorDialog);
     return {
+      dialog,
       printerStore: usePrinterStore(),
       floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
@@ -60,9 +60,7 @@ export default defineComponent({
   async created() {},
   async mounted() {},
   props: {},
-  data: (): Data => ({
-    dialogId: DialogName.CreateFloorDialog,
-  }),
+  data: () => ({}),
   computed: {
     validationObserver() {
       return this.$refs.validationObserver as InstanceType<typeof ValidationObserver>;
@@ -95,10 +93,7 @@ export default defineComponent({
       formData.name = newRandomNamePair();
       const maxIndex = Math.max(...this.floorStore.floors.map((f) => f.floor)) + 1;
       formData.floor = maxIndex.toString();
-      this.closeDialog();
-    },
-    closeDialog() {
-      this.dialogsStore.closeDialog(this.dialogId);
+      this.dialog.closeDialog();
     },
   },
   watch: {},
