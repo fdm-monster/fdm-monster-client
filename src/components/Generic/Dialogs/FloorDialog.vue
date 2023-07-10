@@ -13,7 +13,7 @@
         <v-card-text>
           <v-row>
             <v-col :cols="12">
-              <PrinterFloorCrudForm ref="printerFloorCrudForm" />
+              <FloorCrudForm ref="printerFloorCrudForm" />
             </v-col>
           </v-row>
         </v-card-text>
@@ -33,9 +33,8 @@ import { defineComponent } from "vue";
 import { ValidationObserver } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "../../../shared/noun-adjectives.data";
 import { infoMessageEvent } from "../../../shared/alert.events";
-
 import { usePrinterStore } from "../../../store/printer.store";
-import PrinterFloorCrudForm from "@/components/Generic/Forms/PrinterFloorCrudForm.vue";
+import FloorCrudForm from "../Forms/FloorCrudForm.vue";
 import { FloorService } from "../../../backend/floor.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
@@ -46,7 +45,7 @@ export default defineComponent({
   name: "FloorDialog",
   components: {
     ValidationObserver,
-    PrinterFloorCrudForm,
+    FloorCrudForm,
   },
   setup: () => {
     const dialog = useDialog(DialogName.CreateFloorDialog);
@@ -68,7 +67,7 @@ export default defineComponent({
   },
   methods: {
     printerFloorCrudForm() {
-      return this.$refs.printerFloorCrudForm as InstanceType<typeof PrinterFloorCrudForm>;
+      return this.$refs.printerFloorCrudForm as InstanceType<typeof FloorCrudForm>;
     },
     formData() {
       return this.printerFloorCrudForm()?.formData;
