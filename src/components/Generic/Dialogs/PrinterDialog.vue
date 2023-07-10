@@ -1,8 +1,8 @@
 <template>
   <BaseDialog
     :id="dialogId"
-    :max-width="showChecksPanel ? '900px' : '600px'"
     :dialogCloseEvent="clearForm"
+    :max-width="showChecksPanel ? '900px' : '600px'"
   >
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card>
@@ -11,13 +11,14 @@
             <v-avatar color="primary" size="56">
               {{ avatarInitials() }}
             </v-avatar>
-            New Printer
+            <span v-if="isUpdating"> Updating Printer </span>
+            <span v-else> New Printer </span>
           </span>
         </v-card-title>
         <v-card-text>
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
-              <PrinterCrudForm ref="printerCrudForm" :printer-id="storedUpdatedPrinter?.id" />
+              <PrinterCrudForm ref="printerCrudForm" :printer-id="storedPrinter?.id" />
             </v-col>
 
             <PrinterChecksPanel v-if="showChecksPanel" :cols="4">
@@ -25,7 +26,7 @@
             </PrinterChecksPanel>
           </v-row>
           <v-row>
-            <v-col v-if="!isClipboardApiAvailable()" cols="12">
+            <v-col v-if="!isClipboardApiAvailable" cols="12">
               Clipboard is not available. Copy or paste the following:
               <br />
               <v-textarea v-model="copyPasteConnectionString" rows="3"></v-textarea>
@@ -37,8 +38,8 @@
           <v-spacer></v-spacer>
           <v-btn text @click="closeDialog()">Close</v-btn>
           <v-btn
-            v-if="!isUpdating()"
-            :disabled="isPasteDisabled()"
+            v-if="!isUpdating"
+            :disabled="isPasteDisabled"
             text
             @click="pasteFromClipboardOrField()"
           >
@@ -51,9 +52,9 @@
             Test connection
           </v-btn>
 
-          <v-btn :disabled="invalid" color="blue darken-1" text @click="submit()">{{
-            submitButtonText()
-          }}</v-btn>
+          <v-btn :disabled="invalid" color="blue darken-1" text @click="submit()"
+            >{{ submitButtonText }}
+          </v-btn>
         </v-card-actions>
       </v-card>
     </validation-observer>
@@ -81,7 +82,7 @@ interface Data extends WithDialog {
 }
 
 export default defineComponent({
-  name: "CreatePrinterDialog",
+  name: "PrinterDialog",
   components: {
     ValidationObserver,
     PrinterCrudForm,
@@ -100,10 +101,10 @@ export default defineComponent({
   data: (): Data => ({
     showChecksPanel: false,
     copyPasteConnectionString: "",
-    dialogId: DialogName.CreatePrinterDialog,
+    dialogId: DialogName.PrinterDialog,
   }),
   computed: {
-    storedUpdatedPrinter() {
+    storedPrinter() {
       return this.printersStore.updateDialogPrinter;
     },
     validationObserver() {
@@ -112,21 +113,30 @@ export default defineComponent({
     dialogOpenedState() {
       return this.dialogsStore.isDialogOpened(this.dialogId);
     },
+    isUpdating() {
+      return !!this.storedPrinter;
+    },
+    submitButtonText() {
+      return this.isUpdating ? "Save" : "Create";
+    },
+    isPasteDisabled() {
+      if (!this.isClipboardApiAvailable) {
+        return !this.copyPasteConnectionString?.length;
+      }
+      return false;
+    },
+    isClipboardApiAvailable() {
+      return navigator.clipboard;
+    },
   },
   methods: {
-    submitButtonText() {
-      return this.isUpdating() ? "Save" : "Create";
-    },
-    isUpdating() {
-      return this.storedUpdatedPrinter != undefined;
-    },
     async quickCopyConnectionString() {
-      const printer = this.storedUpdatedPrinter;
+      const printer = this.storedPrinter;
       if (!printer) return;
       const loginDetails = await PrintersService.getPrinterLoginDetails(printer.id);
       const connectionString = `{"printerURL": "${loginDetails.printerURL}", "apiKey": "${loginDetails.apiKey}", "printerName": "${printer.printerName}"}`;
 
-      if (!this.isClipboardApiAvailable()) {
+      if (!this.isClipboardApiAvailable) {
         this.copyPasteConnectionString = connectionString;
         return;
       }
@@ -168,21 +178,15 @@ export default defineComponent({
       const { correlationToken } = await this.testPrinterStore.createTestPrinter(testPrinter);
       this.testPrinterStore.currentCorrelationToken = correlationToken;
     },
-    isPasteDisabled() {
-      if (!this.isClipboardApiAvailable()) {
-        return !this.copyPasteConnectionString?.length;
-      }
-      return false;
-    },
     async pasteFromClipboardOrField() {
       const formData = this.formData();
       if (!formData) return;
 
-      if (!this.isClipboardApiAvailable() && !this.copyPasteConnectionString?.length) {
+      if (!this.isClipboardApiAvailable && !this.copyPasteConnectionString?.length) {
         return;
       }
 
-      const jsonData = this.isClipboardApiAvailable()
+      const jsonData = this.isClipboardApiAvailable
         ? await navigator.clipboard.readText()
         : this.copyPasteConnectionString;
       const printerObject = JSON.parse(jsonData);
@@ -211,10 +215,10 @@ export default defineComponent({
       const formData = this.formData();
       if (!formData) return;
       const createPrinter = PrintersService.convertCreateFormToPrinter(formData);
-      if (this.isUpdating()) {
-        this.updatePrinter(createPrinter);
+      if (this.isUpdating) {
+        await this.updatePrinter(createPrinter);
       } else {
-        this.createPrinter(createPrinter);
+        await this.createPrinter(createPrinter);
       }
       this.closeDialog();
     },
@@ -226,16 +230,12 @@ export default defineComponent({
       this.printersStore.updateDialogPrinter = undefined;
       this.copyPasteConnectionString = "";
     },
-
     clearForm() {
       this.showChecksPanel = false;
       this.testPrinterStore.clearEvents();
       this.printerCrudForm().resetForm();
       this.printersStore.updateDialogPrinter = undefined;
       this.copyPasteConnectionString = "";
-    },
-    isClipboardApiAvailable() {
-      return navigator.clipboard;
     },
   },
   watch: {
