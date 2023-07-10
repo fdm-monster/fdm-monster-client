@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialogId" :max-width="'700px'">
+  <BaseDialog :id="dialog.dialogId" :max-width="'700px'">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card>
         <v-card-title>
@@ -20,7 +20,7 @@
         <v-card-actions>
           <em class="red--text">* indicates required field</em>
           <v-spacer></v-spacer>
-          <v-btn text @click="closeDialog()">Close</v-btn>
+          <v-btn text @click="dialog.closeDialog()">Close</v-btn>
           <v-btn :disabled="invalid" color="blue darken-1" text @click="submit()">Create</v-btn>
         </v-card-actions>
       </v-card>
@@ -48,7 +48,7 @@ export default defineComponent({
     FloorCrudForm,
   },
   setup: () => {
-    const dialog = useDialog(DialogName.CreateFloorDialog);
+    const dialog = useDialog(DialogName.FloorDialog);
     return {
       dialog,
       printerStore: usePrinterStore(),

@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialogId" max-width="700px">
+  <BaseDialog :id="dialog.dialogId" max-width="700px">
     <v-card class="pa-4">
       <v-card-title>
         <span class="text-h5"> YAML export and import </span>
@@ -58,11 +58,11 @@ import { defineComponent } from "vue";
 import { usePrinterStore } from "../../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { WithDialog } from "@/utils/dialog.utils";
 import { ServerPrivateService } from "../../../backend/server-private.service";
 import { infoMessageEvent } from "../../../shared/alert.events";
+import { useDialog } from "../../../shared/dialog.composable";
 
-interface Data extends WithDialog {
+interface Data {
   selectedMode: number;
   exportFloors: boolean;
   exportFloorGrid: boolean;
@@ -75,16 +75,17 @@ export default defineComponent({
   name: "YamlImportExportDialog",
   components: {},
   setup: () => {
+    const dialog = useDialog(DialogName.YamlImportExport);
     return {
       printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
+      dialog,
     };
   },
   async created() {},
   async mounted() {},
   props: {},
   data: (): Data => ({
-    dialogId: DialogName.YamlImportExport,
     selectedMode: 0,
     exportFloors: true,
     exportFloorGrid: true,
@@ -127,7 +128,7 @@ export default defineComponent({
       this.closeDialog();
     },
     closeDialog() {
-      this.dialogsStore.closeDialog(this.dialogId);
+      this.dialog.closeDialog();
     },
   },
   watch: {},

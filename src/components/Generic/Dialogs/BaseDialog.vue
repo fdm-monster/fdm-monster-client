@@ -14,6 +14,7 @@ import { defineComponent } from "vue";
 import { usePrinterStore } from "../../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { useDialog } from "../../../shared/dialog.composable";
 
 export default defineComponent({
   name: "BaseDialog",
@@ -46,12 +47,11 @@ export default defineComponent({
       type: String,
       default: "400px",
     },
-    dialogCloseEvent: {
-      type: Function,
-      default: () => {},
-    },
   },
   computed: {
+    dialog() {
+      return this.id ? this.dialogsStore.dialogsById[this.id] : undefined;
+    },
     showingDialog() {
       if (!this.id) return;
 
@@ -61,8 +61,8 @@ export default defineComponent({
   methods: {
     closeDialog() {
       console.log(`[BaseDialog ${this.id}] Close triggered`);
-      this.dialogCloseEvent();
-      this.dialogsStore.closeDialog(this.id);
+      const dialog = useDialog(this.id);
+      dialog.closeDialog();
     },
   },
   watch: {},

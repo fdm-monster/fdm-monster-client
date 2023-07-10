@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialogId" :max-width="'600px'">
+  <BaseDialog :id="dialog.dialogId" :max-width="'600px'">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card>
         <v-card-title>
@@ -54,11 +54,11 @@ import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { PrintersService } from "@/backend";
 import { Printer } from "@/models/printers/printer.model";
 import { usePrinterStore } from "../../../store/printer.store";
-import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialogsStore } from "@/store/dialog.store";
+import { useDialog } from "../../../shared/dialog.composable";
 
-interface Data extends WithDialog {
+interface Data {
   selectedQuickItems: string[];
   quickItems: string[];
   formData: any;
@@ -71,16 +71,17 @@ export default defineComponent({
     ValidationProvider,
   },
   setup: () => {
+    const dialog = useDialog(DialogName.PrinterMaintenanceDialog);
     return {
       printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
+      dialog,
     };
   },
   async created() {},
   async mounted() {},
   props: {},
   data: (): Data => ({
-    dialogId: DialogName.PrinterMaintenanceDialog,
     selectedQuickItems: [],
     quickItems: [
       "Broken part",
@@ -143,7 +144,7 @@ export default defineComponent({
     },
     closeDialog() {
       this.selectedQuickItems = [];
-      this.dialogsStore.closeDialog(this.dialogId);
+      this.dialog.closeDialog();
       this.printersStore.setMaintenanceDialogPrinter();
     },
   },

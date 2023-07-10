@@ -42,7 +42,7 @@ export const useDialogsStore = defineStore("Dialog", {
       }
       dialog.opened = true;
       dialog.context = context;
-      console.log(`[Pinia Dialog ${id}] Opened with context`, context);
+      console.debug(`[Pinia Dialog ${id}] Opened with context`, context);
     },
     closeDialog(id: DialogName) {
       let dialog = this.dialogsById[id];
@@ -51,7 +51,7 @@ export const useDialogsStore = defineStore("Dialog", {
       }
       dialog.opened = false;
       delete dialog.context;
-      console.log(`[Pinia Dialog ${id}] Closed`);
+      console.debug(`[Pinia Dialog ${id}] Closed`);
     },
     unregisterDialogReference(id: DialogName) {
       delete this.dialogsById[id];
@@ -60,6 +60,7 @@ export const useDialogsStore = defineStore("Dialog", {
     registerDialogReference(id?: DialogName) {
       if (!id) throw new Error("Cannot unregister undefined dialog reference");
 
+      console.debug(`[Pinia Dialog ${id}] Registered`);
       const existingDialog = this.dialogsById[id];
       if (existingDialog) {
         return existingDialog;

@@ -1,6 +1,6 @@
 <template>
   <BaseDialog
-    :id="dialogId"
+    :id="dialog.dialogId"
     :dialogCloseEvent="clearForm"
     :max-width="showChecksPanel ? '900px' : '600px'"
   >
@@ -70,13 +70,12 @@ import { usePrinterStore } from "../../../store/printer.store";
 import { PrintersService } from "@/backend";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import PrinterCrudForm from "@/components/Generic/Forms/PrinterCrudForm.vue";
-import { WithDialog } from "@/utils/dialog.utils";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { useDialogsStore } from "@/store/dialog.store";
 import { useTestPrinterStore } from "../../../store/test-printer.store";
 import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
+import { useDialog } from "../../../shared/dialog.composable";
 
-interface Data extends WithDialog {
+interface Data {
   showChecksPanel: boolean;
   copyPasteConnectionString: string;
 }
@@ -89,10 +88,11 @@ export default defineComponent({
     PrinterChecksPanel,
   },
   setup: () => {
+    const dialog = useDialog(DialogName.PrinterDialog);
     return {
       printersStore: usePrinterStore(),
       testPrinterStore: useTestPrinterStore(),
-      dialogsStore: useDialogsStore(),
+      dialog,
     };
   },
   async created() {},
@@ -101,7 +101,6 @@ export default defineComponent({
   data: (): Data => ({
     showChecksPanel: false,
     copyPasteConnectionString: "",
-    dialogId: DialogName.PrinterDialog,
   }),
   computed: {
     storedPrinter() {
@@ -109,9 +108,6 @@ export default defineComponent({
     },
     validationObserver() {
       return this.$refs.validationObserver as InstanceType<typeof ValidationObserver>;
-    },
-    dialogOpenedState() {
-      return this.dialogsStore.isDialogOpened(this.dialogId);
     },
     isUpdating() {
       return !!this.storedPrinter;
@@ -127,6 +123,9 @@ export default defineComponent({
     },
     isClipboardApiAvailable() {
       return navigator.clipboard;
+    },
+    printerCrudForm() {
+      return this.$refs.printerCrudForm as InstanceType<typeof PrinterCrudForm>;
     },
   },
   methods: {
@@ -149,12 +148,8 @@ export default defineComponent({
       }
       await navigator.clipboard.writeText(connectionString);
     },
-
-    printerCrudForm() {
-      return this.$refs.printerCrudForm as InstanceType<typeof PrinterCrudForm>;
-    },
     formData() {
-      return this.printerCrudForm()?.formData;
+      return this.printerCrudForm?.formData;
     },
     avatarInitials() {
       const formData = this.formData();
@@ -225,21 +220,18 @@ export default defineComponent({
     closeDialog() {
       this.showChecksPanel = false;
       this.testPrinterStore.clearEvents();
-      this.printerCrudForm().resetForm();
-      this.dialogsStore.closeDialog(this.dialogId);
+      this.printerCrudForm?.resetForm();
+      this.dialog.closeDialog();
       this.printersStore.updateDialogPrinter = undefined;
       this.copyPasteConnectionString = "";
     },
     clearForm() {
       this.showChecksPanel = false;
       this.testPrinterStore.clearEvents();
-      this.printerCrudForm().resetForm();
+      this.printerCrudForm?.resetForm();
       this.printersStore.updateDialogPrinter = undefined;
       this.copyPasteConnectionString = "";
     },
-  },
-  watch: {
-    dialogOpenedState(newValue: boolean) {},
   },
 });
 </script>

@@ -7,7 +7,7 @@ export enum DialogName {
   // The printer create dialog, which is used to create a new or update a printer.
   PrinterDialog = "PrinterDialog",
   // The floor create dialog, which is used to create a new floor where printers can be placed.
-  CreateFloorDialog = "CreateFloorDialog",
+  FloorDialog = "FloorDialog",
   // The printer repair dialog, which is used to mark a printer as maintenance mode.
   PrinterMaintenanceDialog = "PrinterMaintenanceDialog",
 }
