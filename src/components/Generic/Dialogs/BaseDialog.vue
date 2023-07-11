@@ -56,8 +56,11 @@ export default defineComponent({
     showingDialog() {
       if (!this.id) return;
 
-      console.log(`[BaseDialog ${this.id}] Showing dialog: ${this.dialog?.opened}`);
-      return this.dialogsStore.isDialogOpened(this.id);
+      const isOpened = this.dialogsStore.isDialogOpened(this.id);
+      if (isOpened) {
+        console.debug(`[BaseDialog ${this.id}] Showing dialog: ${this.dialog?.opened}`);
+      }
+      return isOpened;
     },
   },
   methods: {
