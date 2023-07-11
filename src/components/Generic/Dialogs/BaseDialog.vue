@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-    :value="showingDialog"
     :max-width="maxWidth"
     :retain-focus="false"
+    :value="showingDialog"
     persistent
     @close="emitEscape()"
   >
@@ -14,7 +14,6 @@ import { defineComponent } from "vue";
 import { usePrinterStore } from "../../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { useDialog } from "../../../shared/dialog.composable";
 import { onKeyStroke } from "@vueuse/core";
 
 export default defineComponent({
