@@ -225,10 +225,10 @@ export default defineComponent({
     },
     openEditDialog(printer: Printer) {
       this.printerStore.setUpdateDialogPrinter(printer);
-      this.dialogsStore.openDialog(DialogName.PrinterDialog);
+      this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
     },
     openCreatePrinterDialog() {
-      this.dialogsStore.openDialog(DialogName.PrinterDialog);
+      this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
     },
     clickRow(item: Printer, event: any) {
       if (event.isExpanded) {

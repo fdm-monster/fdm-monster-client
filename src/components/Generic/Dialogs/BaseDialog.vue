@@ -1,10 +1,10 @@
 <template>
   <v-dialog
-    :value="showingDialog"
     :max-width="maxWidth"
     :retain-focus="false"
+    :value="showingDialog"
     persistent
-    @close="closeDialog()"
+    @close="emitEscape()"
   >
     <slot></slot>
   </v-dialog>
@@ -14,6 +14,7 @@ import { defineComponent } from "vue";
 import { usePrinterStore } from "../../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { onKeyStroke } from "@vueuse/core";
 
 export default defineComponent({
   name: "BaseDialog",
@@ -25,9 +26,10 @@ export default defineComponent({
     };
   },
   async created() {
-    window.addEventListener("keydown", (e) => {
-      if (e.key == "Escape" && this.showingDialog) {
-        this.closeDialog();
+    onKeyStroke("Escape", (e) => {
+      if (this.showingDialog) {
+        e.preventDefault();
+        this.emitEscape();
       }
     });
   },
@@ -46,23 +48,24 @@ export default defineComponent({
       type: String,
       default: "400px",
     },
-    dialogCloseEvent: {
-      type: Function,
-      default: () => {},
-    },
   },
   computed: {
+    dialog() {
+      return this.id ? this.dialogsStore.dialogsById[this.id] : undefined;
+    },
     showingDialog() {
       if (!this.id) return;
 
-      return this.dialogsStore.isDialogOpened(this.id);
+      const isOpened = this.dialogsStore.isDialogOpened(this.id);
+      if (isOpened) {
+        console.debug(`[BaseDialog ${this.id}] Showing dialog: ${this.dialog?.opened}`);
+      }
+      return isOpened;
     },
   },
   methods: {
-    closeDialog() {
-      console.log(`[BaseDialog ${this.id}] Close triggered`);
-      this.dialogCloseEvent();
-      this.dialogsStore.closeDialog(this.id);
+    emitEscape() {
+      this.$emit("escape");
     },
   },
   watch: {},

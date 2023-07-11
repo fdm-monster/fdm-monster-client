@@ -5,9 +5,9 @@ export enum DialogName {
   // This YAML is for internal backup and restore only and is not compatible with external projects.
   YamlImportExport = "YamlImportExport",
   // The printer create dialog, which is used to create a new or update a printer.
-  PrinterDialog = "PrinterDialog",
+  AddOrUpdatePrinterDialog = "AddOrUpdatePrinterDialog",
   // The floor create dialog, which is used to create a new floor where printers can be placed.
-  CreateFloorDialog = "CreateFloorDialog",
+  AddOrUpdateFloorDialog = "AddOrUpdateFloorDialog",
   // The printer repair dialog, which is used to mark a printer as maintenance mode.
   PrinterMaintenanceDialog = "PrinterMaintenanceDialog",
 }
