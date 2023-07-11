@@ -26,7 +26,7 @@ export default defineComponent({
   computed: {},
   methods: {
     openCreatePrinterDialog() {
-      this.dialogsStore.openDialog(DialogName.PrinterDialog);
+      this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
     },
   },
 });

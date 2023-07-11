@@ -150,20 +150,20 @@
 <script lang="ts">
 import { defineComponent, inject } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
-import { generateInitials } from "../../../shared/noun-adjectives.data";
-import { infoMessageEvent } from "../../../shared/alert.events";
-import { usePrinterStore } from "../../../store/printer.store";
+import { generateInitials } from "@/shared/noun-adjectives.data";
+import { infoMessageEvent } from "@/shared/alert.events";
+import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { useTestPrinterStore } from "../../../store/test-printer.store";
+import { useTestPrinterStore } from "@/store/test-printer.store";
 import {
   CreatePrinter,
   getDefaultCreatePrinter,
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
-import { useDialog } from "../../../shared/dialog.composable";
-import { AppConstants } from "../../../shared/app.constants";
+import { useDialog } from "@/shared/dialog.composable";
+import { AppConstants } from "@/shared/app.constants";
 
 const watchedId = "printerId";
 
@@ -174,14 +174,14 @@ interface Data {
 }
 
 export default defineComponent({
-  name: "PrinterDialog",
+  name: "AddOrUpdatePrinterDialog",
   components: {
     ValidationProvider,
     ValidationObserver,
     PrinterChecksPanel,
   },
   setup: () => {
-    const dialog = useDialog(DialogName.PrinterDialog);
+    const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
     return {
       printersStore: usePrinterStore(),
       testPrinterStore: useTestPrinterStore(),

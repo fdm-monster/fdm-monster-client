@@ -81,13 +81,13 @@ interface Data {
 }
 
 export default defineComponent({
-  name: "FloorDialog",
+  name: "AddOrUpdateFloorDialog",
   components: {
     ValidationObserver,
     ValidationProvider,
   },
   setup: () => {
-    const dialog = useDialog(DialogName.FloorDialog);
+    const dialog = useDialog(DialogName.AddOrUpdateFloorDialog);
     return {
       dialog,
       printerStore: usePrinterStore(),
