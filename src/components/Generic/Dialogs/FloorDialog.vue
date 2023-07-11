@@ -1,11 +1,11 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" :max-width="'700px'">
+  <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog()">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card>
         <v-card-title>
           <span class="text-h5">
             <v-avatar color="primary" size="56">
-              {{ avatarInitials() }}
+              {{ avatarInitials }}
             </v-avatar>
             New Printer Floor
           </span>
@@ -13,7 +13,39 @@
         <v-card-text>
           <v-row>
             <v-col :cols="12">
-              <FloorCrudForm ref="printerFloorCrudForm" />
+              <v-container>
+                <v-row>
+                  <v-col v-if="formData" cols="12" md="6">
+                    <validation-provider
+                      v-slot="{ errors }"
+                      :rules="printerFloorNameRules"
+                      name="Name"
+                    >
+                      <v-text-field
+                        v-model="formData.name"
+                        :error-messages="errors"
+                        autofocus
+                        label="Floor name*"
+                        required
+                      />
+                    </validation-provider>
+
+                    <validation-provider
+                      v-slot="{ errors }"
+                      :rules="floorNumberRules"
+                      name="FloorNumber"
+                    >
+                      <v-text-field
+                        v-model="formData.floor"
+                        :error-messages="errors"
+                        label="Floor number"
+                        required
+                        type="number"
+                      />
+                    </validation-provider>
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-col>
           </v-row>
         </v-card-text>
@@ -29,23 +61,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { ValidationObserver } from "vee-validate";
+import { defineComponent, inject } from "vue";
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "../../../shared/noun-adjectives.data";
 import { infoMessageEvent } from "../../../shared/alert.events";
 import { usePrinterStore } from "../../../store/printer.store";
-import FloorCrudForm from "../Forms/FloorCrudForm.vue";
 import { FloorService } from "../../../backend/floor.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useFloorStore } from "../../../store/floor.store";
 import { useDialog } from "../../../shared/dialog.composable";
+import { AppConstants } from "../../../shared/app.constants";
+import { getDefaultCreateFloor, PreCreateFloor } from "../../../models/floors/floor.model";
+
+const watchedId = "printerFloorId";
+
+interface Data {
+  formData: PreCreateFloor;
+}
 
 export default defineComponent({
   name: "FloorDialog",
   components: {
     ValidationObserver,
-    FloorCrudForm,
+    ValidationProvider,
   },
   setup: () => {
     const dialog = useDialog(DialogName.FloorDialog);
@@ -54,36 +93,54 @@ export default defineComponent({
       printerStore: usePrinterStore(),
       floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
+      appConstants: inject("appConstants") as AppConstants,
     };
   },
-  async created() {},
+  async created() {
+    if (this.printerFloorId) {
+      const crudeData = this.floorStore.floor(this.printerFloorId);
+      this.formData = FloorService.convertPrinterFloorToCreateForm(crudeData);
+    } else if (this.floorStore.floors?.length) {
+      const maxIndex = Math.max(...this.floorStore.floors.map((pf) => pf.floor)) + 1;
+      this.formData.floor = maxIndex.toString();
+    }
+  },
   async mounted() {},
   props: {},
-  data: () => ({}),
+  data: () => ({
+    formData: getDefaultCreateFloor(),
+  }),
   computed: {
+    printerFloorId() {
+      return this.dialog.context().printerFloorId;
+    },
     validationObserver() {
       return this.$refs.validationObserver as InstanceType<typeof ValidationObserver>;
     },
-  },
-  methods: {
-    printerFloorCrudForm() {
-      return this.$refs.printerFloorCrudForm as InstanceType<typeof FloorCrudForm>;
+    printerFloorNameRules() {
+      return { required: true, min: this.appConstants.minPrinterFloorNameLength };
     },
-    formData() {
-      return this.printerFloorCrudForm()?.formData;
+    floorNumberRules() {
+      return {
+        required: true,
+        integer: true,
+      };
     },
     avatarInitials() {
-      const formData = this.formData();
+      const formData = this.formData;
       if (formData) {
         return generateInitials(formData.name);
       }
+      return "";
     },
+  },
+  methods: {
     async isValid() {
       return await this.validationObserver.validate();
     },
     async submit() {
       if (!(await this.isValid())) return;
-      const formData = this.formData();
+      const formData = this.formData;
       if (!formData) return;
       const floorData = FloorService.convertCreateFormToFloor(formData);
       await this.floorStore.createFloor(floorData);
@@ -92,9 +149,18 @@ export default defineComponent({
       formData.name = newRandomNamePair();
       const maxIndex = Math.max(...this.floorStore.floors.map((f) => f.floor)) + 1;
       formData.floor = maxIndex.toString();
+      this.closeDialog();
+    },
+    closeDialog() {
       this.dialog.closeDialog();
     },
   },
-  watch: {},
+  watch: {
+    [watchedId](val?: string) {
+      if (!val) return;
+      const printerFloor = this.floorStore.floor(val);
+      this.formData = FloorService.convertPrinterFloorToCreateForm(printerFloor);
+    },
+  },
 });
 </script>

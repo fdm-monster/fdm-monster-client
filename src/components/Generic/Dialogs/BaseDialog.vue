@@ -4,7 +4,7 @@
     :max-width="maxWidth"
     :retain-focus="false"
     persistent
-    @close="closeDialog()"
+    @close="emitEscape()"
   >
     <slot></slot>
   </v-dialog>
@@ -15,6 +15,7 @@ import { usePrinterStore } from "../../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialog } from "../../../shared/dialog.composable";
+import { onKeyStroke } from "@vueuse/core";
 
 export default defineComponent({
   name: "BaseDialog",
@@ -26,9 +27,10 @@ export default defineComponent({
     };
   },
   async created() {
-    window.addEventListener("keydown", (e) => {
-      if (e.key == "Escape" && this.showingDialog) {
-        this.closeDialog();
+    onKeyStroke("Escape", (e) => {
+      if (this.showingDialog) {
+        e.preventDefault();
+        this.emitEscape();
       }
     });
   },
@@ -55,14 +57,13 @@ export default defineComponent({
     showingDialog() {
       if (!this.id) return;
 
+      console.log(`[BaseDialog ${this.id}] Showing dialog: ${this.dialog?.opened}`);
       return this.dialogsStore.isDialogOpened(this.id);
     },
   },
   methods: {
-    closeDialog() {
-      console.log(`[BaseDialog ${this.id}] Close triggered`);
-      const dialog = useDialog(this.id);
-      dialog.closeDialog();
+    emitEscape() {
+      this.$emit("escape");
     },
   },
   watch: {},

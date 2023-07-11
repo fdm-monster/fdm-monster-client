@@ -42,6 +42,10 @@ export const useDialogsStore = defineStore("Dialog", {
       }
       dialog.opened = true;
       dialog.context = context;
+      // Vue 2 reactivity issue
+      this.dialogsById = {
+        ...this.dialogsById,
+      };
       console.debug(`[Pinia Dialog ${id}] Opened with context`, context);
     },
     closeDialog(id: DialogName) {
@@ -51,6 +55,10 @@ export const useDialogsStore = defineStore("Dialog", {
       }
       dialog.opened = false;
       delete dialog.context;
+      // Vue 2 reactivity issue
+      this.dialogsById = {
+        ...this.dialogsById,
+      };
       console.debug(`[Pinia Dialog ${id}] Closed`);
     },
     unregisterDialogReference(id: DialogName) {

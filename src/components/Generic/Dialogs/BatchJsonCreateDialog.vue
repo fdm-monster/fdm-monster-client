@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" max-width="700px">
+  <BaseDialog :id="dialog.dialogId" max-width="700px" @escape="closeDialog()">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card class="pa-4">
         <v-card-title>

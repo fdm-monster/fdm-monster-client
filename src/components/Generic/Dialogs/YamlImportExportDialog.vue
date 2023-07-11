@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" max-width="700px">
+  <BaseDialog :id="dialog.dialogId" max-width="700px" @escape="closeDialog()">
     <v-card class="pa-4">
       <v-card-title>
         <span class="text-h5"> YAML export and import </span>
