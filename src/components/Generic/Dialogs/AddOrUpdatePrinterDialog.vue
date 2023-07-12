@@ -259,7 +259,7 @@ export default defineComponent({
           }
         }
       } catch {
-        console.log("Invalid Printer URL");
+        /* empty */
       }
     },
     resetForm() {

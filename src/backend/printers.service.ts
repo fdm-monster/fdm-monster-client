@@ -34,10 +34,8 @@ export class PrintersService extends BaseService {
 
     if (port == undefined) return false;
     try {
-      console.log(port);
       return Number.parseInt(port) <= 65535 && isNumber.test(port);
     } catch {
-      console.log("Invalid Port");
       return false;
     }
   }
