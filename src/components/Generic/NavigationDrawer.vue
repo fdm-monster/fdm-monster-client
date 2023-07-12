@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app mini-variant class="gradient-bg" dark permanent>
+  <v-navigation-drawer app mini-variant class="gradient-bg" dark :permanent="true">
     <v-list-item class="px-2">
       <v-list-item-content>
         <v-list-item-title class="text-h5">

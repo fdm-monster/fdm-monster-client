@@ -33,8 +33,25 @@
       </strong>
       <strong v-else> No MonsterPi distro detected. </strong>
       <br />
-      <v-btn outlined to="/settings/software-upgrade"> Visit Upgrade Settings</v-btn>
+      <v-btn class="mt-3" outlined to="/settings/software-upgrade"> Visit Upgrade Settings</v-btn>
     </v-card-text>
+    <v-card-title> Documentation</v-card-title>
+    <v-card-text>
+      <strong>
+        <v-btn
+          color="primary"
+          href="https://docs.fdm-monster.net"
+          style="color: white"
+          target="_blank"
+        >
+          <v-icon class="mr-2">menu_book</v-icon>
+          FDM Monster documentation site
+        </v-btn>
+      </strong>
+      <br />
+    </v-card-text>
+
+    <!--    Bug reports section -->
     <v-card-title>
       Bug reports
       <v-icon>bug</v-icon>

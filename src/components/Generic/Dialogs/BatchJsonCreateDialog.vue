@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :id="dialogId" max-width="700px">
+  <BaseDialog :id="dialog.dialogId" max-width="700px" @escape="closeDialog()">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card class="pa-4">
         <v-card-title>
@@ -44,7 +44,7 @@ import { PrintersService } from "@/backend";
 import { usePrinterStore } from "../../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { WithDialog } from "@/utils/dialog.utils";
+import { useDialog } from "../../../shared/dialog.composable";
 
 setInteractionMode("eager");
 extend("json", {
@@ -60,7 +60,7 @@ extend("json", {
   message: "{_field_} needs to be valid JSON.",
 });
 
-interface Data extends WithDialog {
+interface Data {
   formData: {
     json: string;
   };
@@ -74,9 +74,11 @@ export default defineComponent({
     ValidationObserver,
   },
   setup: () => {
+    const dialog = useDialog(DialogName.BatchJsonCreate);
     return {
       printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
+      dialog,
     };
   },
   async created() {
@@ -89,7 +91,6 @@ export default defineComponent({
       json: "",
     },
     numPrinters: 0,
-    dialogId: DialogName.BatchJsonCreate,
   }),
   computed: {
     validationObserver() {
@@ -145,7 +146,7 @@ export default defineComponent({
       this.closeDialog();
     },
     closeDialog() {
-      this.dialogsStore.closeDialog(this.dialogId);
+      this.dialog.closeDialog();
     },
   },
   watch: {},

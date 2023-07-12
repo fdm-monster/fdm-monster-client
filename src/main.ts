@@ -59,8 +59,6 @@ Vue.config.errorHandler = (err: Error, vm: Vue, info: string) => {
 };
 
 Vue.use(PiniaVuePlugin);
-const pinia = createPinia();
-
 Vue.component(BaseDialog.name, BaseDialog);
 
 new Vue({
@@ -69,7 +67,7 @@ new Vue({
   provide: {
     appConstants: generateAppConstants(),
   },
-  pinia,
+  pinia: createPinia(),
   render: (h) => h(App),
 }).$mount("#app");
 
