@@ -9,9 +9,8 @@
       </ErrorAlert>
     </v-main>
 
-    <UpdatePrinterDialog />
-    <CreatePrinterDialog />
-    <CreatePrinterFloorDialog />
+    <AddOrUpdatePrinterDialog />
+    <AddOrUpdateFloorDialog />
     <PrinterMaintenanceDialog />
     <BatchJsonCreateDialog />
     <YamlImportExportDialog />
@@ -24,10 +23,9 @@ import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/Generic/NavigationDrawer.vue";
 import TopBar from "@/components/Generic/TopBar.vue";
 import ErrorAlert from "@/components/Generic/AlertStack.vue";
-import UpdatePrinterDialog from "@/components/Generic/Dialogs/UpdatePrinterDialog.vue";
 import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
-import CreatePrinterDialog from "@/components/Generic/Dialogs/CreatePrinterDialog.vue";
-import CreatePrinterFloorDialog from "@/components/Generic/Dialogs/CreatePrinterFloorDialog.vue";
+import AddOrUpdatePrinterDialog from "./components/Generic/Dialogs/AddOrUpdatePrinterDialog.vue";
+import AddOrUpdateFloorDialog from "./components/Generic/Dialogs/AddOrUpdateFloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
 import { useUploadsStore } from "@/store/uploads.store";
 import { usePrinterStore } from "./store/printer.store";
@@ -49,9 +47,8 @@ export default defineComponent({
     YamlImportExportDialog,
     TopBar,
     NavigationDrawer,
-    UpdatePrinterDialog,
-    CreatePrinterDialog,
-    CreatePrinterFloorDialog,
+    AddOrUpdatePrinterDialog,
+    AddOrUpdateFloorDialog,
     PrinterMaintenanceDialog,
     FileExplorerSideNav,
     ErrorAlert,

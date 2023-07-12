@@ -1,6 +1,9 @@
 import { apiBase } from "../backend/base.service";
 
 export function downloadFileByBlob(data: ArrayBuffer, fileName: string) {
+  if (!data) {
+    throw new Error("No data to download");
+  }
   const blob = new Blob([data], { type: "text" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
