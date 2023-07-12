@@ -112,7 +112,7 @@ export default defineComponent({
   }),
   computed: {
     printerFloorId() {
-      return this.dialog.context().printerFloorId;
+      return this.dialog.context()?.printerFloorId;
     },
     validationObserver() {
       return this.$refs.validationObserver as InstanceType<typeof ValidationObserver>;
