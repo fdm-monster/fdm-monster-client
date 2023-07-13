@@ -59,8 +59,8 @@ import { usePrinterStore } from "../../../store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { ServerPrivateService } from "../../../backend/server-private.service";
-import { infoMessageEvent } from "../../../shared/alert.events";
 import { useDialog } from "../../../shared/dialog.composable";
+import { useSnackbar } from "../../../shared/snackbar.composable";
 
 interface Data {
   selectedMode: number;
@@ -80,6 +80,7 @@ export default defineComponent({
       printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
       dialog,
+      snackbar: useSnackbar(),
     };
   },
   async created() {},
@@ -115,7 +116,7 @@ export default defineComponent({
         floorComparisonStrategiesByPriority: "floor",
         notes: this.notes,
       });
-      this.$bus.emit(infoMessageEvent, "Downloaded the YAML file");
+      this.snackbar.openInfoMessage("Downloaded the YAML file");
       this.notes = "";
     },
     async uploadAndImportYamlFile() {
@@ -124,7 +125,7 @@ export default defineComponent({
       }
       await ServerPrivateService.uploadAndImportYaml(this.importFile);
       this.importFile = undefined;
-      this.$bus.emit(infoMessageEvent, "Imported the YAML file");
+      this.snackbar.openInfoMessage("Imported the YAML file");
       this.closeDialog();
     },
     closeDialog() {

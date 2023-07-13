@@ -64,7 +64,6 @@
 import { defineComponent, inject } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "../../../shared/noun-adjectives.data";
-import { infoMessageEvent } from "../../../shared/alert.events";
 import { usePrinterStore } from "../../../store/printer.store";
 import { FloorService } from "../../../backend/floor.service";
 import { useDialogsStore } from "@/store/dialog.store";
@@ -73,6 +72,7 @@ import { useFloorStore } from "../../../store/floor.store";
 import { useDialog } from "../../../shared/dialog.composable";
 import { AppConstants } from "../../../shared/app.constants";
 import { getDefaultCreateFloor, PreCreateFloor } from "../../../models/floors/floor.model";
+import { useSnackbar } from "../../../shared/snackbar.composable";
 
 const watchedId = "printerFloorId";
 
@@ -94,6 +94,7 @@ export default defineComponent({
       floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
       appConstants: inject("appConstants") as AppConstants,
+      snackbar: useSnackbar(),
     };
   },
   async created() {
@@ -145,7 +146,7 @@ export default defineComponent({
       const floorData = FloorService.convertCreateFormToFloor(formData);
       await this.floorStore.createFloor(floorData);
 
-      this.$bus.emit(infoMessageEvent, `Printer floor ${floorData.name} created`);
+      this.snackbar.openInfoMessage(`Printer floor ${floorData.name} created`);
       formData.name = newRandomNamePair();
       const maxIndex = Math.max(...this.floorStore.floors.map((f) => f.floor)) + 1;
       formData.floor = maxIndex.toString();

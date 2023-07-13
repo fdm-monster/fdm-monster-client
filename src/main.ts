@@ -53,13 +53,12 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
 });
 
-// Not sure how this works with Sentry
-Vue.config.errorHandler = (err: Error, vm: Vue, info: string) => {
-  console.log("Global Error captured", err, vm, info);
-};
-
 Vue.use(PiniaVuePlugin);
 Vue.component(BaseDialog.name, BaseDialog);
+
+Vue.config.errorHandler = (err, vm, info) => {
+  console.error(`An error was caught [${err.name}]:\n ${err.message}\n ${err.stack}`);
+};
 
 new Vue({
   router,

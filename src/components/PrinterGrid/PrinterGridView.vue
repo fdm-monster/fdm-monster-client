@@ -81,7 +81,6 @@ import PrinterGrid from "@/components/PrinterGrid/PrinterGrid.vue";
 import { Printer } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
 import { formatBytes } from "@/utils/file-size.util";
-import { infoMessageEvent } from "../../shared/alert.events";
 import { convertMultiPrinterFileToQueue } from "@/utils/uploads-state.utils";
 import HomeToolbar from "@/components/PrinterGrid/HomeToolbar.vue";
 import { usePrinterStore } from "../../store/printer.store";
@@ -89,6 +88,7 @@ import { useUploadsStore } from "@/store/uploads.store";
 import { useFeatureStore } from "../../store/features.store";
 import { usePrinterStateStore } from "../../store/printer-state.store";
 import { useGridStore } from "../../store/grid.store";
+import { useSnackbar } from "../../shared/snackbar.composable";
 
 export default defineComponent({
   name: "PrinterGridView",
@@ -100,6 +100,7 @@ export default defineComponent({
       printerStateStore: usePrinterStateStore(),
       uploadsStore: useUploadsStore(),
       featureStore: useFeatureStore(),
+      snackbar: useSnackbar(),
     };
   },
   async created() {},
@@ -151,8 +152,7 @@ export default defineComponent({
       // Checking and informing user
       const incompleteListCount = selectedPrinters.length - accessiblePrinters.length;
       if (incompleteListCount > 0) {
-        this.$bus.emit(
-          infoMessageEvent,
+        this.snackbar.openInfoMessage(
           `${incompleteListCount} printers were skipped as they are not accessible or disabled (now).`
         );
       }
