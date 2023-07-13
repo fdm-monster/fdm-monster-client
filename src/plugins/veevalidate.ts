@@ -30,10 +30,6 @@ export function configureVeeValidate() {
     message: "{_field_} must be alphanumeric",
   });
 
-  extend("ip_or_fqdn", (value) => {
-    return validator.isFQDN(value) || validator.isIP(value) || value === "localhost";
-  });
-
   extend("min", {
     ...min,
     message: "{_field_} must at least {length} characters long",
