@@ -35,7 +35,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Printer IP or HostName"
-                      rules="required|ip_or_fqdn"
+                      rules="required"
                     >
                       <v-text-field
                         v-model="formData.printerHostName"
