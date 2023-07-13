@@ -142,7 +142,7 @@
 <script lang="ts">
 import { defineComponent, inject } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
-import { generateInitials } from "@/shared/noun-adjectives.data";
+import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { infoMessageEvent } from "@/shared/alert.events";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -317,8 +317,8 @@ export default defineComponent({
       }
       this.closeDialog();
     },
-
     async duplicatePrinter() {
+      this.formData.printerName = newRandomNamePair();
       this.formData.printerHostPort = undefined;
       this.printersStore.updateDialogPrinter = undefined;
     },
