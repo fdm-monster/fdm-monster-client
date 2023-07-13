@@ -35,7 +35,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Printer IP or HostName"
-                      rules="required|ip_or_fqdn"
+                      rules="required"
                     >
                       <v-text-field
                         v-model="formData.printerHostName"
@@ -124,16 +124,8 @@
           <em class="red--text">* indicates required field</em>
           <v-spacer></v-spacer>
           <v-btn text @click="closeDialog()">Close</v-btn>
-          <v-btn
-            v-if="!isUpdating"
-            :disabled="isPasteDisabled"
-            text
-            @click="pasteFromClipboardOrField()"
-          >
-            Paste
-          </v-btn>
-          <v-btn v-else :disabled="invalid" color="gray" text @click="quickCopyConnectionString()">
-            Copy
+          <v-btn :disabled="invalid" color="gray" text @click="duplicatePrinter()">
+            Duplicate
           </v-btn>
           <v-btn :disabled="invalid" color="warning" text @click="testPrinter()">
             Test connection
@@ -151,7 +143,7 @@
 <script lang="ts">
 import { defineComponent, inject } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
-import { generateInitials } from "@/shared/noun-adjectives.data";
+import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { infoMessageEvent } from "@/shared/alert.events";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -341,6 +333,11 @@ export default defineComponent({
         await this.createPrinter(createPrinter);
       }
       this.closeDialog();
+    },
+    async duplicatePrinter() {
+      this.formData.printerName = newRandomNamePair();
+      this.formData.printerHostPort = undefined;
+      this.printersStore.updateDialogPrinter = undefined;
     },
     closeDialog() {
       this.dialog.closeDialog();

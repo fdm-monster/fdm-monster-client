@@ -23,7 +23,7 @@ export interface PreCreatePrinter {
 
   printerHostPrefix: HttpProtocol;
   printerHostName: string;
-  printerHostPort: number;
+  printerHostPort: number | undefined;
 
   apiKey: string;
 }
