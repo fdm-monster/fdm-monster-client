@@ -6,11 +6,9 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import axios from "axios";
 import VueAxios from "vue-axios";
-import VueBus from "vue-bus";
 import { configureVeeValidate } from "@/plugins/veevalidate";
 import { generateAppConstants } from "@/shared/app.constants";
 import { registerFileDropDirective } from "@/directives/file-upload.directive";
-import { errorEvent } from "@/shared/alert.events";
 import { createPinia, PiniaVuePlugin } from "pinia";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
@@ -19,19 +17,10 @@ import { BrowserTracing } from "@sentry/vue";
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
-Vue.use(VueBus);
 
 configureVeeValidate();
 registerFileDropDirective();
 registerPrinterPlaceDirective();
-
-window.addEventListener("unhandledrejection", (event) => {
-  if (event.reason?.isAxiosError) {
-    console.warn(`Handled error through alert`, event.reason);
-  }
-  Vue.bus.emit(errorEvent, event);
-  event.preventDefault();
-});
 
 Sentry.init({
   Vue,
@@ -43,6 +32,7 @@ Sentry.init({
     }),
     new Sentry.Replay(),
   ],
+  enabled: process.env.NODE_ENV === "production",
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
@@ -56,7 +46,7 @@ Sentry.init({
 Vue.use(PiniaVuePlugin);
 Vue.component(BaseDialog.name, BaseDialog);
 
-Vue.config.errorHandler = (err, vm, info) => {
+Vue.config.errorHandler = (err) => {
   console.error(`An error was caught [${err.name}]:\n ${err.message}\n ${err.stack}`);
 };
 
@@ -70,4 +60,8 @@ new Vue({
   render: (h) => h(App),
 }).$mount("#app");
 
-console.log("App Build UTC", document.documentElement.dataset.buildTimestampUtc);
+console.log(
+  "App Build UTC",
+  document.documentElement.dataset.buildTimestampUtc,
+  process.env.NODE_ENV
+);

@@ -254,7 +254,9 @@ export default defineComponent({
     async clickRefreshSocket() {
       if (!this.printerId?.length) return;
       await PrintersService.refreshSocket(this.printerId);
-      this.snackbar.openInfoMessage("Refreshing OctoPrint connection state");
+      this.snackbar.openInfoMessage({
+        title: "Refreshing OctoPrint connection state",
+      });
     },
     clickOpenPrinterURL() {
       if (!this.printer) return;

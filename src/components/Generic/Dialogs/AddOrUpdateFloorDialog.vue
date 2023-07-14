@@ -7,7 +7,7 @@
             <v-avatar color="primary" size="56">
               {{ avatarInitials }}
             </v-avatar>
-            New Printer Floor
+            New Floor
           </span>
         </v-card-title>
         <v-card-text>
@@ -146,7 +146,9 @@ export default defineComponent({
       const floorData = FloorService.convertCreateFormToFloor(formData);
       await this.floorStore.createFloor(floorData);
 
-      this.snackbar.openInfoMessage(`Printer floor ${floorData.name} created`);
+      this.snackbar.openInfoMessage({
+        title: `Floor ${floorData.name} created`,
+      });
       formData.name = newRandomNamePair();
       const maxIndex = Math.max(...this.floorStore.floors.map((f) => f.floor)) + 1;
       formData.floor = maxIndex.toString();

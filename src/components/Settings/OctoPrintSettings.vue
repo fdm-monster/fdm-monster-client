@@ -203,19 +203,21 @@ export default defineComponent({
     async purgeFiles() {
       await PrinterFileService.purgeFiles();
 
-      this.snackbar.openInfoMessage(`Successfully purged all references to printer files!`);
+      this.snackbar.openInfoMessage({
+        title: `Successfully purged all references to printer files!`,
+      });
     },
     async bulkDisableGCodeAnalysis() {
       const printers = this.printerStateStore.onlinePrinters;
-      this.snackbar.openInfoMessage(
-        `Trying to disable gcode analysis for ${printers.length} online printers.`
-      );
+      this.snackbar.openInfoMessage({
+        title: `Trying to disable gcode analysis for ${printers.length} online printers.`,
+      });
       for (const printer of Object.values(printers)) {
         await PrinterSettingsService.setGCodeAnalysis(printer.id, false);
       }
-      this.snackbar.openInfoMessage(
-        `Finished disabling gcode analysis for ${printers.length} online printers.`
-      );
+      this.snackbar.openInfoMessage({
+        title: `Finished disabling gcode analysis for ${printers.length} online printers.`,
+      });
     },
   },
   watch: {},

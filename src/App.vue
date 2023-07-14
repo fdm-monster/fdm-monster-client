@@ -22,7 +22,7 @@
 import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/Generic/NavigationDrawer.vue";
 import TopBar from "@/components/Generic/TopBar.vue";
-import ErrorAlert from "@/components/Generic/AlertStack.vue";
+import ErrorAlert from "./components/Generic/Snackbars/AppSnackbars.vue";
 import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
 import AddOrUpdatePrinterDialog from "./components/Generic/Dialogs/AddOrUpdatePrinterDialog.vue";
 import AddOrUpdateFloorDialog from "./components/Generic/Dialogs/AddOrUpdateFloorDialog.vue";
@@ -36,6 +36,7 @@ import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateD
 import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
 import { useFeatureStore } from "./store/features.store";
 import { setSentryEnabled } from "./utils/sentry.util";
+import { useSnackbar } from "./shared/snackbar.composable";
 
 interface Data {
   socketIoClient?: SocketIoService;
@@ -61,6 +62,7 @@ export default defineComponent({
       settingsStore: useSettingsStore(),
       featureStore: useFeatureStore(),
       dialogsStore: useDialogsStore(),
+      snackbar: useSnackbar(),
     };
   },
   async created() {
@@ -69,9 +71,6 @@ export default defineComponent({
     setSentryEnabled(!!enabled);
 
     await this.featureStore.loadFeatures();
-
-    // TODO replace with useEventBus
-    this.uploadsStore._injectEventBus(this.$bus);
     await this.connectSocketIoClient();
   },
   async mounted() {},
@@ -90,7 +89,7 @@ export default defineComponent({
   methods: {
     async connectSocketIoClient() {
       this.socketIoClient = new SocketIoService();
-      this.socketIoClient.setupSocketConnection(this.$bus);
+      this.socketIoClient.setupSocketConnection();
     },
   },
   watch: {

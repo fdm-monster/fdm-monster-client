@@ -41,7 +41,9 @@ export default defineComponent({
   methods: {
     async syncPrinterName(printer: Printer) {
       await PrinterSettingsService.syncPrinterName(printer.id);
-      this.snackbar.openInfoMessage("Synced printer name to OctoPrint");
+      this.snackbar.openInfoMessage({
+        title: "Synced printer name to OctoPrint",
+      });
     },
   },
 });

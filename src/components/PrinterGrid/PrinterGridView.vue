@@ -152,9 +152,10 @@ export default defineComponent({
       // Checking and informing user
       const incompleteListCount = selectedPrinters.length - accessiblePrinters.length;
       if (incompleteListCount > 0) {
-        this.snackbar.openInfoMessage(
-          `${incompleteListCount} printers were skipped as they are not accessible or disabled (now).`
-        );
+        this.snackbar.openInfoMessage({
+          title: `${incompleteListCount} printers inaccessible`,
+          subtitle: "These were skipped from uploading.",
+        });
       }
 
       const uploads = convertMultiPrinterFileToQueue(accessiblePrinters, this.selectedFile);

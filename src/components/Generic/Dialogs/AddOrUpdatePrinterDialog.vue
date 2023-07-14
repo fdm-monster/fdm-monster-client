@@ -295,7 +295,9 @@ export default defineComponent({
     },
     async createPrinter(newPrinterData: CreatePrinter) {
       await this.printersStore.createPrinter(newPrinterData);
-      this.snackbar.openInfoMessage(`Printer ${newPrinterData.printerName} created`);
+      this.snackbar.openInfoMessage({
+        title: `Printer ${newPrinterData.printerName} created`,
+      });
     },
     async updatePrinter(updatedPrinter: CreatePrinter) {
       const printerId = updatedPrinter.id;
@@ -305,7 +307,9 @@ export default defineComponent({
         updatedPrinter,
       });
 
-      this.snackbar.openInfoMessage(`Printer ${updatedPrinter.printerName} updated`);
+      this.snackbar.openInfoMessage({
+        title: `Printer ${updatedPrinter.printerName} updated`,
+      });
     },
     async submit() {
       if (!(await this.isValid())) return;

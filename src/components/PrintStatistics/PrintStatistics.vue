@@ -63,7 +63,7 @@
         <thead>
           <tr>
             <th class="text-left">Printer name</th>
-            <th class="text-left">Printer floor</th>
+            <th class="text-left">Floor</th>
             <th class="text-left">Fail/ Success/ Total</th>
             <th class="text-left">Last success</th>
             <th class="text-left">Last failure</th>

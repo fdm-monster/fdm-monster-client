@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
-import { VueBus } from "vue-bus";
 import { FailedQueuedUpload, QueuedUpload } from "@/models/uploads/queued-upload.model";
 import { PrinterFileService } from "@/backend";
-import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "../shared/alert.events";
+import { useSnackbar } from "../shared/snackbar.composable";
 
 export interface UploadsState {
-  $bus?: VueBus;
   queuedUploads: QueuedUpload[];
   failedUploads: FailedQueuedUpload[];
   uploadingNow: boolean;
@@ -13,7 +11,6 @@ export interface UploadsState {
 
 export const useUploadsStore = defineStore("Uploads", {
   state: (): UploadsState => ({
-    $bus: undefined,
     queuedUploads: [],
     failedUploads: [],
     uploadingNow: false,
@@ -38,9 +35,6 @@ export const useUploadsStore = defineStore("Uploads", {
       this.queuedUploads = [];
       this.failedUploads = [];
     },
-    _injectEventBus(eventBus: VueBus) {
-      this.$bus = eventBus;
-    },
     _setUploadingNow(uploading: boolean) {
       this.uploadingNow = uploading;
     },
@@ -51,6 +45,7 @@ export const useUploadsStore = defineStore("Uploads", {
       this.queuedUploads.splice(0, 1);
     },
     async handleNextUpload() {
+      const snackbar = useSnackbar();
       // Dont upload when queue empty
       if (!this.queuedUploads?.length) return;
       this._setUploadingNow(true);
@@ -70,9 +65,13 @@ export const useUploadsStore = defineStore("Uploads", {
             error: e,
           };
           this._appendFailedUpload(failedUpload);
-          this.$bus!.emit(uploadFailureMessageEvent, e);
+          snackbar.openErrorMessage({
+            title: `upload failed for file ${file.name} to printer ${printer.printerName}`,
+          });
         } else {
-          this.$bus!.emit(uploadOtherMessageEvent, e);
+          snackbar.openErrorMessage({
+            title: "Unknown upload error occurred",
+          });
         }
       }
       this._setUploadingNow(false);

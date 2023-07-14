@@ -11,6 +11,18 @@ export const errorMessageKey: EventBusKey<{ name: "error-message" }> = Symbol(
   "Error snackbar message event symbol"
 );
 
+export interface InfoMessage {
+  title: string;
+  subtitle?: string | null;
+}
+
+export interface ErrorMessage {
+  title: string;
+  subtitle?: string | null;
+  // The idea is that the error can be revisited on a separate page/dialog
+  // url?: string;
+}
+
 export interface ProgressEvent {
   key: string;
   title: string;
@@ -18,11 +30,16 @@ export interface ProgressEvent {
   completed: boolean;
 }
 
+export interface ProgressMessage {
+  title: string;
+  subtitle: string;
+}
+
 export function useSnackbar() {
   const { emit: emitProgessMessage, on: onProgressMessage } =
     useEventBus<string>(progressMessageKey);
-  const { emit: emitInfoMessage, on: onInfoMessage } = useEventBus<string>(infoMessageKey);
-  const { emit: emitErrorMessage, on: onErrorMessage } = useEventBus<string>(errorMessageKey);
+  const { emit: emitInfoMessage, on: onInfoMessage } = useEventBus<InfoMessage>(infoMessageKey);
+  const { emit: emitErrorMessage, on: onErrorMessage } = useEventBus<ErrorMessage>(errorMessageKey);
 
   return {
     openProgressMessage: (key: string, title: string, value: number | string, completed: boolean) =>
@@ -32,8 +49,8 @@ export function useSnackbar() {
         value,
         completed,
       } as ProgressEvent),
-    openInfoMessage: (text: string) => emitInfoMessage("open-info-message", text),
-    openErrorMessage: (text: string) => emitErrorMessage("open-error-message", text),
+    openInfoMessage: (data: InfoMessage) => emitInfoMessage(data),
+    openErrorMessage: (errorData: ErrorMessage) => emitErrorMessage(errorData),
     onProgressMessage,
     onInfoMessage,
     onErrorMessage,

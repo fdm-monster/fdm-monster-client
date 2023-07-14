@@ -116,7 +116,9 @@ export default defineComponent({
         floorComparisonStrategiesByPriority: "floor",
         notes: this.notes,
       });
-      this.snackbar.openInfoMessage("Downloaded the YAML file");
+      this.snackbar.openInfoMessage({
+        title: "Downloaded the YAML file",
+      });
       this.notes = "";
     },
     async uploadAndImportYamlFile() {
@@ -125,7 +127,9 @@ export default defineComponent({
       }
       await ServerPrivateService.uploadAndImportYaml(this.importFile);
       this.importFile = undefined;
-      this.snackbar.openInfoMessage("Imported the YAML file");
+      this.snackbar.openInfoMessage({
+        title: "Imported the YAML file",
+      });
       this.closeDialog();
     },
     closeDialog() {
