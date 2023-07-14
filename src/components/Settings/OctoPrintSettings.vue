@@ -56,8 +56,8 @@
             <v-row>
               <v-col>
                 <v-btn color="default" @click="resetWhitelistSettingsToDefault()">
-                  reset to default</v-btn
-                >
+                  reset to default
+                </v-btn>
                 <v-btn color="primary" @click="setWhitelistSettings()">
                   save whitelist settings
                 </v-btn>
@@ -84,9 +84,9 @@
             <v-text-field
               v-model="fileHandlingSettings.autoRemoveOldFilesCriteriumDays"
               :disabled="!fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
+              label="Amount of days to keep files"
               min="0"
               outlined
-              label="Amount of days to keep files"
               type="number"
             />
             <v-btn color="primary" @click="setFileCleanSettings()">save file clean settings</v-btn>
@@ -127,12 +127,12 @@
 import { defineComponent } from "vue";
 import { PrinterFileService, SettingsService } from "@/backend";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
-import { infoMessageEvent } from "../../shared/alert.events";
 import { PrinterFileCleanSettings } from "../../models/settings/printer-file-clean-settings.model";
 import { usePrinterStore } from "../../store/printer.store";
 import { isValidIPOrMask } from "@/utils/validation.utils";
 import { whitelistSettingsHidden } from "../../shared/experimental.constants";
 import { usePrinterStateStore } from "../../store/printer-state.store";
+import { useSnackbar } from "../../shared/snackbar.composable";
 
 interface Data {
   ipAddress: string;
@@ -146,6 +146,7 @@ export default defineComponent({
   setup: () => {
     return {
       printersStore: usePrinterStore(),
+      snackbar: useSnackbar(),
       printerStateStore: usePrinterStateStore(),
       ipAddressRule: (val: string) => (isValidIPOrMask(val) ? true : "Not a valid IP Address"),
     };
@@ -202,21 +203,21 @@ export default defineComponent({
     async purgeFiles() {
       await PrinterFileService.purgeFiles();
 
-      this.$bus.emit(infoMessageEvent, `Successfully purged all references to printer files!`);
+      this.snackbar.openInfoMessage({
+        title: `Successfully purged all references to printer files!`,
+      });
     },
     async bulkDisableGCodeAnalysis() {
       const printers = this.printerStateStore.onlinePrinters;
-      this.$bus.emit(
-        infoMessageEvent,
-        `Trying to disable gcode analysis for ${printers.length} online printers.`
-      );
+      this.snackbar.openInfoMessage({
+        title: `Trying to disable gcode analysis for ${printers.length} online printers.`,
+      });
       for (const printer of Object.values(printers)) {
         await PrinterSettingsService.setGCodeAnalysis(printer.id, false);
       }
-      this.$bus.emit(
-        infoMessageEvent,
-        `Finished disabling gcode analysis for ${printers.length} online printers.`
-      );
+      this.snackbar.openInfoMessage({
+        title: `Finished disabling gcode analysis for ${printers.length} online printers.`,
+      });
     },
   },
   watch: {},

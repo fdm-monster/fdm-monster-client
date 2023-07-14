@@ -29,10 +29,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { AxiosError } from "axios";
-import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "../../shared/alert.events";
-import { FailedQueuedUpload } from "@/models/uploads/queued-upload.model";
-import { usePrinterStore } from "../../store/printer.store";
-import { useUploadsStore } from "@/store/uploads.store";
+import { FailedQueuedUpload } from "../../../models/uploads/queued-upload.model";
+import { usePrinterStore } from "../../../store/printer.store";
+import { useUploadsStore } from "../../../store/uploads.store";
 
 interface Data {
   dialogOpened: boolean;
@@ -50,14 +49,8 @@ export default defineComponent({
       uploadsStore: useUploadsStore(),
     };
   },
-  created() {
-    this.$bus.on(uploadFailureMessageEvent, this.uploadFailureHandler);
-    this.$bus.on(uploadOtherMessageEvent, this.uploadOtherHandler);
-  },
-  beforeDestroyed() {
-    this.$bus.off(uploadFailureMessageEvent, this.uploadFailureHandler);
-    this.$bus.off(uploadOtherMessageEvent, this.uploadOtherHandler);
-  },
+  created() {},
+  beforeDestroyed() {},
   async mounted() {},
   props: {},
   data: (): Data => ({

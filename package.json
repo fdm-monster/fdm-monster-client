@@ -14,12 +14,14 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.vue\""
   },
   "dependencies": {
-    "@sentry/tracing": "7.58.0",
-    "@sentry/vue": "7.58.0",
+    "@sentry/tracing": "7.58.1",
+    "@sentry/vue": "7.58.1",
     "@vue/composition-api": "1.7.1",
     "@vueuse/core": "10.2.1",
+    "@vueuse/integrations": "10.2.1",
     "axios": "1.4.0",
     "core-js": "3.31.1",
+    "jwt-decode": "^3.1.2",
     "luxon": "3.3.0",
     "pinia": "2.1.4",
     "register-service-worker": "1.7.2",
@@ -29,7 +31,6 @@
     "vee-validate": "3.4.15",
     "vue": "2.7.14",
     "vue-axios": "3.5.2",
-    "vue-bus": "1.2.1",
     "vue-router": "3.6.5",
     "vuedraggable": "2.24.3",
     "vuetify": "2.7.0"
@@ -55,7 +56,7 @@
     "@vue/vue2-jest": "29.2.4",
     "babel-jest": "29.6.1",
     "cypress": "12.17.1",
-    "eslint": "8.44.0",
+    "eslint": "8.45.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-vue": "9.15.1",

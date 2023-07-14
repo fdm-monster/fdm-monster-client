@@ -1,16 +1,14 @@
 import { io, Socket } from "socket.io-client";
-import { VueBus } from "vue-bus";
 import {
   PrinterEventsById,
   SocketIoUpdateMessage,
 } from "@/models/socketio-messages/socketio-message.model";
-
-import { InfoEventType, uploadMessageEvent } from "./alert.events";
 import { usePrinterStore } from "@/store/printer.store";
 import { apiBase } from "@/backend/base.service";
 import { useFloorStore } from "@/store/floor.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { useTestPrinterStore } from "../store/test-printer.store";
+import { useSnackbar } from "./snackbar.composable";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -22,15 +20,14 @@ enum IO_MESSAGES {
 
 export class SocketIoService {
   socket: Socket;
-  $bus: VueBus;
   printerStore = usePrinterStore();
   floorStore = useFloorStore();
   printerStateStore = usePrinterStateStore();
   testPrinterStore = useTestPrinterStore();
+  snackbar = useSnackbar();
 
-  setupSocketConnection($bus: VueBus) {
-    this.socket = io(apiBase); // Same-origin policy);
-    this.$bus = $bus;
+  setupSocketConnection() {
+    this.socket = io(apiBase);
     this.socket.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
     this.socket.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);
@@ -44,15 +41,23 @@ export class SocketIoService {
   }
 
   onMessage(message: SocketIoUpdateMessage) {
-    if (message.trackedUploads) {
-      this.$bus.emit(uploadMessageEvent, InfoEventType.UPLOAD_BACKEND, message.trackedUploads);
+    if (message.trackedUploads.current?.length || message.trackedUploads.failed?.length) {
+      console.debug("[SocketIO] trackedUploads message received");
+      message.trackedUploads.current.forEach((u) => {
+        this.snackbar.openProgressMessage(
+          u.correlationToken,
+          u.multerFile.originalname,
+          u.progress?.percent, // Number((u.progress?.percent || 0) * 100).toFixed(0),
+          false
+        );
+      });
     }
 
-    if (message.floors) {
+    if (message.floors?.length) {
       this.floorStore.saveFloors(message.floors);
     }
 
-    if (message.printers) {
+    if (message.printers?.length) {
       this.printerStore.setPrinters(message.printers);
     }
 

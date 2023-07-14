@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
-import { VueBus } from "vue-bus";
 import { FailedQueuedUpload, QueuedUpload } from "@/models/uploads/queued-upload.model";
 import { PrinterFileService } from "@/backend";
-import { uploadFailureMessageEvent, uploadOtherMessageEvent } from "../shared/alert.events";
+import { useSnackbar } from "../shared/snackbar.composable";
 
 export interface UploadsState {
-  $bus?: VueBus;
   queuedUploads: QueuedUpload[];
   failedUploads: FailedQueuedUpload[];
   uploadingNow: boolean;
@@ -13,7 +11,6 @@ export interface UploadsState {
 
 export const useUploadsStore = defineStore("Uploads", {
   state: (): UploadsState => ({
-    $bus: undefined,
     queuedUploads: [],
     failedUploads: [],
     uploadingNow: false,
@@ -38,44 +35,38 @@ export const useUploadsStore = defineStore("Uploads", {
       this.queuedUploads = [];
       this.failedUploads = [];
     },
-    _injectEventBus(eventBus: VueBus) {
-      this.$bus = eventBus;
-    },
-    _setUploadingNow(uploading: boolean) {
-      this.uploadingNow = uploading;
-    },
-    _appendFailedUpload(failedUpload: FailedQueuedUpload) {
-      this.failedUploads.push(failedUpload);
-    },
-    _spliceNextUpload() {
-      this.queuedUploads.splice(0, 1);
-    },
     async handleNextUpload() {
+      const snackbar = useSnackbar();
       // Dont upload when queue empty
       if (!this.queuedUploads?.length) return;
-      this._setUploadingNow(true);
+      this.uploadingNow = true;
       const { file, printer, commands } = this.nextUpload;
       // We'd rather fail fast and avoid the same upload failing many times
-      this._spliceNextUpload();
+      this.queuedUploads.splice(0, 1);
 
       try {
         await PrinterFileService.uploadFile(printer, file, commands);
       } catch (e: any) {
         if (e.isAxiosError) {
-          console.log("Axios error caught and emitted to bus");
           const failedUpload: FailedQueuedUpload = {
             file,
             printer,
             commands,
             error: e,
           };
-          this._appendFailedUpload(failedUpload);
-          this.$bus!.emit(uploadFailureMessageEvent, e);
+          this.failedUploads.push(failedUpload);
+          snackbar.openErrorMessage({
+            title: "Upload failure",
+            subtitle: `File ${file.name}Upload failed for  to printer ${printer.printerName}`,
+          });
         } else {
-          this.$bus!.emit(uploadOtherMessageEvent, e);
+          snackbar.openErrorMessage({
+            title: "Upload failure",
+            subtitle: "Unknown upload error occurred",
+          });
         }
       }
-      this._setUploadingNow(false);
+      this.uploadingNow = false;
     },
   },
 });
