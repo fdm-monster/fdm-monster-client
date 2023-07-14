@@ -4,11 +4,11 @@
     absolute
     bottom
     class="ml-16 mb-16 ma-3"
-    color="error"
+    color="error darken-1"
     elevation="24"
     multi-line
     shaped
-    timeout="10000"
+    timeout="-1"
   >
     <v-row>
       <v-col cols="2">

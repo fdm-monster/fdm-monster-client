@@ -56,7 +56,15 @@ export class PrinterFileService extends BaseService {
       path,
       formData,
       {
-        onUploadProgress: this.uploadUpdateProgress,
+        onUploadProgress: (progress) => {
+          const snackbar = useSnackbar();
+          snackbar.openProgressMessage(
+            "single-file-upload",
+            `Uploading file ${file.name}`,
+            (100 * progress.loaded) / progress.total!,
+            false
+          );
+        },
       },
       { unwrap: false }
     );

@@ -27,7 +27,7 @@ export interface ErrorMessage {
 export interface ProgressMessage {
   key: string;
   title: string;
-  value: number | string;
+  value: number;
   completed: boolean;
 }
 
@@ -38,7 +38,13 @@ export function useSnackbar() {
   const { emit: emitErrorMessage, on: onErrorMessage } = useEventBus<ErrorMessage>(errorMessageKey);
 
   return {
-    openProgressMessage: (data: ProgressMessage) => emitProgessMessage(data),
+    openProgressMessage: (key: string, title: string, value: number, completed: boolean) =>
+      emitProgessMessage({
+        key,
+        title,
+        value,
+        completed,
+      } as ProgressMessage),
     openInfoMessage: (data: InfoMessage) => emitInfoMessage(data),
     openErrorMessage: (errorData: ErrorMessage) => emitErrorMessage(errorData),
     onProgressMessage,
