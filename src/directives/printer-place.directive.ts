@@ -1,8 +1,7 @@
 import { Printer } from "prettier";
-import Vue, { Directive } from "vue";
+import Vue from "vue";
 import { isPrinterPlaceDataTransfer, PrinterPlace } from "../shared/drag.constants";
 import { FloorService } from "../backend/floor.service";
-import { usePrinterStore } from "../store/printer.store";
 import { useFloorStore } from "../store/floor.store";
 
 interface PrinterBindingValue {
@@ -14,12 +13,7 @@ interface PrinterBindingValue {
 const defaultBorder = "1px solid #2b2a27";
 const hoverBorder = "1px solid gray";
 
-const bindDropConditionally = (
-  el: HTMLElement,
-  bindingValue: PrinterBindingValue,
-  context?: Vue
-) => {
-  const printerStore = usePrinterStore();
+const bindDropConditionally = (el: HTMLElement, bindingValue: PrinterBindingValue) => {
   const floorStore = useFloorStore();
 
   const printerSet = bindingValue?.printerSet;
@@ -77,10 +71,10 @@ const bindDropConditionally = (
 export function registerPrinterPlaceDirective() {
   Vue.directive("drop-printer-position", {
     inserted: (el, binding, vnode) => {
-      bindDropConditionally(el, binding.value, vnode.context);
+      bindDropConditionally(el, binding.value);
     },
     update: (el, binding, vnode) => {
-      bindDropConditionally(el, binding.value, vnode.context);
+      bindDropConditionally(el, binding.value);
     },
   });
 }

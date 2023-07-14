@@ -4,11 +4,10 @@
     <TopBar />
 
     <v-main>
-      <ErrorAlert>
-        <router-view />
-      </ErrorAlert>
+      <router-view />
     </v-main>
 
+    <AppSnackbars />
     <AddOrUpdatePrinterDialog />
     <AddOrUpdateFloorDialog />
     <PrinterMaintenanceDialog />
@@ -22,7 +21,7 @@
 import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/Generic/NavigationDrawer.vue";
 import TopBar from "@/components/Generic/TopBar.vue";
-import ErrorAlert from "@/components/Generic/AlertStack.vue";
+import AppSnackbars from "./components/Generic/Snackbars/AppSnackbars.vue";
 import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
 import AddOrUpdatePrinterDialog from "./components/Generic/Dialogs/AddOrUpdatePrinterDialog.vue";
 import AddOrUpdateFloorDialog from "./components/Generic/Dialogs/AddOrUpdateFloorDialog.vue";
@@ -36,6 +35,7 @@ import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateD
 import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
 import { useFeatureStore } from "./store/features.store";
 import { setSentryEnabled } from "./utils/sentry.util";
+import { useSnackbar } from "./shared/snackbar.composable";
 
 interface Data {
   socketIoClient?: SocketIoService;
@@ -51,7 +51,7 @@ export default defineComponent({
     AddOrUpdateFloorDialog,
     PrinterMaintenanceDialog,
     FileExplorerSideNav,
-    ErrorAlert,
+    AppSnackbars,
     BatchJsonCreateDialog,
   },
   setup: () => {
@@ -61,6 +61,7 @@ export default defineComponent({
       settingsStore: useSettingsStore(),
       featureStore: useFeatureStore(),
       dialogsStore: useDialogsStore(),
+      snackbar: useSnackbar(),
     };
   },
   async created() {
@@ -69,10 +70,38 @@ export default defineComponent({
     setSentryEnabled(!!enabled);
 
     await this.featureStore.loadFeatures();
-
-    // TODO replace with useEventBus
-    this.uploadsStore._injectEventBus(this.$bus);
     await this.connectSocketIoClient();
+
+    // Nice visual test for uploads
+    // let i = 0;
+    // let j = 0;
+    // let interval: any;
+    // // eslint-disable-next-line prefer-const
+    // interval = setInterval(() => {
+    //   i += 2;
+    //   j += 3;
+    //   this.snackbar.openProgressMessage("1", "file.gcode to YoParinter", i, i > 55);
+    //   if (j > 10 && j < 80) {
+    //     this.snackbar.openProgressMessage("2", "file2.gcode to Beast", i, i > 80);
+    //   }
+    //   this.snackbar.openProgressMessage("3", "file3.gcode to Beast", i, i > 80);
+    //   this.snackbar.openProgressMessage("4", "file4.gcode to Beast", i, i > 80);
+    //   if (j > 20) this.snackbar.openProgressMessage("5", "file5.gcode to Beast", i, i > 60);
+    //   this.snackbar.openProgressMessage("6", "file6.gcode to Beast", i, i > 65);
+    //   this.snackbar.openProgressMessage("7", "file7.gcode to Beast", i, i > 80);
+    //
+    //   if (i >= 110 && j > 115) {
+    //     clearInterval(interval);
+    //   }
+    // }, 200);
+  },
+  errorCaptured(error) {
+    this.snackbar.openErrorMessage({
+      title: "An error occurred",
+      subtitle: error.message.slice(0, 20) + "...",
+    });
+    // Check if still caught by Sentry
+    // throw error;
   },
   async mounted() {},
   beforeDestroy() {
@@ -90,7 +119,7 @@ export default defineComponent({
   methods: {
     async connectSocketIoClient() {
       this.socketIoClient = new SocketIoService();
-      this.socketIoClient.setupSocketConnection(this.$bus);
+      this.socketIoClient.setupSocketConnection();
     },
   },
   watch: {

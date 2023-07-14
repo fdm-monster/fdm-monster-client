@@ -185,8 +185,8 @@ import { useSettingsStore } from "../../store/settings.store";
 import { useFloorStore } from "../../store/floor.store";
 import { interpretStates } from "../../shared/printer-state.constants";
 import { usePrinterStateStore } from "../../store/printer-state.store";
-import { infoMessageEvent } from "../../shared/alert.events";
 import { Printer } from "../../models/printers/printer.model";
+import { useSnackbar } from "../../shared/snackbar.composable";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
@@ -206,6 +206,7 @@ export default defineComponent({
       settingsStore: useSettingsStore(),
       gridStore: useGridStore(),
       dialogsStore: useDialogsStore(),
+      snackbar: useSnackbar(),
     };
   },
   computed: {
@@ -253,7 +254,9 @@ export default defineComponent({
     async clickRefreshSocket() {
       if (!this.printerId?.length) return;
       await PrintersService.refreshSocket(this.printerId);
-      this.$bus.emit(infoMessageEvent, "Refreshing OctoPrint connection state");
+      this.snackbar.openInfoMessage({
+        title: "Refreshing OctoPrint connection state",
+      });
     },
     clickOpenPrinterURL() {
       if (!this.printer) return;

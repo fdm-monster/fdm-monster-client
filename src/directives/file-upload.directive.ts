@@ -4,13 +4,15 @@ import {
   convertMultiPrinterFileToQueue,
   convertPrinterMultiFileToQueue,
 } from "@/utils/uploads-state.utils";
-import { infoMessageEvent } from "../shared/alert.events";
 import { usePrinterStore } from "../store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
+import { useSnackbar } from "../shared/snackbar.composable";
 
 const bindDropConditionally = (el: HTMLElement, printers: Printer[], context?: Vue) => {
   const printersStore = usePrinterStore();
   const uploadsStore = useUploadsStore();
+  const snackbar = useSnackbar();
+
   if (printers?.length) {
     const isSinglePrinter = printers.length === 1;
     const firstPrinter = printers[0];
@@ -59,7 +61,11 @@ const bindDropConditionally = (el: HTMLElement, printers: Printer[], context?: V
     el.ondrop = async (e) => {
       e.preventDefault();
       el.style.border = defaultBorder;
-      context?.$bus.emit(infoMessageEvent, "Please select a printer to upload to first.");
+      snackbar.openInfoMessage({
+        title: "No action performed",
+        subtitle: "Please select one or more printers",
+        warning: true,
+      });
     };
   }
 };

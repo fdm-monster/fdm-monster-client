@@ -143,7 +143,6 @@
 import { defineComponent, inject } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
-import { infoMessageEvent } from "@/shared/alert.events";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
@@ -156,6 +155,7 @@ import {
 } from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
+import { useSnackbar } from "../../../shared/snackbar.composable";
 
 const watchedId = "printerId";
 
@@ -179,6 +179,7 @@ export default defineComponent({
       testPrinterStore: useTestPrinterStore(),
       dialog,
       appConstants: inject("appConstants") as AppConstants,
+      snackbar: useSnackbar(),
     };
   },
   async created() {
@@ -294,7 +295,9 @@ export default defineComponent({
     },
     async createPrinter(newPrinterData: CreatePrinter) {
       await this.printersStore.createPrinter(newPrinterData);
-      this.$bus.emit(infoMessageEvent, `Printer ${newPrinterData.printerName} created`);
+      this.snackbar.openInfoMessage({
+        title: `Printer ${newPrinterData.printerName} created`,
+      });
     },
     async updatePrinter(updatedPrinter: CreatePrinter) {
       const printerId = updatedPrinter.id;
@@ -304,7 +307,9 @@ export default defineComponent({
         updatedPrinter,
       });
 
-      this.$bus.emit(infoMessageEvent, `Printer ${updatedPrinter.printerName} updated`);
+      this.snackbar.openInfoMessage({
+        title: `Printer ${updatedPrinter.printerName} updated`,
+      });
     },
     async submit() {
       if (!(await this.isValid())) return;
