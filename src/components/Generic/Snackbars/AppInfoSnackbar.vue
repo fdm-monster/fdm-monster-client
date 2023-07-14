@@ -3,8 +3,9 @@
     v-model="snackbarOpened"
     absolute
     bottom
-    color="success"
+    :color="isWarning ? 'warning darken-2' : 'success'"
     elevation="24"
+    class="ma-3"
     shaped
     timeout="5000"
     multi-line
@@ -37,11 +38,13 @@ const snackbar = useSnackbar();
 const snackbarOpened = ref(false);
 const infoTitle = ref("");
 const infoSubtitle = ref("");
+const isWarning = ref(false);
 
 onMounted(() => {
   snackbar.onInfoMessage((data: InfoMessage) => {
     infoTitle.value = data.title;
     infoSubtitle.value = data.subtitle ?? "";
+    isWarning.value = data.warning ?? false;
     snackbarOpened.value = true;
   });
 });

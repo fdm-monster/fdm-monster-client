@@ -3,10 +3,8 @@ import { ServerApi } from "@/backend/server.api";
 import { FileUploadCommands } from "@/models/printers/file-upload-commands.model";
 import { PrinterFileCache } from "@/models/printers/printer-file-cache.model";
 import { ClearedFilesResult, PrinterFile } from "@/models/printers/printer-file.model";
-import Vue from "vue";
-import { InfoEventType, uploadMessageEvent } from "../shared/alert.events";
 import { Printer } from "@/models/printers/printer.model";
-import { AxiosProgressEvent } from "axios";
+import { useSnackbar } from "../shared/snackbar.composable";
 
 export class PrinterFileService extends BaseService {
   static async getFiles(printerId: string, recursive = false) {
@@ -33,34 +31,6 @@ export class PrinterFileService extends BaseService {
   static async selectAndPrintFile(printerId: string, filePath: string, print = true) {
     const path = ServerApi.printerFilesSelectAndPrintRoute(printerId);
     return await this.postApi(path, { filePath, print });
-  }
-
-  static async uploadStubFile(printerId: string, files: File[]) {
-    const path = ServerApi.printerFilesUploadStubRoute;
-
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files[" + i + "]", files[i]);
-    }
-
-    return this.postUploadApi(
-      path,
-      formData,
-      {
-        onUploadProgress: this.uploadUpdateProgress,
-      },
-      { unwrap: false }
-    );
-  }
-
-  static uploadUpdateProgress(progress: AxiosProgressEvent) {
-    Vue.bus.emit(uploadMessageEvent, InfoEventType.UPLOAD_FRONTEND, {
-      current: [
-        {
-          progress: { percent: progress.loaded / progress.total! },
-        },
-      ],
-    });
   }
 
   static async uploadFile(

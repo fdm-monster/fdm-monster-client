@@ -22,15 +22,14 @@ enum IO_MESSAGES {
 
 export class SocketIoService {
   socket: Socket;
-  $bus: VueBus;
   printerStore = usePrinterStore();
   floorStore = useFloorStore();
   printerStateStore = usePrinterStateStore();
   testPrinterStore = useTestPrinterStore();
+  snackbar = useSnackbar();
 
-  setupSocketConnection($bus: VueBus) {
-    this.socket = io(apiBase); // Same-origin policy);
-    this.$bus = $bus;
+  setupSocketConnection() {
+    this.socket = io(apiBase);
     this.socket.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
     this.socket.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);

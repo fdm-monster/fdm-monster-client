@@ -14,6 +14,7 @@ export const errorMessageKey: EventBusKey<{ name: "error-message" }> = Symbol(
 export interface InfoMessage {
   title: string;
   subtitle?: string | null;
+  warning?: boolean;
 }
 
 export interface ErrorMessage {
@@ -23,32 +24,21 @@ export interface ErrorMessage {
   // url?: string;
 }
 
-export interface ProgressEvent {
+export interface ProgressMessage {
   key: string;
   title: string;
-  value: number;
+  value: number | string;
   completed: boolean;
-}
-
-export interface ProgressMessage {
-  title: string;
-  subtitle: string;
 }
 
 export function useSnackbar() {
   const { emit: emitProgessMessage, on: onProgressMessage } =
-    useEventBus<string>(progressMessageKey);
+    useEventBus<ProgressMessage>(progressMessageKey);
   const { emit: emitInfoMessage, on: onInfoMessage } = useEventBus<InfoMessage>(infoMessageKey);
   const { emit: emitErrorMessage, on: onErrorMessage } = useEventBus<ErrorMessage>(errorMessageKey);
 
   return {
-    openProgressMessage: (key: string, title: string, value: number | string, completed: boolean) =>
-      emitProgessMessage("progress-message", {
-        key,
-        title,
-        value,
-        completed,
-      } as ProgressEvent),
+    openProgressMessage: (data: ProgressMessage) => emitProgessMessage(data),
     openInfoMessage: (data: InfoMessage) => emitInfoMessage(data),
     openErrorMessage: (errorData: ErrorMessage) => emitErrorMessage(errorData),
     onProgressMessage,

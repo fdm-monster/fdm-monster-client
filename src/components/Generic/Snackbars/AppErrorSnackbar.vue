@@ -3,11 +3,12 @@
     v-model="snackbarOpened"
     absolute
     bottom
+    class="ml-16 mb-16 ma-3"
     color="error"
     elevation="24"
     multi-line
     shaped
-    timeout="5000"
+    timeout="10000"
   >
     <v-row>
       <v-col cols="2">

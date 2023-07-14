@@ -4,11 +4,10 @@
     <TopBar />
 
     <v-main>
-      <ErrorAlert>
-        <router-view />
-      </ErrorAlert>
+      <router-view />
     </v-main>
 
+    <AppSnackbars />
     <AddOrUpdatePrinterDialog />
     <AddOrUpdateFloorDialog />
     <PrinterMaintenanceDialog />
@@ -22,7 +21,7 @@
 import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/Generic/NavigationDrawer.vue";
 import TopBar from "@/components/Generic/TopBar.vue";
-import ErrorAlert from "./components/Generic/Snackbars/AppSnackbars.vue";
+import AppSnackbars from "./components/Generic/Snackbars/AppSnackbars.vue";
 import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
 import AddOrUpdatePrinterDialog from "./components/Generic/Dialogs/AddOrUpdatePrinterDialog.vue";
 import AddOrUpdateFloorDialog from "./components/Generic/Dialogs/AddOrUpdateFloorDialog.vue";
@@ -52,7 +51,7 @@ export default defineComponent({
     AddOrUpdateFloorDialog,
     PrinterMaintenanceDialog,
     FileExplorerSideNav,
-    ErrorAlert,
+    AppSnackbars,
     BatchJsonCreateDialog,
   },
   setup: () => {
