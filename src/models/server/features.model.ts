@@ -11,6 +11,7 @@ export class FeaturesModel {
   anonymousDiagnosticsToggle?: IFeatureFlag;
   pauseResumePrinterCommand?: IFeatureFlag;
   logDumpZip?: IFeatureFlag;
+  clearLogFiles?: IFeatureFlag;
   batchTogglePrinterEnabled?: IFeatureFlag;
 }
 

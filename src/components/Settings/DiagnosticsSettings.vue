@@ -42,6 +42,11 @@
               Download Log Files (.zip)
             </v-btn>
           </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item v-if="hasLogDumpFeature">
+        <v-list-item-content>
+          <v-list-item-title>Clear log files</v-list-item-title>
           <v-list-item-subtitle>
             <br />
             <v-btn color="default" @click="clearOldLogFiles()">
@@ -68,12 +73,14 @@ const snackBar = useSnackbar();
 const settingsStore = useSettingsStore();
 const hasAnonymousDiagnosticsToggleFeature = ref(false);
 const hasLogDumpFeature = ref(false);
+const hasLogClearFeature = ref(false);
 const sentryDiagnosticsEnabled = ref(false);
 onMounted(async () => {
   const features = await AppService.getFeatures();
   hasAnonymousDiagnosticsToggleFeature.value =
     features.anonymousDiagnosticsToggle?.available || false;
   hasLogDumpFeature.value = features.logDumpZip?.available || false;
+  hasLogClearFeature.value = features.clearLogFiles?.available || false;
 
   await settingsStore.loadSettings();
   sentryDiagnosticsEnabled.value = settingsStore.serverSettings?.sentryDiagnosticsEnabled || false;
