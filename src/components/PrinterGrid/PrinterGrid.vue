@@ -1,5 +1,11 @@
 <template>
   <div>
+    <img
+      alt="FDM Monster Background"
+      class="grid-bg-img align-content-center"
+      src="/img/logo.svg"
+      style="opacity: 0.08"
+    />
     <v-banner v-if="gridStore.gridEditMode" style="cursor: move">
       <v-row style="margin-bottom: -5px">
         <v-col>
@@ -148,6 +154,15 @@ export default defineComponent({
 </script>
 
 <style>
+.grid-bg-img {
+  position: fixed;
+  height: 100vh;
+  top: 50vh;
+  width: 600%;
+  left: -250%;
+  filter: grayscale(100%);
+}
+
 .test-bottom {
   border: 1px solid transparent;
   margin: 0 20px 10px 20px !important;
