@@ -38,4 +38,9 @@ export class ServerPrivateService extends BaseService {
     });
     await downloadFileByBlob((response as any).data, "logs-fdm-monster-" + Date.now() + ".zip");
   }
+
+  public static async clearLogFilesOlderThanWeek() {
+    const path = `api/server/clear-outdated-fdm-monster-logs`;
+    return await this.deleteApi(path);
+  }
 }
