@@ -62,7 +62,9 @@ import { useSettingsStore } from "../../store/settings.store";
 import { SettingsService } from "../../backend";
 import { setSentryEnabled } from "../../utils/sentry.util";
 import { ServerPrivateService } from "../../backend/server-private.service";
+import { useSnackbar } from "../../shared/snackbar.composable";
 
+const snackBar = useSnackbar();
 const settingsStore = useSettingsStore();
 const hasAnonymousDiagnosticsToggleFeature = ref(false);
 const hasLogDumpFeature = ref(false);
@@ -88,5 +90,9 @@ async function downloadLogDump() {
 
 async function clearOldLogFiles() {
   await ServerPrivateService.clearLogFilesOlderThanWeek();
+  snackBar.openInfoMessage({
+    title: "Action success",
+    subtitle: "Log files older than a week have been deleted",
+  });
 }
 </script>
