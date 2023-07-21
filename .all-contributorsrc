@@ -35,6 +35,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "WindArrow3d",
+      "name": "WindArrow3d",
+      "avatar_url": "https://avatars.githubusercontent.com/u/91099282?v=4",
+      "profile": "https://github.com/WindArrow3d",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
