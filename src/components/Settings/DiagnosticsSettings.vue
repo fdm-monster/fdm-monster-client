@@ -42,6 +42,13 @@
               Download Log Files (.zip)
             </v-btn>
           </v-list-item-subtitle>
+          <v-list-item-subtitle>
+            <br />
+            <v-btn color="default" @click="clearOldLogFiles()">
+              <v-icon>download</v-icon>
+              Clear log files older than a week
+            </v-btn>
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -77,5 +84,9 @@ async function saveSentryDiagnosticsSettings() {
 
 async function downloadLogDump() {
   await ServerPrivateService.downloadLogDump();
+}
+
+async function clearOldLogFiles() {
+  await ServerPrivateService.clearLogFilesOlderThanWeek();
 }
 </script>
