@@ -1,13 +1,16 @@
 <template>
   <v-app>
+    <AppInfoSnackbar />
+    <AppErrorSnackbar />
+    <AppProgressSnackbar />
+    <AlertErrorDialog />
+
     <NavigationDrawer />
     <TopBar />
 
     <v-main>
       <router-view />
     </v-main>
-
-    <AppSnackbars />
     <AddOrUpdatePrinterDialog />
     <AddOrUpdateFloorDialog />
     <PrinterMaintenanceDialog />
@@ -21,7 +24,6 @@
 import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/Generic/NavigationDrawer.vue";
 import TopBar from "@/components/Generic/TopBar.vue";
-import AppSnackbars from "./components/Generic/Snackbars/AppSnackbars.vue";
 import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
 import AddOrUpdatePrinterDialog from "./components/Generic/Dialogs/AddOrUpdatePrinterDialog.vue";
 import AddOrUpdateFloorDialog from "./components/Generic/Dialogs/AddOrUpdateFloorDialog.vue";
@@ -36,6 +38,10 @@ import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExpor
 import { useFeatureStore } from "./store/features.store";
 import { setSentryEnabled } from "./utils/sentry.util";
 import { useSnackbar } from "./shared/snackbar.composable";
+import AppProgressSnackbar from "./components/Generic/Snackbars/AppProgressSnackbar.vue";
+import AlertErrorDialog from "./components/Generic/Snackbars/AlertErrorDialog.vue";
+import AppErrorSnackbar from "./components/Generic/Snackbars/AppErrorSnackbar.vue";
+import AppInfoSnackbar from "./components/Generic/Snackbars/AppInfoSnackbar.vue";
 
 interface Data {
   socketIoClient?: SocketIoService;
@@ -44,6 +50,10 @@ interface Data {
 export default defineComponent({
   name: "AppView",
   components: {
+    AppInfoSnackbar,
+    AppErrorSnackbar,
+    AlertErrorDialog,
+    AppProgressSnackbar,
     YamlImportExportDialog,
     TopBar,
     NavigationDrawer,
@@ -51,7 +61,6 @@ export default defineComponent({
     AddOrUpdateFloorDialog,
     PrinterMaintenanceDialog,
     FileExplorerSideNav,
-    AppSnackbars,
     BatchJsonCreateDialog,
   },
   setup: () => {
@@ -64,7 +73,7 @@ export default defineComponent({
       snackbar: useSnackbar(),
     };
   },
-  async created() {
+  async mounted() {
     await this.settingsStore.loadSettings();
     const enabled = this.settingsStore.serverSettings?.sentryDiagnosticsEnabled;
     setSentryEnabled(!!enabled);
@@ -72,28 +81,7 @@ export default defineComponent({
     await this.featureStore.loadFeatures();
     await this.connectSocketIoClient();
 
-    // Nice visual test for uploads
-    // let i = 0;
-    // let j = 0;
-    // let interval: any;
-    // // eslint-disable-next-line prefer-const
-    // interval = setInterval(() => {
-    //   i += 2;
-    //   j += 3;
-    //   this.snackbar.openProgressMessage("1", "file.gcode to YoParinter", i, i > 55);
-    //   if (j > 10 && j < 80) {
-    //     this.snackbar.openProgressMessage("2", "file2.gcode to Beast", i, i > 80);
-    //   }
-    //   this.snackbar.openProgressMessage("3", "file3.gcode to Beast", i, i > 80);
-    //   this.snackbar.openProgressMessage("4", "file4.gcode to Beast", i, i > 80);
-    //   if (j > 20) this.snackbar.openProgressMessage("5", "file5.gcode to Beast", i, i > 60);
-    //   this.snackbar.openProgressMessage("6", "file6.gcode to Beast", i, i > 65);
-    //   this.snackbar.openProgressMessage("7", "file7.gcode to Beast", i, i > 80);
-    //
-    //   if (i >= 110 && j > 115) {
-    //     clearInterval(interval);
-    //   }
-    // }, 200);
+    uploadProgressTest(false);
   },
   errorCaptured(error) {
     this.snackbar.openErrorMessage({
@@ -103,7 +91,6 @@ export default defineComponent({
     // Check if still caught by Sentry
     // throw error;
   },
-  async mounted() {},
   beforeDestroy() {
     this.socketIoClient?.disconnect();
   },
