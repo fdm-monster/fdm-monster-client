@@ -42,6 +42,7 @@ import AppProgressSnackbar from "./components/Generic/Snackbars/AppProgressSnack
 import AlertErrorDialog from "./components/Generic/Snackbars/AlertErrorDialog.vue";
 import AppErrorSnackbar from "./components/Generic/Snackbars/AppErrorSnackbar.vue";
 import AppInfoSnackbar from "./components/Generic/Snackbars/AppInfoSnackbar.vue";
+import { uploadProgressTest } from "./utils/test.util";
 
 interface Data {
   socketIoClient?: SocketIoService;
@@ -74,6 +75,7 @@ export default defineComponent({
     };
   },
   async mounted() {
+    console.debug("App.vue mounted");
     await this.settingsStore.loadSettings();
     const enabled = this.settingsStore.serverSettings?.sentryDiagnosticsEnabled;
     setSentryEnabled(!!enabled);
@@ -82,14 +84,6 @@ export default defineComponent({
     await this.connectSocketIoClient();
 
     uploadProgressTest(false);
-  },
-  errorCaptured(error) {
-    this.snackbar.openErrorMessage({
-      title: "An error occurred",
-      subtitle: error.message.slice(0, 20) + "...",
-    });
-    // Check if still caught by Sentry
-    // throw error;
   },
   beforeDestroy() {
     this.socketIoClient?.disconnect();
