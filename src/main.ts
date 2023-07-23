@@ -14,6 +14,7 @@ import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
 import * as Sentry from "@sentry/vue";
 import { BrowserTracing } from "@sentry/vue";
+import { useSnackbar } from "./shared/snackbar.composable";
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
@@ -48,6 +49,11 @@ Vue.component(BaseDialog.name, BaseDialog);
 
 Vue.config.errorHandler = (err) => {
   console.error(`An error was caught [${err.name}]:\n ${err.message}\n ${err.stack}`);
+  useSnackbar().openErrorMessage({
+    title: "An error occurred",
+    subtitle: err.message?.length <= 18 ? err.message : err.message.slice(0, 20) + "...",
+    timeout: 7000,
+  });
 };
 
 new Vue({

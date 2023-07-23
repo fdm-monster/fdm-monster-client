@@ -1,6 +1,7 @@
 <template>
   <v-snackbar
     v-model="snackbarOpened"
+    :timeout="snackbarTimeout"
     absolute
     bottom
     class="ml-16 mb-16 ma-3"
@@ -8,7 +9,6 @@
     elevation="24"
     multi-line
     shaped
-    timeout="-1"
   >
     <v-row>
       <v-col cols="2">
@@ -22,6 +22,7 @@
           <div v-if="snackbarSubtitle?.length">{{ snackbarSubtitle }}</div>
         </div>
       </v-col>
+
       <v-col cols="1">
         <v-btn icon large @click="snackbarOpened = false">
           <v-icon>close</v-icon>
@@ -35,6 +36,7 @@ import { ErrorMessage, useSnackbar } from "../../../shared/snackbar.composable";
 import { onMounted, ref } from "vue";
 
 const snackbar = useSnackbar();
+const snackbarTimeout = ref(-1);
 const snackbarOpened = ref(false);
 const snackbarTitle = ref("");
 const snackbarSubtitle = ref("");
@@ -44,6 +46,7 @@ onMounted(() => {
     snackbarTitle.value = data.title;
     snackbarSubtitle.value = data.subtitle ?? "";
     snackbarOpened.value = true;
+    snackbarTimeout.value = data.timeout ?? -1;
   });
 });
 </script>
