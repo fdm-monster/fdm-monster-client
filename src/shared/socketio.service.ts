@@ -47,7 +47,7 @@ export class SocketIoService {
         this.snackbar.openProgressMessage(
           u.correlationToken,
           u.multerFile.originalname,
-          u.progress?.percent, // Number((u.progress?.percent || 0) * 100).toFixed(0),
+          (u.progress?.percent || 0) * 100,
           false
         );
       });
