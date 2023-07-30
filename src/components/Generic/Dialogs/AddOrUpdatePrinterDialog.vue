@@ -16,11 +16,15 @@
           </span>
         </v-card-title>
         <v-card-text>
+          <v-btn-toggle v-model="formType" mandatory>
+            <v-btn value="FullUrl">Full URL</v-btn>
+            <v-btn value="CustomParts">Custom Parts</v-btn>
+          </v-btn-toggle>
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
               <v-container>
-                <v-row>
-                  <v-col v-if="formData" cols="12" md="6">
+                <v-col>
+                  <v-row v-if="formData" cols="12" md="6">
                     <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
                       <v-text-field
                         v-model="formData.printerName"
@@ -31,22 +35,7 @@
                         required
                       />
                     </validation-provider>
-
-                    <validation-provider
-                      v-slot="{ errors }"
-                      name="Printer IP or HostName"
-                      rules="required"
-                    >
-                      <v-text-field
-                        v-model="formData.printerHostName"
-                        :error-messages="errors"
-                        @paste="onHostNamePaste"
-                        hint="Examples: 'my.printer.com', 'localhost' or '192.x.x.x'"
-                        label="IP/Host*"
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-col>
-                  <v-col cols="12" md="6">
+                    <v-spacer></v-spacer>
                     <validation-provider v-slot="{ errors }" name="Enabled">
                       <v-checkbox
                         v-model="formData.enabled"
@@ -57,6 +46,22 @@
                         required
                       ></v-checkbox>
                     </validation-provider>
+                  </v-row>
+                  <div style="height: 40px"></div>
+                  <v-row v-if="isFullPart" cols="12" md="6">
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Printer IP or HostName"
+                      rules="required"
+                    >
+                      <v-text-field
+                        v-model="formData.printerHostName"
+                        :error-messages="errors"
+                        hint="Examples: 'my.printer.com', 'localhost' or '192.x.x.x'"
+                        label="IP/Host*"
+                      ></v-text-field>
+                    </validation-provider>
+                    <v-spacer></v-spacer>
 
                     <validation-provider
                       v-slot="{ errors }"
@@ -70,23 +75,35 @@
                         label="Host Port*"
                       ></v-text-field>
                     </validation-provider>
-                  </v-col>
-                  <v-col class="pb-5 pt-0" cols="12" md="12">
-                    <validation-provider v-slot="{ errors }" :rules="apiKeyRules" name="ApiKey">
+                  </v-row>
+                  <div v-else>
+                    <validation-provider v-slot="{ errors }" name="Printer URL" rules="required">
                       <v-text-field
-                        v-model="formData.apiKey"
-                        :counter="apiKeyRules.length"
+                        :value="getPrinterUrl"
                         :error-messages="errors"
-                        hint="User or Application Key only (Global API key fails)"
-                        label="API Key*"
-                        persistent-hint
-                        required
+                        hint="Examples: 'my.printer.com', 'http://localhost:xxxx/' or 'http://192.168.0.43:5000/'"
+                        label="Printer URL"
+                        style="width: 100%"
+                        @input="onPrinterURLChange"
                       ></v-text-field>
                     </validation-provider>
-                  </v-col>
-                </v-row>
+                  </div>
+                  <div style="height: 20px"></div>
 
-                <v-expansion-panels accordion>
+                  <validation-provider v-slot="{ errors }" :rules="apiKeyRules" name="ApiKey">
+                    <v-text-field
+                      v-model="formData.apiKey"
+                      :counter="apiKeyRules.length"
+                      :error-messages="errors"
+                      hint="User or Application Key only (Global API key fails)"
+                      label="API Key*"
+                      persistent-hint
+                      required
+                    ></v-text-field>
+                  </validation-provider>
+                </v-col>
+
+                <v-expansion-panels accordion v-if="isFullPart">
                   <v-expansion-panel>
                     <v-expansion-panel-header>Advanced settings</v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -152,11 +169,13 @@ import { useTestPrinterStore } from "@/store/test-printer.store";
 import {
   CreatePrinter,
   getDefaultCreatePrinter,
+  HttpProtocol,
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "../../../shared/snackbar.composable";
+import { AddOrUpdatePrinterFormType } from "./update.printer.form.input.type";
 
 const watchedId = "printerId";
 
@@ -164,6 +183,8 @@ interface Data {
   showChecksPanel: boolean;
   copyPasteConnectionString: string;
   formData: PreCreatePrinter;
+  formType: AddOrUpdatePrinterFormType;
+  printerURL: string;
 }
 
 export default defineComponent({
@@ -195,6 +216,8 @@ export default defineComponent({
     showChecksPanel: false,
     copyPasteConnectionString: "",
     formData: getDefaultCreatePrinter(),
+    formType: AddOrUpdatePrinterFormType.FullUrl,
+    printerURL: "",
   }),
   computed: {
     printerId() {
@@ -237,26 +260,44 @@ export default defineComponent({
         alpha_num: true,
       };
     },
+
+    isFullPart() {
+      return this.formType == AddOrUpdatePrinterFormType.FullUrl;
+    },
+    getPrinterUrl() {
+      const printerURL = `${this.formData.printerHostPrefix}://${this.formData.printerHostName}:${
+        this.formData.printerHostPort != undefined ? this.formData.printerHostPort : ""
+      }`;
+      return printerURL;
+    },
   },
   methods: {
-    onHostNamePaste(pasted: ClipboardEvent) {
+    onPrinterURLChange(event: string) {
       try {
-        if (pasted.clipboardData != undefined) {
-          const text = pasted.clipboardData.getData("text");
-          const parsedUrl = new URL(text);
-          if (PrintersService.isValidPrinterUrl(parsedUrl)) {
-            /* Because @paste Event is handled after v-model data bind so the textfield gets updated two times first when
-             we update the v-model and then the textfield value adds the pasted value */
-            pasted.preventDefault();
-            PrintersService.applyPastedPrinterUrl(parsedUrl, this.formData);
-          }
-        }
+        console.log(event);
+        this.parseURL(event);
+        // if (PrintersService.isValidPrinterUrl(parsedUrl)) {
+        //   /* Because @paste Event is handled after v-model data bind so the textfield gets updated two times first when
+        //      we update the v-model and then the textfield value adds the pasted value */
+        //   PrintersService.applyPastedPrinterUrl(parsedUrl, this.formData);
+        // } else {
+        //   //Reset Hostname when printer url is invalid to make sure user dont continue unless the correct url is input
+        // }
       } catch {
-        /* empty */
+        //Reset Hostname when printer url is invalid to make sure user dont continue unless the correct url is input
       }
     },
+
     resetForm() {
       this.formData = getDefaultCreatePrinter();
+    },
+
+    parseURL(url: string) {
+      const parsedURL = url.replaceAll("//", "").split(":");
+      this.formData.printerHostPrefix = parsedURL[0] as HttpProtocol;
+      this.formData.printerHostPort =
+        parsedURL[2] != "" ? Number.parseInt(parsedURL[2]) : undefined;
+      this.formData.printerHostName = parsedURL[1];
     },
     async quickCopyConnectionString() {
       const printer = this.storedPrinter;
