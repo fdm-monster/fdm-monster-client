@@ -16,50 +16,36 @@ export class PrintersService extends BaseService {
     formData: PreCreatePrinter
   ) {
     const printerURL = new URL(patch.printerURL);
-    formData.printerHostPort = parseInt(printerURL.port) || 80;
-    formData.printerHostName = printerURL.hostname;
-    formData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
+    // formData.printerHostPort = parseInt(printerURL.port) || 80;
+    // formData.printerHostName = printerURL.hostname;
+    // formData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
     formData.printerName = patch.printerName || newRandomNamePair();
     formData.apiKey = patch.apiKey;
   }
 
-  static applyPastedPrinterUrl(printerURL: URL, formData: PreCreatePrinter) {
-    formData.printerHostPort = parseInt(printerURL.port) || 80;
-    formData.printerHostName = printerURL.hostname;
-    formData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
-  }
-
-  static validPort(port: string | undefined) {
-    const isNumber = /^\d+$/;
-
-    if (port == undefined) return false;
-    try {
-      return Number.parseInt(port) <= 65535 && isNumber.test(port);
-    } catch {
-      return false;
-    }
-  }
-
   static validHostname(hostname: string | undefined) {
-    if (hostname == undefined) return false;
+    if (hostname == undefined || hostname == "") return false;
     return validator.isFQDN(hostname) || validator.isIP(hostname) || hostname === "localhost";
   }
 
   static validProtocol(protocol: string | undefined) {
     if (protocol == undefined) return false;
 
-    return ["https", "http"].includes(protocol);
+    return ["https", "http"].includes(protocol.toLowerCase());
   }
 
-  static isValidPrinterUrl(printerUrl: URL | undefined) {
+  static isValidPrinterUrl(printerUrl: string | undefined) {
     if (printerUrl == undefined) return false;
+    try {
+      const ParsedUrl = new URL(printerUrl);
 
-    if (
-      this.validHostname(printerUrl.hostname) &&
-      this.validProtocol(printerUrl.protocol.replace(":", "")) &&
-      this.validPort(printerUrl.port)
-    )
-      return true;
+      return (
+        this.validHostname(ParsedUrl.hostname) &&
+        this.validProtocol(ParsedUrl.protocol.replace(":", ""))
+      );
+    } catch {
+      return false;
+    }
   }
 
   static convertPrinterToCreateForm(printer: CreatePrinter) {
@@ -68,9 +54,10 @@ export class PrintersService extends BaseService {
 
     const printerURL = new URL(printer.printerURL);
     newFormData.id = printer.id;
-    newFormData.printerHostPort = parseInt(printerURL.port) || 80;
-    newFormData.printerHostName = printerURL.hostname;
-    newFormData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
+    newFormData.printerURL = printer.printerURL;
+    // newFormData.printerHostPort = parseInt(printerURL.port) || 80;
+    // newFormData.printerHostName = printerURL.hostname;
+    // newFormData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
     newFormData.printerName = printer.printerName || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
     newFormData.enabled = printer.enabled;
@@ -86,8 +73,7 @@ export class PrintersService extends BaseService {
   static convertCreateFormToPrinter(formData: PreCreatePrinter) {
     const modifiedData: any = { ...formData };
 
-    const { printerHostPrefix, printerHostName, printerHostPort } = formData;
-    const printerURL = new URL(`${printerHostPrefix}://${printerHostName}:${printerHostPort}`);
+    const printerURL = new URL(formData.printerURL!);
 
     delete modifiedData.printerHostName;
     delete modifiedData.printerHostPrefix;
