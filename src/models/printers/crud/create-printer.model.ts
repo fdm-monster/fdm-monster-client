@@ -5,10 +5,11 @@ export type HttpProtocol = "http" | "https";
 export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
   id: undefined,
   printerName: newRandomNamePair(),
-  printerHostPrefix: "http",
-  printerHostPort: 80,
-  printerHostName: "",
+  // printerHostPrefix: "http",
+  // printerHostPort: 80,
+  // printerHostName: "",
   apiKey: "",
+  printerURL: "",
   enabled: true,
 });
 
@@ -21,9 +22,10 @@ export interface PreCreatePrinter {
   enabled: boolean;
   printerName: string;
 
-  printerHostPrefix: HttpProtocol;
-  printerHostName: string;
-  printerHostPort: number | undefined;
+  // printerHostPrefix: HttpProtocol;
+  // printerHostName: string;
+  // printerHostPort: number | undefined;
+  printerURL: string | undefined;
 
   apiKey: string;
 }
