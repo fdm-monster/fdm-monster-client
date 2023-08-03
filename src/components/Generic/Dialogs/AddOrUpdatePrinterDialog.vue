@@ -19,68 +19,62 @@
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
               <v-container>
-                <v-col>
-                  <v-row v-if="formData" cols="12" md="6">
-                    <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
-                      <v-text-field
-                        v-model="formData.printerName"
-                        :counter="printerNameRules.max"
-                        :error-messages="errors"
-                        autofocus
-                        label="Printer name*"
-                        required
-                      />
-                    </validation-provider>
-                    <v-spacer></v-spacer>
-                    <validation-provider v-slot="{ errors }" name="Enabled">
-                      <v-checkbox
-                        v-model="formData.enabled"
-                        :error-messages="errors"
-                        hint="Disabling makes the printer passive"
-                        label="Enabled*"
-                        persistent-hint
-                        required
-                      ></v-checkbox>
-                    </validation-provider>
-                  </v-row>
-                  <div style="height: 40px"></div>
-                  <v-row cols="12" md="6">
-                    <validation-provider
-                      style="width: 100%"
-                      v-slot="{ errors }"
-                      name="Printer URL"
-                      rules="required|printerUrlRules"
+                <v-row class="ma-1" align-content="center" v-if="formData">
+                  <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
+                    <v-text-field
+                      v-model="formData.printerName"
+                      :counter="printerNameRules.max"
+                      :error-messages="errors"
+                      autofocus
+                      label="Printer name*"
+                      required
+                    />
+                  </validation-provider>
+                  <v-spacer></v-spacer>
+                  <validation-provider v-slot="{ errors }" name="Enabled">
+                    <v-checkbox
+                      v-model="formData.enabled"
+                      :error-messages="errors"
+                      hint="Disabling makes the printer passive"
+                      label="Enabled*"
                       persistent-hint
-                    >
-                      <v-text-field
-                        v-model="formData.printerURL"
-                        :error-messages="errors"
-                        hint="Examples: 'my.printer.com', 'http://localhost:xxxx/' or 'http://192.168.0.43:5000/'"
-                        label="Printer URL"
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-row>
+                      required
+                    ></v-checkbox>
+                  </validation-provider>
+                </v-row>
 
-                  <div style="height: 30px"></div>
-                  <v-row cols="12" md="6">
-                    <validation-provider
-                      v-slot="{ errors }"
-                      :rules="apiKeyRules"
-                      name="ApiKey"
-                      style="width: 100%"
-                    >
-                      <v-text-field
-                        v-model="formData.apiKey"
-                        :counter="apiKeyRules.length"
-                        :error-messages="errors"
-                        hint="User or Application Key only (Global API key fails)"
-                        label="API Key*"
-                        persistent-hint
-                        required
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-row>
-                </v-col>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Printer URL"
+                  rules="required|printerUrlRules"
+                  persistent-hint
+                >
+                  <v-text-field
+                    class="ma-1"
+                    v-model="formData.printerURL"
+                    :error-messages="errors"
+                    hint="Examples: 'my.printer.com', 'http://localhost:wxyz/' or 'http://192.168.0.43:5000/'"
+                    label="Printer URL"
+                  ></v-text-field>
+                </validation-provider>
+
+                <validation-provider
+                  v-slot="{ errors }"
+                  :rules="apiKeyRules"
+                  name="ApiKey"
+                  style="width: 100%"
+                >
+                  <v-text-field
+                    class="ma-1"
+                    v-model="formData.apiKey"
+                    :counter="apiKeyRules.length"
+                    :error-messages="errors"
+                    hint="User or Application Key only (Global API key fails)"
+                    label="API Key*"
+                    persistent-hint
+                    required
+                  ></v-text-field>
+                </validation-provider>
               </v-container>
             </v-col>
 
@@ -90,25 +84,20 @@
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-container>
-            <em class="red--text">* indicates required field</em>
-            <div style="height: 10px"></div>
-            <v-row dense>
-              <v-btn text @click="closeDialog()">Close</v-btn>
-              <v-btn :disabled="invalid" color="gray" text @click="duplicatePrinter()">
-                Duplicate
-              </v-btn>
-              <v-btn :disabled="invalid" color="warning" text @click="testPrinter()">
-                Test connection
-              </v-btn>
+          <em class="red--text">* indicates required field</em>
+          <v-spacer></v-spacer>
+          <v-btn text @click="closeDialog()">Close</v-btn>
+          <v-btn :disabled="invalid" color="gray" text @click="duplicatePrinter()">
+            Duplicate
+          </v-btn>
+          <v-btn :disabled="invalid" color="warning" text @click="testPrinter()">
+            Test connection
+          </v-btn>
 
-              <v-btn :disabled="invalid" color="blue darken-1" text @click="submit()">
-                {{ submitButtonText }}
-              </v-btn>
-            </v-row>
-          </v-container>
+          <v-btn :disabled="invalid" color="blue darken-1" text @click="submit()">
+            {{ submitButtonText }}
+          </v-btn>
         </v-card-actions>
-        <v-card-actions cols="12" md="6"> </v-card-actions>
       </v-card>
     </validation-observer>
   </BaseDialog>
@@ -131,7 +120,6 @@ import {
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "../../../shared/snackbar.composable";
-import { AddOrUpdatePrinterFormType } from "./update.printer.form.input.type";
 
 extend("printerUrlRules", {
   validate: (value: string) => {
