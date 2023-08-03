@@ -4,7 +4,6 @@ import { LoginDetails, Printer } from "@/models/printers/printer.model";
 import {
   CreatePrinter,
   getDefaultCreatePrinter,
-  HttpProtocol,
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
 import { newRandomNamePair } from "../shared/noun-adjectives.data";
@@ -15,10 +14,6 @@ export class PrintersService extends BaseService {
     patch: { printerURL: string; apiKey: string; printerName: string },
     formData: PreCreatePrinter
   ) {
-    const printerURL = new URL(patch.printerURL);
-    // formData.printerHostPort = parseInt(printerURL.port) || 80;
-    // formData.printerHostName = printerURL.hostname;
-    // formData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
     formData.printerName = patch.printerName || newRandomNamePair();
     formData.apiKey = patch.apiKey;
   }
@@ -52,12 +47,8 @@ export class PrintersService extends BaseService {
     // Inverse transformation
     const newFormData = getDefaultCreatePrinter();
 
-    const printerURL = new URL(printer.printerURL);
     newFormData.id = printer.id;
     newFormData.printerURL = printer.printerURL;
-    // newFormData.printerHostPort = parseInt(printerURL.port) || 80;
-    // newFormData.printerHostName = printerURL.hostname;
-    // newFormData.printerHostPrefix = printerURL.protocol.replace(":", "") as HttpProtocol;
     newFormData.printerName = printer.printerName || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
     newFormData.enabled = printer.enabled;
