@@ -2,7 +2,7 @@
   <div>
     <HomeToolbar />
 
-    <v-banner v-drop-upload="{ printers: selectedPrinters }" v-if="!gridStore.gridEditMode">
+    <v-banner v-if="!gridStore.gridEditMode" v-drop-upload="{ printers: selectedPrinters }">
       <v-row style="margin-bottom: -5px">
         <v-col style="padding: 5px 0 0 15px">
           <v-chip-group class="d-inline-block">

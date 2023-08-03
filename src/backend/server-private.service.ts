@@ -31,7 +31,16 @@ export class ServerPrivateService extends BaseService {
   }
 
   public static async downloadLogDump() {
-    const response = await this.postApi("api/server/dump-fdm-monster-logs");
-    await downloadFileByBlob(response as any as any, "logs-fdm-monster-" + Date.now() + ".zip");
+    const response = await axios.request<any>({
+      method: "POST",
+      url: `${apiBase}/api/server/dump-fdm-monster-logs`,
+      responseType: "blob",
+    });
+    await downloadFileByBlob((response as any).data, "logs-fdm-monster-" + Date.now() + ".zip");
+  }
+
+  public static async clearLogFilesOlderThanWeek() {
+    const path = `api/server/clear-outdated-fdm-monster-logs`;
+    return await this.deleteApi(path);
   }
 }

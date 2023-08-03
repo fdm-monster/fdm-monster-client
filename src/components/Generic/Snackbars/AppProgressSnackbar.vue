@@ -27,7 +27,7 @@
             <v-icon v-else-if="progress.timeoutAt">pause</v-icon>
             <v-icon v-else>hourglass_bottom</v-icon>
             {{ progress.title }}
-            {{ progress.completed ? 100 : progress.value }}%
+            {{ (progress.completed ? 100 : progress.value).toFixed(1) }}%
             <br />
             <v-progress-linear
               :key="progress.key"
