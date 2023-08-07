@@ -39,7 +39,7 @@
     "@fontsource/roboto": "^5.0.3",
     "@types/jest": "29.5.3",
     "@types/luxon": "3.3.1",
-    "@types/validator": "13.9.0",
+    "@types/validator": "13.11.1",
     "@typescript-eslint/eslint-plugin": "6.1.0",
     "@typescript-eslint/parser": "6.1.0",
     "@vue/cli-plugin-babel": "5.0.8",
