@@ -4,7 +4,7 @@ import Vue from "vue";
 export const apiBase = Vue.config.devtools ? "http://127.0.0.1:4000" : ""; // Same-origin policy
 
 export class BaseService {
-  static readonly UNWRAP = { unwrap: true };
+  private static readonly UNWRAP = { unwrap: true };
 
   protected static async getApi<R>(path: string, options = this.UNWRAP) {
     const response = await axios.get<R>(`${apiBase}/${path}`);

@@ -7,7 +7,7 @@ import { usePrinterStore } from "@/store/printer.store";
 import { apiBase } from "@/backend/base.service";
 import { useFloorStore } from "@/store/floor.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
-import { useTestPrinterStore } from "../store/test-printer.store";
+import { useTestPrinterStore } from "@/store/test-printer.store";
 import { useSnackbar } from "./snackbar.composable";
 
 enum IO_MESSAGES {
@@ -19,12 +19,12 @@ enum IO_MESSAGES {
 }
 
 export class SocketIoService {
-  socket: Socket;
-  printerStore = usePrinterStore();
-  floorStore = useFloorStore();
-  printerStateStore = usePrinterStateStore();
-  testPrinterStore = useTestPrinterStore();
-  snackbar = useSnackbar();
+  private socket: Socket;
+  private printerStore = usePrinterStore();
+  private floorStore = useFloorStore();
+  private printerStateStore = usePrinterStateStore();
+  private testPrinterStore = useTestPrinterStore();
+  private snackbar = useSnackbar();
 
   setupSocketConnection() {
     this.socket = io(apiBase);
