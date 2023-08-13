@@ -6,7 +6,7 @@ import {
   getDefaultCreatePrinter,
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
-import { newRandomNamePair } from "../shared/noun-adjectives.data";
+import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 import validator from "validator";
 
 export class PrintersService extends BaseService {
@@ -16,31 +16,6 @@ export class PrintersService extends BaseService {
   ) {
     formData.printerName = patch.printerName || newRandomNamePair();
     formData.apiKey = patch.apiKey;
-  }
-
-  static validHostname(hostname: string | undefined) {
-    if (hostname == undefined || hostname == "") return false;
-    return validator.isFQDN(hostname) || validator.isIP(hostname) || hostname === "localhost";
-  }
-
-  static validProtocol(protocol: string | undefined) {
-    if (protocol == undefined) return false;
-
-    return ["https", "http"].includes(protocol.toLowerCase());
-  }
-
-  static isValidPrinterUrl(printerUrl: string | undefined) {
-    if (printerUrl == undefined) return false;
-    try {
-      const ParsedUrl = new URL(printerUrl);
-
-      return (
-        this.validHostname(ParsedUrl.hostname) &&
-        this.validProtocol(ParsedUrl.protocol.replace(":", ""))
-      );
-    } catch {
-      return false;
-    }
   }
 
   static convertPrinterToCreateForm(printer: CreatePrinter) {
