@@ -36,18 +36,6 @@ export class PrintersService extends BaseService {
     window.open(printerURL);
   }
 
-  static convertCreateFormToPrinter(formData: PreCreatePrinter) {
-    const modifiedData: any = { ...formData };
-
-    const printerURL = new URL(formData.printerURL!);
-
-    delete modifiedData.printerHostName;
-    delete modifiedData.printerHostPrefix;
-    modifiedData.printerURL = printerURL;
-
-    return modifiedData as CreatePrinter;
-  }
-
   static async getPrinters() {
     const path = ServerApi.printerRoute;
 

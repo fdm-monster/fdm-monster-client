@@ -239,12 +239,11 @@ export default defineComponent({
       if (!(await this.isValid())) return;
       if (!this.formData) return;
 
-      const testPrinter = PrintersService.convertCreateFormToPrinter(this.formData);
-      if (!testPrinter) return;
+      const { correlationToken } = await this.testPrinterStore.createTestPrinter(
+        this.formData as CreatePrinter
+      );
       this.openTestPanel();
-
       this.testPrinterStore.clearEvents();
-      const { correlationToken } = await this.testPrinterStore.createTestPrinter(testPrinter);
       this.testPrinterStore.currentCorrelationToken = correlationToken;
     },
     async pasteFromClipboardOrField() {
@@ -285,7 +284,7 @@ export default defineComponent({
     async submit() {
       if (!(await this.isValid())) return;
       if (!this.formData) return;
-      const createPrinter = PrintersService.convertCreateFormToPrinter(this.formData);
+      const createPrinter = this.formData as CreatePrinter;
       if (this.isUpdating) {
         await this.updatePrinter(createPrinter);
       } else {
