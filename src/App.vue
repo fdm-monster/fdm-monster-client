@@ -85,55 +85,6 @@ export default defineComponent({
     await this.connectSocketIoClient();
 
     uploadProgressTest(false);
-
-    const testedUrls = [
-      "http://minipi:1234",
-      "http://minipi",
-      "https://pi.local/somepath",
-      "https://pi.local/somepath/",
-      "rack12.local",
-      "rack12.local:8080",
-      "octopi.local",
-      "https://octopi.local",
-      "https://octopi.local:8000",
-      "http://minipi:80",
-      "minipi:1234",
-      "minipi",
-      "http://localhost:1234",
-      "localhost:1234",
-      "localhost",
-      "127.0.0.1",
-      "127.0.0.2",
-      "192.168.178.2",
-      "https://my.printer.com",
-      "my.printer.com",
-      "asd",
-      "my.printer.com ", // space
-      "asd.",
-      "ftp://my.printer.com",
-      "http://127",
-      "http://localhost:wxyz/",
-      "http://localhost:wxyz",
-    ];
-    for (const testedUrl of testedUrls) {
-      console.log(
-        `Testing ${testedUrl}`,
-        isURL(testedUrl?.trimEnd(), {
-          protocols: ["http", "https"],
-          require_tld: false,
-          require_protocol: false,
-          require_host: true,
-          require_port: false,
-          require_valid_protocol: true,
-          allow_underscores: true,
-          allow_trailing_dot: false,
-          allow_protocol_relative_urls: false,
-          allow_fragments: false,
-          allow_query_components: false,
-          validate_length: true,
-        })
-      );
-    }
   },
   beforeDestroy() {
     this.socketIoClient?.disconnect();
