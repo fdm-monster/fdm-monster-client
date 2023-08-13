@@ -50,7 +50,7 @@
                 v-slot="{ errors }"
                 name="Printer URL"
                 persistent-hint
-                rules="required|printerUrlRules"
+                rules="required|url"
               >
                 <v-text-field
                   v-model="formData.printerURL"
@@ -127,7 +127,7 @@ import {
 } from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
-import { useSnackbar } from "../../../shared/snackbar.composable";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 extend("printerUrlRules", {
   validate: (value: string) => {
