@@ -87,7 +87,13 @@
           <em class="red--text">* indicates required field</em>
           <v-spacer></v-spacer>
           <v-btn text @click="closeDialog()">Close</v-btn>
-          <v-btn :disabled="invalid" color="gray" text @click="duplicatePrinter()">
+          <v-btn
+            v-if="isUpdating"
+            :disabled="invalid"
+            color="gray"
+            text
+            @click="duplicatePrinter()"
+          >
             Duplicate
           </v-btn>
           <v-btn :disabled="invalid" color="warning" text @click="testPrinter()">
@@ -106,7 +112,7 @@
 <script lang="ts">
 import { defineComponent, inject } from "vue";
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
-import { generateInitials } from "@/shared/noun-adjectives.data";
+import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
@@ -230,7 +236,6 @@ export default defineComponent({
       }
       await navigator.clipboard.writeText(connectionString);
     },
-
     openTestPanel() {
       this.showChecksPanel = true;
     },
@@ -293,6 +298,7 @@ export default defineComponent({
       this.closeDialog();
     },
     async duplicatePrinter() {
+      this.formData.printerName = newRandomNamePair();
       this.formData.apiKey = "";
       this.printersStore.updateDialogPrinter = undefined;
     },
