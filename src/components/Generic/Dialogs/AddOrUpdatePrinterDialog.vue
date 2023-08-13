@@ -56,7 +56,7 @@
                   v-model="formData.printerURL"
                   :error-messages="errors"
                   class="ma-1"
-                  hint="Examples: 'my.printer.com', 'http://localhost:wxyz/' or 'http://192.168.0.43:5000/'"
+                  hint="F.e. 'octopi.local' or 'https://my.printer.com'"
                   label="Printer URL"
                 ></v-text-field>
               </validation-provider>
@@ -113,7 +113,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from "vue";
-import { extend, ValidationObserver, ValidationProvider } from "vee-validate";
+import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -129,12 +129,6 @@ import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
-extend("printerUrlRules", {
-  validate: (value: string) => {
-    return PrintersService.isValidPrinterUrl(value);
-  },
-  message: "Please enter a valid IP address or URL",
-});
 const watchedId = "printerId";
 
 interface Data {

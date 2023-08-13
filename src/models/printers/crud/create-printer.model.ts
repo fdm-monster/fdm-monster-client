@@ -1,7 +1,5 @@
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 
-export type HttpProtocol = "http" | "https";
-
 export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
   id: undefined,
   printerName: newRandomNamePair(),
@@ -12,7 +10,6 @@ export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
 
 export interface PreCreatePrinter {
   id?: string; // Only in case of update
-
   enabled: boolean;
   printerName: string;
   printerURL: string | undefined;
