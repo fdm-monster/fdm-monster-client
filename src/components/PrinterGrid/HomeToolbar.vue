@@ -30,9 +30,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { usePrinterStore } from "../../store/printer.store";
-import { useGridStore } from "../../store/grid.store";
-import { useFloorStore } from "../../store/floor.store";
+import { usePrinterStore } from "@/store/printer.store";
+import { useGridStore } from "@/store/grid.store";
+import { useFloorStore } from "@/store/floor.store";
 
 export default defineComponent({
   name: "HomeToolbar",

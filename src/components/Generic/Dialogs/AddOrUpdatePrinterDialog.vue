@@ -1,11 +1,11 @@
 <template>
   <BaseDialog
     :id="dialog.dialogId"
-    :max-width="showChecksPanel ? '900px' : '600px'"
+    :max-width="showChecksPanel ? '900px' : '700px'"
     @escape="closeDialog()"
   >
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
-      <v-card>
+      <v-card class="pa-4">
         <v-card-title>
           <span class="text-h5">
             <v-avatar color="primary" size="56">
@@ -18,112 +18,84 @@
         <v-card-text>
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
-              <v-container>
-                <v-row>
-                  <v-col v-if="formData" cols="12" md="6">
-                    <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
-                      <v-text-field
-                        v-model="formData.printerName"
-                        :counter="printerNameRules.max"
-                        :error-messages="errors"
-                        autofocus
-                        label="Printer name*"
-                        required
-                      />
-                    </validation-provider>
+              <v-row v-if="formData">
+                <v-col>
+                  <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
+                    <v-text-field
+                      v-model="formData.printerName"
+                      :counter="printerNameRules.max"
+                      :error-messages="errors"
+                      autofocus
+                      class="ma-1"
+                      label="Printer name*"
+                      required
+                    />
+                  </validation-provider>
+                </v-col>
+                <v-col>
+                  <validation-provider v-slot="{ errors }" name="Enabled">
+                    <v-checkbox
+                      v-model="formData.enabled"
+                      :error-messages="errors"
+                      hint="Disabling makes the printer passive"
+                      label="Enabled*"
+                      persistent-hint
+                      required
+                    ></v-checkbox>
+                  </validation-provider>
+                </v-col>
+              </v-row>
 
-                    <validation-provider
-                      v-slot="{ errors }"
-                      name="Printer IP or HostName"
-                      rules="required"
-                    >
-                      <v-text-field
-                        v-model="formData.printerHostName"
-                        :error-messages="errors"
-                        hint="Examples: 'my.printer.com', 'localhost' or '192.x.x.x'"
-                        label="IP/Host*"
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-col>
-                  <v-col cols="12" md="6">
-                    <validation-provider v-slot="{ errors }" name="Enabled">
-                      <v-checkbox
-                        v-model="formData.enabled"
-                        :error-messages="errors"
-                        hint="Disabling makes the printer passive"
-                        label="Enabled*"
-                        persistent-hint
-                        required
-                      ></v-checkbox>
-                    </validation-provider>
+              <validation-provider
+                v-slot="{ errors }"
+                name="Printer URL"
+                persistent-hint
+                rules="required|url"
+              >
+                <v-text-field
+                  v-model="formData.printerURL"
+                  :error-messages="errors"
+                  class="ma-1"
+                  hint="F.e. 'octopi.local' or 'https://my.printer.com'"
+                  label="Printer URL"
+                ></v-text-field>
+              </validation-provider>
 
-                    <validation-provider
-                      v-slot="{ errors }"
-                      name="Host Port"
-                      rules="required|integer|max:65535"
-                    >
-                      <v-text-field
-                        v-model="formData.printerHostPort"
-                        :error-messages="errors"
-                        hint="Examples: '80', '443' or '5050'"
-                        label="Host Port*"
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-col>
-                  <v-col class="pb-5 pt-0" cols="12" md="12">
-                    <validation-provider v-slot="{ errors }" :rules="apiKeyRules" name="ApiKey">
-                      <v-text-field
-                        v-model="formData.apiKey"
-                        :counter="apiKeyRules.length"
-                        :error-messages="errors"
-                        hint="User or Application Key only (Global API key fails)"
-                        label="API Key*"
-                        persistent-hint
-                        required
-                      ></v-text-field>
-                    </validation-provider>
-                  </v-col>
-                </v-row>
-
-                <v-expansion-panels accordion>
-                  <v-expansion-panel>
-                    <v-expansion-panel-header>Advanced settings</v-expansion-panel-header>
-                    <v-expansion-panel-content>
-                      <v-col cols="12" md="12">
-                        <validation-provider v-slot="{ errors }" name="PrinterHostPrefix">
-                          <v-select
-                            v-model="formData.printerHostPrefix"
-                            :error-messages="errors"
-                            :items="['http', 'https']"
-                            label="Insecure/Secure HTTP"
-                            required
-                            value="http"
-                          ></v-select>
-                        </validation-provider>
-                      </v-col>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-                </v-expansion-panels>
-              </v-container>
+              <validation-provider
+                v-slot="{ errors }"
+                :rules="apiKeyRules"
+                name="ApiKey"
+                style="width: 100%"
+              >
+                <v-text-field
+                  v-model="formData.apiKey"
+                  :counter="apiKeyRules.length"
+                  :error-messages="errors"
+                  class="ma-1"
+                  hint="User or Application Key only (Global API key fails)"
+                  label="API Key*"
+                  persistent-hint
+                  required
+                ></v-text-field>
+              </validation-provider>
             </v-col>
 
             <PrinterChecksPanel v-if="showChecksPanel" :cols="4">
               <v-btn @click="showChecksPanel = false">Hide checks</v-btn>
             </PrinterChecksPanel>
           </v-row>
-          <v-row>
-            <v-col v-if="!isClipboardApiAvailable" cols="12">
-              Clipboard is not available. Copy or paste the following:
-              <br />
-              <v-textarea v-model="copyPasteConnectionString" rows="3"></v-textarea>
-            </v-col>
-          </v-row>
         </v-card-text>
         <v-card-actions>
           <em class="red--text">* indicates required field</em>
           <v-spacer></v-spacer>
           <v-btn text @click="closeDialog()">Close</v-btn>
-          <v-btn :disabled="invalid" color="gray" text @click="duplicatePrinter()">
+          <v-btn
+            v-if="isUpdating"
+            :disabled="invalid"
+            color="gray"
+            text
+            @click="duplicatePrinter()"
+          >
             Duplicate
           </v-btn>
           <v-btn :disabled="invalid" color="warning" text @click="testPrinter()">
@@ -155,7 +127,7 @@ import {
 } from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
-import { useSnackbar } from "../../../shared/snackbar.composable";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 const watchedId = "printerId";
 
@@ -260,7 +232,6 @@ export default defineComponent({
       }
       await navigator.clipboard.writeText(connectionString);
     },
-
     openTestPanel() {
       this.showChecksPanel = true;
     },
@@ -268,12 +239,12 @@ export default defineComponent({
       if (!(await this.isValid())) return;
       if (!this.formData) return;
 
-      const testPrinter = PrintersService.convertCreateFormToPrinter(this.formData);
-      if (!testPrinter) return;
+      this.testPrinterStore.clearEvents();
       this.openTestPanel();
 
-      this.testPrinterStore.clearEvents();
-      const { correlationToken } = await this.testPrinterStore.createTestPrinter(testPrinter);
+      const { correlationToken } = await this.testPrinterStore.createTestPrinter(
+        this.formData as CreatePrinter
+      );
       this.testPrinterStore.currentCorrelationToken = correlationToken;
     },
     async pasteFromClipboardOrField() {
@@ -314,7 +285,7 @@ export default defineComponent({
     async submit() {
       if (!(await this.isValid())) return;
       if (!this.formData) return;
-      const createPrinter = PrintersService.convertCreateFormToPrinter(this.formData);
+      const createPrinter = this.formData as CreatePrinter;
       if (this.isUpdating) {
         await this.updatePrinter(createPrinter);
       } else {
@@ -324,7 +295,6 @@ export default defineComponent({
     },
     async duplicatePrinter() {
       this.formData.printerName = newRandomNamePair();
-      this.formData.printerHostPort = undefined;
       this.printersStore.updateDialogPrinter = undefined;
     },
     closeDialog() {

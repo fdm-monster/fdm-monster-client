@@ -1,43 +1,25 @@
-import { newRandomNamePair } from "../../../shared/noun-adjectives.data";
-
-export type HttpProtocol = "http" | "https";
+import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 
 export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
   id: undefined,
   printerName: newRandomNamePair(),
-  printerHostPrefix: "http",
-  printerHostPort: 80,
-  printerHostName: "",
   apiKey: "",
+  printerURL: "",
   enabled: true,
 });
 
-/**
- * DEPRECATED over ZOD schema + infer
- */
 export interface PreCreatePrinter {
   id?: string; // Only in case of update
-
   enabled: boolean;
   printerName: string;
-
-  printerHostPrefix: HttpProtocol;
-  printerHostName: string;
-  printerHostPort: number | undefined;
-
+  printerURL: string | undefined;
   apiKey: string;
 }
 
-/**
- * DEPRECATED over ZOD schema + infer
- */
 export interface CreatePrinter {
   id?: string; // Only in case of update
-
   enabled: boolean;
   printerName: string;
-
   printerURL: string;
-
   apiKey: string;
 }

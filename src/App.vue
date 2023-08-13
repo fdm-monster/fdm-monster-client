@@ -43,6 +43,7 @@ import AlertErrorDialog from "./components/Generic/Snackbars/AlertErrorDialog.vu
 import AppErrorSnackbar from "./components/Generic/Snackbars/AppErrorSnackbar.vue";
 import AppInfoSnackbar from "./components/Generic/Snackbars/AppInfoSnackbar.vue";
 import { uploadProgressTest } from "./utils/test.util";
+import isURL from "validator/lib/isURL";
 
 interface Data {
   socketIoClient?: SocketIoService;

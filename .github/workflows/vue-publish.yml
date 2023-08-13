@@ -15,6 +15,7 @@ jobs:
 
       - run: yarn install --immutable --immutable-cache --check-cache
       - run: yarn run build
+      - run: yarn run test:unit
       - uses: JS-DevTools/npm-publish@v2
         if: ${{ github.repository.name == 'fdm-monster-client' }}
         with:
