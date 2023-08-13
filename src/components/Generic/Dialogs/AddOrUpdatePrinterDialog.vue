@@ -239,11 +239,12 @@ export default defineComponent({
       if (!(await this.isValid())) return;
       if (!this.formData) return;
 
+      this.testPrinterStore.clearEvents();
+      this.openTestPanel();
+
       const { correlationToken } = await this.testPrinterStore.createTestPrinter(
         this.formData as CreatePrinter
       );
-      this.openTestPanel();
-      this.testPrinterStore.clearEvents();
       this.testPrinterStore.currentCorrelationToken = correlationToken;
     },
     async pasteFromClipboardOrField() {
