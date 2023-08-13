@@ -295,7 +295,6 @@ export default defineComponent({
     },
     async duplicatePrinter() {
       this.formData.printerName = newRandomNamePair();
-      this.formData.apiKey = "";
       this.printersStore.updateDialogPrinter = undefined;
     },
     closeDialog() {
