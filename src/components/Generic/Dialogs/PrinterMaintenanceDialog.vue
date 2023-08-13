@@ -1,7 +1,7 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" :max-width="'600px'" @escape="closeDialog()">
+  <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog()">
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
-      <v-card>
+      <v-card class="pa-4">
         <v-card-title>
           <span class="text-h5"> Mark '{{ printer?.printerName }}' for maintenance </span>
         </v-card-title>

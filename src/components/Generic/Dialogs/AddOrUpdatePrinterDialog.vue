@@ -1,11 +1,11 @@
 <template>
   <BaseDialog
     :id="dialog.dialogId"
-    :max-width="showChecksPanel ? '900px' : '600px'"
+    :max-width="showChecksPanel ? '900px' : '700px'"
     @escape="closeDialog()"
   >
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
-      <v-card>
+      <v-card class="pa-4">
         <v-card-title>
           <span class="text-h5">
             <v-avatar color="primary" size="56">
@@ -18,19 +18,21 @@
         <v-card-text>
           <v-row>
             <v-col :cols="showChecksPanel ? 8 : 12">
-              <v-container>
-                <v-row class="ma-1" align-content="center" v-if="formData">
+              <v-row v-if="formData">
+                <v-col>
                   <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
                     <v-text-field
                       v-model="formData.printerName"
                       :counter="printerNameRules.max"
                       :error-messages="errors"
                       autofocus
+                      class="ma-1"
                       label="Printer name*"
                       required
                     />
                   </validation-provider>
-                  <v-spacer></v-spacer>
+                </v-col>
+                <v-col>
                   <validation-provider v-slot="{ errors }" name="Enabled">
                     <v-checkbox
                       v-model="formData.enabled"
@@ -41,41 +43,41 @@
                       required
                     ></v-checkbox>
                   </validation-provider>
-                </v-row>
+                </v-col>
+              </v-row>
 
-                <validation-provider
-                  v-slot="{ errors }"
-                  name="Printer URL"
-                  rules="required|printerUrlRules"
+              <validation-provider
+                v-slot="{ errors }"
+                name="Printer URL"
+                persistent-hint
+                rules="required|printerUrlRules"
+              >
+                <v-text-field
+                  v-model="formData.printerURL"
+                  :error-messages="errors"
+                  class="ma-1"
+                  hint="Examples: 'my.printer.com', 'http://localhost:wxyz/' or 'http://192.168.0.43:5000/'"
+                  label="Printer URL"
+                ></v-text-field>
+              </validation-provider>
+
+              <validation-provider
+                v-slot="{ errors }"
+                :rules="apiKeyRules"
+                name="ApiKey"
+                style="width: 100%"
+              >
+                <v-text-field
+                  v-model="formData.apiKey"
+                  :counter="apiKeyRules.length"
+                  :error-messages="errors"
+                  class="ma-1"
+                  hint="User or Application Key only (Global API key fails)"
+                  label="API Key*"
                   persistent-hint
-                >
-                  <v-text-field
-                    class="ma-1"
-                    v-model="formData.printerURL"
-                    :error-messages="errors"
-                    hint="Examples: 'my.printer.com', 'http://localhost:wxyz/' or 'http://192.168.0.43:5000/'"
-                    label="Printer URL"
-                  ></v-text-field>
-                </validation-provider>
-
-                <validation-provider
-                  v-slot="{ errors }"
-                  :rules="apiKeyRules"
-                  name="ApiKey"
-                  style="width: 100%"
-                >
-                  <v-text-field
-                    class="ma-1"
-                    v-model="formData.apiKey"
-                    :counter="apiKeyRules.length"
-                    :error-messages="errors"
-                    hint="User or Application Key only (Global API key fails)"
-                    label="API Key*"
-                    persistent-hint
-                    required
-                  ></v-text-field>
-                </validation-provider>
-              </v-container>
+                  required
+                ></v-text-field>
+              </validation-provider>
             </v-col>
 
             <PrinterChecksPanel v-if="showChecksPanel" :cols="4">
@@ -111,7 +113,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from "vue";
-import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
+import { extend, ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
