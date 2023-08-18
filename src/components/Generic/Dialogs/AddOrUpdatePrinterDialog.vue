@@ -57,7 +57,7 @@
                   :error-messages="errors"
                   class="ma-1"
                   hint="F.e. 'octopi.local' or 'https://my.printer.com'"
-                  label="Printer URL"
+                  label="Printer URL*"
                 ></v-text-field>
               </validation-provider>
 
