@@ -1,5 +1,5 @@
 export class ServerApi {
-  static base = "api";
+  static base = "/api";
   static amIAliveRoute = `${ServerApi.base}/amialive`;
   static printerRoute = `${ServerApi.base}/printer`;
   static printerBatchRoute = `${ServerApi.printerRoute}/batch`;

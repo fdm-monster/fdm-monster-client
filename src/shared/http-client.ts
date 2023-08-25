@@ -6,7 +6,8 @@ import Vue from "vue";
  * Made async for future possibility of getting base URI externally or asynchronously
  */
 export async function getBaseUri() {
-  return Vue.config.devtools ? "http://127.0.0.1:4000" : ""; // Same-origin policy
+  // return Vue.config.devtools ? "https://demo.fdm-monster.net" : "";
+  return Vue.config.devtools ? "http://localhost:4000/" : "/"; // Same-origin policy
 }
 
 export function getHttpClient(withAuth: boolean = true) {
