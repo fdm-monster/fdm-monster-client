@@ -23,6 +23,7 @@ import { useFeatureStore } from "@/store/features.store";
 import { useProfileStore } from "@/store/profile.store";
 import { useEventBus } from "@vueuse/core";
 import { SocketIoService } from "@/shared/socketio.service";
+import { sleep } from "@/utils/time.utils";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -75,11 +76,12 @@ onUnmounted(() => {
 });
 
 onBeforeMount(async () => {
-  const loginRequired = await authStore.checkLoginRequired();
+  // test slow page loading
+  // await sleep(2000);
 
   // If the route is wrong about login requirements, an error will be shown
+  const loginRequired = await authStore.checkLoginRequired();
   if (!loginRequired) {
-    console.log("No login required. Loading settings.");
     return await loadAppWithAuthentication();
   }
 

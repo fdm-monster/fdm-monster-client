@@ -32,7 +32,6 @@
                 type="password"
                 @keyup.enter="formIsDisabled || login()"
               ></v-text-field>
-              {{ formIsDisabled }}
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -79,11 +78,11 @@ async function login() {
 
   const routePath = route.query.redirect;
   if (!routePath) {
-    console.log("Redirecting to home");
+    console.debug("[LoginForm] Redirecting to home");
     await router.push({ name: "Home" });
     return;
   } else {
-    console.log("Redirecting to " + routePath);
+    console.debug("[LoginForm] Redirecting to ", routePath);
     await router.push({
       path: routePath as string,
     });

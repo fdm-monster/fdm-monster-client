@@ -133,15 +133,17 @@ const appRouter = new VueRouter({
 
 appRouter.beforeEach(async (to, from, next) => {
   // This prevents login page from being shown when already logged in
-  if (!to?.meta?.requiresAuth) {
-    console.log(`No auth required on route ${to.fullPath}`);
+  const authStore = useAuthStore();
+
+  // Note that we do not let loginRequired === null coerce to false as that means its not loaded
+  if (!to?.meta?.requiresAuth || authStore.loginRequired === false) {
+    console.debug(`No auth required on route ${to.fullPath}`);
     return next();
   }
 
-  const authStore = useAuthStore();
   authStore.loadTokens();
   if (!authStore.isLoggedIn) {
-    console.log("Not logged in, redirecting to login page");
+    console.debug("Not logged in, redirecting to login page");
     if (from.path == "/login") {
       throw new Error("Already on login page, cannot redirect");
     }

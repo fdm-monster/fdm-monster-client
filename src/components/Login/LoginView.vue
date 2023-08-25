@@ -31,15 +31,15 @@ const authStore = useAuthStore();
 
 onMounted(() => {
   authStore.loadTokens();
-  if (authStore.isLoggedIn) {
+  if (authStore.isLoggedIn || authStore.loginRequired === false) {
     const routePath = route.query.redirect;
 
     if (!routePath) {
-      console.log("View, Redirecting to home");
+      console.debug("LoginView, no query param, redirecting to home");
       router.push({ name: "Home" });
       return;
     } else {
-      console.log("View, Redirecting to", routePath);
+      console.debug("LoginView, query param, redirecting to", routePath);
       router.push({
         path: routePath as string,
       });

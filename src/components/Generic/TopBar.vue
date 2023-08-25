@@ -38,7 +38,7 @@
       </v-list>
     </v-menu>
 
-    <v-btn class="ml-2" color="secondary" @click="logout()">
+    <v-btn class="ml-2" color="secondary" @click="logout()" v-if="authStore.loginRequired === true">
       <v-icon class="mr-2">logout</v-icon>
       Logout
     </v-btn>
