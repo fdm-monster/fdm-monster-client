@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialogOpened" max-width="500" persistent>
+  <v-dialog v-model="dialogOpened" max-width="800" persistent>
     <v-card>
       <v-card-title class="text-h5"> Upload problem occurred</v-card-title>
       <v-layout justify-center>

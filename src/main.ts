@@ -2,8 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 
 // import "./registerServiceWorker";
-import router from "./router";
 import pinia from "./plugins/pinia";
+import VueRouter from "vue-router";
+import appRouter from "./router";
 import vuetify from "./plugins/vuetify";
 import axios from "axios";
 import VueAxios from "vue-axios";
@@ -29,7 +30,7 @@ Sentry.init({
   dsn: "https://f64683e8d1cb4ac291434993cff1bf9b@o4503975545733120.ingest.sentry.io/4503975546912768",
   integrations: [
     new BrowserTracing({
-      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      routingInstrumentation: Sentry.vueRouterInstrumentation(appRouter),
       // tracingOrigins: ["localhost", "monsterpi.local", /^\//],
     }),
     new Sentry.Replay(),
@@ -46,6 +47,7 @@ Sentry.init({
 });
 
 Vue.use(PiniaVuePlugin);
+Vue.use(VueRouter);
 Vue.component(BaseDialog.name, BaseDialog);
 
 Vue.config.errorHandler = (err) => {
@@ -59,8 +61,8 @@ Vue.config.errorHandler = (err) => {
 };
 
 new Vue({
-  router,
   pinia,
+  router: appRouter,
   vuetify,
   provide: {
     appConstants: generateAppConstants(),

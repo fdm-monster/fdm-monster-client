@@ -11,7 +11,7 @@
       </v-btn>
 
       <span class="pa-5">or</span>
-      <v-btn class="align-center" @click="goBack()" variant="elevated">
+      <v-btn class="align-center" variant="elevated" @click="goBack()">
         <v-icon class="mr-2">arrow_left</v-icon>
         Go back
       </v-btn>
@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+
 export default defineComponent({
   name: "NotFoundView",
   setup() {},
