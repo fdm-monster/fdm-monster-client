@@ -35,7 +35,7 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" disabled to="/">Register</v-btn>
+            <!--            <v-btn color="primary" disabled to="/">Register</v-btn>-->
             <v-spacer></v-spacer>
             <v-btn :disabled="formIsDisabled" color="primary" @click="login()"> Login</v-btn>
           </v-card-actions>
