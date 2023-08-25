@@ -15,6 +15,7 @@ export class ServerApi {
   static printerFilesPurgeRoute = `${ServerApi.printerFilesRoute}/purge`;
   static customGCodeRoute = `${ServerApi.base}/custom-gcode`;
   static userRoute = `${ServerApi.base}/user`;
+  static userProfileRoute = `${ServerApi.userRoute}/profile`;
   static settingsRoute = `${ServerApi.base}/settings`;
   static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
   static frontendSettingsRoute = `${ServerApi.serverSettingsRoute}/frontend`;
