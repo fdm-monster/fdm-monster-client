@@ -1,4 +1,3 @@
-import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import PrinterGridView from "@/components/PrinterGrid/PrinterGridView.vue";
 import PrintersView from "@/components/PrinterList/PrintersView.vue";
@@ -9,57 +8,99 @@ import OctoPrintSettings from "@/components/Settings/OctoPrintSettings.vue";
 import EmergencyCommands from "../components/Settings/EmergencyCommands.vue";
 import UserManagementSettings from "@/components/Settings/UserManagementSettings.vue";
 import FloorSettings from "@/components/Settings/FloorSettings.vue";
+import AccountSettings from "../components/Settings/AccountSettings.vue";
 import GridSettings from "../components/Settings/GridSettings.vue";
 import SoftwareUpgradeSettings from "../components/Settings/SoftwareUpgradeSettings.vue";
 import DiagnosticsSettings from "../components/Settings/DiagnosticsSettings.vue";
+import { useAuthStore } from "@/store/auth.store";
+import LoginView from "../components/Login/LoginView.vue";
+import NotFoundView from "../components/NotFound/NotFoundView.vue";
 
-Vue.use(VueRouter);
+const NeedsAuth = {
+  requiresAuth: true,
+};
+const NoAuth = {
+  requiresAuth: false,
+};
+
+export const RouteNames = {
+  Home: "Home",
+  Login: "Login",
+  Printers: "PrintersView",
+  Settings: "Settings",
+  PrintStatistics: "Print Statistics",
+  About: "About",
+  // This route can be used for routes that are not found or data that cannot be found (by routing)
+  NotFound: "NotFound",
+};
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
+    name: RouteNames.Home,
+    meta: NeedsAuth,
     component: PrinterGridView,
+  },
+  {
+    path: "/login",
+    name: RouteNames.Login,
+    meta: NoAuth,
+    component: LoginView,
   },
   {
     path: "/printers",
     name: "PrintersView",
+    meta: NeedsAuth,
     component: PrintersView,
   },
   {
     path: "/settings",
     component: Settings,
+    meta: NeedsAuth,
     children: [
       {
         path: "",
+        meta: NeedsAuth,
         redirect: "grid",
       },
       {
+        path: "account",
+        meta: NeedsAuth,
+        component: AccountSettings,
+      },
+      {
         path: "grid",
+        meta: NeedsAuth,
         component: GridSettings,
       },
       {
         path: "floors",
+        meta: NeedsAuth,
         component: FloorSettings,
       },
       {
         path: "user-management",
+        meta: NeedsAuth,
         component: UserManagementSettings,
       },
       {
         path: "octoprint",
+        meta: NeedsAuth,
         component: OctoPrintSettings,
       },
       {
         path: "emergency-commands",
+        meta: NeedsAuth,
         component: EmergencyCommands,
       },
       {
         path: "software-upgrade",
+        meta: NeedsAuth,
         component: SoftwareUpgradeSettings,
       },
       {
         path: "diagnostics",
+        meta: NeedsAuth,
         component: DiagnosticsSettings,
       },
     ],
@@ -67,24 +108,50 @@ const routes: Array<RouteConfig> = [
   {
     path: "/statistics",
     name: "Print Statistics",
+    meta: NeedsAuth,
     component: PrintStatisticsView,
   },
   {
     path: "/about",
     name: "About",
+    meta: NeedsAuth,
     component: AboutHelp,
   },
   {
     path: "*",
     name: "NotFound",
-    component: () => import(/* webpackChunkName: "about" */ "../views/NotFoundView.vue"),
+    meta: NoAuth,
+    component: NotFoundView,
   },
 ];
 
-const router = new VueRouter({
+const appRouter = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
 });
 
-export default router;
+appRouter.beforeEach(async (to, from, next) => {
+  // This prevents login page from being shown when already logged in
+  if (!to?.meta?.requiresAuth) {
+    console.log(`No auth required on route ${to.fullPath}`);
+    return next();
+  }
+
+  const authStore = useAuthStore();
+  authStore.loadTokens();
+  if (!authStore.isLoggedIn) {
+    console.log("Not logged in, redirecting to login page");
+    if (from.path == "/login") {
+      throw new Error("Already on login page, cannot redirect");
+    }
+    return next({
+      path: "/login",
+      query: { redirect: to.fullPath },
+    });
+  }
+
+  return next();
+});
+
+export default appRouter;

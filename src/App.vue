@@ -5,12 +5,15 @@
     <AppProgressSnackbar />
     <AlertErrorDialog />
 
-    <NavigationDrawer />
-    <TopBar />
+    <NavigationDrawer v-if="authStore.isLoggedIn || !authStore.loginRequired" />
+    <TopBar v-if="authStore.isLoggedIn || !authStore.loginRequired" />
 
-    <v-main>
-      <router-view />
-    </v-main>
+    <AppLoader>
+      <v-main>
+        <router-view />
+      </v-main>
+    </AppLoader>
+
     <AddOrUpdatePrinterDialog />
     <AddOrUpdateFloorDialog />
     <PrinterMaintenanceDialog />
@@ -31,23 +34,20 @@ import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMainte
 import { useUploadsStore } from "@/store/uploads.store";
 import { usePrinterStore } from "./store/printer.store";
 import { useSettingsStore } from "./store/settings.store";
-import { SocketIoService } from "./shared/socketio.service";
 import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
 import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
 import { useFeatureStore } from "./store/features.store";
-import { setSentryEnabled } from "./utils/sentry.util";
 import { useSnackbar } from "./shared/snackbar.composable";
 import AppProgressSnackbar from "./components/Generic/Snackbars/AppProgressSnackbar.vue";
 import AlertErrorDialog from "./components/Generic/Snackbars/AlertErrorDialog.vue";
 import AppErrorSnackbar from "./components/Generic/Snackbars/AppErrorSnackbar.vue";
 import AppInfoSnackbar from "./components/Generic/Snackbars/AppInfoSnackbar.vue";
 import { uploadProgressTest } from "./utils/test.util";
-import isURL from "validator/lib/isURL";
+import { useAuthStore } from "./store/auth.store";
+import AppLoader from "./AppLoader.vue";
 
-interface Data {
-  socketIoClient?: SocketIoService;
-}
+interface Data {}
 
 export default defineComponent({
   name: "AppView",
@@ -56,6 +56,7 @@ export default defineComponent({
     AppErrorSnackbar,
     AlertErrorDialog,
     AppProgressSnackbar,
+    AppLoader,
     YamlImportExportDialog,
     TopBar,
     NavigationDrawer,
@@ -73,22 +74,17 @@ export default defineComponent({
       featureStore: useFeatureStore(),
       dialogsStore: useDialogsStore(),
       snackbar: useSnackbar(),
+      authStore: useAuthStore(),
     };
   },
   async mounted() {
-    console.debug("App.vue mounted");
-    await this.settingsStore.loadSettings();
-    const enabled = this.settingsStore.serverSettings?.sentryDiagnosticsEnabled;
-    setSentryEnabled(!!enabled);
-
-    await this.featureStore.loadFeatures();
-    await this.connectSocketIoClient();
+    console.debug(
+      `App.vue mounted. Logged in: ${this.authStore.isLoggedIn}, Expired: ${this.authStore.isLoginExpired}`
+    );
 
     uploadProgressTest(false);
   },
-  beforeDestroy() {
-    this.socketIoClient?.disconnect();
-  },
+  beforeDestroy() {},
   props: {},
   data: (): Data => ({
     socketIoClient: undefined,
@@ -98,12 +94,7 @@ export default defineComponent({
       return this.uploadsStore.queuedUploads;
     },
   },
-  methods: {
-    async connectSocketIoClient() {
-      this.socketIoClient = new SocketIoService();
-      this.socketIoClient.setupSocketConnection();
-    },
-  },
+  methods: {},
   watch: {
     async queuedUploads() {
       await this.uploadsStore.handleNextUpload();

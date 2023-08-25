@@ -96,6 +96,7 @@ export default defineComponent({
     };
   },
   setup() {
+    console.log("Setup grid");
     return {
       printerStore: usePrinterStore(),
       floorStore: useFloorStore(),

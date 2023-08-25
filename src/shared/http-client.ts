@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "@/store/auth.store";
 import Vue from "vue";
 
 /**
@@ -11,6 +12,12 @@ export async function getBaseUri() {
 export function getHttpClient(withAuth: boolean = true) {
   axios.interceptors.request.use(async (config) => {
     config.baseURL = await getBaseUri();
+    if (withAuth) {
+      const auth = useAuthStore();
+      if (auth.isLoggedIn) {
+        config.headers.Authorization = `Bearer ${auth.token}`;
+      }
+    }
     return config;
   });
   return axios;

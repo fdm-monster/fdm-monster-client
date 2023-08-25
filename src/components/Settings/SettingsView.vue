@@ -65,6 +65,11 @@ export default defineComponent({
         icon: "group",
         path: "/settings/user-management",
       },
+      {
+        title: "Account Settings",
+        icon: "account_circle",
+        path: "/settings/account",
+      },
       { title: "OctoPrint Settings", icon: "image", path: "/settings/octoprint" },
       { title: "Emergency Commands", icon: "warning", path: "/settings/emergency-commands" },
       { title: "Software Upgrade", icon: "upgrade", path: "/settings/software-upgrade" },
