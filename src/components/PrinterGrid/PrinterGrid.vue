@@ -28,7 +28,10 @@
         <v-col>
           <div>
             Clear printers by clicking on
-            <strong> <v-icon>disabled_visible</v-icon> Click to clear </strong>
+            <strong>
+              <v-icon>disabled_visible</v-icon>
+              Click to clear
+            </strong>
           </div>
         </v-col>
       </v-row>

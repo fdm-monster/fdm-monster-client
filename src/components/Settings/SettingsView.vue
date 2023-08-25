@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { usePrinterStore } from "../../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 
 interface Data {
   items: any[];

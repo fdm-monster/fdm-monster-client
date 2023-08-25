@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
-import { Printer } from "../models/printers/printer.model";
+import { Printer } from "@/models/printers/printer.model";
 import {
   PrinterEventsById,
   SocketStateById,
-} from "../models/socketio-messages/socketio-message.model";
+} from "@/models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "./printer.store";
-import { PrinterFileService } from "../backend";
-import { ById } from "../utils/types/byid.utils";
+import { PrinterFileService } from "@/backend";
+import { ById } from "@/utils/types/byid.utils";
 import { useSettingsStore } from "./settings.store";
-import { CurrentOrHistoryPayload } from "../models/printers/printer-current-job.model";
+import { CurrentOrHistoryPayload } from "@/models/printers/printer-current-job.model";
 
 interface State {
   printerIds: string[];
