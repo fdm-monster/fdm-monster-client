@@ -52,22 +52,17 @@ export class PrinterFileService extends BaseService {
     }
     formData.append("files[0]", file);
 
-    return this.postUploadApi(
-      path,
-      formData,
-      {
-        onUploadProgress: (progress) => {
-          const snackbar = useSnackbar();
-          snackbar.openProgressMessage(
-            "single-file-upload",
-            `Uploading file ${file.name}`,
-            (100 * progress.loaded) / progress.total!,
-            false
-          );
-        },
+    return this.postUploadApi(path, formData, {
+      onUploadProgress: (progress) => {
+        const snackbar = useSnackbar();
+        snackbar.openProgressMessage(
+          "single-file-upload",
+          `Uploading file ${file.name}`,
+          (100 * progress.loaded) / progress.total!,
+          false
+        );
       },
-      { unwrap: false }
-    );
+    });
   }
 
   static async clearFiles(printerId: string) {

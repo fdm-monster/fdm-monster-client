@@ -1,8 +1,9 @@
-import { apiBase, BaseService } from "@/backend/base.service";
+import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
-import { ExportYamlModel } from "../models/server/export-yaml.model";
-import { downloadFileByBlob } from "../utils/download-file.util";
+import { ExportYamlModel } from "@/models/server/export-yaml.model";
+import { downloadFileByBlob } from "@/utils/download-file.util";
 import axios from "axios";
+import { getBaseUri } from "@/shared/http-client";
 
 export class ServerPrivateService extends BaseService {
   public static async restartServer() {
@@ -12,6 +13,7 @@ export class ServerPrivateService extends BaseService {
   }
 
   public static async downloadYamlExport(input: ExportYamlModel) {
+    const apiBase = await getBaseUri();
     const response = await axios.request<any>({
       method: "POST",
       url: `${apiBase}/api/server/export-printers-floors-yaml`,
@@ -31,6 +33,7 @@ export class ServerPrivateService extends BaseService {
   }
 
   public static async downloadLogDump() {
+    const apiBase = await getBaseUri();
     const response = await axios.request<any>({
       method: "POST",
       url: `${apiBase}/api/server/dump-fdm-monster-logs`,

@@ -11,7 +11,6 @@ import { WhitelistSettings } from "@/models/settings/serverSettings";
 export class SettingsService extends BaseService {
   static async getServerSettings() {
     const path = ServerApi.serverSettingsRoute;
-
     return (await this.getApi(path)) as SettingsDto;
   }
 

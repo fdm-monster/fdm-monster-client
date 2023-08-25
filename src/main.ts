@@ -3,17 +3,18 @@ import App from "./App.vue";
 
 // import "./registerServiceWorker";
 import router from "./router";
+import pinia from "./plugins/pinia";
 import vuetify from "./plugins/vuetify";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import { configureVeeValidate } from "@/plugins/veevalidate";
 import { generateAppConstants } from "@/shared/app.constants";
 import { registerFileDropDirective } from "@/directives/file-upload.directive";
-import { createPinia, PiniaVuePlugin } from "pinia";
-import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
+import { PiniaVuePlugin } from "pinia";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
 import * as Sentry from "@sentry/vue";
 import { BrowserTracing } from "@sentry/vue";
+import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { useSnackbar } from "./shared/snackbar.composable";
 
 Vue.config.productionTip = false;
@@ -51,22 +52,23 @@ Vue.config.errorHandler = (err) => {
   console.error(`An error was caught [${err.name}]:\n ${err.message}\n ${err.stack}`);
   useSnackbar().openErrorMessage({
     title: "An error occurred",
-    subtitle: err.message?.length <= 18 ? err.message : err.message.slice(0, 20) + "...",
-    timeout: 7000,
+    subtitle: err.message?.length <= 35 ? err.message : err.message.slice(0, 23) + "...",
+    fullSubtitle: err.message,
+    timeout: 5000,
   });
 };
 
 new Vue({
   router,
+  pinia,
   vuetify,
   provide: {
     appConstants: generateAppConstants(),
   },
-  pinia: createPinia(),
   render: (h) => h(App),
 }).$mount("#app");
 
-console.log(
+console.debug(
   "App Build UTC",
   document.documentElement.dataset.buildTimestampUtc,
   process.env.NODE_ENV

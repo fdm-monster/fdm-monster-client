@@ -4,11 +4,11 @@ import {
   SocketIoUpdateMessage,
 } from "@/models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "@/store/printer.store";
-import { apiBase } from "@/backend/base.service";
 import { useFloorStore } from "@/store/floor.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { useTestPrinterStore } from "@/store/test-printer.store";
 import { useSnackbar } from "./snackbar.composable";
+import { getBaseUri } from "@/shared/http-client";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -26,7 +26,8 @@ export class SocketIoService {
   private testPrinterStore = useTestPrinterStore();
   private snackbar = useSnackbar();
 
-  setupSocketConnection() {
+  async setupSocketConnection() {
+    const apiBase = await getBaseUri();
     this.socket = io(apiBase);
     this.socket.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
     this.socket.on(IO_MESSAGES.TestPrinterState, (data) => {
