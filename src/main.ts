@@ -13,6 +13,7 @@ import * as Sentry from "@sentry/vue";
 import { BrowserTracing } from "@sentry/vue";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { useSnackbar } from "./shared/snackbar.composable";
+import { AxiosError } from "axios";
 
 Vue.config.productionTip = false;
 Vue.config.silent = true;
@@ -49,11 +50,22 @@ Vue.use(VueRouter);
 Vue.component(BaseDialog.name, BaseDialog);
 
 Vue.config.errorHandler = (err) => {
-  console.error(`An error was caught [${err.name}]:\n ${err.message}\n ${err.stack}`);
+  if (err instanceof AxiosError) {
+    console.error(
+      `An error was caught [${err.name}]:\n ${err.message}\n ${err.config?.url}\n${err.stack}`
+    );
+    useSnackbar().openErrorMessage({
+      title: "An error occurred",
+      subtitle: err.message,
+      timeout: 5000,
+    });
+    return;
+  } else {
+    console.error(`An error was caught [${err.name}]:\n ${err.message}\n ${err.stack}`);
+  }
   useSnackbar().openErrorMessage({
     title: "An error occurred",
-    subtitle: err.message?.length <= 35 ? err.message : err.message.slice(0, 23) + "...",
-    fullSubtitle: err.message,
+    subtitle: err.message,
     timeout: 5000,
   });
 };

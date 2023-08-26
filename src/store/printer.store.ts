@@ -97,6 +97,10 @@ export const usePrinterStore = defineStore("Printers", {
       return data;
     },
     setPrinters(printers: Printer[]) {
+      if (!printers?.length) {
+        this.printers = [];
+        return;
+      }
       const viewedPrinterId = this.sideNavPrinter?.id;
       if (viewedPrinterId) {
         this.sideNavPrinter = printers.find((p) => p.id === viewedPrinterId);

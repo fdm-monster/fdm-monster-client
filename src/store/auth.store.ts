@@ -3,15 +3,14 @@ import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
 import { AuthService, type Tokens } from "@/backend/auth.service";
 import { AxiosError, HttpStatusCode } from "axios";
-import { RemovableRef, useLocalStorage } from "@vueuse/core";
 
 export interface IClaims extends JwtPayload {
   name: string;
 }
 
 export interface AuthState {
-  refreshToken: RemovableRef<string> | null;
-  token: RemovableRef<string> | null;
+  refreshToken: string | null;
+  token: string | null;
   loginRequired: boolean | null;
 }
 
@@ -46,16 +45,15 @@ export const useAuthStore = defineStore("auth", {
     },
     logout() {
       console.debug("Logging out");
-      this.setIdToken(null);
-      this.setRefreshToken(null);
+      this.setIdToken(undefined);
+      this.setRefreshToken(undefined);
     },
     async verifyOrRefreshLoginOnce() {
       try {
         await AuthService.verifyLogin();
         return true;
       } catch (e1) {
-        const canRefresh = this.hasAuthToken && this.isLoginExpired && this.hasRefreshToken;
-        if (canRefresh) {
+        if (this.hasRefreshToken) {
           try {
             await this.refreshLoginToken();
             await AuthService.verifyLogin();
@@ -69,10 +67,8 @@ export const useAuthStore = defineStore("auth", {
       }
     },
     loadTokens() {
-      const tokenRef = useLocalStorage<string | null>("token", null);
-      const refreshTokenRef = useLocalStorage<string | null>("refreshToken", null);
-      this.token = tokenRef.value;
-      this.refreshToken = refreshTokenRef.value;
+      this.token = localStorage.getItem("token");
+      this.refreshToken = localStorage.getItem("refreshToken");
     },
     async refreshLoginToken() {
       if (!this.refreshToken) {
@@ -88,7 +84,7 @@ export const useAuthStore = defineStore("auth", {
         })
         .catch((e: AxiosError) => {
           if (e.response?.status == HttpStatusCode.Unauthorized) {
-            this.setTokens(null, null);
+            this.setTokens(undefined, undefined);
             console.error(
               "refreshLoginToken: authentication error, failed to refresh tokens",
               e.response?.status
@@ -102,23 +98,25 @@ export const useAuthStore = defineStore("auth", {
           throw e;
         });
     },
-    setTokens(token: string | null, refreshToken: string | null) {
+    setTokens(token?: string, refreshToken?: string) {
       this.setIdToken(token);
       this.setRefreshToken(refreshToken);
     },
-    setIdToken(token: string | null) {
-      if (token == null) {
+    setIdToken(token?: string) {
+      if (!token?.length) {
         localStorage.removeItem("token");
+      } else {
+        localStorage.setItem("token", token as string);
+        this.token = token;
       }
-      localStorage.setItem("token", token as string);
-      this.token = token;
     },
-    setRefreshToken(refreshToken: string | null) {
-      if (refreshToken == null) {
+    setRefreshToken(refreshToken?: string) {
+      if (!refreshToken?.length) {
         localStorage.removeItem("refreshToken");
+      } else {
+        localStorage.setItem("refreshToken", refreshToken as string);
+        this.refreshToken = refreshToken;
       }
-      localStorage.setItem("refreshToken", refreshToken as string);
-      this.refreshToken = refreshToken;
     },
   },
   getters: {

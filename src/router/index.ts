@@ -15,7 +15,7 @@ import DiagnosticsSettings from "../components/Settings/DiagnosticsSettings.vue"
 import { useAuthStore } from "@/store/auth.store";
 import LoginView from "../components/Login/LoginView.vue";
 import NotFoundView from "../components/NotFound/NotFoundView.vue";
-import LackingPermission from "@/components/Login/LackingPermission.vue";
+import PermissionDenied from "@/components/Login/PermissionDenied.vue";
 import { RouteNames } from "@/router/route-names";
 
 const NeedsAuth = {
@@ -109,10 +109,10 @@ const routes: Array<RouteConfig> = [
     component: AboutHelp,
   },
   {
-    path: "/lacking-permission",
-    name: RouteNames.LackingPermission,
+    path: "/permission-denied",
+    name: RouteNames.PermissionDenied,
     meta: NeedsAuth,
-    component: LackingPermission,
+    component: PermissionDenied,
   },
   {
     path: "*",

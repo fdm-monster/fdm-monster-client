@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "@/store/auth.store";
 import { useRoute, useRouter } from "vue-router/composables";
 import { useEventBus } from "@vueuse/core";
@@ -99,6 +99,30 @@ const formIsDisabled = computed(() => {
   return (username.value ?? "")?.length < 3 || (password.value ?? "").length < 3;
 });
 
+onMounted(async () => {
+  authStore.loadTokens();
+  await authStore.checkLoginRequired();
+  if (!authStore.hasRefreshToken) {
+    return;
+  }
+
+  const success = await authStore.verifyOrRefreshLoginOnce();
+  if (success || authStore.loginRequired === false) {
+    const routePath = route.query.redirect;
+
+    if (!routePath) {
+      console.debug("LoginView, no query param, redirecting to home");
+      await router.push({ name: "Home" });
+      return;
+    } else {
+      console.debug("LoginView, query param, redirecting to", routePath);
+      await router.push({
+        path: routePath as string,
+      });
+      return;
+    }
+  }
+});
 async function login() {
   try {
     loading.value = true;
@@ -113,7 +137,7 @@ async function login() {
 
     snackbar.openErrorMessage({
       title: "Error logging in",
-      fullSubtitle: "Please test your connection and try again.",
+      subtitle: "Please test your connection and try again.",
     });
 
     return;

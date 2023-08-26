@@ -5,6 +5,6 @@ export const RouteNames = {
   Settings: "Settings",
   PrintStatistics: "Print Statistics",
   About: "About",
-  LackingPermission: "LackingPermission",
+  PermissionDenied: "PermissionDenied",
   NotFound: "NotFound",
 };

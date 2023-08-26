@@ -57,13 +57,6 @@ async function routeToLoginSafely() {
 
 async function loadAppWithAuthentication() {
   try {
-    authStore.loadTokens();
-    const success = await authStore.verifyOrRefreshLoginOnce();
-    if (!success) {
-      // This should not happen, but if it does, go to login
-      return routeToLoginSafely();
-    }
-
     await settingsStore.loadSettings();
     await featureStore.loadFeatures();
     await profileStore.getProfile();
@@ -74,8 +67,7 @@ async function loadAppWithAuthentication() {
     console.log("Error when loading settings.", e);
     snackbar.openErrorMessage({
       title: "Error",
-      fullSubtitle: "Error when verifying login and loading settings.",
-      subtitle: "Error when verifying login.",
+      subtitle: "Error when verifying login and loading settings.",
     });
   }
 
@@ -84,20 +76,42 @@ async function loadAppWithAuthentication() {
   setOverlay(false);
 }
 
-const authFailKey = useEventBus("auth:failure");
-authFailKey.on(() => {
-  router.push({ name: RouteNames.Login });
-  setOverlay(true);
+// In use (shared/http-client.ts)
+const authPermissionDeniedKey = useEventBus("auth:permission-denied");
+authPermissionDeniedKey.on(async (event) => {
+  console.log("[AppLoader] Permission denied, going to permission denied page");
+  setOverlay(true, "Permission denied");
+  await router.push({
+    name: RouteNames.PermissionDenied,
+    query: {
+      roles: event?.roles,
+      page: router.currentRoute.name,
+      permissions: event?.permissions,
+      error: event?.error,
+      url: event?.url,
+    },
+  });
+  setOverlay(false);
 });
+
+// Currently unused
+const authFailKey = useEventBus("auth:failure");
+authFailKey.on(async () => {
+  console.debug("[AppLoader] Event received: 'auth:failure', going back to login");
+  setOverlay(true, "Authentication failed, going back to login");
+  await router.push({ name: RouteNames.Login });
+  setOverlay(false);
+});
+
+// In use (components/Login/LoginForm.vue)
 const loginEventKey = useEventBus("auth:login");
-loginEventKey.on(() => {
-  setOverlay(true);
-  loadAppWithAuthentication();
+loginEventKey.on(async () => {
+  console.debug("[AppLoader] Event received: 'auth:login', loading app");
+  setOverlay(true, "Loading app");
+  await loadAppWithAuthentication();
 });
 
 onUnmounted(() => {
-  authFailKey.reset();
-  loginEventKey.reset();
   if (socketIoClient) {
     socketIoClient.disconnect();
   }
@@ -113,14 +127,18 @@ onBeforeMount(async () => {
   }
 
   // Router will have tackled routing already
+  console.debug("[AppLoader] Checking if tokens are present");
   if (!authStore.hasAuthToken && !authStore.hasRefreshToken) {
+    console.debug("[AppLoader] No tokens present, hiding overlay as router will have handled it");
     return setOverlay(false);
   }
 
   // What if refreshToken is not present or not valid?
   setOverlay(true, "Refreshing login");
+  console.debug("[AppLoader] Verifying or refreshing login once");
   const refreshSuccess = await authStore.verifyOrRefreshLoginOnce();
   if (!refreshSuccess) {
+    console.debug("[AppLoader] No success refreshing");
     setOverlay(true, "Login expired, going back to login");
     await sleep(500);
     if (router.currentRoute.name !== RouteNames.Login) {
@@ -131,6 +149,7 @@ onBeforeMount(async () => {
     return;
   }
 
+  console.debug("[AppLoader] Loading app");
   await loadAppWithAuthentication();
 });
 </script>
