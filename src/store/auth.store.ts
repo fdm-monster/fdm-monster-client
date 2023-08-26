@@ -2,16 +2,15 @@ import { defineStore } from "pinia";
 import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
 import { AuthService, type Tokens } from "@/backend/auth.service";
-import { AxiosError } from "axios";
-import { RemovableRef, useLocalStorage } from "@vueuse/core";
+import { AxiosError, HttpStatusCode } from "axios";
 
 export interface IClaims extends JwtPayload {
   name: string;
 }
 
 export interface AuthState {
-  refreshToken: RemovableRef<string> | null;
-  token: RemovableRef<string> | null;
+  refreshToken: string | null;
+  token: string | null;
   loginRequired: boolean | null;
 }
 
@@ -29,7 +28,7 @@ export const useAuthStore = defineStore("auth", {
           return this.loginRequired;
         })
         .catch((e: AxiosError) => {
-          console.error("authRequired: failed to check login required", e.code);
+          console.error("authRequired: failed to check login required", e.response?.status);
           throw e;
         });
     },
@@ -40,52 +39,84 @@ export const useAuthStore = defineStore("auth", {
           return response.data;
         })
         .catch((e: AxiosError) => {
-          console.error("login: failed to login", e.code);
+          console.error("login: failed to login", e.response?.status);
           throw e;
         });
     },
     logout() {
-      this.setIdToken(null);
-      this.setRefreshToken(null);
-      console.warn("Logged out");
+      console.debug("Logging out");
+      this.setIdToken(undefined);
+      this.setRefreshToken(undefined);
     },
-    async verifyLogin() {
-      return await AuthService.verifyLogin();
+    async verifyOrRefreshLoginOnce() {
+      try {
+        await AuthService.verifyLogin();
+        return true;
+      } catch (e1) {
+        if (this.hasRefreshToken) {
+          try {
+            await this.refreshLoginToken();
+            await AuthService.verifyLogin();
+          } catch (e2) {
+            return false;
+          }
+          return true;
+        } else {
+          return false;
+        }
+      }
     },
     loadTokens() {
-      const tokenRef = useLocalStorage<string | null>("token", null);
-      const refreshTokenRef = useLocalStorage<string | null>("refreshToken", null);
-      this.token = tokenRef.value;
-      this.refreshToken = refreshTokenRef.value;
+      this.token = localStorage.getItem("token");
+      this.refreshToken = localStorage.getItem("refreshToken");
     },
-    async refreshTokens() {
-      if (!this.refreshToken) return;
+    async refreshLoginToken() {
+      if (!this.refreshToken) {
+        throw new Error("refreshLoginToken: no refresh token");
+      }
       return await AuthService.refreshLogin(this.refreshToken)
         .then((response) => {
-          this.setIdToken(response.data.token);
+          if (response?.data?.token) {
+            this.setIdToken(response.data.token);
+          }
+
+          return true;
         })
         .catch((e: AxiosError) => {
-          console.error("refreshTokens: failed to refresh tokens", e.code);
+          if (e.response?.status == HttpStatusCode.Unauthorized) {
+            this.setTokens(undefined, undefined);
+            console.error(
+              "refreshLoginToken: authentication error, failed to refresh tokens",
+              e.response?.status
+            );
+          } else {
+            console.error(
+              "refreshLoginToken: unknown error, failed to refresh tokens",
+              e.response?.status
+            );
+          }
           throw e;
         });
     },
-    setTokens(token: string, refreshToken: string) {
+    setTokens(token?: string, refreshToken?: string) {
       this.setIdToken(token);
       this.setRefreshToken(refreshToken);
     },
-    setIdToken(token: string | null) {
-      if (token == null) {
+    setIdToken(token?: string) {
+      if (!token?.length) {
         localStorage.removeItem("token");
+      } else {
+        localStorage.setItem("token", token as string);
+        this.token = token;
       }
-      localStorage.setItem("token", token as string);
-      this.token = token;
     },
-    setRefreshToken(refreshToken: string | null) {
-      if (refreshToken == null) {
+    setRefreshToken(refreshToken?: string) {
+      if (!refreshToken?.length) {
         localStorage.removeItem("refreshToken");
+      } else {
+        localStorage.setItem("refreshToken", refreshToken as string);
+        this.refreshToken = refreshToken;
       }
-      localStorage.setItem("refreshToken", refreshToken as string);
-      this.refreshToken = refreshToken;
     },
   },
   getters: {
@@ -97,7 +128,7 @@ export const useAuthStore = defineStore("auth", {
       if (!claims?.exp) return false;
       return claims.exp < Date.now() / 1000;
     },
-    isLoggedIn() {
+    hasAuthToken() {
       return !!this.tokenClaims;
     },
     tokenClaims(): IClaims | null {

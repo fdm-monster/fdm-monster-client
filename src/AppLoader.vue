@@ -1,21 +1,21 @@
 <template>
   <span>
-    <v-overlay
-      v-model="overlay"
-      class="align-center justify-center"
-      opacity="0.98"
-      style="z-index: 7"
-    >
-      <GridLoader :size="20" color="#a70015" />
+    <v-overlay v-model="overlay" opacity="0.98" style="z-index: 7">
+      <GridLoader :size="20" class="ma-auto" color="#a70015" />
+      <br />
+
+      <!-- Fade-in -->
+      <!-- Slow scroll fade-out vtexts -->
+      <div style="animation: fadeIn 0.75s">{{ overlayMessage }}</div>
     </v-overlay>
     <slot v-if="!overlay" />
   </span>
 </template>
+
 <script lang="ts" setup>
 import { onBeforeMount, onUnmounted, ref } from "vue";
 import GridLoader from "./components/Generic/Loaders/GridLoader.vue";
 import { useAuthStore } from "./store/auth.store";
-import { useRouter } from "vue-router/composables";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useSettingsStore } from "@/store/settings.store";
 import { setSentryEnabled } from "@/utils/sentry.util";
@@ -23,25 +23,40 @@ import { useFeatureStore } from "@/store/features.store";
 import { useProfileStore } from "@/store/profile.store";
 import { useEventBus } from "@vueuse/core";
 import { SocketIoService } from "@/shared/socketio.service";
+import { useRouter } from "vue-router/composables";
 import { sleep } from "@/utils/time.utils";
+import { RouteNames } from "@/router/route-names";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
 const featureStore = useFeatureStore();
 const profileStore = useProfileStore();
-const overlay = ref(true);
-const snackbar = useSnackbar();
+const overlay = ref(false);
 const router = useRouter();
+const overlayMessage = ref("");
+const snackbar = useSnackbar();
 const socketIoClient: SocketIoService = new SocketIoService();
 
-function setOverlay(overlayEnabled: boolean) {
+function setOverlay(overlayEnabled: boolean, message: string = "") {
+  if (!overlayEnabled) {
+    overlayMessage.value = "";
+  } else {
+    overlayMessage.value = message;
+  }
   overlay.value = overlayEnabled;
+}
+
+async function routeToLoginSafely() {
+  setOverlay(true, "Login expired, going back to login");
+  await sleep(500);
+  if (router.currentRoute.name !== RouteNames.Login) {
+    await router.push({ name: RouteNames.Login });
+  }
+  setOverlay(false);
 }
 
 async function loadAppWithAuthentication() {
   try {
-    authStore.loadTokens();
-    await authStore.verifyLogin();
     await settingsStore.loadSettings();
     await featureStore.loadFeatures();
     await profileStore.getProfile();
@@ -52,8 +67,7 @@ async function loadAppWithAuthentication() {
     console.log("Error when loading settings.", e);
     snackbar.openErrorMessage({
       title: "Error",
-      fullSubtitle: "Error when verifying login and loading settings.",
-      subtitle: "Error when verifying login.",
+      subtitle: "Error when verifying login and loading settings.",
     });
   }
 
@@ -62,22 +76,49 @@ async function loadAppWithAuthentication() {
   setOverlay(false);
 }
 
-const key = useEventBus("auth:login");
-key.on(() => {
-  setOverlay(true);
-  loadAppWithAuthentication();
+// In use (shared/http-client.ts)
+const authPermissionDeniedKey = useEventBus("auth:permission-denied");
+authPermissionDeniedKey.on(async (event) => {
+  console.log("[AppLoader] Permission denied, going to permission denied page");
+  setOverlay(true, "Permission denied");
+  await router.push({
+    name: RouteNames.PermissionDenied,
+    query: {
+      roles: event?.roles,
+      page: router.currentRoute.name,
+      permissions: event?.permissions,
+      error: event?.error,
+      url: event?.url,
+    },
+  });
+  setOverlay(false);
+});
+
+// Currently unused
+const authFailKey = useEventBus("auth:failure");
+authFailKey.on(async () => {
+  console.debug("[AppLoader] Event received: 'auth:failure', going back to login");
+  setOverlay(true, "Authentication failed, going back to login");
+  await router.push({ name: RouteNames.Login });
+  setOverlay(false);
+});
+
+// In use (components/Login/LoginForm.vue)
+const loginEventKey = useEventBus("auth:login");
+loginEventKey.on(async () => {
+  console.debug("[AppLoader] Event received: 'auth:login', loading app");
+  setOverlay(true, "Loading app");
+  await loadAppWithAuthentication();
 });
 
 onUnmounted(() => {
-  key.reset();
   if (socketIoClient) {
     socketIoClient.disconnect();
   }
 });
 
 onBeforeMount(async () => {
-  // test slow page loading
-  // await sleep(2000);
+  setOverlay(true, "Loading spools");
 
   // If the route is wrong about login requirements, an error will be shown
   const loginRequired = await authStore.checkLoginRequired();
@@ -86,23 +127,39 @@ onBeforeMount(async () => {
   }
 
   // Router will have tackled routing already
-  if (!authStore.isLoggedIn) {
+  console.debug("[AppLoader] Checking if tokens are present");
+  if (!authStore.hasAuthToken && !authStore.hasRefreshToken) {
+    console.debug("[AppLoader] No tokens present, hiding overlay as router will have handled it");
     return setOverlay(false);
   }
 
-  if (authStore.isLoggedIn && authStore.isLoginExpired) {
-    try {
-      await authStore.refreshTokens();
-    } catch (e) {
-      console.error("Error when refreshing login.");
-      snackbar.openErrorMessage({
-        title: "Login error",
-        fullSubtitle: "Error when refreshing login.",
-      });
-      await router.push({ name: "Login" });
+  // What if refreshToken is not present or not valid?
+  setOverlay(true, "Refreshing login");
+  console.debug("[AppLoader] Verifying or refreshing login once");
+  const refreshSuccess = await authStore.verifyOrRefreshLoginOnce();
+  if (!refreshSuccess) {
+    console.debug("[AppLoader] No success refreshing");
+    setOverlay(true, "Login expired, going back to login");
+    await sleep(500);
+    if (router.currentRoute.name !== RouteNames.Login) {
+      await router.push({ name: RouteNames.Login });
     }
+    setOverlay(false);
+    // Dont load app as it will be redirected to login
+    return;
   }
 
+  console.debug("[AppLoader] Loading app");
   await loadAppWithAuthentication();
 });
 </script>
+<style>
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+</style>

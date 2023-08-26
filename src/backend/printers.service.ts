@@ -7,7 +7,6 @@ import {
   PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
-import validator from "validator";
 
 export class PrintersService extends BaseService {
   static applyLoginDetailsPatchForm(

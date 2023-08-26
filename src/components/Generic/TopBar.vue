@@ -9,7 +9,7 @@
     <PrintJobsMenu />
 
     <v-menu
-      v-if="authStore.isLoggedIn && !authStore.isLoginExpired"
+      v-if="authStore.hasAuthToken && !authStore.isLoginExpired"
       :close-on-content-click="false"
       :nudge-width="200"
       bottom

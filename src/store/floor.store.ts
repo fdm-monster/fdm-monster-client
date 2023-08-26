@@ -78,6 +78,7 @@ export const useFloorStore = defineStore("Floors", {
       return data;
     },
     saveFloors(floors: Floor[]) {
+      if (!floors?.length) return;
       this.floors = floors.sort((f, f2) => f.floor - f2.floor);
       const floorId = this.selectedFloor?._id;
       const foundFloor = this.floors.find((f) => f._id === floorId);

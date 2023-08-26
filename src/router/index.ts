@@ -15,23 +15,14 @@ import DiagnosticsSettings from "../components/Settings/DiagnosticsSettings.vue"
 import { useAuthStore } from "@/store/auth.store";
 import LoginView from "../components/Login/LoginView.vue";
 import NotFoundView from "../components/NotFound/NotFoundView.vue";
+import PermissionDenied from "@/components/Login/PermissionDenied.vue";
+import { RouteNames } from "@/router/route-names";
 
 const NeedsAuth = {
   requiresAuth: true,
 };
 const NoAuth = {
   requiresAuth: false,
-};
-
-export const RouteNames = {
-  Home: "Home",
-  Login: "Login",
-  Printers: "PrintersView",
-  Settings: "Settings",
-  PrintStatistics: "Print Statistics",
-  About: "About",
-  // This route can be used for routes that are not found or data that cannot be found (by routing)
-  NotFound: "NotFound",
 };
 
 const routes: Array<RouteConfig> = [
@@ -49,7 +40,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/printers",
-    name: "PrintersView",
+    name: RouteNames.PrintersView,
     meta: NeedsAuth,
     component: PrintersView,
   },
@@ -107,19 +98,25 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/statistics",
-    name: "Print Statistics",
+    name: RouteNames.PrintStatistics,
     meta: NeedsAuth,
     component: PrintStatisticsView,
   },
   {
     path: "/about",
-    name: "About",
+    name: RouteNames.About,
     meta: NeedsAuth,
     component: AboutHelp,
   },
   {
+    path: "/permission-denied",
+    name: RouteNames.PermissionDenied,
+    meta: NeedsAuth,
+    component: PermissionDenied,
+  },
+  {
     path: "*",
-    name: "NotFound",
+    name: RouteNames.NotFound,
     meta: NoAuth,
     component: NotFoundView,
   },
@@ -143,7 +140,7 @@ appRouter.beforeEach(async (to, from, next) => {
   }
 
   authStore.loadTokens();
-  if (!authStore.isLoggedIn) {
+  if (!authStore.hasAuthToken && !authStore.hasRefreshToken) {
     console.debug("Not logged in, redirecting to login page");
     if (from.path == "/login") {
       throw new Error("Already on login page, cannot redirect");

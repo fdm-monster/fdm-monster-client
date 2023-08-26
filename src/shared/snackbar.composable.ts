@@ -20,7 +20,6 @@ export interface InfoMessage {
 export interface ErrorMessage {
   title: string;
   subtitle?: string | null;
-  fullSubtitle?: string | null;
   timeout?: number;
   // The idea is that the error can be revisited on a separate page/dialog
   // url?: string;

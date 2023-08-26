@@ -1,5 +1,5 @@
 import VueRouter from "vue-router";
-import { RouteNames } from "./index";
+import { RouteNames } from "./route-names";
 
 export async function routeToPath(router: VueRouter, name: string) {
   return router.push({ name: name });
