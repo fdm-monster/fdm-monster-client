@@ -7,12 +7,12 @@ export interface Tokens {
 
 export class AuthService {
   static async getLoginRequired() {
-    const httpClient = getHttpClient(false);
+    const httpClient = await getHttpClient(false);
     return await httpClient.get<{ loginRequired: boolean }>("api/auth/login-required");
   }
 
   static async postLogin(username: string, password: string) {
-    const httpClient = getHttpClient(false);
+    const httpClient = await getHttpClient(false);
     return await httpClient.post<Tokens>("api/auth/login", {
       username,
       password,
@@ -20,12 +20,12 @@ export class AuthService {
   }
 
   static async refreshLogin(refreshToken: string) {
-    const httpClient = getHttpClient(false);
+    const httpClient = await getHttpClient(false);
     return await httpClient.post<{ token: string }>("api/auth/refresh", { refreshToken });
   }
 
   static async verifyLogin() {
-    const httpClient = getHttpClient(true);
+    const httpClient = await getHttpClient(true);
     return await httpClient.post("api/auth/verify");
   }
 }
