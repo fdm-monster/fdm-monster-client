@@ -4,6 +4,10 @@
   "private": false,
   "author": "David Zwart",
   "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fdm-monster/fdm-monster"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --skip-plugins pwa,workbox",
@@ -36,19 +40,19 @@
     "vuetify": "2.7.1"
   },
   "devDependencies": {
-    "@fontsource/roboto": "^5.0.3",
+    "@fontsource/roboto": "5.0.8",
     "@types/jest": "29.5.4",
     "@types/luxon": "3.3.1",
+    "@types/node": "18.15.3",
     "@types/validator": "13.11.1",
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
     "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-e2e-cypress": "5.0.8",
     "@vue/cli-plugin-eslint": "5.0.8",
-    "@vue/cli-plugin-pwa": "5.0.8",
     "@vue/cli-plugin-router": "5.0.8",
     "@vue/cli-plugin-typescript": "5.0.8",
-    "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/cli-plugin-unit-jest": "5.0.8",
     "@vue/cli-service": "5.0.8",
     "@vue/eslint-config-prettier": "8.0.0",
     "@vue/eslint-config-typescript": "11.0.3",
@@ -74,9 +78,5 @@
     "vue-template-compiler": "2.7.14",
     "vuetify-loader": "1.9.2",
     "webpack": "5.88.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fdm-monster/fdm-monster"
   }
 }

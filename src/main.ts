@@ -1,7 +1,5 @@
 import Vue from "vue";
 import App from "./App.vue";
-
-// import "./registerServiceWorker";
 import pinia from "./plugins/pinia";
 import VueRouter from "vue-router";
 import appRouter from "./router";
@@ -35,7 +33,8 @@ Sentry.init({
     }),
     new Sentry.Replay(),
   ],
-  enabled: process.env.NODE_ENV === "production",
+  // It will be enabled later
+  enabled: false,
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
@@ -73,5 +72,7 @@ new Vue({
 console.debug(
   "App Build UTC",
   document.documentElement.dataset.buildTimestampUtc,
+  "NODE_ENV:",
+  // @ts-ignore
   process.env.NODE_ENV
 );

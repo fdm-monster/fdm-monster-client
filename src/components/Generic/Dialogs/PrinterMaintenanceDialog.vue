@@ -149,7 +149,7 @@ export default defineComponent({
     },
   },
   watch: {
-    async printer(viewedPrinter?: Printer, oldVal?: Printer) {
+    async printer(viewedPrinter?: Printer, _?: Printer) {
       const printerId = viewedPrinter?.id;
       if (!viewedPrinter || !printerId) return;
     },
