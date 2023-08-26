@@ -88,7 +88,7 @@
 
     <v-card-title>About me</v-card-title>
     <v-card-text>
-      <v-img src="/img/DavidZwart.jpg" width="150px"></v-img>
+      <img src="/img/DavidZwart.jpg" width="150px" />
       <h4 class="mt-2">
         <a
           href="https://www.linkedin.com/in/david-zwart-88514083/"
