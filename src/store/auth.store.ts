@@ -40,7 +40,7 @@ export const useAuthStore = defineStore("auth", {
           return response.data;
         })
         .catch((e: AxiosError) => {
-          console.error("login: failed to login", e.code);
+          console.error("login: failed to login", e.response?.status);
           throw e;
         });
     },

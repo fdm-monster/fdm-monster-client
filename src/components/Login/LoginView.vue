@@ -19,9 +19,8 @@ const authStore = useAuthStore();
 onMounted(async () => {
   authStore.loadTokens();
   await authStore.checkLoginRequired();
-  await authStore.verifyOrRefreshLoginOnce();
-
-  if (authStore.hasAuthToken || authStore.loginRequired === false) {
+  const success = await authStore.verifyOrRefreshLoginOnce();
+  if (success || authStore.loginRequired === false) {
     const routePath = route.query.redirect;
 
     if (!routePath) {

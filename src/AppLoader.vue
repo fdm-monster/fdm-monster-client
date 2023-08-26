@@ -46,10 +46,24 @@ function setOverlay(overlayEnabled: boolean, message: string = "") {
   overlay.value = overlayEnabled;
 }
 
+async function routeToLoginSafely() {
+  setOverlay(true, "Login expired, going back to login");
+  await sleep(500);
+  if (router.currentRoute.name !== RouteNames.Login) {
+    await router.push({ name: RouteNames.Login });
+  }
+  setOverlay(false);
+}
+
 async function loadAppWithAuthentication() {
   try {
     authStore.loadTokens();
-    await authStore.verifyOrRefreshLoginOnce();
+    const success = await authStore.verifyOrRefreshLoginOnce();
+    if (!success) {
+      // This should not happen, but if it does, go to login
+      return routeToLoginSafely();
+    }
+
     await settingsStore.loadSettings();
     await featureStore.loadFeatures();
     await profileStore.getProfile();
