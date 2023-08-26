@@ -35,12 +35,24 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
+
+      # Cached pnpm install
       - uses: pnpm/action-setup@v2
+        name: Install pnpm
         with:
           version: 8
-          run_install: |
-            - recursive: false
-              args: [--frozen-lockfile]           
+          run_install: false
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-       
 
       # https://stackoverflow.com/questions/57968497/how-do-i-set-an-env-var-with-a-bash-expression-in-github-actions
       - name: get-client-version
@@ -49,6 +61,7 @@ jobs:
           echo "CLIENT_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
 
       # Build bundle
+      - run: pnpm install --frozen-lockfile
       - run: pnpm run build
 
       # Clear fields that make installing harder
