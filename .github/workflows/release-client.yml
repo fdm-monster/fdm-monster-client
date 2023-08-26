@@ -35,6 +35,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: |
+            - recursive: false
+              args: [--frozen-lockfile]           
 
       # https://stackoverflow.com/questions/57968497/how-do-i-set-an-env-var-with-a-bash-expression-in-github-actions
       - name: get-client-version
@@ -43,8 +49,7 @@ jobs:
           echo "CLIENT_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
 
       # Build bundle
-      - run: yarn install --immutable --immutable-cache --check-cache
-      - run: yarn run build
+      - run: pnpm run build
 
       # Clear fields that make installing harder
       - name: Replace JSON Value

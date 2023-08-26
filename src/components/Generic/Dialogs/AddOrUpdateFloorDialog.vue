@@ -108,7 +108,7 @@ export default defineComponent({
   },
   async mounted() {},
   props: {},
-  data: () => ({
+  data: (): Data => ({
     formData: getDefaultCreateFloor(),
   }),
   computed: {

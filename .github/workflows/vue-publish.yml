@@ -12,10 +12,17 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: |
+            - recursive: false
+              args: [--frozen-lockfile]            
 
-      - run: yarn install --immutable --immutable-cache --check-cache
-      - run: yarn run build
-      - run: yarn run test:unit
+      - run: pnpm run build
+      - run: pnpm run test:unit
+
+      # Publish the package
       - uses: JS-DevTools/npm-publish@v2
         if: ${{ github.repository.name == 'fdm-monster-client' }}
         with:
