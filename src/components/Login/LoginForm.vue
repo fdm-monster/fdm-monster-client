@@ -1,14 +1,34 @@
 <template>
   <v-container fill-height fluid>
-    <v-layout align-center justify-center>
-      <v-flex md4 sm8 xs12>
-        <v-card class="elevation-12">
-          <v-toolbar color="primary" dark>
-            <v-toolbar-title>
-              <v-icon>security</v-icon>
-              Authorization required
-            </v-toolbar-title>
-          </v-toolbar>
+    <v-layout align-content-center justify-center>
+      <v-flex
+        class="d-flex flex-column align-content-center"
+        md4
+        sm8
+        style="max-width: 450px; margin-top: 15%"
+        xs12
+      >
+        <div class="d-flex flex-column align-center">
+          <v-img
+            :src="require('@/assets/logo.png')"
+            class="shrink mr-1 pt-3 ml-1"
+            contain
+            style="opacity: 0.85"
+            width="150"
+          ></v-img>
+
+          <v-toolbar-title class="text-uppercase red--text">
+            <strong>FDM&nbsp;</strong>
+            <strong>Monster</strong>
+          </v-toolbar-title>
+
+          <v-toolbar-title class="mt-lg-10 mt-sm-10"> Login to your account</v-toolbar-title>
+          <v-card-subtitle class="grey--text">
+            Welcome back! Please enter your details
+          </v-card-subtitle>
+        </div>
+
+        <v-card class="elevation-4 pa-4" style="border-radius: 10px">
           <v-card-text>
             <v-form>
               <v-text-field
@@ -35,9 +55,9 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <!--            <v-btn color="primary" disabled to="/">Register</v-btn>-->
-            <v-spacer></v-spacer>
-            <v-btn :disabled="formIsDisabled" color="primary" @click="login()"> Login</v-btn>
+            <v-btn class="pa-4" color="primary" large style="width: 100%" @click="login()">
+              Login
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>

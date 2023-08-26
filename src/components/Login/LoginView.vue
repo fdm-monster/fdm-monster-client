@@ -1,18 +1,5 @@
 <template>
   <v-container fill-height fluid>
-    <v-app-bar app color="secondary" dark>
-      <v-toolbar-title class="text-uppercase white--text">
-        <span class="font-weight-light">FDM</span>
-        <strong>Monster</strong>
-      </v-toolbar-title>
-    </v-app-bar>
-
-    <img
-      alt="FDM Monster Background"
-      class="grid-bg-img align-content-center"
-      src="/img/logo.svg"
-      style="opacity: 0.06"
-    />
     <v-layout align-center justify-center>
       <LoginForm />
     </v-layout>
@@ -29,18 +16,21 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-onMounted(() => {
+onMounted(async () => {
   authStore.loadTokens();
+  await authStore.checkLoginRequired();
+  await authStore.verifyOrRefreshLoginOnce();
+
   if (authStore.hasAuthToken || authStore.loginRequired === false) {
     const routePath = route.query.redirect;
 
     if (!routePath) {
       console.debug("LoginView, no query param, redirecting to home");
-      router.push({ name: "Home" });
+      await router.push({ name: "Home" });
       return;
     } else {
       console.debug("LoginView, query param, redirecting to", routePath);
-      router.push({
+      await router.push({
         path: routePath as string,
       });
       return;

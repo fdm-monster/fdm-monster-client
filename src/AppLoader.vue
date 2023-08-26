@@ -23,12 +23,16 @@ import { useFeatureStore } from "@/store/features.store";
 import { useProfileStore } from "@/store/profile.store";
 import { useEventBus } from "@vueuse/core";
 import { SocketIoService } from "@/shared/socketio.service";
+import { useRouter } from "vue-router/composables";
+import { sleep } from "@/utils/time.utils";
+import { RouteNames } from "@/router/route-names";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
 const featureStore = useFeatureStore();
 const profileStore = useProfileStore();
 const overlay = ref(false);
+const router = useRouter();
 const overlayMessage = ref("");
 const snackbar = useSnackbar();
 const socketIoClient: SocketIoService = new SocketIoService();
@@ -45,7 +49,7 @@ function setOverlay(overlayEnabled: boolean, message: string = "") {
 async function loadAppWithAuthentication() {
   try {
     authStore.loadTokens();
-    await authStore.verifyLogin();
+    await authStore.verifyOrRefreshLoginOnce();
     await settingsStore.loadSettings();
     await featureStore.loadFeatures();
     await profileStore.getProfile();
@@ -66,14 +70,19 @@ async function loadAppWithAuthentication() {
   setOverlay(false);
 }
 
-const key = useEventBus("auth:login");
-key.on(() => {
+const authFailKey = useEventBus("auth:failure");
+authFailKey.on(() => {
+  router.push({ name: RouteNames.Login });
+  setOverlay(true);
+});
+const loginEventKey = useEventBus("auth:login");
+loginEventKey.on(() => {
   setOverlay(true);
   loadAppWithAuthentication();
 });
 
 onUnmounted(() => {
-  key.reset();
+  loginEventKey.reset();
   if (socketIoClient) {
     socketIoClient.disconnect();
   }
@@ -89,17 +98,19 @@ onBeforeMount(async () => {
   }
 
   // Router will have tackled routing already
-  if (!authStore.hasAuthToken) {
+  if (!authStore.hasAuthToken && !authStore.hasRefreshToken) {
     return setOverlay(false);
   }
 
-  if (authStore.hasAuthToken && authStore.isLoginExpired) {
-    // What if refreshToken is not present or not valid?
-    setOverlay(true, "Refreshing login");
-
-    await authStore.verifyLogin();
-
-    // Dont load app
+  // What if refreshToken is not present or not valid?
+  setOverlay(true, "Refreshing login");
+  const refreshSuccess = await authStore.verifyOrRefreshLoginOnce();
+  if (!refreshSuccess) {
+    setOverlay(true, "Login expired, going back to login");
+    await sleep(500);
+    await router.push({ name: RouteNames.Login });
+    setOverlay(false);
+    // Dont load app as it will be redirected to login
     return;
   }
 

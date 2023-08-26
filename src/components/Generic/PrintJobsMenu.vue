@@ -82,8 +82,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { usePrinterStore } from "../../store/printer.store";
-import { usePrinterStateStore } from "../../store/printer-state.store";
+import { usePrinterStore } from "@/store/printer.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 interface Data {
   search: string;

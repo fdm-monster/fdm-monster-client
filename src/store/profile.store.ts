@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { AxiosError } from "axios";
 import { UserService } from "@/backend/user.service";
 
 interface State {
@@ -12,13 +11,9 @@ export const useProfileStore = defineStore("profile", {
   }),
   actions: {
     async getProfile() {
-      return await UserService.getProfile()
-        .then((response) => {
-          this.username = response.username;
-        })
-        .catch((e: AxiosError) => {
-          console.log("getProfile: failed to get profile", e.code);
-        });
+      return await UserService.getProfile().then((response) => {
+        this.username = response.username;
+      });
     },
   },
 });

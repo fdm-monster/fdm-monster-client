@@ -109,9 +109,9 @@ const routes: Array<RouteConfig> = [
     component: AboutHelp,
   },
   {
-    path: "*",
+    path: "/lacking-permission",
     name: RouteNames.LackingPermission,
-    meta: NoAuth,
+    meta: NeedsAuth,
     component: LackingPermission,
   },
   {
@@ -140,7 +140,7 @@ appRouter.beforeEach(async (to, from, next) => {
   }
 
   authStore.loadTokens();
-  if (!authStore.hasAuthToken) {
+  if (!authStore.hasAuthToken && !authStore.hasRefreshToken) {
     console.debug("Not logged in, redirecting to login page");
     if (from.path == "/login") {
       throw new Error("Already on login page, cannot redirect");

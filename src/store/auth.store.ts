@@ -29,7 +29,7 @@ export const useAuthStore = defineStore("auth", {
           return this.loginRequired;
         })
         .catch((e: AxiosError) => {
-          console.error("authRequired: failed to check login required", e.code);
+          console.error("authRequired: failed to check login required", e.response?.status);
           throw e;
         });
     },
@@ -45,12 +45,28 @@ export const useAuthStore = defineStore("auth", {
         });
     },
     logout() {
+      console.debug("Logging out");
       this.setIdToken(null);
       this.setRefreshToken(null);
-      console.warn("Logged out");
     },
-    async verifyLogin() {
-      return await AuthService.verifyLogin();
+    async verifyOrRefreshLoginOnce() {
+      try {
+        await AuthService.verifyLogin();
+        return true;
+      } catch (e1) {
+        const canRefresh = this.hasAuthToken && this.isLoginExpired && this.hasRefreshToken;
+        if (canRefresh) {
+          try {
+            await this.refreshLoginToken();
+            await AuthService.verifyLogin();
+          } catch (e2) {
+            return false;
+          }
+          return true;
+        } else {
+          return false;
+        }
+      }
     },
     loadTokens() {
       const tokenRef = useLocalStorage<string | null>("token", null);
@@ -58,23 +74,29 @@ export const useAuthStore = defineStore("auth", {
       this.token = tokenRef.value;
       this.refreshToken = refreshTokenRef.value;
     },
-    async refreshTokens() {
+    async refreshLoginToken() {
       if (!this.refreshToken) {
-        throw new Error("refreshTokens: no refresh token");
+        throw new Error("refreshLoginToken: no refresh token");
       }
       return await AuthService.refreshLogin(this.refreshToken)
         .then((response) => {
-          this.setIdToken(response.data.token);
+          if (response?.data?.token) {
+            this.setIdToken(response.data.token);
+          }
+
+          return true;
         })
         .catch((e: AxiosError) => {
-          if (e.status == HttpStatusCode.Unauthorized) {
+          if (e.response?.status == HttpStatusCode.Unauthorized) {
             this.setTokens(null, null);
-            console.error("refreshTokens: authentication error, failed to refresh tokens", e.code);
+            console.error(
+              "refreshLoginToken: authentication error, failed to refresh tokens",
+              e.response?.status
+            );
           } else {
             console.error(
-              "refreshTokens: unknown error, failed to refresh tokens",
-              e.status,
-              e.code
+              "refreshLoginToken: unknown error, failed to refresh tokens",
+              e.response?.status
             );
           }
           throw e;
