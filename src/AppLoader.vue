@@ -11,7 +11,7 @@
     <slot v-if="!overlay" />
   </span>
 </template>
-v
+
 <script lang="ts" setup>
 import { onBeforeMount, onUnmounted, ref } from "vue";
 import GridLoader from "./components/Generic/Loaders/GridLoader.vue";
