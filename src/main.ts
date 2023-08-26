@@ -4,8 +4,6 @@ import pinia from "./plugins/pinia";
 import VueRouter from "vue-router";
 import appRouter from "./router";
 import vuetify from "./plugins/vuetify";
-import axios from "axios";
-import VueAxios from "vue-axios";
 import { configureVeeValidate } from "@/plugins/veevalidate";
 import { generateAppConstants } from "@/shared/app.constants";
 import { registerFileDropDirective } from "@/directives/file-upload.directive";
@@ -17,7 +15,8 @@ import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { useSnackbar } from "./shared/snackbar.composable";
 
 Vue.config.productionTip = false;
-Vue.use(VueAxios, axios);
+Vue.config.silent = true;
+Vue.config.devtools = false;
 
 configureVeeValidate();
 registerFileDropDirective();
