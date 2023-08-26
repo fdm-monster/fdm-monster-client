@@ -82,6 +82,7 @@ loginEventKey.on(() => {
 });
 
 onUnmounted(() => {
+  authFailKey.reset();
   loginEventKey.reset();
   if (socketIoClient) {
     socketIoClient.disconnect();
@@ -108,7 +109,9 @@ onBeforeMount(async () => {
   if (!refreshSuccess) {
     setOverlay(true, "Login expired, going back to login");
     await sleep(500);
-    await router.push({ name: RouteNames.Login });
+    if (router.currentRoute.name !== RouteNames.Login) {
+      await router.push({ name: RouteNames.Login });
+    }
     setOverlay(false);
     // Dont load app as it will be redirected to login
     return;
