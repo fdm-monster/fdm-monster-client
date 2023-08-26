@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
 import { AuthService, type Tokens } from "@/backend/auth.service";
-import { AxiosError } from "axios";
+import { AxiosError, HttpStatusCode } from "axios";
 import { RemovableRef, useLocalStorage } from "@vueuse/core";
 
 export interface IClaims extends JwtPayload {
@@ -59,17 +59,28 @@ export const useAuthStore = defineStore("auth", {
       this.refreshToken = refreshTokenRef.value;
     },
     async refreshTokens() {
-      if (!this.refreshToken) return;
+      if (!this.refreshToken) {
+        throw new Error("refreshTokens: no refresh token");
+      }
       return await AuthService.refreshLogin(this.refreshToken)
         .then((response) => {
           this.setIdToken(response.data.token);
         })
         .catch((e: AxiosError) => {
-          console.error("refreshTokens: failed to refresh tokens", e.code);
+          if (e.status == HttpStatusCode.Unauthorized) {
+            this.setTokens(null, null);
+            console.error("refreshTokens: authentication error, failed to refresh tokens", e.code);
+          } else {
+            console.error(
+              "refreshTokens: unknown error, failed to refresh tokens",
+              e.status,
+              e.code
+            );
+          }
           throw e;
         });
     },
-    setTokens(token: string, refreshToken: string) {
+    setTokens(token: string | null, refreshToken: string | null) {
       this.setIdToken(token);
       this.setRefreshToken(refreshToken);
     },
@@ -97,7 +108,7 @@ export const useAuthStore = defineStore("auth", {
       if (!claims?.exp) return false;
       return claims.exp < Date.now() / 1000;
     },
-    isLoggedIn() {
+    hasAuthToken() {
       return !!this.tokenClaims;
     },
     tokenClaims(): IClaims | null {

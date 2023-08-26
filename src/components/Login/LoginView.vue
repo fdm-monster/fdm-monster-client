@@ -31,7 +31,7 @@ const authStore = useAuthStore();
 
 onMounted(() => {
   authStore.loadTokens();
-  if (authStore.isLoggedIn || authStore.loginRequired === false) {
+  if (authStore.hasAuthToken || authStore.loginRequired === false) {
     const routePath = route.query.redirect;
 
     if (!routePath) {

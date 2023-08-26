@@ -1,21 +1,21 @@
 <template>
   <span>
-    <v-overlay
-      v-model="overlay"
-      class="align-center justify-center"
-      opacity="0.98"
-      style="z-index: 7"
-    >
-      <GridLoader :size="20" color="#a70015" />
+    <v-overlay v-model="overlay" opacity="0.98" style="z-index: 7">
+      <GridLoader :size="20" class="ma-auto" color="#a70015" />
+      <br />
+
+      <!-- Fade-in -->
+      <!-- Slow scroll fade-out vtexts -->
+      <div style="animation: fadeIn 0.75s">{{ overlayMessage }}</div>
     </v-overlay>
     <slot v-if="!overlay" />
   </span>
 </template>
+v
 <script lang="ts" setup>
 import { onBeforeMount, onUnmounted, ref } from "vue";
 import GridLoader from "./components/Generic/Loaders/GridLoader.vue";
 import { useAuthStore } from "./store/auth.store";
-import { useRouter } from "vue-router/composables";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useSettingsStore } from "@/store/settings.store";
 import { setSentryEnabled } from "@/utils/sentry.util";
@@ -23,18 +23,22 @@ import { useFeatureStore } from "@/store/features.store";
 import { useProfileStore } from "@/store/profile.store";
 import { useEventBus } from "@vueuse/core";
 import { SocketIoService } from "@/shared/socketio.service";
-import { sleep } from "@/utils/time.utils";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
 const featureStore = useFeatureStore();
 const profileStore = useProfileStore();
-const overlay = ref(true);
+const overlay = ref(false);
+const overlayMessage = ref("");
 const snackbar = useSnackbar();
-const router = useRouter();
 const socketIoClient: SocketIoService = new SocketIoService();
 
-function setOverlay(overlayEnabled: boolean) {
+function setOverlay(overlayEnabled: boolean, message: string = "") {
+  if (!overlayEnabled) {
+    overlayMessage.value = "";
+  } else {
+    overlayMessage.value = message;
+  }
   overlay.value = overlayEnabled;
 }
 
@@ -76,8 +80,7 @@ onUnmounted(() => {
 });
 
 onBeforeMount(async () => {
-  // test slow page loading
-  // await sleep(2000);
+  setOverlay(true, "Loading spools");
 
   // If the route is wrong about login requirements, an error will be shown
   const loginRequired = await authStore.checkLoginRequired();
@@ -86,23 +89,30 @@ onBeforeMount(async () => {
   }
 
   // Router will have tackled routing already
-  if (!authStore.isLoggedIn) {
+  if (!authStore.hasAuthToken) {
     return setOverlay(false);
   }
 
-  if (authStore.isLoggedIn && authStore.isLoginExpired) {
-    try {
-      await authStore.refreshTokens();
-    } catch (e) {
-      console.error("Error when refreshing login.");
-      snackbar.openErrorMessage({
-        title: "Login error",
-        fullSubtitle: "Error when refreshing login.",
-      });
-      await router.push({ name: "Login" });
-    }
+  if (authStore.hasAuthToken && authStore.isLoginExpired) {
+    // What if refreshToken is not present or not valid?
+    setOverlay(true, "Refreshing login");
+
+    await authStore.verifyLogin();
+
+    // Dont load app
+    return;
   }
 
   await loadAppWithAuthentication();
 });
 </script>
+<style>
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+</style>

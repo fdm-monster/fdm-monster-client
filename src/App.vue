@@ -5,8 +5,8 @@
     <AppProgressSnackbar />
     <AlertErrorDialog />
 
-    <NavigationDrawer v-if="authStore.isLoggedIn || !authStore.loginRequired" />
-    <TopBar v-if="authStore.isLoggedIn || !authStore.loginRequired" />
+    <NavigationDrawer v-if="authStore.hasAuthToken || !authStore.loginRequired" />
+    <TopBar v-if="authStore.hasAuthToken || !authStore.loginRequired" />
 
     <AppLoader>
       <v-main>
@@ -79,7 +79,7 @@ export default defineComponent({
   },
   async mounted() {
     console.debug(
-      `App.vue mounted. Logged in: ${this.authStore.isLoggedIn}, Expired: ${this.authStore.isLoginExpired}`
+      `App.vue mounted. Logged in: ${this.authStore.hasAuthToken}, Expired: ${this.authStore.isLoginExpired}`
     );
 
     uploadProgressTest(false);
