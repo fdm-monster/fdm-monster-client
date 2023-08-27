@@ -8,32 +8,32 @@ Please refer to the [FDM Monster Developer documentation](https://docs.fdm-monst
 
 ## Project setup
 ```
-yarn install @fdm-monster/client
+pnpm install @fdm-monster/client
 ```
 
 **Compiles and hot-reloads for development**
 ```
-yarn run serve
+pnpm run serve
 ```
 
 **Compiles and minifies for production**
 ```
-yarn run build
+pnpm run build
 ```
 
 **Run your unit tests**
 ```
-yarn run test:unit
+pnpm run test:unit
 ```
 
 **Run your end-to-end tests**
 ```
-yarn run test:e2e
+pnpm run test:e2e
 ```
 
 **Lints and fixes files**
 ```
-yarn run lint
+pnpm run lint
 ```
 ### Customize Vue configuration
 See [Vue Configuration Reference](https://cli.vuejs.org/config/).
