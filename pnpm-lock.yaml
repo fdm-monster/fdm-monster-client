@@ -90,7 +90,7 @@ devDependencies:
     version: 5.0.8(@vue/cli-service@5.0.8)(core-js@3.32.1)(vue@2.7.14)
   '@vue/cli-plugin-e2e-cypress':
     specifier: 5.0.8
-    version: 5.0.8(@vue/cli-service@5.0.8)(cypress@12.17.4)(eslint@8.48.0)
+    version: 5.0.8(@vue/cli-service@5.0.8)(cypress@13.0.0)(eslint@8.48.0)
   '@vue/cli-plugin-eslint':
     specifier: 5.0.8
     version: 5.0.8(@vue/cli-service@5.0.8)(eslint@8.48.0)
@@ -122,8 +122,8 @@ devDependencies:
     specifier: 29.6.4
     version: 29.6.4(@babel/core@7.22.11)
   cypress:
-    specifier: 12.17.4
-    version: 12.17.4
+    specifier: 13.0.0
+    version: 13.0.0
   eslint:
     specifier: 8.48.0
     version: 8.48.0
@@ -1448,8 +1448,8 @@ packages:
     dev: true
     optional: true
 
-  /@cypress/request@2.88.12:
-    resolution: {integrity: sha512-tOn+0mDZxASFM+cuAP9szGUGPI1HwWVSvdzm7V4cCsPdFTx6qMj29CwaQmRAMIEhORIUBFBsYROYJcveK4uOjA==}
+  /@cypress/request@3.0.0:
+    resolution: {integrity: sha512-GKFCqwZwMYmL3IBoNeR2MM1SnxRIGERsQOTWeQKoYBt2JLqcqiy7JXqO894FLrpjZYqGxW92MNwRH2BN56obdQ==}
     engines: {node: '>= 6'}
     dependencies:
       aws-sign2: 0.7.0
@@ -2851,7 +2851,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@vue/cli-plugin-e2e-cypress@5.0.8(@vue/cli-service@5.0.8)(cypress@12.17.4)(eslint@8.48.0):
+  /@vue/cli-plugin-e2e-cypress@5.0.8(@vue/cli-service@5.0.8)(cypress@13.0.0)(eslint@8.48.0):
     resolution: {integrity: sha512-BasFHQSqDAmFvueaqk/d+s1hJnW0OtWEIgmHZRXg8hYkZJF4pu7kz66DmEAZl6DypfyoSxqwN7WHILYDuKAaEw==}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0 || ^5.0.0-0
@@ -2859,7 +2859,7 @@ packages:
     dependencies:
       '@vue/cli-service': 5.0.8(prettier@2.8.8)(sass-loader@13.3.2)(vue-template-compiler@2.7.14)(vue@2.7.14)
       '@vue/cli-shared-utils': 5.0.8
-      cypress: 12.17.4
+      cypress: 13.0.0
       eslint-plugin-cypress: 2.14.0(eslint@8.48.0)
     transitivePeerDependencies:
       - encoding
@@ -5103,13 +5103,13 @@ packages:
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
 
-  /cypress@12.17.4:
-    resolution: {integrity: sha512-gAN8Pmns9MA5eCDFSDJXWKUpaL3IDd89N9TtIupjYnzLSmlpVr+ZR+vb4U/qaMp+lB6tBvAmt7504c3Z4RU5KQ==}
-    engines: {node: ^14.0.0 || ^16.0.0 || >=18.0.0}
+  /cypress@13.0.0:
+    resolution: {integrity: sha512-nWHU5dUxP2Wm/zrMd8SWTTl706aJex/l+H4vi/tbu2SWUr17BUcd/sIYeqyxeoSPW1JFV2pT1pf4JEImH/POMg==}
+    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@cypress/request': 2.88.12
+      '@cypress/request': 3.0.0
       '@cypress/xvfb': 1.2.4(supports-color@8.1.1)
       '@types/node': 16.18.46
       '@types/sinonjs__fake-timers': 8.1.1
