@@ -12,10 +12,13 @@
           <v-list-item-content>
             <v-list-item-title> Username</v-list-item-title>
             <v-list-item-action-text>
-              <v-text-field v-model="formData.username" disabled label="username" />
+              <v-text-field v-model="formData.username" label="username" />
             </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
+        <div class="ml-4 mb-4">
+          <v-btn color="primary" @click="changeUsername()">Change username</v-btn>
+        </div>
         <v-divider />
         <br />
 
@@ -23,7 +26,11 @@
           <v-list-item-content>
             <v-list-item-title> Old Password</v-list-item-title>
             <v-list-item-action-text>
-              <v-text-field v-model="formData.oldPassword" disabled label="oldPassword" />
+              <v-text-field
+                v-model="formData.oldPassword"
+                placeholder="Old password"
+                type="password"
+              />
             </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
@@ -31,7 +38,11 @@
           <v-list-item-content>
             <v-list-item-title> New Password</v-list-item-title>
             <v-list-item-action-text>
-              <v-text-field v-model="formData.newPassword" disabled label="oldPassword" />
+              <v-text-field
+                v-model="formData.newPassword"
+                placeholder="New password"
+                type="password"
+              />
             </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
@@ -39,12 +50,19 @@
           <v-list-item-content>
             <v-list-item-title> Repeat New Password</v-list-item-title>
             <v-list-item-action-text>
-              <v-text-field v-model="formData.repeatPassword" disabled label="repeatPassword" />
+              <v-text-field
+                v-model="formData.repeatPassword"
+                placeholder="Repeat new password"
+                type="password"
+              />
             </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-content>
     </v-list>
+    <div class="ml-4 mb-4">
+      <v-btn color="primary" @click="changePassword()">Change password</v-btn>
+    </div>
     <v-divider />
   </v-card>
 </template>
@@ -56,6 +74,7 @@ import { UserService } from "@/backend/user.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
 const profileStore = useProfileStore();
+const snackbar = useSnackbar();
 const userId = ref<string>("");
 const formData = ref<{
   username: string;
@@ -72,20 +91,23 @@ onMounted(async () => {
 
 async function changeUsername() {
   if (!userId.value?.length) {
-    useSnackbar().openErrorMessage({ title: "User not loaded" });
+    snackbar.openErrorMessage({ title: "User not loaded" });
     return;
   }
   await UserService.changeUsername(userId.value, formData.value.username);
-  formData.value.username = "";
+
+  await profileStore.getProfile();
+  formData.value.username = profileStore.username as string;
+  snackbar.openInfoMessage({ title: "Username changed" });
 }
 
 async function changePassword() {
   if (!userId.value?.length) {
-    useSnackbar().openErrorMessage({ title: "User not loaded" });
+    snackbar.openErrorMessage({ title: "User not loaded" });
     return;
   }
-  if (formData.value.oldPassword !== formData.value.repeatPassword) {
-    useSnackbar().openErrorMessage({ title: "Passwords do not match" });
+  if (formData.value.newPassword !== formData.value.repeatPassword) {
+    snackbar.openErrorMessage({ title: "Passwords do not match" });
     return;
   }
   await UserService.changePassword(
@@ -94,6 +116,8 @@ async function changePassword() {
     formData.value.newPassword
   );
   formData.value.oldPassword = "";
+  formData.value.newPassword = "";
   formData.value.repeatPassword = "";
+  snackbar.openInfoMessage({ title: "Password changed" });
 }
 </script>

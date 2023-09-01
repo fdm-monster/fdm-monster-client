@@ -19,8 +19,8 @@ export class UserService extends BaseService {
     return await this.postApi(path, { oldPassword, newPassword });
   }
 
-  static async changeUsername(id: string, newUsername: string) {
+  static async changeUsername(id: string, username: string) {
     const path = ServerApi.userChangeUsernameRoute(id);
-    return await this.postApi(path, { newUsername });
+    return await this.postApi(path, { username });
   }
 }
