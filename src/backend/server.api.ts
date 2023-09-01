@@ -72,4 +72,7 @@ export class ServerApi {
   static printerStopJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/stop`;
   static printerPauseJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/pause`;
   static printerResumeJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/resume`;
+
+  static userChangeUsernameRoute = (id: string) => `${ServerApi.userRoute}/${id}/change-username`;
+  static userChangePasswordRoute = (id: string) => `${ServerApi.userRoute}/${id}/change-password`;
 }
