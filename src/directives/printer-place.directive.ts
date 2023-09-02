@@ -1,8 +1,7 @@
 import Vue from "vue";
-import { isPrinterPlaceDataTransfer, PrinterPlace } from "@/shared/drag.constants";
-import { FloorService } from "@/backend/floor.service";
-import { useFloorStore } from "@/store/floor.store";
-import { Printer } from "@/models/printers/printer.model";
+import { isPrinterPlaceDataTransfer, PrinterPlace } from "../shared/drag.constants";
+import { FloorService } from "../backend/floor.service";
+import { useFloorStore } from "../store/floor.store";
 
 interface PrinterBindingValue {
   printerSet: Printer | null;

@@ -124,7 +124,6 @@ const routes: Array<RouteConfig> = [
 
 const appRouter = new VueRouter({
   mode: "history",
-  // @ts-ignore
   base: process.env.BASE_URL,
   routes,
 });
