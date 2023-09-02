@@ -33,8 +33,7 @@ Sentry.init({
     }),
     new Sentry.Replay(),
   ],
-  // It will be enabled later
-  enabled: false,
+  enabled: process.env.NODE_ENV === "production",
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
@@ -83,7 +82,5 @@ new Vue({
 console.debug(
   "App Build UTC",
   document.documentElement.dataset.buildTimestampUtc,
-  "NODE_ENV:",
-  // @ts-ignore
   process.env.NODE_ENV
 );

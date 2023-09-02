@@ -5,7 +5,7 @@
       "name": "FDM Monster Vue Client (serve)",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "pnpm",
+      "runtimeExecutable": "yarn",
       "runtimeArgs": [
         "run",
         "serve"
