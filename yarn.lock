@@ -2670,10 +2670,10 @@
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-"@vue/vue2-jest@29.2.5":
-  version "29.2.5"
-  resolved "https://registry.yarnpkg.com/@vue/vue2-jest/-/vue2-jest-29.2.5.tgz#ed93322515c3d5dc434ff4822b294af9e75fab1d"
-  integrity sha512-vEFEjQpg66REk2h7J1HuaqFW6iXtJd+xCfDKDVee4n9NPYhvzAO+Xy4LxClMwvLK0E7uy64nMJ6arg7+GdZEuQ==
+"@vue/vue2-jest@29.2.6":
+  version "29.2.6"
+  resolved "https://registry.yarnpkg.com/@vue/vue2-jest/-/vue2-jest-29.2.6.tgz#b827c14fbdfca6e20aa807b00f309866fcf99f47"
+  integrity sha512-nPu9IvnEkP0AEpo9ETOAk50uqyBa0QMJ9GnPYkC7EukFN1z29QKjyucICayMt8KuHJ9oYBca2TDMH40HowY9mQ==
   dependencies:
     "@babel/plugin-transform-modules-commonjs" "^7.2.0"
     "@vue/component-compiler-utils" "^3.1.0"
