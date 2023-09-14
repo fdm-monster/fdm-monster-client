@@ -121,7 +121,13 @@ onBeforeMount(async () => {
   setOverlay(true, "Loading spools");
 
   // If the route is wrong about login requirements, an error will be shown
-  const loginRequired = await authStore.checkLoginRequired();
+  const { loginRequired, wizardState } = await authStore.checkLoginRequired();
+  if (!wizardState.wizardCompleted) {
+    console.debug("[AppLoader] Wizard not completed, going to wizard");
+    await router.push({ name: RouteNames.FirstTimeSetup });
+    setOverlay(false);
+    return;
+  }
   if (!loginRequired) {
     return await loadAppWithAuthentication();
   }

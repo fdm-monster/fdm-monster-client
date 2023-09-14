@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
-import { AuthService, type Tokens } from "@/backend/auth.service";
+import { AuthService, type Tokens, WizardState } from "@/backend/auth.service";
 import { AxiosError, HttpStatusCode } from "axios";
 
 export interface IClaims extends JwtPayload {
@@ -12,6 +12,7 @@ export interface AuthState {
   refreshToken: string | null;
   token: string | null;
   loginRequired: boolean | null;
+  wizardState: WizardState | null;
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -19,13 +20,18 @@ export const useAuthStore = defineStore("auth", {
     token: null,
     refreshToken: null,
     loginRequired: null,
+    wizardState: null,
   }),
   actions: {
     async checkLoginRequired() {
       return await AuthService.getLoginRequired()
         .then((response) => {
           this.loginRequired = response.data.loginRequired;
-          return this.loginRequired;
+          this.wizardState = response.data.wizardState;
+          return {
+            loginRequired: this.loginRequired,
+            wizardState: this.wizardState,
+          };
         })
         .catch((e: AxiosError) => {
           console.error("authRequired: failed to check login required", e.response?.status);
