@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { TFeatureFlags, FeaturesModel, IFeatureFlag } from "../models/server/features.model";
-import { AppService } from "../backend/app.service";
+import { TFeatureFlags, FeaturesModel, IFeatureFlag } from "@/models/server/features.model";
+import { AppService } from "@/backend/app.service";
 
 interface State {
   features: FeaturesModel | undefined;
