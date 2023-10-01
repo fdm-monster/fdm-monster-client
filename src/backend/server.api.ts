@@ -1,28 +1,34 @@
 export class ServerApi {
   static base = "/api";
-  static amIAliveRoute = `${ServerApi.base}/amialive`;
+
   static printerRoute = `${ServerApi.base}/printer`;
   static printerBatchRoute = `${ServerApi.printerRoute}/batch`;
   static printerTestConnectionRoute = `${ServerApi.printerRoute}/test-connection`;
+
   static printerSettingsRoute = `${ServerApi.base}/printer-settings`;
+
   static floorRoute = `${ServerApi.base}/floor`;
+
   static printCompletionRoute = `${ServerApi.base}/print-completion`;
+
   static printerFilesRoute = `${ServerApi.base}/printer-files`;
   static printerFilesBatchReprintRoute = `${ServerApi.printerFilesRoute}/batch/reprint-files`;
-  static printerFilesUploadStubRoute = `${ServerApi.base}/printer-files/upload-stub`;
-  static serverPrivateRoute = `${ServerApi.base}/server`;
-  static serverRestartCommandRoute = `${ServerApi.serverPrivateRoute}/restart`;
   static printerFilesPurgeRoute = `${ServerApi.printerFilesRoute}/purge`;
+
   static customGCodeRoute = `${ServerApi.base}/custom-gcode`;
+
   static userRoute = `${ServerApi.base}/user`;
   static userProfileRoute = `${ServerApi.userRoute}/profile`;
+
   static settingsRoute = `${ServerApi.base}/settings`;
   static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
-  static frontendSettingsRoute = `${ServerApi.serverSettingsRoute}/frontend`;
-  static serverWhitelistSettingRoute = `${ServerApi.serverSettingsRoute}/whitelist`;
-  static serverSentryDiagnosticsSettingRoute = `${ServerApi.serverSettingsRoute}/sentry-diagnostics`;
-  static serverRestartRoute = `${ServerApi.serverSettingsRoute}/restart`;
-  static customGCodeSettingsRoutes = `${ServerApi.settingsRoute}/custom-gcode`;
+  static frontendSettingsRoute = `${ServerApi.settingsRoute}/frontend`;
+  static serverWhitelistSettingRoute = `${ServerApi.settingsRoute}/whitelist`;
+  static serverSentryDiagnosticsSettingRoute = `${ServerApi.settingsRoute}/sentry-diagnostics`;
+
+  static serverPrivateRoute = `${ServerApi.base}/server`;
+  static serverRestartCommandRoute = `${ServerApi.serverPrivateRoute}/restart`;
+
   static pluginRoute = `${ServerApi.base}/plugin`;
   static pluginFirmwareUpdateRoute = `${ServerApi.pluginRoute}/firmware-update`;
   static pluginFirmwareReleasesRoute = `${ServerApi.pluginFirmwareUpdateRoute}/releases`;
