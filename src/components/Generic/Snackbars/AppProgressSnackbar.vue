@@ -9,6 +9,7 @@
     elevation="24"
     multi-line
     right
+    style="z-index: 1000"
     shaped
   >
     <v-row>

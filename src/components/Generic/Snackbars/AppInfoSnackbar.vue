@@ -8,6 +8,7 @@
     class="ma-3"
     shaped
     timeout="5000"
+    style="z-index: 1000"
     multi-line
   >
     <v-row>
@@ -31,7 +32,7 @@
   </v-snackbar>
 </template>
 <script lang="ts" setup>
-import { InfoMessage, useSnackbar } from "../../../shared/snackbar.composable";
+import { InfoMessage, useSnackbar } from "@/shared/snackbar.composable";
 import { onMounted, ref } from "vue";
 
 const snackbar = useSnackbar();

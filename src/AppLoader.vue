@@ -1,12 +1,35 @@
 <template>
   <span>
     <v-overlay v-model="overlay" opacity="0.98" style="z-index: 7">
-      <GridLoader :size="20" class="ma-auto" color="#a70015" />
+      <GridLoader :size="20" class="ma-auto" color="#a70015" v-if="loading" />
       <br />
+
+      <div v-if="errorCaught">
+        <h1>FDM Monster Connection Error</h1>
+        <p>Could not connect to the backend. Please check your configuration.</p>
+        <v-sheet color="grey darken-2" class="pa-4 rounded" width="70%">
+          Details:
+          <div class="mt-2 mb-2">{{ JSON.stringify(errorCaught, null, 4) }}</div>
+          <br />
+          <v-btn class="mr-5" color="secondary" @click="copyError()"
+            ><v-icon class="mr-2">content_copy</v-icon>Copy error details</v-btn
+          >
+          <v-btn color="primary" @click="reloadPage()"
+            ><v-icon class="mr-2">refresh</v-icon>reload the page</v-btn
+          >
+        </v-sheet>
+
+        <img
+          class="justify-center align-center align-content-center rounded-pill mt-8 ma-4"
+          src="/img/OIG.JYDC2RaWdz7g9.jpg"
+          style="opacity: 0.9"
+          width="400"
+        />
+      </div>
 
       <!-- Fade-in -->
       <!-- Slow scroll fade-out vtexts -->
-      <div style="animation: fadeIn 0.75s">{{ overlayMessage }}</div>
+      <div style="animation: fadeIn 0.75s" v-if="loading">{{ overlayMessage }}</div>
     </v-overlay>
     <slot v-if="!overlay" />
   </span>
@@ -26,6 +49,7 @@ import { SocketIoService } from "@/shared/socketio.service";
 import { useRouter } from "vue-router/composables";
 import { sleep } from "@/utils/time.utils";
 import { RouteNames } from "@/router/route-names";
+import { AppService } from "@/backend/app.service";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -34,8 +58,22 @@ const profileStore = useProfileStore();
 const overlay = ref(false);
 const router = useRouter();
 const overlayMessage = ref("");
+const loading = ref(true);
+const errorCaught = ref(null);
 const snackbar = useSnackbar();
 const socketIoClient: SocketIoService = new SocketIoService();
+
+function reloadPage() {
+  window.location.reload();
+}
+
+function copyError() {
+  navigator.clipboard.writeText(JSON.stringify(errorCaught.value));
+  snackbar.openInfoMessage({
+    title: "Copied",
+    subtitle: "Error copied to clipboard",
+  });
+}
 
 function setOverlay(overlayEnabled: boolean, message: string = "") {
   if (!overlayEnabled) {
@@ -118,10 +156,27 @@ onUnmounted(() => {
 });
 
 onBeforeMount(async () => {
+  loading.value = true;
   setOverlay(true, "Loading spools");
 
+  try {
+    await AppService.test();
+  } catch (e) {
+    loading.value = false;
+    errorCaught.value = e;
+    return;
+  }
+
   // If the route is wrong about login requirements, an error will be shown
-  const loginRequired = await authStore.checkLoginRequired();
+  const { loginRequired, wizardState } = await authStore.checkLoginRequired();
+  if (!wizardState.wizardCompleted) {
+    console.debug("[AppLoader] Wizard not completed, going to wizard");
+    if (router.currentRoute.name !== RouteNames.FirstTimeSetup) {
+      await router.replace({ name: RouteNames.FirstTimeSetup });
+    }
+    setOverlay(false);
+    return;
+  }
   if (!loginRequired) {
     return await loadAppWithAuthentication();
   }

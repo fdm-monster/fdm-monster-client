@@ -9,7 +9,6 @@ export interface VersionModel {
   update: {
     synced: boolean;
     updateAvailable: boolean;
-    includingPrerelease: boolean;
     airGapped: boolean;
   };
 }

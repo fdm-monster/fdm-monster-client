@@ -17,6 +17,7 @@ import LoginView from "../components/Login/LoginView.vue";
 import NotFoundView from "../components/NotFound/NotFoundView.vue";
 import PermissionDenied from "@/components/Login/PermissionDenied.vue";
 import { RouteNames } from "@/router/route-names";
+import FirstTimeSetupView from "@/components/FirstTimeSetup/FirstTimeSetupView.vue";
 
 const NeedsAuth = {
   requiresAuth: true,
@@ -31,6 +32,12 @@ const routes: Array<RouteConfig> = [
     name: RouteNames.Home,
     meta: NeedsAuth,
     component: PrinterGridView,
+  },
+  {
+    path: "/first-time-setup",
+    name: RouteNames.FirstTimeSetup,
+    meta: NoAuth,
+    component: FirstTimeSetupView,
   },
   {
     path: "/login",

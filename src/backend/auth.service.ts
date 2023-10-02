@@ -5,10 +5,19 @@ export interface Tokens {
   refreshToken: string;
 }
 
+export interface WizardState {
+  wizardState: string;
+  wizardCompleted: boolean;
+  wizardVersion: number;
+  latestWizardVersion: number;
+}
+
 export class AuthService {
   static async getLoginRequired() {
     const httpClient = await getHttpClient(false, false);
-    return await httpClient.get<{ loginRequired: boolean }>("api/auth/login-required");
+    return await httpClient.get<{ loginRequired: boolean; wizardState: WizardState }>(
+      "api/auth/login-required"
+    );
   }
 
   static async postLogin(username: string, password: string) {

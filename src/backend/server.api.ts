@@ -1,6 +1,8 @@
 export class ServerApi {
   static base = "/api";
 
+  static firstTimeSetupRoute = `${ServerApi.base}/first-time-setup`;
+
   static printerRoute = `${ServerApi.base}/printer`;
   static printerBatchRoute = `${ServerApi.printerRoute}/batch`;
   static printerTestConnectionRoute = `${ServerApi.printerRoute}/test-connection`;
