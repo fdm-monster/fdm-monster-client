@@ -198,7 +198,7 @@ export default defineComponent({
     },
     async setFileCleanSettings() {
       const serverSettings = await SettingsService.setFileCleanSettings(this.fileHandlingSettings);
-      this.fileHandlingSettings = serverSettings.printerFileClean;
+      this.fileHandlingSettings = serverSettings.fileClean;
     },
     async purgeFiles() {
       await PrinterFileService.purgeFiles();
