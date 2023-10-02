@@ -124,7 +124,9 @@ onBeforeMount(async () => {
   const { loginRequired, wizardState } = await authStore.checkLoginRequired();
   if (!wizardState.wizardCompleted) {
     console.debug("[AppLoader] Wizard not completed, going to wizard");
-    await router.push({ name: RouteNames.FirstTimeSetup });
+    if (router.currentRoute.name !== RouteNames.FirstTimeSetup) {
+      await router.replace({ name: RouteNames.FirstTimeSetup });
+    }
     setOverlay(false);
     return;
   }
