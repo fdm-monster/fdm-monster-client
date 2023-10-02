@@ -19,4 +19,8 @@ export class AppService extends BaseService {
   static async getFeatures() {
     return (await this.getApi(`api/features`)) as FeaturesModel;
   }
+
+  static async test() {
+    return (await this.getApi(`api/test`)) as { message: string };
+  }
 }

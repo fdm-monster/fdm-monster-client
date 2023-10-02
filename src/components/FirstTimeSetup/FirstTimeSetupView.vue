@@ -89,7 +89,7 @@
                   >
                     check
                   </v-icon>
-                  Accounts can be registered using guest role.
+                  Accounts can be registered with a guest role.
                 </span>
                 <span class="d-flex flex-row align-center">
                   <v-icon
