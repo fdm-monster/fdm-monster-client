@@ -2,10 +2,10 @@ import { ServerApi } from "@/backend/server.api";
 import { BaseService } from "@/backend/base.service";
 import {
   FrontendSettings,
-  PrinterFileCleanSubSetting,
+  FileCleanSubSetting,
   SettingsDto,
 } from "@/models/settings/settings.model";
-import { PrinterFileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
+import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
 import { WhitelistSettings } from "@/models/settings/serverSettings";
 
 export class SettingsService extends BaseService {
@@ -31,11 +31,11 @@ export class SettingsService extends BaseService {
     return (await this.putApi(path, subSettings as WhitelistSettings)) as SettingsDto;
   }
 
-  static async setFileCleanSettings(subSettings: PrinterFileCleanSettings) {
+  static async setFileCleanSettings(subSettings: FileCleanSettings) {
     const path = `${ServerApi.serverSettingsRoute}`;
 
     return (await this.putApi(path, {
-      printerFileClean: subSettings,
-    } as PrinterFileCleanSubSetting)) as SettingsDto;
+      fileClean: subSettings,
+    } as FileCleanSubSetting)) as SettingsDto;
   }
 }

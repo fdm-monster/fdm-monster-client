@@ -1,8 +1,8 @@
 import { ServerSettings } from "./serverSettings";
-import { PrinterFileCleanSettings } from "./printer-file-clean-settings.model";
+import { FileCleanSettings } from "./printer-file-clean-settings.model";
 
-export type PrinterFileCleanSubSetting = {
-  printerFileClean: PrinterFileCleanSettings;
+export type FileCleanSubSetting = {
+  fileClean: FileCleanSettings;
 };
 
 export interface FrontendSettings {
@@ -15,6 +15,6 @@ export interface SettingsDto {
   id: string;
   server: ServerSettings;
   frontend: FrontendSettings;
-  printerFileClean: PrinterFileCleanSettings;
+  fileClean: FileCleanSettings;
   timeout: any; // TODO model
 }

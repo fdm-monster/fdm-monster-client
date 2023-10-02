@@ -127,7 +127,7 @@
 import { defineComponent } from "vue";
 import { PrinterFileService, SettingsService } from "@/backend";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
-import { PrinterFileCleanSettings } from "../../models/settings/printer-file-clean-settings.model";
+import { FileCleanSettings } from "../../models/settings/printer-file-clean-settings.model";
 import { usePrinterStore } from "../../store/printer.store";
 import { isValidIPOrMask } from "@/utils/validation.utils";
 import { whitelistSettingsHidden } from "../../shared/experimental.constants";
@@ -138,7 +138,7 @@ interface Data {
   ipAddress: string;
   whitelistEnabled: boolean;
   whitelistedIpAddresses: string[];
-  fileHandlingSettings: PrinterFileCleanSettings;
+  fileHandlingSettings: FileCleanSettings;
 }
 
 export default defineComponent({
@@ -163,10 +163,10 @@ export default defineComponent({
     whitelistedIpAddresses: [],
   }),
   async created() {
-    const serverSettings = await SettingsService.getServerSettings();
-    this.whitelistedIpAddresses = serverSettings.server?.whitelistedIpAddresses;
-    this.whitelistEnabled = serverSettings.server?.whitelistEnabled;
-    this.fileHandlingSettings = serverSettings.printerFileClean;
+    const settings = await SettingsService.getServerSettings();
+    this.whitelistedIpAddresses = settings.server?.whitelistedIpAddresses;
+    this.whitelistEnabled = settings.server?.whitelistEnabled;
+    this.fileHandlingSettings = settings.fileClean;
   },
   mounted() {},
   computed: {},
@@ -198,7 +198,7 @@ export default defineComponent({
     },
     async setFileCleanSettings() {
       const serverSettings = await SettingsService.setFileCleanSettings(this.fileHandlingSettings);
-      this.fileHandlingSettings = serverSettings.printerFileClean;
+      this.fileHandlingSettings = serverSettings.fileClean;
     },
     async purgeFiles() {
       await PrinterFileService.purgeFiles();
