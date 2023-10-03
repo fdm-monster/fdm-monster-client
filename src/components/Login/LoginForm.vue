@@ -60,11 +60,22 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
+              :disabled="!authStore.registration"
               :loading="loading"
               class="pa-4"
               color="primary"
               large
-              style="width: 100%"
+              style="width: 50%"
+              @click="gotoRegistration()"
+            >
+              Register {{ authStore.registration ? "" : "(not enabled)" }}
+            </v-btn>
+            <v-btn
+              :loading="loading"
+              class="pa-4"
+              color="primary"
+              large
+              style="width: 50%"
               @click="login()"
             >
               Login
@@ -124,6 +135,10 @@ onMounted(async () => {
     }
   }
 });
+
+async function gotoRegistration() {
+  return await router.push({ name: RouteNames.Registration });
+}
 
 async function login() {
   try {
