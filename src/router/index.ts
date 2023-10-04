@@ -18,6 +18,7 @@ import NotFoundView from "../components/NotFound/NotFoundView.vue";
 import PermissionDenied from "@/components/Login/PermissionDenied.vue";
 import { RouteNames } from "@/router/route-names";
 import FirstTimeSetupView from "@/components/FirstTimeSetup/FirstTimeSetupView.vue";
+import RegistrationView from "@/components/Login/RegistrationView.vue";
 
 const NeedsAuth = {
   requiresAuth: true,
@@ -44,6 +45,12 @@ const routes: Array<RouteConfig> = [
     name: RouteNames.Login,
     meta: NoAuth,
     component: LoginView,
+  },
+  {
+    path: "/registration",
+    name: RouteNames.Registration,
+    meta: NoAuth,
+    component: RegistrationView,
   },
   {
     path: "/printers",

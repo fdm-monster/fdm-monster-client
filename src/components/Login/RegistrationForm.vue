@@ -5,7 +5,7 @@
         class="d-flex flex-column align-content-center"
         md4
         sm8
-        style="max-width: 550px; margin-top: 10%"
+        style="max-width: 450px; margin-top: 10%"
         xs12
       >
         <div class="d-flex flex-column align-center">
@@ -22,9 +22,9 @@
             <strong>Monster</strong>
           </v-toolbar-title>
 
-          <v-toolbar-title class="mt-lg-6 mt-sm-5"> Login to your account</v-toolbar-title>
+          <v-toolbar-title class="mt-lg-6 mt-sm-5"> Register new account</v-toolbar-title>
           <v-card-subtitle class="grey--text">
-            Welcome back! Please enter your details
+            Welcome! Please register your guest account
           </v-card-subtitle>
         </div>
 
@@ -34,12 +34,12 @@
               <label> Username </label>
               <v-text-field
                 v-model="username"
+                :rules="[(v) => !!v || 'Username is required']"
                 autofocus
                 name="login"
-                placeholder="Username"
+                label="Username"
                 prepend-icon="person"
                 type="text"
-                @keyup.enter="formIsDisabled || login()"
               ></v-text-field>
               <v-text-field
                 id="password"
@@ -48,10 +48,29 @@
                 :type="showPassword ? 'text' : 'password'"
                 label="Password"
                 name="password"
+                :rules="[
+                  (v) => !!v || 'Password is required',
+                  (v) => (!!v && v?.length >= 8) || 'Password must be of length 8 or greater',
+                ]"
                 password
                 prepend-icon="lock"
                 @click:append="showPassword = !showPassword"
-                @keyup.enter="formIsDisabled || login()"
+              ></v-text-field>
+              <v-text-field
+                id="password"
+                v-model="password2"
+                :append-icon="showPassword2 ? 'visibility' : 'visibility_off'"
+                :type="showPassword2 ? 'text' : 'password'"
+                :rules="[
+                  (v) => !!v || 'Repeated password is required',
+                  (v) => v === password || 'Passwords are not equal',
+                ]"
+                label="Repeated Password"
+                name="password"
+                password
+                prepend-icon="lock"
+                @click:append="showPassword2 = !showPassword2"
+                @keyup.enter="formIsDisabled || registerAccount()"
               ></v-text-field>
               <v-alert v-if="errorMessage" class="mt-6" color="error" dense outlined>
                 {{ errorMessage }}
@@ -65,22 +84,14 @@
               color="primary"
               large
               style="width: 100%"
-              @click="login()"
+              @click="registerAccount()"
             >
-              Login
+              Register account
             </v-btn>
           </v-card-actions>
           <v-card-actions>
-            <v-btn
-              :disabled="!authStore.registration"
-              :loading="loading"
-              class="pa-4"
-              large
-              style="width: 100%"
-              @click="gotoRegistration()"
-            >
-              Register new account {{ authStore.registration ? "" : "(not enabled)" }}
-              <v-icon right>arrow_right</v-icon>
+            <v-btn :loading="loading" style="width: 100%" class="pa-4" large @click="gotoLogin()">
+              <v-icon class="mr-2">arrow_left</v-icon>Back to Login
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -88,64 +99,53 @@
     </v-layout>
   </v-container>
 </template>
-
 <script lang="ts" setup>
+import { AxiosError } from "axios";
 import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "@/store/auth.store";
-import { useRoute, useRouter } from "vue-router/composables";
-import { useEventBus } from "@vueuse/core";
+import { useRouter } from "vue-router/composables";
 import { useSnackbar } from "@/shared/snackbar.composable";
-import { AxiosError } from "axios";
+import { AuthService } from "@/backend/auth.service";
 import { RouteNames } from "@/router/route-names";
 
 const authStore = useAuthStore();
+const router = useRouter();
 const errorMessage = ref("");
 const username = ref("");
 const showPassword = ref(false);
+const showPassword2 = ref(false);
 const password = ref("");
-const router = useRouter();
-const route = useRoute();
+const password2 = ref("");
 const loading = ref(false);
-const loginEvent = useEventBus("auth:login");
 const snackbar = useSnackbar();
 
+async function gotoLogin() {
+  return await router.push({ name: RouteNames.Login });
+}
+
 const formIsDisabled = computed(() => {
-  return (username.value ?? "")?.length < 3 || (password.value ?? "").length < 3;
+  return (
+    (username.value ?? "")?.length < 3 ||
+    (password.value ?? "").length < 3 ||
+    password.value != password2.value
+  );
 });
 
 onMounted(async () => {
-  authStore.loadTokens();
+  await authStore.logout();
   await authStore.checkLoginRequired();
-  if (!authStore.hasRefreshToken) {
-    return;
-  }
-
-  const success = await authStore.verifyOrRefreshLoginOnce();
-  if (success || authStore.loginRequired === false) {
-    const routePath = route.query.redirect;
-
-    if (!routePath) {
-      console.debug("LoginView, no query param, redirecting to home");
-      await router.push({ name: "Home" });
-      return;
-    } else {
-      console.debug("LoginView, query param, redirecting to", routePath);
-      await router.push({
-        path: routePath as string,
-      });
-      return;
-    }
+  if (!authStore.registration) {
+    snackbar.info("Registration is disabled, please contact your administrator");
+    await router.push({
+      name: RouteNames.Login,
+    });
   }
 });
 
-async function gotoRegistration() {
-  return await router.push({ name: RouteNames.Registration });
-}
-
-async function login() {
+async function registerAccount() {
   try {
     loading.value = true;
-    await authStore.login(username.value, password.value);
+    await AuthService.registerAccount(username.value, password.value);
     loading.value = false;
   } catch (e) {
     loading.value = false;
@@ -161,23 +161,9 @@ async function login() {
 
     return;
   }
-
   errorMessage.value = "";
 
-  // Trigger AppLoader
-  loginEvent.emit(true);
-
-  const routePath = route.query.redirect;
-  if (!routePath) {
-    console.debug("[LoginForm] Redirecting to home");
-    await router.push({ name: RouteNames.Home });
-    return;
-  } else {
-    console.debug("[LoginForm] Redirecting to ", routePath);
-    await router.push({
-      path: routePath as string,
-    });
-    return;
-  }
+  snackbar.info("Account created, please login");
+  await gotoLogin();
 }
 </script>

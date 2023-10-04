@@ -26,7 +26,7 @@ export const useSettingsStore = defineStore({
   }),
   actions: {
     async loadSettings(): Promise<SettingsDto> {
-      const response = await SettingsService.getServerSettings();
+      const response = await SettingsService.getSettings();
       this.settings = response;
       return response;
     },

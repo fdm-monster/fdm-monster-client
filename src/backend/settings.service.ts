@@ -9,13 +9,13 @@ import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings
 import { WhitelistSettings } from "@/models/settings/serverSettings";
 
 export class SettingsService extends BaseService {
-  static async getServerSettings() {
-    const path = ServerApi.serverSettingsRoute;
+  static async getSettings() {
+    const path = ServerApi.settingsRoute;
     return (await this.getApi(path)) as SettingsDto;
   }
 
   static async updateFrontendSettings(frontendSettings: FrontendSettings) {
-    const path = `${ServerApi.frontendSettingsRoute}`;
+    const path = `${ServerApi.updateFrontendSettingsRoute}`;
 
     return (await this.putApi(path, frontendSettings as FrontendSettings)) as SettingsDto;
   }
@@ -26,13 +26,13 @@ export class SettingsService extends BaseService {
   }
 
   static async setWhitelistSettings(subSettings: WhitelistSettings) {
-    const path = `${ServerApi.serverWhitelistSettingRoute}`;
+    const path = `${ServerApi.updateServerWhitelistSettingRoute}`;
 
     return (await this.putApi(path, subSettings as WhitelistSettings)) as SettingsDto;
   }
 
   static async setFileCleanSettings(subSettings: FileCleanSettings) {
-    const path = `${ServerApi.serverSettingsRoute}`;
+    const path = `${ServerApi.fileCleanSettingsRoute}`;
 
     return (await this.putApi(path, {
       fileClean: subSettings,

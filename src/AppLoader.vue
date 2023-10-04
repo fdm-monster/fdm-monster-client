@@ -1,13 +1,13 @@
 <template>
   <span>
     <v-overlay v-model="overlay" opacity="0.98" style="z-index: 7">
-      <GridLoader :size="20" class="ma-auto" color="#a70015" v-if="loading" />
+      <GridLoader v-if="loading" :size="20" class="ma-auto" color="#a70015" />
       <br />
 
       <div v-if="errorCaught">
         <h1>FDM Monster Connection Error</h1>
         <p>Could not connect to the backend. Please check your configuration.</p>
-        <v-sheet color="grey darken-2" class="pa-4 rounded" width="70%">
+        <v-sheet class="pa-4 rounded" color="grey darken-2" width="70%">
           Details:
           <div class="mt-2 mb-2">{{ JSON.stringify(errorCaught, null, 4) }}</div>
           <br />
@@ -29,7 +29,7 @@
 
       <!-- Fade-in -->
       <!-- Slow scroll fade-out vtexts -->
-      <div style="animation: fadeIn 0.75s" v-if="loading">{{ overlayMessage }}</div>
+      <div v-if="loading" style="animation: fadeIn 0.75s">{{ overlayMessage }}</div>
     </v-overlay>
     <slot v-if="!overlay" />
   </span>
@@ -137,7 +137,10 @@ const authFailKey = useEventBus("auth:failure");
 authFailKey.on(async () => {
   console.debug("[AppLoader] Event received: 'auth:failure', going back to login");
   setOverlay(true, "Authentication failed, going back to login");
-  await router.push({ name: RouteNames.Login });
+
+  if (router.currentRoute.name !== RouteNames.Login) {
+    await router.push({ name: RouteNames.Login });
+  }
   setOverlay(false);
 });
 
@@ -171,6 +174,7 @@ onBeforeMount(async () => {
   const { loginRequired, wizardState } = await authStore.checkLoginRequired();
   if (!wizardState.wizardCompleted) {
     console.debug("[AppLoader] Wizard not completed, going to wizard");
+    authStore.logout();
     if (router.currentRoute.name !== RouteNames.FirstTimeSetup) {
       await router.replace({ name: RouteNames.FirstTimeSetup });
     }

@@ -37,7 +37,7 @@
             >
           </div>
         </v-stepper-content>
-        <v-stepper-content step="2">
+        <v-stepper-content class="align-content-center align-center text-center" step="2">
           <h4><v-icon class="mr-2">settings</v-icon> Login</h4>
 
           <v-form v-model="formValid">
@@ -114,6 +114,7 @@
               :rules="[(v) => !!v || 'Username is required']"
               class="mt-5"
               label="Username"
+              prepend-icon="person"
             >
               <template v-slot:prepend>
                 <v-icon>person</v-icon>
@@ -123,9 +124,10 @@
             <v-text-field
               v-model="formStep2.rootPassword"
               type="password"
+              prepend-icon="lock"
               :rules="[
                 (v) => !!v || 'Password is required',
-                (v) => (!!v && v?.length > 6) || 'Password must be of length 6 or greater',
+                (v) => (!!v && v?.length >= 8) || 'Password must be of length 8 or greater',
               ]"
               class="mt-5"
               label="Password"
@@ -138,6 +140,7 @@
             <v-text-field
               v-model="formStep2.rootPassword2"
               type="password"
+              prepend-icon="lock"
               :rules="[
                 (v) => !!v || 'Repeated password is required',
                 (v) => v === formStep2.rootPassword || 'Passwords are not equal',
@@ -169,10 +172,14 @@
             >
           </div>
         </v-stepper-content>
-        <v-stepper-content step="3">
-          <v-icon size="100" color="green">check</v-icon> Completed
+        <v-stepper-content class="align-content-center align-center text-center" step="3">
+          <div class="mb-5 mt-10">
+            <v-icon size="100" class="mr-5" color="green circle">check_circle</v-icon> Setup
+            Completed
+          </div>
 
-          <v-btn class="mr-4" @click="continueNext()">Let's continue</v-btn>
+          <br />
+          <v-btn color="primary" class="mr-4" @click="continueNext()">Let's continue</v-btn>
 
           <div class="mt-14">
             <v-icon class="mr-6">question_mark</v-icon>
@@ -201,7 +208,7 @@ const formStep1 = ref({
   registration: false,
 });
 const formStep2 = ref({
-  rootUsername: "",
+  rootUsername: "admin",
   rootPassword: "",
   rootPassword2: "",
 });

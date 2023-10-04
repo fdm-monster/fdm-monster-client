@@ -12,6 +12,7 @@ export interface AuthState {
   refreshToken: string | null;
   token: string | null;
   loginRequired: boolean | null;
+  registration: boolean | null;
   wizardState: WizardState | null;
 }
 
@@ -20,6 +21,7 @@ export const useAuthStore = defineStore("auth", {
     token: null,
     refreshToken: null,
     loginRequired: null,
+    registration: null,
     wizardState: null,
   }),
   actions: {
@@ -28,9 +30,11 @@ export const useAuthStore = defineStore("auth", {
         .then((response) => {
           this.loginRequired = response.data.loginRequired;
           this.wizardState = response.data.wizardState;
+          this.registration = response.data.registration;
           return {
             loginRequired: this.loginRequired,
             wizardState: this.wizardState,
+            registration: this.registration,
           };
         })
         .catch((e: AxiosError) => {

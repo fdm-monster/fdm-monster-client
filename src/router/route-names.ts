@@ -1,6 +1,7 @@
 export const RouteNames = {
   Home: "Home",
   Login: "Login",
+  Registration: "Registration",
   PrintersView: "PrintersView",
   Settings: "Settings",
   PrintStatistics: "Print Statistics",
