@@ -205,7 +205,7 @@ const formStep1 = ref({
   registration: false,
 });
 const formStep2 = ref({
-  rootUsername: "",
+  rootUsername: "admin",
   rootPassword: "",
   rootPassword2: "",
 });
