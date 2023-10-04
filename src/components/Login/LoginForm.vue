@@ -60,25 +60,27 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              :disabled="!authStore.registration"
               :loading="loading"
               class="pa-4"
               color="primary"
               large
-              style="width: 50%"
-              @click="gotoRegistration()"
-            >
-              Register {{ authStore.registration ? "" : "(not enabled)" }}
-            </v-btn>
-            <v-btn
-              :loading="loading"
-              class="pa-4"
-              color="primary"
-              large
-              style="width: 50%"
+              style="width: 100%"
               @click="login()"
             >
               Login
+            </v-btn>
+          </v-card-actions>
+          <v-card-actions>
+            <v-btn
+              :disabled="!authStore.registration"
+              :loading="loading"
+              class="pa-4"
+              large
+              style="width: 100%"
+              @click="gotoRegistration()"
+            >
+              Register new account {{ authStore.registration ? "" : "(not enabled)" }}
+              <v-icon right>arrow_right</v-icon>
             </v-btn>
           </v-card-actions>
         </v-card>

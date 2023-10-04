@@ -114,6 +114,7 @@
               :rules="[(v) => !!v || 'Username is required']"
               class="mt-5"
               label="Username"
+              prepend-icon="person"
             >
               <template v-slot:prepend>
                 <v-icon>person</v-icon>
@@ -123,6 +124,7 @@
             <v-text-field
               v-model="formStep2.rootPassword"
               type="password"
+              prepend-icon="lock"
               :rules="[
                 (v) => !!v || 'Password is required',
                 (v) => (!!v && v?.length >= 8) || 'Password must be of length 8 or greater',
@@ -138,6 +140,7 @@
             <v-text-field
               v-model="formStep2.rootPassword2"
               type="password"
+              prepend-icon="lock"
               :rules="[
                 (v) => !!v || 'Repeated password is required',
                 (v) => v === formStep2.rootPassword || 'Passwords are not equal',

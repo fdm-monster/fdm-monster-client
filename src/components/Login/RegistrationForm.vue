@@ -34,9 +34,10 @@
               <label> Username </label>
               <v-text-field
                 v-model="username"
+                :rules="[(v) => !!v || 'Username is required']"
                 autofocus
                 name="login"
-                placeholder="Username"
+                label="Username"
                 prepend-icon="person"
                 type="text"
               ></v-text-field>
@@ -47,6 +48,10 @@
                 :type="showPassword ? 'text' : 'password'"
                 label="Password"
                 name="password"
+                :rules="[
+                  (v) => !!v || 'Password is required',
+                  (v) => (!!v && v?.length >= 8) || 'Password must be of length 8 or greater',
+                ]"
                 password
                 prepend-icon="lock"
                 @click:append="showPassword = !showPassword"
@@ -56,7 +61,11 @@
                 v-model="password2"
                 :append-icon="showPassword2 ? 'visibility' : 'visibility_off'"
                 :type="showPassword2 ? 'text' : 'password'"
-                label="Password"
+                :rules="[
+                  (v) => !!v || 'Repeated password is required',
+                  (v) => v === password || 'Passwords are not equal',
+                ]"
+                label="Repeated Password"
                 name="password"
                 password
                 prepend-icon="lock"
@@ -80,6 +89,11 @@
               Register account
             </v-btn>
           </v-card-actions>
+          <v-card-actions>
+            <v-btn :loading="loading" style="width: 100%" class="pa-4" large @click="gotoLogin()">
+              <v-icon class="mr-2">arrow_left</v-icon>Back to Login
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
@@ -89,14 +103,13 @@
 import { AxiosError } from "axios";
 import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "@/store/auth.store";
-import { useRoute, useRouter } from "vue-router/composables";
+import { useRouter } from "vue-router/composables";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AuthService } from "@/backend/auth.service";
 import { RouteNames } from "@/router/route-names";
 
 const authStore = useAuthStore();
 const router = useRouter();
-const route = useRoute();
 const errorMessage = ref("");
 const username = ref("");
 const showPassword = ref(false);
@@ -105,6 +118,10 @@ const password = ref("");
 const password2 = ref("");
 const loading = ref(false);
 const snackbar = useSnackbar();
+
+async function gotoLogin() {
+  return await router.push({ name: RouteNames.Login });
+}
 
 const formIsDisabled = computed(() => {
   return (
@@ -115,7 +132,7 @@ const formIsDisabled = computed(() => {
 });
 
 onMounted(async () => {
-  // TODO check registration is enabled
+  await authStore.logout();
   await authStore.checkLoginRequired();
   if (!authStore.registration) {
     snackbar.info("Registration is disabled, please contact your administrator");
@@ -147,8 +164,6 @@ async function registerAccount() {
   errorMessage.value = "";
 
   snackbar.info("Account created, please login");
-  await router.push({
-    name: RouteNames.Login,
-  });
+  await gotoLogin();
 }
 </script>
