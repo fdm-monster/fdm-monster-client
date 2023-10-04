@@ -163,7 +163,7 @@ export default defineComponent({
     whitelistedIpAddresses: [],
   }),
   async created() {
-    const settings = await SettingsService.getServerSettings();
+    const settings = await SettingsService.getSettings();
     this.whitelistedIpAddresses = settings.server?.whitelistedIpAddresses;
     this.whitelistEnabled = settings.server?.whitelistEnabled;
     this.fileHandlingSettings = settings.fileClean;

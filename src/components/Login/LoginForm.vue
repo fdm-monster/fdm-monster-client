@@ -5,7 +5,7 @@
         class="d-flex flex-column align-content-center"
         md4
         sm8
-        style="max-width: 450px; margin-top: 10%"
+        style="max-width: 550px; margin-top: 10%"
         xs12
       >
         <div class="d-flex flex-column align-center">

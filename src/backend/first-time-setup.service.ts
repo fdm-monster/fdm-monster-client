@@ -10,7 +10,7 @@ interface FirstTimeSetupData {
 
 export class FirstTimeSetupService extends BaseService {
   static async postFirstTimeSetup(data: FirstTimeSetupData) {
-    const path = ServerApi.firstTimeSetupRoute;
+    const path = ServerApi.completeFirstTimeSetupRoute;
 
     return await this.postApi(path, data);
   }

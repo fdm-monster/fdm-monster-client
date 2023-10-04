@@ -2,6 +2,7 @@ export class ServerApi {
   static base = "/api";
 
   static firstTimeSetupRoute = `${ServerApi.base}/first-time-setup`;
+  static completeFirstTimeSetupRoute = `${ServerApi.firstTimeSetupRoute}/complete`;
 
   static printerRoute = `${ServerApi.base}/printer`;
   static printerBatchRoute = `${ServerApi.printerRoute}/batch`;
@@ -24,8 +25,9 @@ export class ServerApi {
 
   static settingsRoute = `${ServerApi.base}/settings`;
   static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
-  static frontendSettingsRoute = `${ServerApi.settingsRoute}/frontend`;
-  static serverWhitelistSettingRoute = `${ServerApi.settingsRoute}/whitelist`;
+  static fileCleanSettingsRoute = `${ServerApi.settingsRoute}/file-clean`;
+  static updateFrontendSettingsRoute = `${ServerApi.settingsRoute}/frontend`;
+  static updateServerWhitelistSettingRoute = `${ServerApi.settingsRoute}/whitelist`;
   static serverSentryDiagnosticsSettingRoute = `${ServerApi.settingsRoute}/sentry-diagnostics`;
 
   static serverPrivateRoute = `${ServerApi.base}/server`;
