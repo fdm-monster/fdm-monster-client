@@ -1,6 +1,6 @@
 import { Printer } from "@/models/printers/printer.model";
 import { Floor } from "../floors/floor.model";
-import { ById } from "../../utils/types/byid.utils";
+import { ById } from "@/utils/types/byid.utils";
 import { PrinterState } from "../printers/visual-state.model";
 
 export interface TrackedUpload {
