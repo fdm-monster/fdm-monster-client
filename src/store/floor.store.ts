@@ -20,7 +20,7 @@ export const useFloorStore = defineStore("Floors", {
       return state.floors.sort((f, f2) => f.floor - f2.floor);
     },
     floor(state) {
-      return (floorId: string) => state.floors.find((pf) => pf._id === floorId);
+      return (floorId: string) => state.floors.find((pf) => pf.id === floorId);
     },
     floorNames(state) {
       return state.floors.map((f) => f.name);
@@ -80,8 +80,8 @@ export const useFloorStore = defineStore("Floors", {
     saveFloors(floors: Floor[]) {
       if (!floors?.length) return;
       this.floors = floors.sort((f, f2) => f.floor - f2.floor);
-      const floorId = this.selectedFloor?._id;
-      const foundFloor = this.floors.find((f) => f._id === floorId);
+      const floorId = this.selectedFloor?.id;
+      const foundFloor = this.floors.find((f) => f.id === floorId);
       this.selectedFloor = !foundFloor ? this.floors[0] : foundFloor;
     },
     async deleteFloor(floorId: string) {
@@ -131,13 +131,13 @@ export const useFloorStore = defineStore("Floors", {
       this._replaceFloor(result);
     },
     _popPrinterFloor(floorId: string) {
-      const foundFloorIndex = this.floors.findIndex((pg) => pg._id === floorId);
+      const foundFloorIndex = this.floors.findIndex((pg) => pg.id === floorId);
       if (foundFloorIndex !== -1) {
         this.floors.splice(foundFloorIndex, 1);
       }
     },
     _replaceFloor(printerFloor: Floor) {
-      const foundFloorIndex = this.floors.findIndex((pf) => pf._id === printerFloor._id);
+      const foundFloorIndex = this.floors.findIndex((pf) => pf.id === printerFloor.id);
       if (foundFloorIndex !== -1) {
         this.floors[foundFloorIndex] = printerFloor;
       }

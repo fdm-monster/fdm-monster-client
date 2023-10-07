@@ -28,7 +28,7 @@
       <v-col>
         <v-list dense>
           <v-list-item-group v-model="selectedItem">
-            <v-list-item v-for="floor of floors" :key="floor._id">
+            <v-list-item v-for="floor of floors" :key="floor.id">
               <v-list-item-content>
                 <v-list-item-title>{{ floor.name }}</v-list-item-title>
                 <v-list-item-subtitle>
@@ -128,7 +128,7 @@
             </v-list-item-content>
 
             <v-list-item-action v-if="printerInFloor(selectedFloor, x)">
-              <v-btn @click="clearPrinterGroupFromFloor(selectedFloor, x)">
+              <v-btn @click="deletePrinterFromFloor(selectedFloor, x)">
                 <v-icon>close</v-icon>
                 Clear
               </v-btn>
@@ -149,6 +149,7 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { Printer } from "../../models/printers/printer.model";
 import { floorPrinterAssignmentHidden } from "../../shared/experimental.constants";
 import { useFloorStore } from "../../store/floor.store";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 interface Data {
   editedFloorName: string;
@@ -163,6 +164,7 @@ export default defineComponent({
       printersStore: usePrinterStore(),
       floorStore: useFloorStore(),
       dialogsStore: useDialogsStore(),
+      snackbar: useSnackbar(),
     };
   },
   props: {},
@@ -208,47 +210,40 @@ export default defineComponent({
       this.editedFloorNumber = this.selectedFloor.floor;
     },
     async updatePrinterFloorName() {
-      if (!this.selectedFloor?._id) return;
-      const { _id: floorId } = this.selectedFloor;
+      if (!this.selectedFloor?.id) return;
+      const { id: floorId } = this.selectedFloor;
       await this.floorStore.updateFloorName({
         floorId,
         name: this.editedFloorName,
       });
+      this.snackbar.info("Floor name updated");
     },
     async updatePrinterFloorNumber() {
-      if (!this.selectedFloor?._id) return;
-      const { _id: floorId } = this.selectedFloor;
+      if (!this.selectedFloor?.id) return;
+      const { id: floorId } = this.selectedFloor;
       await this.floorStore.updateFloorNumber({
         floorId,
         floorNumber: this.editedFloorNumber,
       });
+      this.snackbar.info("Floor level updated");
       // Adapt to potential sort change
       this.selectedItem = -1;
     },
     async clickDeleteFloor() {
-      if (!this.selectedFloor?._id) return;
+      if (!this.selectedFloor?.id) return;
 
-      await this.floorStore.deleteFloor(this.selectedFloor._id);
+      await this.floorStore.deleteFloor(this.selectedFloor.id);
+      this.snackbar.info("Floor deleted");
     },
-    async addPrinterToFloor(floor: Floor, printer: Printer) {
-      if (!this.selectedFloor._id || !printer?.id) return;
-
-      // TODO this will fail because X < 0 and Y < 0
-      await this.floorStore.addPrinterToFloor({
-        floorId: this.selectedFloor._id,
-        printerId: printer.id,
-        x: -1,
-        y: -1,
-      });
-    },
-    async clearPrinterGroupFromFloor(floor: Floor, index: number) {
+    async deletePrinterFromFloor(floor: Floor, index: number) {
       const printer = this.printerInFloor(floor, index);
-      if (!floor?._id || !printer?.id) return;
+      if (!floor?.id || !printer?.id) return;
 
       await this.floorStore.deletePrinterFromFloor({
-        floorId: floor._id,
+        floorId: floor.id,
         printerId: printer.id,
       });
+      this.snackbar.info("Printer removed from floor");
     },
   },
   watch: {},
