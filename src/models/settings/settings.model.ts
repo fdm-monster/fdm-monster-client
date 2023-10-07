@@ -1,4 +1,4 @@
-import { ServerSettings } from "./serverSettings";
+import { ServerSettings, TimeoutSettings } from "./serverSettings";
 import { FileCleanSettings } from "./printer-file-clean-settings.model";
 
 export type FileCleanSubSetting = {
@@ -16,5 +16,5 @@ export interface SettingsDto {
   server: ServerSettings;
   frontend: FrontendSettings;
   fileClean: FileCleanSettings;
-  timeout: any; // TODO model
+  timeout: TimeoutSettings;
 }

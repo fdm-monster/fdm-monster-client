@@ -8,7 +8,7 @@ export class FloorService extends BaseService {
     // Inverse transformation
     const newFormData = getDefaultCreateFloor();
 
-    newFormData._id = printerFloor?._id;
+    newFormData.id = printerFloor?.id;
     newFormData.name = printerFloor?.name || newRandomNamePair();
     newFormData.printers = [];
 
