@@ -281,7 +281,7 @@ export default defineComponent({
     async selectOrUnplacePrinter() {
       if (!this.printer || !this.printerId) return;
       if (this.gridStore.gridEditMode) {
-        const floorId = this.floorStore.selectedFloor?._id;
+        const floorId = this.floorStore.selectedFloor?.id;
         if (!floorId) throw new Error("Cant clear printer, floor not selected");
         await FloorService.deletePrinterFromFloor(floorId, this.printerId);
 

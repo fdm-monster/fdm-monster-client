@@ -60,6 +60,7 @@
 import { defineComponent } from "vue";
 import { useSettingsStore } from "../../store/settings.store";
 import { colOptions, rowOptions } from "../../shared/printer-grid.constants";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 interface Data {
   property: number;
@@ -71,6 +72,7 @@ export default defineComponent({
   setup: () => {
     return {
       settingsStore: useSettingsStore(),
+      snackbar: useSnackbar(),
     };
   },
   async created() {},
@@ -97,6 +99,7 @@ export default defineComponent({
         gridRows: this.settingsStore.gridRows,
         largeTiles: this.largeTilesSettings,
       });
+      this.snackbar.info("Grid settings updated");
     },
   },
   watch: {},

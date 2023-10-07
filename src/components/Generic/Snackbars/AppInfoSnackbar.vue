@@ -7,7 +7,7 @@
     elevation="24"
     class="ma-3"
     shaped
-    timeout="5000"
+    :timeout="timeout"
     style="z-index: 1000"
     multi-line
   >
@@ -39,6 +39,7 @@ const snackbar = useSnackbar();
 const snackbarOpened = ref(false);
 const infoTitle = ref("");
 const infoSubtitle = ref("");
+const timeout = ref(2000);
 const isWarning = ref(false);
 
 onMounted(() => {
@@ -46,6 +47,7 @@ onMounted(() => {
     infoTitle.value = data.title;
     infoSubtitle.value = data.subtitle ?? "";
     isWarning.value = data.warning ?? false;
+    timeout.value = data.timeout ?? 2000;
     snackbarOpened.value = true;
   });
 });

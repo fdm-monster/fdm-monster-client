@@ -15,6 +15,7 @@ export interface InfoMessage {
   title: string;
   subtitle?: string | null;
   warning?: boolean;
+  timeout?: number;
 }
 
 export interface ErrorMessage {
@@ -47,7 +48,8 @@ export function useSnackbar() {
         completed,
       } as ProgressMessage),
     openInfoMessage: (data: InfoMessage) => emitInfoMessage(data),
-    info: (title: string, subtitle?: string) => emitInfoMessage({ title, subtitle }),
+    info: (title: string, subtitle?: string, timeout?: number) =>
+      emitInfoMessage({ title, subtitle, timeout }),
     openErrorMessage: (errorData: ErrorMessage) => emitErrorMessage(errorData),
     error: (title: string, subtitle?: string) => emitErrorMessage({ title, subtitle }),
     onProgressMessage,
