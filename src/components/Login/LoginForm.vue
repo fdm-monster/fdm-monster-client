@@ -73,7 +73,6 @@
           <v-card-actions>
             <v-btn
               :disabled="!authStore.registration"
-              :loading="loading"
               class="pa-4"
               large
               style="width: 100%"
