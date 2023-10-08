@@ -93,8 +93,17 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
       // If this fails, the server is just confused
       const success = await authStore.verifyOrRefreshLoginOnce();
       if (success) {
+        if (!config?.url) {
+          throw new Error("No URL in axios config, cannot retry");
+        }
+
         console.debug("Redoing request without interceptors", config?.url);
-        return axios(config as AxiosRequestConfig);
+        const newConfig: AxiosRequestConfig = config;
+        if (!newConfig.headers) {
+          newConfig.headers = {};
+        }
+        newConfig.headers.Authorization = `Bearer ${authStore.token}`;
+        return axios(newConfig);
       }
 
       console.error("[HttpClient] 401 Unauthorized - emitting 'auth:failure'");

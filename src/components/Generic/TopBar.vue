@@ -38,7 +38,7 @@
       </v-list>
     </v-menu>
 
-    <span class="ml-2"> AuthExp {{ expiry }} </span>
+    <span class="ml-2" v-if="isDevEnv"> AuthExp {{ expiry }} </span>
 
     <v-btn v-if="authStore.loginRequired === true" class="ml-2" color="secondary" @click="logout()">
       <v-icon class="mr-2">logout</v-icon>
@@ -72,7 +72,7 @@ import { useProfileStore } from "@/store/profile.store";
 import { useRouter } from "vue-router/composables";
 import { routeToLogin } from "@/router/utils";
 import { useIntervalFn } from "@vueuse/core";
-import { isProdEnv } from "@/shared/app.constants";
+import { isDevEnv, isProdEnv } from "@/shared/app.constants";
 
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
@@ -80,10 +80,14 @@ const router = useRouter();
 const items = [{ title: "Open Profile", icon: "person", path: "/settings/account" }];
 
 const showHelp = ref(false);
+
 const now = ref(Date.now());
-useIntervalFn(() => {
-  now.value = Date.now();
-}, 1000);
+if (isDevEnv) {
+  useIntervalFn(() => {
+    now.value = Date.now();
+  }, 1000);
+}
+
 const expiry = computed(() => {
   if (isProdEnv) {
     return "";
@@ -94,6 +98,7 @@ const expiry = computed(() => {
   const diffValue = authStore.tokenClaims.exp - now.value / 1000;
   return `${Math.round(diffValue)}s`;
 });
+
 const username = computed(() => {
   return profileStore.username;
 });
