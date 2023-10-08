@@ -62,12 +62,12 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { AppService } from "../../backend/app.service";
-import { useSettingsStore } from "../../store/settings.store";
-import { SettingsService } from "../../backend";
-import { setSentryEnabled } from "../../utils/sentry.util";
-import { ServerPrivateService } from "../../backend/server-private.service";
-import { useSnackbar } from "../../shared/snackbar.composable";
+import { AppService } from "@/backend/app.service";
+import { useSettingsStore } from "@/store/settings.store";
+import { SettingsService } from "@/backend";
+import { setSentryEnabled } from "@/utils/sentry.util";
+import { ServerPrivateService } from "@/backend/server-private.service";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 const snackBar = useSnackbar();
 const settingsStore = useSettingsStore();
