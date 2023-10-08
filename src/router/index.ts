@@ -12,6 +12,7 @@ import AccountSettings from "../components/Settings/AccountSettings.vue";
 import GridSettings from "../components/Settings/GridSettings.vue";
 import SoftwareUpgradeSettings from "../components/Settings/SoftwareUpgradeSettings.vue";
 import DiagnosticsSettings from "../components/Settings/DiagnosticsSettings.vue";
+import CameraGridView from "../components/CameraGrid/CameraGridView.vue";
 import { useAuthStore } from "@/store/auth.store";
 import LoginView from "../components/Login/LoginView.vue";
 import NotFoundView from "../components/NotFound/NotFoundView.vue";
@@ -58,6 +59,11 @@ const routes: Array<RouteConfig> = [
     name: RouteNames.PrintersView,
     meta: NeedsAuth,
     component: PrintersView,
+  },
+  {
+    path: "/cameras",
+    name: RouteNames.CameraGridView,
+    component: CameraGridView,
   },
   {
     path: "/settings",

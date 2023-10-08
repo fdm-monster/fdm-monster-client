@@ -10,4 +10,5 @@ export enum DialogName {
   AddOrUpdateFloorDialog = "AddOrUpdateFloorDialog",
   // The printer repair dialog, which is used to mark a printer as maintenance mode.
   PrinterMaintenanceDialog = "PrinterMaintenanceDialog",
+  AddOrUpdateCameraDialog = "AddOrUpdateCameraDialog",
 }

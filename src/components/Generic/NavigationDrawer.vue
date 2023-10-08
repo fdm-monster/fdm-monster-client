@@ -44,6 +44,7 @@ export default defineComponent({
       items: [
         ["home", "Devices", "/"],
         ["printer", "Printers", "/printers"],
+        ["camera_alt", "CameraGridView", "/cameras"],
         ["settings", "Settings", "/settings"],
         ["timeline", "PrintStatistics", "/statistics"],
         ["contact_support", "About", "/about"],
