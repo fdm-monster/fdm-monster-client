@@ -16,6 +16,7 @@ export function newRandomNamePair() {
 export function generateInitials(name: string) {
   if (name === null) return "?";
   const initials = name
+    ?.replace(/[^a-zA-Z ]/g, "")
     ?.split(" ")
     .slice(0, 3)
     .reduce((acc, subname) => acc + subname[0], "");

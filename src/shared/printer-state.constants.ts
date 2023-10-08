@@ -1,7 +1,7 @@
-import { PrinterState } from "../models/printers/visual-state.model";
-import { Printer } from "../models/printers/printer.model";
-import { SocketState } from "../models/socketio-messages/socketio-message.model";
-import { useSettingsStore } from "../store/settings.store";
+import { PrinterState } from "@/models/printers/visual-state.model";
+import { Printer } from "@/models/printers/printer.model";
+import { SocketState } from "@/models/socketio-messages/socketio-message.model";
+import { useSettingsStore } from "@/store/settings.store";
 
 const COLOR = {
   danger: "danger",
