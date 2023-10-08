@@ -77,10 +77,6 @@
               v-model="fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
               label="Remove old file before upload"
             ></v-checkbox>
-            <v-checkbox
-              v-model="fileHandlingSettings.autoRemoveOldFilesAtBoot"
-              label="Remove old files when (re)booting the server"
-            ></v-checkbox>
             <v-text-field
               v-model="fileHandlingSettings.autoRemoveOldFilesCriteriumDays"
               :disabled="!fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
@@ -89,6 +85,10 @@
               outlined
               type="number"
             />
+            <v-checkbox
+              v-model="fileHandlingSettings.autoRemoveOldFilesAtBoot"
+              label="Remove old files when (re)booting the server"
+            ></v-checkbox>
             <v-btn color="primary" @click="setFileCleanSettings()">save file clean settings</v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -166,7 +166,7 @@ export default defineComponent({
     const settings = await SettingsService.getSettings();
     this.whitelistedIpAddresses = settings.server?.whitelistedIpAddresses;
     this.whitelistEnabled = settings.server?.whitelistEnabled;
-    this.fileHandlingSettings = settings.fileClean;
+    this.fileHandlingSettings = settings.printerFileClean;
   },
   mounted() {},
   computed: {},
@@ -198,7 +198,7 @@ export default defineComponent({
     },
     async setFileCleanSettings() {
       const serverSettings = await SettingsService.setFileCleanSettings(this.fileHandlingSettings);
-      this.fileHandlingSettings = serverSettings.fileClean;
+      this.fileHandlingSettings = serverSettings.printerFileClean;
     },
     async purgeFiles() {
       await PrinterFileService.purgeFiles();
