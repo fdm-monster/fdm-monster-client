@@ -15,6 +15,6 @@ export interface SettingsDto {
   id: string;
   server: ServerSettings;
   frontend: FrontendSettings;
-  fileClean: FileCleanSettings;
+  printerFileClean: FileCleanSettings;
   timeout: TimeoutSettings;
 }
