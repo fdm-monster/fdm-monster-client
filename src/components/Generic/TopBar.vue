@@ -38,6 +38,8 @@
       </v-list>
     </v-menu>
 
+    <span class="ml-2" v-if="isDevEnv"> AuthExp {{ expiry }} </span>
+
     <v-btn v-if="authStore.loginRequired === true" class="ml-2" color="secondary" @click="logout()">
       <v-icon class="mr-2">logout</v-icon>
       Logout
@@ -45,15 +47,18 @@
     <v-btn icon @click="showHelp = true">
       <v-icon>help</v-icon>
     </v-btn>
-    <v-dialog v-model="showHelp" eager width="90%" fullscreen transition="dialog-bottom-transition">
-      <v-btn @click="showHelp = false">Close Help<v-icon>close</v-icon></v-btn>
-      <v-card width="100%" height="100%">
+    <v-dialog v-model="showHelp" eager fullscreen transition="dialog-bottom-transition" width="90%">
+      <v-btn @click="showHelp = false"
+        >Close Help
+        <v-icon>close</v-icon>
+      </v-btn>
+      <v-card height="100%" width="100%">
         <v-toolbar color="primary">
           <v-icon class="mr-2">help</v-icon>
           Showing help from docs.fdm-monster.net
         </v-toolbar>
 
-        <iframe src="https://docs.fdm-monster.net/software_usage" width="100%" height="100%" />
+        <iframe height="100%" src="https://docs.fdm-monster.net/software_usage" width="100%" />
       </v-card>
     </v-dialog>
   </v-app-bar>
@@ -66,12 +71,33 @@ import { computed, ref } from "vue";
 import { useProfileStore } from "@/store/profile.store";
 import { useRouter } from "vue-router/composables";
 import { routeToLogin } from "@/router/utils";
+import { useIntervalFn } from "@vueuse/core";
+import { isDevEnv, isProdEnv } from "@/shared/app.constants";
 
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const items = [{ title: "Open Profile", icon: "person", path: "/settings/account" }];
+
 const showHelp = ref(false);
+
+const now = ref(Date.now());
+if (isDevEnv) {
+  useIntervalFn(() => {
+    now.value = Date.now();
+  }, 1000);
+}
+
+const expiry = computed(() => {
+  if (isProdEnv) {
+    return "";
+  }
+  if (!authStore.tokenClaims?.exp) {
+    return "";
+  }
+  const diffValue = authStore.tokenClaims.exp - now.value / 1000;
+  return `${Math.round(diffValue)}s`;
+});
 
 const username = computed(() => {
   return profileStore.username;
