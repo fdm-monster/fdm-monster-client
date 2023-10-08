@@ -3,7 +3,7 @@ import { ServerApi } from "@/backend/server.api";
 import { ExportYamlModel } from "@/models/server/export-yaml.model";
 import { downloadFileByBlob } from "@/utils/download-file.util";
 import axios from "axios";
-import { getBaseUri } from "@/shared/http-client";
+import { getBaseUri, getHttpClient } from "@/shared/http-client";
 
 export class ServerPrivateService extends BaseService {
   public static async restartServer() {
@@ -13,10 +13,10 @@ export class ServerPrivateService extends BaseService {
   }
 
   public static async downloadYamlExport(input: ExportYamlModel) {
-    const apiBase = await getBaseUri();
-    const response = await axios.request<any>({
+    const client = await getHttpClient();
+    const response = await client.request<any>({
       method: "POST",
-      url: `${apiBase}/api/server/export-printers-floors-yaml`,
+      url: `api/server/export-printers-floors-yaml`,
       data: input,
       responseType: "blob",
     });
@@ -33,10 +33,10 @@ export class ServerPrivateService extends BaseService {
   }
 
   public static async downloadLogDump() {
-    const apiBase = await getBaseUri();
-    const response = await axios.request<any>({
+    const client = await getHttpClient();
+    const response = await client.request<any>({
       method: "POST",
-      url: `${apiBase}/api/server/dump-fdm-monster-logs`,
+      url: `api/server/dump-fdm-monster-logs`,
       responseType: "blob",
     });
     await downloadFileByBlob((response as any).data, "logs-fdm-monster-" + Date.now() + ".zip");
