@@ -19,6 +19,7 @@
     </AppLoader>
 
     <AddOrUpdatePrinterDialog />
+    <AddOrUpdateCameraStreamDialog />
     <AddOrUpdateFloorDialog />
     <PrinterMaintenanceDialog />
     <BatchJsonCreateDialog />
@@ -50,12 +51,14 @@ import AppInfoSnackbar from "./components/Generic/Snackbars/AppInfoSnackbar.vue"
 import { uploadProgressTest } from "./utils/test.util";
 import { useAuthStore } from "./store/auth.store";
 import AppLoader from "./AppLoader.vue";
+import AddOrUpdateCameraStreamDialog from "@/components/Generic/Dialogs/AddOrUpdateCameraStreamDialog.vue";
 
 interface Data {}
 
 export default defineComponent({
   name: "AppView",
   components: {
+    AddOrUpdateCameraStreamDialog,
     AppInfoSnackbar,
     AppErrorSnackbar,
     AlertErrorDialog,

@@ -2,24 +2,24 @@
   <div>
     <v-toolbar>
       <v-toolbar-title class="mr-4">Camera Overview</v-toolbar-title>
-      <v-btn color="primary">
+      <v-btn color="primary" @click="addCamera()">
         <v-icon class="mr-2">add</v-icon>
         Add camera
       </v-btn>
     </v-toolbar>
     <v-row class="ma-0">
       <div
-        v-for="camera in camerasWithPrinter"
-        :key="camera.cameraStream._id"
+        v-for="camera in query.data.value"
+        :key="camera.id"
         class="ma-3"
-        style="border: 1px solid gray; margin: 0"
+        style="border: 1px solid grey; margin: 0"
         width="300"
       >
         <v-card class="" width="300">
           <v-card-title>
-            <v-icon dense v-if="camera?.printer" class="mr-2">print</v-icon>
-            <v-icon dense v-else class="mr-2">camera_alt</v-icon>
-            {{ camera?.printer ? camera?.printer.printerName : "Normal Camera" }}
+            <v-icon v-if="camera?.printerId" class="mr-2" dense>print</v-icon>
+            <v-icon v-else class="mr-2" dense>camera_alt</v-icon>
+            {{ camera?.cameraStream.name ?? camera?.printer?.printerName ?? "Camera" }}
           </v-card-title>
           <img :src="camera.cameraStream?.streamURL" width="100%" />
           <br />
@@ -27,7 +27,7 @@
             <v-icon class="mr-2">edit</v-icon>
             Update
           </v-btn>
-          <v-btn small>
+          <v-btn small @click="deleteCamera(camera.cameraStream.id)">
             <v-icon class="mr-2">delete</v-icon>
             Delete
           </v-btn>
@@ -38,22 +38,46 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue";
-import { CameraStreamService } from "../../backend/camera-stream.service";
-import { CameraStream } from "../../models/camera-streams/camera-stream";
-import { usePrinterStore } from "../../store/printer.store";
+import { CameraStreamService } from "@/backend/camera-stream.service";
+import { useDialog } from "@/shared/dialog.composable";
+import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { useMutation, useQuery } from "@tanstack/vue-query";
+import { CameraStream } from "@/models/camera-streams/camera-stream";
+import { Printer } from "@/models/printers/printer.model";
+import { usePrinterStore } from "@/store/printer.store";
 
-const cameraStreams = ref<CameraStream[]>([]);
+interface CameraWithPrinter {
+  printer: Printer;
+  cameraStream: CameraStream;
+}
+
 const printerStore = usePrinterStore();
-
-onMounted(async () => {
-  cameraStreams.value = (await CameraStreamService.listCameraStreams()) as CameraStream[];
-});
-
-const camerasWithPrinter = computed(() => {
-  return cameraStreams.value.map((cameraStream) => ({
+const dialog = useDialog(DialogName.AddOrUpdateCameraDialog);
+const camerasWithPrinter = async (): Promise<CameraWithPrinter[]> => {
+  const streams = await CameraStreamService.listCameraStreams();
+  return streams.map((cameraStream) => ({
     printer: printerStore.printers.find((printer) => printer.id === cameraStream.printerId),
     cameraStream,
-  }));
+  })) as CameraWithPrinter[];
+};
+const query = useQuery({
+  queryKey: ["cameraStream"],
+  queryFn: camerasWithPrinter,
 });
+const deleteMutation = useMutation({
+  mutationFn: (cameraId: string | number) => CameraStreamService.deleteCameraStream(cameraId),
+  onSuccess: () => query.refetch(),
+});
+
+function addCamera() {
+  dialog.openDialog({ addOrUpdate: "add" });
+}
+
+function updateCamera(cameraId: string | number) {
+  dialog.openDialog({ addOrUpdate: "update", cameraId });
+}
+
+function deleteCamera(cameraId: string | number) {
+  deleteMutation.mutateAsync(cameraId);
+}
 </script>
