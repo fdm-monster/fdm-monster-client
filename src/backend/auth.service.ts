@@ -26,6 +26,11 @@ export class AuthService {
     });
   }
 
+  static async logout() {
+    const httpClient = await getHttpClient(true, false);
+    return await httpClient.post("api/auth/logout");
+  }
+
   static async refreshLogin(refreshToken: string) {
     const httpClient = await getHttpClient(false, false);
     return await httpClient.post<{

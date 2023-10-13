@@ -133,7 +133,7 @@ const formIsDisabled = computed(() => {
 
 onMounted(async () => {
   await authStore.logout();
-  await authStore.checkLoginRequired();
+  await authStore.checkAuthenticationRequirements();
   if (!authStore.registration) {
     snackbar.info("Registration is disabled, please contact your administrator");
     await router.push({

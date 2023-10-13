@@ -88,7 +88,7 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
       authStore.loadTokens();
 
       // If this is called on AppLoader and failing, poll it if status 0
-      await authStore.checkLoginRequired();
+      await authStore.checkAuthenticationRequirements();
 
       // If this fails, the server is just confused
       const success = await authStore.verifyOrRefreshLoginOnce();

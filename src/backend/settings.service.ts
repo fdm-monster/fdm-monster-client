@@ -21,6 +21,18 @@ export class SettingsService extends BaseService {
     return (await this.getApi(path)) as SettingsSensitiveDto;
   }
 
+  static async updateLoginRequiredSettings(loginRequired: boolean) {
+    const path = `${ServerApi.updateLoginRequiredRoute}`;
+
+    return (await this.putApi(path, { loginRequired })) as SettingsDto;
+  }
+
+  static async updateRegistrationEnabledSettings(registrationEnabled: boolean) {
+    const path = `${ServerApi.updateRegistrationEnabledRoute}`;
+
+    return (await this.putApi(path, { registrationEnabled })) as SettingsDto;
+  }
+
   static async updateFrontendSettings(frontendSettings: FrontendSettings) {
     const path = `${ServerApi.updateFrontendSettingsRoute}`;
 

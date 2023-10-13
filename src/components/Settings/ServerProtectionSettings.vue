@@ -70,12 +70,94 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Login Required</v-list-item-title>
+
+          <v-list-item-subtitle>
+            <v-row>
+              <v-col cols="12" md="2">
+                <v-checkbox v-model="loginRequired" label="Require Login"></v-checkbox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-btn color="primary" @click="setLoginRequired()">
+                  save login required setting
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Registration Enabled</v-list-item-title>
+          <v-list-item-subtitle>
+            <v-row>
+              <v-col cols="12" md="2">
+                <v-checkbox v-model="registrationEnabled" label="Enable Registration"></v-checkbox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-btn color="primary" @click="setRegistrationEnabled()">
+                  save registration enabled setting
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Login Expiry Settings (advanced)</v-list-item-title>
+          <v-list-item-content>
+            <v-list-item-subtitle>
+              <v-alert color="primary">
+                <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong expiry could make you
+                lose access to the server!
+              </v-alert>
+              <v-row>
+                <v-col cols="12" md="2">
+                  <v-text-field
+                    v-model="jwtExpiresIn"
+                    :rules="[(val) => !!val]"
+                    label="JWT Expiry (seconds)"
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="2">
+                  <v-checkbox
+                    v-model="refreshTokenAttemptsEnabled"
+                    label="Enable Refresh Token Attempts"
+                  ></v-checkbox>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="2">
+                  <v-text-field
+                    v-model="refreshTokenAttempts"
+                    :disabled="!refreshTokenAttemptsEnabled"
+                    :rules="[(val) => !!val]"
+                    label="Refresh Token Attempts"
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="2">
+                  <v-text-field
+                    v-model="refreshTokenExpiry"
+                    :rules="[(val) => !!val]"
+                    label="Refresh Token Expiry (days)"
+                  >
+                  </v-text-field>
+                </v-col>
+              </v-row>
+            </v-list-item-subtitle>
+          </v-list-item-content>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -87,18 +169,43 @@ import { onMounted, ref } from "vue";
 import { whitelistSettingsHidden } from "@/shared/experimental.constants";
 import { isValidIPOrMask } from "@/utils/validation.utils";
 import { SettingsService } from "@/backend";
+import { useSnackbar } from "@/shared/snackbar.composable";
+import { useAuthStore } from "@/store/auth.store";
+import { useRouter } from "vue-router/composables";
+import { RouteNames } from "@/router/route-names";
+
+const router = useRouter();
+const snackbar = useSnackbar();
+const authStore = useAuthStore();
 
 const ipAddress = ref<string>("");
 const whitelistEnabled = ref<boolean>(false);
 const whitelistedIpAddresses = ref<string[]>([]);
 
+const loginRequired = ref<boolean>(false);
+const registrationEnabled = ref<boolean>(false);
+
+const jwtExpiresIn = ref<number>(3200);
+const refreshTokenAttemptsEnabled = ref<boolean>(false);
+const refreshTokenAttempts = ref<number>(-1);
+const refreshTokenExpiry = ref<number>(14);
+
 const ipAddressRule = (val: string) => (isValidIPOrMask(val) ? true : "Not a valid IP Address");
 
 onMounted(async () => {
   const settings = await SettingsService.getSettings();
-  ipAddress.value = settings.server.ipAddress;
+  loginRequired.value = settings.server.loginRequired;
+  registrationEnabled.value = settings.server.registration;
+
+  ipAddress.value = settings.connection?.clientIp ?? "127.0.0.1";
   whitelistEnabled.value = settings.server.whitelistEnabled;
   whitelistedIpAddresses.value = settings.server.whitelistedIpAddresses;
+
+  const sensitiveSettings = await SettingsService.getSettingsSensitive();
+  jwtExpiresIn.value = sensitiveSettings.credentials.jwtExpiresIn;
+  refreshTokenAttemptsEnabled.value = sensitiveSettings.credentials.refreshTokenAttempts !== -1;
+  refreshTokenAttempts.value = sensitiveSettings.credentials.refreshTokenAttempts;
+  refreshTokenExpiry.value = sensitiveSettings.credentials.refreshTokenExpiry;
 });
 
 function removeIpWhitelist(removedIp: string) {
@@ -115,15 +222,44 @@ function appendIpAddress(ip: string) {
 async function resetWhitelistSettingsToDefault() {
   whitelistedIpAddresses.value = ["127.0.0.1", "::12"];
   whitelistEnabled.value = false;
-  await setWhitelistSettings();
+  await setWhitelistSettings(false);
+  snackbar.info("Whitelist settings reset to default");
 }
 
-async function setWhitelistSettings() {
+async function setWhitelistSettings(showSuccess = true) {
   const settingsDto = await SettingsService.setWhitelistSettings({
     whitelistedIpAddresses: whitelistedIpAddresses.value,
     whitelistEnabled: whitelistEnabled.value,
   });
   whitelistedIpAddresses.value = settingsDto.server?.whitelistedIpAddresses;
   whitelistEnabled.value = settingsDto.server?.whitelistEnabled;
+  if (showSuccess) {
+    snackbar.info("Whitelist settings updated");
+  }
+}
+
+async function setLoginRequired() {
+  const loginRequiredVal = loginRequired.value;
+  if (!loginRequiredVal && !confirm("Disabling login will expose your server. Continue?")) {
+    return;
+  }
+
+  await SettingsService.updateLoginRequiredSettings(loginRequiredVal);
+
+  await authStore.logout(true);
+
+  await authStore.checkAuthenticationRequirements();
+  if (!loginRequiredVal) {
+    await router.push({ name: RouteNames.Home });
+  } else {
+    await router.push({ name: RouteNames.Login });
+  }
+  snackbar.info("Login Required settings updated");
+}
+
+async function setRegistrationEnabled() {
+  await SettingsService.updateRegistrationEnabledSettings(registrationEnabled.value);
+  await authStore.checkAuthenticationRequirements();
+  snackbar.info("Registration settings updated");
 }
 </script>

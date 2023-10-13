@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavigationDrawer from "@/components/Generic/NavigationDrawer.vue";
-import TopBar from "@/components/Generic/TopBar.vue";
+import TopBar from "@/components/TopBar.vue";
 import FileExplorerSideNav from "./components/Generic/FileExplorerSideNav.vue";
 import AddOrUpdatePrinterDialog from "./components/Generic/Dialogs/AddOrUpdatePrinterDialog.vue";
 import AddOrUpdateFloorDialog from "./components/Generic/Dialogs/AddOrUpdateFloorDialog.vue";
