@@ -114,7 +114,11 @@ const formIsDisabled = computed(() => {
 
 onMounted(async () => {
   authStore.loadTokens();
-  await authStore.checkLoginRequired();
+  await authStore.checkAuthenticationRequirements();
+  if (authStore.loginRequired === false) {
+    console.debug("LoginView, no login required, redirecting to", route.query.redirect, "or home");
+    return await routeToRedirect();
+  }
   if (!authStore.hasRefreshToken) {
     return;
   }
@@ -166,6 +170,10 @@ async function login() {
   // Trigger AppLoader
   loginEvent.emit(true);
 
+  return await routeToRedirect();
+}
+
+async function routeToRedirect() {
   const routePath = route.query.redirect;
   if (!routePath) {
     console.debug("[LoginForm] Redirecting to home");

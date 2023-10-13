@@ -9,4 +9,5 @@ export const RouteNames = {
   PermissionDenied: "PermissionDenied",
   NotFound: "NotFound",
   FirstTimeSetup: "FirstTimeSetup",
+  ServerProtection: "ServerProtection",
 };

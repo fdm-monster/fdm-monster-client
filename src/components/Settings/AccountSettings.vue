@@ -72,8 +72,13 @@ import { useProfileStore } from "@/store/profile.store";
 import { onMounted, ref } from "vue";
 import { UserService } from "@/backend/user.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import { useAuthStore } from "@/store/auth.store";
+import { routeToLogin } from "@/router/utils";
+import { useRouter } from "vue-router/composables";
 
 const profileStore = useProfileStore();
+const authStore = useAuthStore();
+const router = useRouter();
 const snackbar = useSnackbar();
 const userId = ref<string>("");
 const formData = ref<{
@@ -119,5 +124,7 @@ async function changePassword() {
   formData.value.newPassword = "";
   formData.value.repeatPassword = "";
   snackbar.openInfoMessage({ title: "Password changed" });
+  await authStore.logout(true);
+  await routeToLogin(router);
 }
 </script>

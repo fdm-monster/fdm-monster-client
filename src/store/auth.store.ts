@@ -1,19 +1,21 @@
 import { defineStore } from "pinia";
 import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
-import { AuthService, type Tokens, WizardState } from "@/backend/auth.service";
+import { AuthService, type Tokens } from "@/backend/auth.service";
 import { AxiosError, HttpStatusCode } from "axios";
+import { WizardSettingsDto } from "@/models/settings/settings.model";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 export interface IClaims extends JwtPayload {
   name: string;
 }
 
 export interface AuthState {
-  refreshToken: string | null;
-  token: string | null;
   loginRequired: boolean | null;
+  refreshToken: string | null;
   registration: boolean | null;
-  wizardState: WizardState | null;
+  token: string | null;
+  wizardState: WizardSettingsDto | null;
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -25,7 +27,7 @@ export const useAuthStore = defineStore("auth", {
     wizardState: null,
   }),
   actions: {
-    async checkLoginRequired() {
+    async checkAuthenticationRequirements() {
       return await AuthService.getLoginRequired()
         .then((response) => {
           this.loginRequired = response.data.loginRequired;
@@ -53,8 +55,15 @@ export const useAuthStore = defineStore("auth", {
           throw e;
         });
     },
-    logout() {
-      console.debug("Logging out");
+    async logout(callServerLogout = false) {
+      console.debug(`Logging out (calling server ${callServerLogout})`);
+      if (callServerLogout && !!this.tokenClaims && !this.isLoginExpired) {
+        try {
+          await AuthService.logout();
+        } catch (e) {
+          useSnackbar().error("Server could not process logout, but local logout was successful");
+        }
+      }
       this.setIdToken(undefined);
       this.setRefreshToken(undefined);
     },

@@ -93,7 +93,7 @@ async function routeToLoginSafely() {
   setOverlay(false);
 }
 
-async function loadAppWithAuthentication() {
+async function loadAppWithAuthenticationReady() {
   try {
     await settingsStore.loadSettings();
     await featureStore.loadFeatures();
@@ -105,7 +105,7 @@ async function loadAppWithAuthentication() {
     console.log("Error when loading settings.", e);
     snackbar.openErrorMessage({
       title: "Error",
-      subtitle: "Error when verifying login and loading settings.",
+      subtitle: "Error when loading settings, features and/or profile.",
     });
   }
 
@@ -149,7 +149,7 @@ const loginEventKey = useEventBus("auth:login");
 loginEventKey.on(async () => {
   console.debug("[AppLoader] Event received: 'auth:login', loading app");
   setOverlay(true, "Loading app");
-  await loadAppWithAuthentication();
+  await loadAppWithAuthenticationReady();
 });
 
 onUnmounted(() => {
@@ -171,18 +171,21 @@ onBeforeMount(async () => {
   }
 
   // If the route is wrong about login requirements, an error will be shown
-  const { loginRequired, wizardState } = await authStore.checkLoginRequired();
+  const { loginRequired, wizardState } = await authStore.checkAuthenticationRequirements();
   if (!wizardState.wizardCompleted) {
     console.debug("[AppLoader] Wizard not completed, going to wizard");
-    authStore.logout();
+    await authStore.logout(false);
     if (router.currentRoute.name !== RouteNames.FirstTimeSetup) {
       await router.replace({ name: RouteNames.FirstTimeSetup });
     }
     setOverlay(false);
     return;
   }
+
+  // Login is not required, load app directly
   if (!loginRequired) {
-    return await loadAppWithAuthentication();
+    console.debug("[AppLoader] Login not required, loading app");
+    return await loadAppWithAuthenticationReady();
   }
 
   // Router will have tackled routing already
@@ -209,7 +212,7 @@ onBeforeMount(async () => {
   }
 
   console.debug("[AppLoader] Loading app");
-  await loadAppWithAuthentication();
+  await loadAppWithAuthenticationReady();
 });
 </script>
 <style>

@@ -24,10 +24,15 @@ export class ServerApi {
   static userProfileRoute = `${ServerApi.userRoute}/profile`;
 
   static settingsRoute = `${ServerApi.base}/settings`;
+  static settingsSensitiveRoute = `${ServerApi.settingsRoute}/sensitive`;
+  static updateLoginRequiredRoute = `${ServerApi.settingsRoute}/login-required`;
+  static updateRegistrationEnabledRoute = `${ServerApi.settingsRoute}/registration-enabled`;
+  static updateCredentialSettings = `${ServerApi.settingsRoute}/credential`;
   static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
   static fileCleanSettingsRoute = `${ServerApi.settingsRoute}/file-clean`;
   static updateFrontendSettingsRoute = `${ServerApi.settingsRoute}/frontend`;
   static updateServerWhitelistSettingRoute = `${ServerApi.settingsRoute}/whitelist`;
+  static updateTimeoutSettingRoute = `${ServerApi.settingsRoute}/timeout`;
   static serverSentryDiagnosticsSettingRoute = `${ServerApi.settingsRoute}/sentry-diagnostics`;
 
   static serverPrivateRoute = `${ServerApi.base}/server`;

@@ -38,7 +38,7 @@
       </v-list>
     </v-menu>
 
-    <span class="ml-2" v-if="isDevEnv"> AuthExp {{ expiry }} </span>
+    <span class="ml-2" v-if="isDevEnv && expiry"> AuthExp {{ expiry }} </span>
 
     <v-btn v-if="authStore.loginRequired === true" class="ml-2" color="secondary" @click="logout()">
       <v-icon class="mr-2">logout</v-icon>
@@ -104,7 +104,7 @@ const username = computed(() => {
 });
 
 async function logout() {
-  authStore.logout();
+  await authStore.logout(true);
   await routeToLogin(router);
 }
 </script>
