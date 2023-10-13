@@ -5,6 +5,7 @@ import {
   FileCleanSubSetting,
   SettingsDto,
   TimeoutSettings,
+  SettingsSensitiveDto,
 } from "@/models/settings/settings.model";
 import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
 import { WhitelistSettings } from "@/models/settings/server-settings.dto";
@@ -13,6 +14,11 @@ export class SettingsService extends BaseService {
   static async getSettings() {
     const path = ServerApi.settingsRoute;
     return (await this.getApi(path)) as SettingsDto;
+  }
+
+  static async getSettingsSensitive() {
+    const path = ServerApi.settingsSensitiveRoute;
+    return (await this.getApi(path)) as SettingsSensitiveDto;
   }
 
   static async updateFrontendSettings(frontendSettings: FrontendSettings) {

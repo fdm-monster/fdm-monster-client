@@ -35,3 +35,27 @@ export interface SettingsDto {
   timeout: TimeoutSettings;
   connection?: ConnectionInfo;
 }
+
+export interface CredentialSettingsDto {
+  jwtExpiresIn: number;
+  refreshTokenAttempts: number;
+  refreshTokenExpiry: number;
+}
+
+export interface ServerSettingsSensitiveDto {
+  debugSettings: {
+    debugSocketIoEvents: boolean;
+    debugSocketReconnect: boolean;
+    debugSocketRetries: boolean;
+    debugSocketSetup: boolean;
+    debugSocketMessages: boolean;
+    debugSocketIoBandwidth: boolean;
+  };
+  whitelistEnabled: boolean;
+  whitelistedIpAddresses: string[];
+}
+
+export interface SettingsSensitiveDto {
+  server: ServerSettingsSensitiveDto;
+  credentials: CredentialSettingsDto;
+}

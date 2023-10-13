@@ -24,6 +24,7 @@ export class ServerApi {
   static userProfileRoute = `${ServerApi.userRoute}/profile`;
 
   static settingsRoute = `${ServerApi.base}/settings`;
+  static settingsSensitiveRoute = `${ServerApi.settingsRoute}/sensitive`;
   static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
   static fileCleanSettingsRoute = `${ServerApi.settingsRoute}/file-clean`;
   static updateFrontendSettingsRoute = `${ServerApi.settingsRoute}/frontend`;
