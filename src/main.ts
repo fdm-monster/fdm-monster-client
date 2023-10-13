@@ -14,6 +14,7 @@ import { BrowserTracing } from "@sentry/vue";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { useSnackbar } from "./shared/snackbar.composable";
 import { AxiosError } from "axios";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 
 Vue.config.productionTip = false;
 Vue.config.silent = true;
@@ -68,6 +69,8 @@ Vue.config.errorHandler = (err) => {
     timeout: 5000,
   });
 };
+
+Vue.use(VueQueryPlugin);
 
 new Vue({
   pinia,
