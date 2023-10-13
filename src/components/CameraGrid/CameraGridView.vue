@@ -10,20 +10,20 @@
     <v-row class="ma-0">
       <div
         v-for="camera in query.data.value"
-        :key="camera.id"
-        class="ma-3"
+        :key="camera.cameraStream.id"
+        class="ma-4"
         style="border: 1px solid grey; margin: 0"
         width="300"
       >
-        <v-card class="" width="300">
+        <v-card class="pb-2 pl-2 pr-2" width="300">
           <v-card-title>
-            <v-icon v-if="camera?.printerId" class="mr-2" dense>print</v-icon>
+            <v-icon v-if="camera.cameraStream.printerId" class="mr-2" dense>print</v-icon>
             <v-icon v-else class="mr-2" dense>camera_alt</v-icon>
             {{ camera?.cameraStream.name ?? camera?.printer?.printerName ?? "Camera" }}
           </v-card-title>
           <img :src="camera.cameraStream?.streamURL" width="100%" />
           <br />
-          <v-btn class="mr-1" small>
+          <v-btn class="mr-1" small @click="updateCamera(camera.cameraStream.id)">
             <v-icon class="mr-2">edit</v-icon>
             Update
           </v-btn>
@@ -42,14 +42,9 @@ import { CameraStreamService } from "@/backend/camera-stream.service";
 import { useDialog } from "@/shared/dialog.composable";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import { CameraStream } from "@/models/camera-streams/camera-stream";
+import { CameraStream, CameraWithPrinter } from "@/models/camera-streams/camera-stream";
 import { Printer } from "@/models/printers/printer.model";
 import { usePrinterStore } from "@/store/printer.store";
-
-interface CameraWithPrinter {
-  printer: Printer;
-  cameraStream: CameraStream;
-}
 
 const printerStore = usePrinterStore();
 const dialog = useDialog(DialogName.AddOrUpdateCameraDialog);
