@@ -19,6 +19,7 @@ import PermissionDenied from "@/components/Login/PermissionDenied.vue";
 import { RouteNames } from "@/router/route-names";
 import FirstTimeSetupView from "@/components/FirstTimeSetup/FirstTimeSetupView.vue";
 import RegistrationView from "@/components/Login/RegistrationView.vue";
+import ServerProtectionSettings from "@/components/Settings/ServerProtectionSettings.vue";
 
 const NeedsAuth = {
   requiresAuth: true,
@@ -72,6 +73,11 @@ const routes: Array<RouteConfig> = [
         path: "account",
         meta: NeedsAuth,
         component: AccountSettings,
+      },
+      {
+        path: "server-protection",
+        meta: NeedsAuth,
+        component: ServerProtectionSettings,
       },
       {
         path: "grid",

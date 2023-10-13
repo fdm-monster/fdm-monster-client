@@ -70,6 +70,11 @@ export default defineComponent({
         icon: "account_circle",
         path: "/settings/account",
       },
+      {
+        title: "Server Protection",
+        icon: "security",
+        path: "/settings/server-protection",
+      },
       { title: "OctoPrint Settings", icon: "image", path: "/settings/octoprint" },
       { title: "Emergency Commands", icon: "warning", path: "/settings/emergency-commands" },
       { title: "Software Upgrade", icon: "upgrade", path: "/settings/software-upgrade" },
