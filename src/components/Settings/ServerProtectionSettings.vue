@@ -7,7 +7,7 @@
       <v-toolbar-title>Server Protection Settings</v-toolbar-title>
     </v-toolbar>
     <v-list subheader three-line>
-      <v-list-item v-if="!whitelistSettingsHidden()">
+      <v-list-item v-if="!whitelistSettingsHidden">
         <v-list-item-content>
           <v-list-item-title>IP Whitelist</v-list-item-title>
           <v-list-item-subtitle>
@@ -66,6 +66,18 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Login Required</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Registration Enabled</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-card>
 </template>
@@ -84,9 +96,9 @@ const ipAddressRule = (val: string) => (isValidIPOrMask(val) ? true : "Not a val
 
 onMounted(async () => {
   const settings = await SettingsService.getSettings();
-  ipAddress.value = settings.whitelistSettings.ipAddress;
-  whitelistEnabled.value = settings.whitelistSettings.enabled;
-  whitelistedIpAddresses.value = settings.whitelistSettings.whitelistedIpAddresses;
+  ipAddress.value = settings.server.ipAddress;
+  whitelistEnabled.value = settings.server.whitelistEnabled;
+  whitelistedIpAddresses.value = settings.server.whitelistedIpAddresses;
 });
 
 function removeIpWhitelist(removedIp: string) {

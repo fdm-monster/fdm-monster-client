@@ -485,7 +485,8 @@ export default defineComponent({
       const socketState = this.printerStateStore.socketStatesById[this.printerId];
       const states = interpretStates(this.storedSideNavPrinter, socketState, printerEvents);
 
-      const debugInterpretedState = useSettingsStore().debugSettings?.showInterpretedPrinterState;
+      const debugInterpretedState =
+        useSettingsStore().frontendDebugSettings?.showInterpretedPrinterState;
       if (debugInterpretedState) {
         console.debug(
           "[FileExplorerSideNav] rendered for printerId",

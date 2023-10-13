@@ -7,66 +7,6 @@
       <v-toolbar-title>OctoPrint Settings</v-toolbar-title>
     </v-toolbar>
     <v-list subheader three-line>
-      <v-list-item v-if="!whitelistSettingsHidden()">
-        <v-list-item-content>
-          <v-list-item-title>IP Whitelist</v-list-item-title>
-          <v-list-item-subtitle>
-            <v-alert color="primary">
-              <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong whitelist could make you
-              lose access to the server!
-            </v-alert>
-            Only allow access from specific IP Adresses or subnets. Note: 127.0.0.1 will always be
-            allowed access. Examples:
-            <br />
-            <v-chip small>192.168</v-chip>
-            <v-chip small>192.168.1</v-chip>
-            <v-chip small>192.168.1.1</v-chip>
-            <br />
-            <v-row>
-              <v-col cols="12" md="2">
-                <v-checkbox v-model="whitelistEnabled" label="Enable IP Whitelist"></v-checkbox>
-              </v-col>
-            </v-row>
-            <v-row class="mt-0">
-              <v-col cols="12" md="2">
-                <v-text-field
-                  v-model="ipAddress"
-                  :disabled="!whitelistEnabled"
-                  :rules="[ipAddressRule, (val) => !!val]"
-                  append-icon="add"
-                  label="IP Address"
-                  @click:append="appendIpAddress(ipAddress)"
-                >
-                </v-text-field>
-              </v-col>
-              <v-col>
-                <v-chip-group>
-                  <v-chip
-                    v-for="ip in whitelistedIpAddresses"
-                    :key="ip"
-                    :disabled="!whitelistEnabled"
-                    close
-                    @click:close="removeIpWhitelist(ip)"
-                  >
-                    {{ ip }}
-                  </v-chip>
-                </v-chip-group>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-btn color="default" @click="resetWhitelistSettingsToDefault()">
-                  reset to default
-                </v-btn>
-                <v-btn color="primary" @click="setWhitelistSettings()">
-                  save whitelist settings
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Pre-upload file cleanup</v-list-item-title>
@@ -90,6 +30,24 @@
               label="Remove old files when (re)booting the server"
             ></v-checkbox>
             <v-btn color="primary" @click="setFileCleanSettings()">save file clean settings</v-btn>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Connection Timeout</v-list-item-title>
+          <v-list-item-subtitle v-if="settingsStore.settings?.timeout">
+            The connection timeout is the amount of time in milliseconds that the server will wait
+            for OctoPrint to respond before giving up
+            <v-text-field
+              v-model="settingsStore.settings.timeout.apiTimeout"
+              label="Connection Timeout"
+              min="0"
+              outlined
+              type="number"
+            />
+            <v-btn color="primary" @click="updateTimeoutSettings()">save connection timeout</v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -127,17 +85,13 @@
 import { defineComponent } from "vue";
 import { PrinterFileService, SettingsService } from "@/backend";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
-import { FileCleanSettings } from "../../models/settings/printer-file-clean-settings.model";
-import { usePrinterStore } from "../../store/printer.store";
-import { isValidIPOrMask } from "@/utils/validation.utils";
-import { whitelistSettingsHidden } from "../../shared/experimental.constants";
-import { usePrinterStateStore } from "../../store/printer-state.store";
-import { useSnackbar } from "../../shared/snackbar.composable";
+import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
+import { usePrinterStore } from "@/store/printer.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
+import { useSnackbar } from "@/shared/snackbar.composable";
+import { useSettingsStore } from "@/store/settings.store";
 
 interface Data {
-  ipAddress: string;
-  whitelistEnabled: boolean;
-  whitelistedIpAddresses: string[];
   fileHandlingSettings: FileCleanSettings;
 }
 
@@ -145,56 +99,38 @@ export default defineComponent({
   name: "FdmSettings",
   setup: () => {
     return {
+      settingsStore: useSettingsStore(),
       printersStore: usePrinterStore(),
       snackbar: useSnackbar(),
       printerStateStore: usePrinterStateStore(),
-      ipAddressRule: (val: string) => (isValidIPOrMask(val) ? true : "Not a valid IP Address"),
     };
   },
   props: {},
   data: (): Data => ({
-    ipAddress: "",
     fileHandlingSettings: {
       autoRemoveOldFilesBeforeUpload: false,
       autoRemoveOldFilesAtBoot: false,
       autoRemoveOldFilesCriteriumDays: 7,
     },
-    whitelistEnabled: false,
-    whitelistedIpAddresses: [],
   }),
   async created() {
     const settings = await SettingsService.getSettings();
-    this.whitelistedIpAddresses = settings.server?.whitelistedIpAddresses;
-    this.whitelistEnabled = settings.server?.whitelistEnabled;
     this.fileHandlingSettings = settings.printerFileClean;
   },
   mounted() {},
   computed: {},
   methods: {
-    whitelistSettingsHidden() {
-      return whitelistSettingsHidden;
-    },
-    removeIpWhitelist(removedIp: string) {
-      this.whitelistedIpAddresses = this.whitelistedIpAddresses.filter(
-        (ip) => ip.toLowerCase() !== removedIp.toLowerCase()
-      );
-    },
-    appendIpAddress(ip: string) {
-      if (!isValidIPOrMask(ip)) return;
-      this.whitelistedIpAddresses.push(ip.toLowerCase());
-    },
-    async resetWhitelistSettingsToDefault() {
-      this.whitelistedIpAddresses = ["127.0.0.1", "::12"];
-      this.whitelistEnabled = false;
-      await this.setWhitelistSettings();
-    },
-    async setWhitelistSettings() {
-      const serverSettings = await SettingsService.setWhitelistSettings({
-        whitelistedIpAddresses: this.whitelistedIpAddresses,
-        whitelistEnabled: this.whitelistEnabled,
-      });
-      this.whitelistedIpAddresses = serverSettings.server?.whitelistedIpAddresses;
-      this.whitelistEnabled = serverSettings.server?.whitelistEnabled;
+    async updateTimeoutSettings() {
+      if (!this.settingsStore.settings?.timeout?.apiTimeout) {
+        this.snackbar.error("Timeout not set");
+        return;
+      }
+      if (this.settingsStore.settings.timeout.apiTimeout < 1000) {
+        this.snackbar.error("Timeout is too low - please set it to at least 1000 milliseconds");
+      } else {
+        await this.settingsStore.updateTimeoutSettings(this.settingsStore.settings?.timeout);
+        this.snackbar.info("Timeout settings updated");
+      }
     },
     async setFileCleanSettings() {
       const serverSettings = await SettingsService.setFileCleanSettings(this.fileHandlingSettings);
