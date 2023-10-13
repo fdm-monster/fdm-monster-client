@@ -33,6 +33,16 @@ export class SettingsService extends BaseService {
     return (await this.putApi(path, { registrationEnabled })) as SettingsDto;
   }
 
+  static async updateCredentialSettings(
+    jwtExpiresIn: number,
+    refreshTokenAttempts: number,
+    refreshTokenExpiry: number
+  ) {
+    const path = `${ServerApi.updateCredentialSettings}`;
+
+    return await this.putApi(path, { jwtExpiresIn, refreshTokenAttempts, refreshTokenExpiry });
+  }
+
   static async updateFrontendSettings(frontendSettings: FrontendSettings) {
     const path = `${ServerApi.updateFrontendSettingsRoute}`;
 
@@ -47,7 +57,7 @@ export class SettingsService extends BaseService {
   static async setWhitelistSettings(subSettings: WhitelistSettings) {
     const path = `${ServerApi.updateServerWhitelistSettingRoute}`;
 
-    return (await this.putApi(path, subSettings as WhitelistSettings)) as SettingsDto;
+    await this.putApi(path, subSettings as WhitelistSettings);
   }
 
   static async updateTimeoutSettings(subSettings: TimeoutSettings) {

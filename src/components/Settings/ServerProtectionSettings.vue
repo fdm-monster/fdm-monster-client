@@ -11,7 +11,7 @@
         <v-list-item-content>
           <v-list-item-title>IP Whitelist</v-list-item-title>
           <v-list-item-subtitle>
-            <v-alert color="primary">
+            <v-alert color="warning">
               <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong whitelist could make you
               lose access to the server!
             </v-alert>
@@ -113,16 +113,12 @@
           <v-list-item-title>Login Expiry Settings (advanced)</v-list-item-title>
           <v-list-item-content>
             <v-list-item-subtitle>
-              <v-alert color="primary">
-                <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong expiry could make you
-                lose access to the server!
-              </v-alert>
               <v-row>
                 <v-col cols="12" md="2">
                   <v-text-field
                     v-model="jwtExpiresIn"
-                    :rules="[(val) => !!val]"
-                    label="JWT Expiry (seconds)"
+                    :rules="[(val) => !!val && val >= 2 && val <= 120]"
+                    label="JWT Expiry (minutes)"
                   >
                   </v-text-field>
                 </v-col>
@@ -131,6 +127,7 @@
                 <v-col cols="12" md="2">
                   <v-checkbox
                     v-model="refreshTokenAttemptsEnabled"
+                    @change="onRefreshTokenEnabledChange()"
                     label="Enable Refresh Token Attempts"
                   ></v-checkbox>
                 </v-col>
@@ -138,10 +135,11 @@
               <v-row>
                 <v-col cols="12" md="2">
                   <v-text-field
+                    type="number"
                     v-model="refreshTokenAttempts"
                     :disabled="!refreshTokenAttemptsEnabled"
-                    :rules="[(val) => !!val]"
-                    label="Refresh Token Attempts"
+                    :rules="[(val) => !!val && val >= 50]"
+                    label="Refresh Token Attempts (disabled: -1)"
                   >
                   </v-text-field>
                 </v-col>
@@ -150,10 +148,26 @@
                 <v-col cols="12" md="2">
                   <v-text-field
                     v-model="refreshTokenExpiry"
-                    :rules="[(val) => !!val]"
+                    :rules="[(val) => !!val && val >= 1 && val <= 30]"
                     label="Refresh Token Expiry (days)"
                   >
                   </v-text-field>
+                </v-col>
+              </v-row>
+
+              <v-alert color="secondary">
+                <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong expiry could make you
+                lose access to the server or make your user experience highly degraded!
+              </v-alert>
+
+              <v-row>
+                <v-col>
+                  <v-btn color="primary" @click="saveLoginExpirySettings()">
+                    save login expiry settings
+                  </v-btn>
+                  <v-btn color="default" @click="resetLoginExpirySettingsToDefault()"
+                    >reset to default</v-btn
+                  >
                 </v-col>
               </v-row>
             </v-list-item-subtitle>
@@ -202,11 +216,17 @@ onMounted(async () => {
   whitelistedIpAddresses.value = settings.server.whitelistedIpAddresses;
 
   const sensitiveSettings = await SettingsService.getSettingsSensitive();
-  jwtExpiresIn.value = sensitiveSettings.credentials.jwtExpiresIn;
+  jwtExpiresIn.value = sensitiveSettings.credentials.jwtExpiresIn / 60;
   refreshTokenAttemptsEnabled.value = sensitiveSettings.credentials.refreshTokenAttempts !== -1;
   refreshTokenAttempts.value = sensitiveSettings.credentials.refreshTokenAttempts;
-  refreshTokenExpiry.value = sensitiveSettings.credentials.refreshTokenExpiry;
+  refreshTokenExpiry.value = sensitiveSettings.credentials.refreshTokenExpiry / 24 / 3600;
 });
+
+function onRefreshTokenEnabledChange() {
+  if (!refreshTokenAttemptsEnabled.value) {
+    refreshTokenAttempts.value = -1;
+  }
+}
 
 function removeIpWhitelist(removedIp: string) {
   whitelistedIpAddresses.value = whitelistedIpAddresses.value.filter(
@@ -261,5 +281,36 @@ async function setRegistrationEnabled() {
   await SettingsService.updateRegistrationEnabledSettings(registrationEnabled.value);
   await authStore.checkAuthenticationRequirements();
   snackbar.info("Registration settings updated");
+}
+
+async function resetLoginExpirySettingsToDefault() {
+  jwtExpiresIn.value = 120;
+  refreshTokenAttemptsEnabled.value = false;
+  refreshTokenAttempts.value = -1;
+  refreshTokenExpiry.value = 14;
+  await saveLoginExpirySettings();
+  snackbar.info("Login expiry settings reset to default");
+}
+
+async function saveLoginExpirySettings(showSnackbar = true) {
+  if (jwtExpiresIn.value < 2 || jwtExpiresIn.value > 120) {
+    throw new Error("JWT Expiry must be between 2 and 120 minutes");
+  }
+  if (
+    refreshTokenAttemptsEnabled.value &&
+    (refreshTokenAttempts.value < 50 || refreshTokenAttempts.value > 1000)
+  ) {
+    throw new Error("Refresh Token Attempts must be between 50 and 1000");
+  }
+  if (refreshTokenExpiry.value < 1 || refreshTokenExpiry.value > 30) {
+    throw new Error("Refresh Token Expiry must be between 1 and 30 days");
+  }
+
+  await SettingsService.updateCredentialSettings(
+    jwtExpiresIn.value * 60,
+    refreshTokenAttempts.value,
+    refreshTokenExpiry.value * 24 * 3600
+  );
+  snackbar.info("Login expiry settings updated");
 }
 </script>
