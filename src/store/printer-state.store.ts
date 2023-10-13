@@ -115,7 +115,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
     printerJobsById() {
       const printerStore = usePrinterStore();
-      const jobsRendered = useSettingsStore().debugSettings.showJobsRendered;
+      const jobsRendered = useSettingsStore().frontendDebugSettings.showJobsRendered;
       const printersWithJobById: ById<CurrentOrHistoryPayload> = {};
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];

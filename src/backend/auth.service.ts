@@ -1,25 +1,21 @@
 import { getHttpClient } from "@/shared/http-client";
+import { WizardSettingsDto } from "@/models/settings/settings.model";
 
 export interface Tokens {
   token: string;
   refreshToken: string;
 }
 
-export interface WizardState {
-  wizardState: string;
-  wizardCompleted: boolean;
-  wizardVersion: number;
-  latestWizardVersion: number;
+export interface LoginRequiredResponse {
+  loginRequired: boolean;
+  registration: boolean;
+  wizardState: WizardSettingsDto;
 }
 
 export class AuthService {
   static async getLoginRequired() {
     const httpClient = await getHttpClient(false, false);
-    return await httpClient.get<{
-      loginRequired: boolean;
-      registration: boolean;
-      wizardState: WizardState;
-    }>("api/auth/login-required");
+    return await httpClient.get<LoginRequiredResponse>("api/auth/login-required");
   }
 
   static async postLogin(username: string, password: string) {

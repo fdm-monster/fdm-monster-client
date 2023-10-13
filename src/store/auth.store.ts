@@ -1,19 +1,20 @@
 import { defineStore } from "pinia";
 import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
-import { AuthService, type Tokens, WizardState } from "@/backend/auth.service";
+import { AuthService, type Tokens } from "@/backend/auth.service";
 import { AxiosError, HttpStatusCode } from "axios";
+import { WizardSettingsDto } from "@/models/settings/settings.model";
 
 export interface IClaims extends JwtPayload {
   name: string;
 }
 
 export interface AuthState {
-  refreshToken: string | null;
-  token: string | null;
   loginRequired: boolean | null;
+  refreshToken: string | null;
   registration: boolean | null;
-  wizardState: WizardState | null;
+  token: string | null;
+  wizardState: WizardSettingsDto | null;
 }
 
 export const useAuthStore = defineStore("auth", {

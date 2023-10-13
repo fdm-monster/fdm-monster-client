@@ -37,7 +37,8 @@ export function interpretStates(
   printerState: PrinterState
 ) {
   const settingsStore = useSettingsStore();
-  const debugPrinterInterpretState = settingsStore.debugSettings.showInterpretedPrinterState;
+  const debugPrinterInterpretState =
+    settingsStore.frontendDebugSettings.showInterpretedPrinterState;
   const state = {};
 
   // Disabled/maintenance printers

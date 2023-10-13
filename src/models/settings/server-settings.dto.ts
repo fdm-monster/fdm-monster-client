@@ -3,10 +3,6 @@ export interface WhitelistSettings {
   whitelistEnabled: boolean;
 }
 
-export interface TimeoutSettings {
-  apiTimeout: number;
-}
-
 export interface DebugSettings {
   debugSocketIoEvents: boolean;
   debugSocketReconnect: boolean;
@@ -16,9 +12,8 @@ export interface DebugSettings {
   debugSocketIoBandwidth: boolean;
 }
 
-export interface ServerSettings extends WhitelistSettings {
+export interface ServerSettingsDto extends WhitelistSettings {
   sentryDiagnosticsEnabled: boolean;
-  debugSettings: DebugSettings;
   loginRequired: boolean;
   registration: boolean;
 }

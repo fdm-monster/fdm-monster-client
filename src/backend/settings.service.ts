@@ -4,9 +4,10 @@ import {
   FrontendSettings,
   FileCleanSubSetting,
   SettingsDto,
+  TimeoutSettings,
 } from "@/models/settings/settings.model";
 import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
-import { WhitelistSettings } from "@/models/settings/serverSettings";
+import { WhitelistSettings } from "@/models/settings/server-settings.dto";
 
 export class SettingsService extends BaseService {
   static async getSettings() {
@@ -29,6 +30,12 @@ export class SettingsService extends BaseService {
     const path = `${ServerApi.updateServerWhitelistSettingRoute}`;
 
     return (await this.putApi(path, subSettings as WhitelistSettings)) as SettingsDto;
+  }
+
+  static async updateTimeoutSettings(subSettings: TimeoutSettings) {
+    const path = `${ServerApi.updateTimeoutSettingRoute}`;
+
+    return (await this.putApi(path, subSettings as TimeoutSettings)) as SettingsDto;
   }
 
   static async setFileCleanSettings(subSettings: FileCleanSettings) {

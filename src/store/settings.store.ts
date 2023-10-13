@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { FrontendSettings, SettingsDto } from "@/models/settings/settings.model";
+import { FrontendSettings, SettingsDto, TimeoutSettings } from "@/models/settings/settings.model";
 import { SettingsService } from "@/backend";
-import { ServerSettings } from "@/models/settings/serverSettings";
+import { ServerSettingsDto } from "@/models/settings/server-settings.dto";
 
-export interface DebugSettings {
+export interface FrontendDebugSettings {
   showPrinterStateUpdateSideNav: boolean;
   showInterpretedPrinterState: boolean;
   showJobsRendered: boolean;
@@ -11,14 +11,14 @@ export interface DebugSettings {
 
 export interface SettingsState {
   settings?: SettingsDto;
-  debugSettings: DebugSettings;
+  frontendDebugSettings: FrontendDebugSettings;
 }
 
 export const useSettingsStore = defineStore({
   id: "Settings",
   state: (): SettingsState => ({
     settings: undefined,
-    debugSettings: {
+    frontendDebugSettings: {
       showPrinterStateUpdateSideNav: false,
       showInterpretedPrinterState: false,
       showJobsRendered: false,
@@ -35,9 +35,14 @@ export const useSettingsStore = defineStore({
       this.settings = response;
       return response;
     },
+    async updateTimeoutSettings(update: TimeoutSettings): Promise<SettingsDto> {
+      const response = await SettingsService.updateTimeoutSettings(update);
+      this.settings = response;
+      return response;
+    },
   },
   getters: {
-    serverSettings(): ServerSettings | undefined {
+    serverSettings(): ServerSettingsDto | undefined {
       return this.settings?.server;
     },
     largeTiles(): boolean {
