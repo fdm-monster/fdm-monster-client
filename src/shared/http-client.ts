@@ -29,9 +29,10 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
   if (withAuth) {
     instance.interceptors.request.use(
       async (config) => {
-        const auth = useAuthStore();
-        if (auth.hasAuthToken) {
-          config.headers.Authorization = `Bearer ${auth.token}`;
+        const authStore = useAuthStore();
+        authStore.loadTokens();
+        if (authStore.hasAuthToken) {
+          config.headers.Authorization = `Bearer ${authStore.token}`;
         }
 
         return config;

@@ -90,9 +90,7 @@ export default defineComponent({
   },
   beforeDestroy() {},
   props: {},
-  data: (): Data => ({
-    socketIoClient: undefined,
-  }),
+  data: (): Data => ({}),
   computed: {
     queuedUploads() {
       return this.uploadsStore.queuedUploads;
