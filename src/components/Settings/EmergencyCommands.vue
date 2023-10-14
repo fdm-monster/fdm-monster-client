@@ -15,7 +15,9 @@
           <v-list-item-subtitle>
             Restart the server
             <br />
-            <v-btn color="primary" @click="restartServer()">Restart server</v-btn>
+            <v-btn color="primary" @click="restartServer()" disabled
+              >Restart server (does not work yet)</v-btn
+            >
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
