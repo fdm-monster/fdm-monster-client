@@ -9,6 +9,7 @@ import { usePrinterStateStore } from "@/store/printer-state.store";
 import { useTestPrinterStore } from "@/store/test-printer.store";
 import { useSnackbar } from "./snackbar.composable";
 import { getBaseUri } from "@/shared/http-client";
+import { useAuthStore } from "@/store/auth.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -28,7 +29,11 @@ export class SocketIoService {
 
   async setupSocketConnection() {
     const apiBase = await getBaseUri();
-    this.socket = io(apiBase);
+    const authStore = useAuthStore();
+    authStore.loadTokens();
+    this.socket = io(apiBase, {
+      auth: authStore.loginRequired ? { token: authStore.token } : undefined,
+    });
     this.socket.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
     this.socket.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);
