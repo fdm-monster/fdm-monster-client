@@ -24,7 +24,7 @@
           <div class="align-content-center align-center text-center">
             <img class="rounded-pill ma-4" src="/img/OIG.jpg" style="opacity: 0.7" width="400" />
             <h1>FDM Monster</h1>
-            <small>This server is still unconfigured..</small>
+            <small>This server is still unconfigured.</small>
           </div>
           <v-btn class="mt-14 mb-14" color="primary" @click="stepper = 2">Start Setup</v-btn>
 
@@ -195,14 +195,16 @@
   </v-container>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { FirstTimeSetupService } from "@/backend/first-time-setup.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useRouter } from "vue-router/composables";
+import { useAuthStore } from "@/store/auth.store";
 
 const router = useRouter();
 const snackbar = useSnackbar();
 const formValid = ref(false);
+const authStore = useAuthStore();
 const formStep1 = ref({
   loginRequired: true,
   registration: false,
@@ -214,6 +216,19 @@ const formStep2 = ref({
 });
 
 const stepper = ref(1);
+
+onMounted(async () => {
+  await authStore.checkAuthenticationRequirements();
+
+  if (authStore.wizardState?.wizardCompleted) {
+    snackbar.info("Setup already completed.");
+    if (authStore.loginRequired) {
+      await router.push({ name: "Login" });
+    } else {
+      await router.push({ name: "Home" });
+    }
+  }
+});
 
 async function submitWizard() {
   if (!formValid.value) {
