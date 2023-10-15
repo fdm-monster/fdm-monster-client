@@ -107,7 +107,7 @@ const username = computed(() => {
 });
 
 const isDemoMode = computed(() => {
-  return profileStore.isDemoUser;
+  return authStore.isDemoMode;
 });
 
 async function logout() {

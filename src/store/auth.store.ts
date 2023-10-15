@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
 import { AuthService, type Tokens } from "@/backend/auth.service";
-import { AxiosError, HttpStatusCode } from "axios";
+import { Axios, AxiosError, HttpStatusCode } from "axios";
 import { WizardSettingsDto } from "@/models/settings/settings.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
@@ -11,6 +11,7 @@ export interface IClaims extends JwtPayload {
 }
 
 export interface AuthState {
+  isDemoMode: boolean | null;
   loginRequired: boolean | null;
   refreshToken: string | null;
   registration: boolean | null;
@@ -20,6 +21,7 @@ export interface AuthState {
 
 export const useAuthStore = defineStore("auth", {
   state: (): AuthState => ({
+    isDemoMode: null,
     token: null,
     refreshToken: null,
     loginRequired: null,
@@ -33,6 +35,7 @@ export const useAuthStore = defineStore("auth", {
           this.loginRequired = response.data.loginRequired;
           this.wizardState = response.data.wizardState;
           this.registration = response.data.registration;
+          this.isDemoMode = response.data.isDemoMode;
           return {
             loginRequired: this.loginRequired,
             wizardState: this.wizardState,
