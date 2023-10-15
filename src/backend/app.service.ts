@@ -2,6 +2,7 @@ import { BaseService } from "./base.service";
 import { VersionModel } from "@/models/server/version.model";
 import { FeaturesModel } from "@/models/server/features.model";
 import { IClientReleases } from "@/models/server/client-releases.model";
+import { getHttpClient } from "@/shared/http-client";
 
 export class AppService extends BaseService {
   static async updateClientDistGithub(tag_name: string) {
@@ -21,6 +22,7 @@ export class AppService extends BaseService {
   }
 
   static async test() {
-    return (await this.getApi(`api/test`)) as { message: string };
+    const httpClient = await getHttpClient(false, false);
+    return (await httpClient.get(`api/test`)) as { message: string };
   }
 }

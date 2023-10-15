@@ -70,20 +70,39 @@ export const useAuthStore = defineStore("auth", {
       this.setIdToken(undefined);
       this.setRefreshToken(undefined);
     },
-    async verifyOrRefreshLoginOnce() {
+    async verifyOrRefreshLoginOnceOrLogout() {
       try {
         await AuthService.verifyLogin();
         return true;
       } catch (e1) {
+        console.error("verifyOrRefreshLoginOnce: failed to verify login", e1);
+
+        const error = e1 as AxiosError;
+        if (!error.response || error.response?.status !== HttpStatusCode.Unauthorized) {
+          // Ensure no request-retry is done, nor other error processing
+          console.error("verifyOrRefreshLoginOnce: unknown error", error.status);
+          throw e1;
+        }
+
+        // Try to refresh the token
         if (this.hasRefreshToken) {
           try {
             await this.refreshLoginToken();
             await AuthService.verifyLogin();
-          } catch (e2) {
-            return false;
+          } catch (e2: any | AxiosError) {
+            const error = e2 as AxiosError;
+            if (error.response?.status === HttpStatusCode.Unauthorized) {
+              await this.logout(false);
+              console.error("verifyOrRefreshLoginOnce: failed to refresh token", error.status);
+              return false;
+            } else {
+              // Ensure no request-retry is done, nor other error processing
+              throw e2;
+            }
           }
           return true;
         } else {
+          await this.logout(false);
           return false;
         }
       }

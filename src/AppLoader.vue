@@ -5,18 +5,40 @@
       <br />
 
       <div v-if="errorCaught">
-        <h1>FDM Monster Connection Error</h1>
-        <p>Could not connect to the backend. Please check your configuration.</p>
-        <v-sheet class="pa-4 rounded" color="grey darken-2" width="70%">
+        <h1>FDM Monster Server Error</h1>
+        <p>Did not expect this answer from the server. Please check your configuration and logs.</p>
+        <v-sheet class="pa-4 rounded" color="grey darken-2" width="80%">
           Details:
           <div class="mt-2 mb-2">{{ JSON.stringify(errorCaught, null, 4) }}</div>
           <br />
-          <v-btn class="mr-5" color="secondary" @click="copyError()"
-            ><v-icon class="mr-2">content_copy</v-icon>Copy error details</v-btn
+          <v-btn class="mb-2" color="secondary" @click="copyError()">
+            <v-icon class="mr-2">content_copy</v-icon>
+            Copy error details
+          </v-btn>
+          <br />
+          <v-btn color="primary mb-2" @click="reloadPage()">
+            <v-icon class="mr-2">refresh</v-icon>reload the page
+          </v-btn>
+          <br />
+          <v-btn
+            color="darken-2 mb-2"
+            href="https://docs.fdm-monster.net"
+            style="color: white"
+            target="_blank"
           >
-          <v-btn color="primary" @click="reloadPage()"
-            ><v-icon class="mr-2">refresh</v-icon>reload the page</v-btn
+            <v-icon class="mr-2">menu_book</v-icon>
+            view documentation
+          </v-btn>
+          <br />
+          <v-btn
+            color="purple darken-4"
+            href="https://discord.gg/mwA8uP8CMc"
+            style="color: white"
+            target="_blank"
           >
+            <v-icon class="mr-2">chat</v-icon>
+            join our Discord
+          </v-btn>
         </v-sheet>
 
         <img
@@ -50,6 +72,7 @@ import { useRouter } from "vue-router/composables";
 import { sleep } from "@/utils/time.utils";
 import { RouteNames } from "@/router/route-names";
 import { AppService } from "@/backend/app.service";
+import { AxiosError } from "axios";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -82,15 +105,6 @@ function setOverlay(overlayEnabled: boolean, message: string = "") {
     overlayMessage.value = message;
   }
   overlay.value = overlayEnabled;
-}
-
-async function routeToLoginSafely() {
-  setOverlay(true, "Login expired, going back to login");
-  await sleep(500);
-  if (router.currentRoute.name !== RouteNames.Login) {
-    await router.push({ name: RouteNames.Login });
-  }
-  setOverlay(false);
 }
 
 async function loadAppWithAuthenticationReady() {
@@ -134,8 +148,10 @@ authPermissionDeniedKey.on(async (event) => {
 
 // Currently unused
 const authFailKey = useEventBus("auth:failure");
-authFailKey.on(async () => {
-  console.debug("[AppLoader] Event received: 'auth:failure', going back to login");
+authFailKey.on(async (event: any) => {
+  console.debug(
+    `[AppLoader] Event received: 'auth:failure', going back to login, context: ${event}`
+  );
   setOverlay(true, "Authentication failed, going back to login");
 
   if (router.currentRoute.name !== RouteNames.Login) {
@@ -164,6 +180,8 @@ onBeforeMount(async () => {
 
   try {
     await AppService.test();
+    // Nice test for error handling
+    // throw new Error("test");
   } catch (e) {
     loading.value = false;
     errorCaught.value = e;
@@ -198,16 +216,24 @@ onBeforeMount(async () => {
   // What if refreshToken is not present or not valid?
   setOverlay(true, "Refreshing login");
   console.debug("[AppLoader] Verifying or refreshing login once");
-  const refreshSuccess = await authStore.verifyOrRefreshLoginOnce();
-  if (!refreshSuccess) {
-    console.debug("[AppLoader] No success refreshing");
-    setOverlay(true, "Login expired, going back to login");
-    await sleep(500);
-    if (router.currentRoute.name !== RouteNames.Login) {
-      await router.push({ name: RouteNames.Login });
+  try {
+    const refreshSuccess = await authStore.verifyOrRefreshLoginOnceOrLogout();
+    if (!refreshSuccess) {
+      console.debug("[AppLoader] No success refreshing");
+      setOverlay(true, "Login expired, going back to login");
+
+      await sleep(500);
+      if (router.currentRoute.name !== RouteNames.Login) {
+        await router.push({ name: RouteNames.Login });
+      }
+      setOverlay(false);
+      // Dont load app as it will be redirected to login
+      return;
     }
-    setOverlay(false);
-    // Dont load app as it will be redirected to login
+  } catch (e) {
+    console.log("[AppLoader] Error when refreshing login", e);
+    loading.value = false;
+    errorCaught.value = (e as AxiosError).message;
     return;
   }
 

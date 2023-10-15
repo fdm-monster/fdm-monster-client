@@ -75,7 +75,7 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
           roles?: string[];
           permissions?: string[];
         };
-        console.error("403 Forbidden", data);
+        console.error("[HttpClient] 403 Forbidden", data);
         useEventBus("auth:permission-denied").emit({
           roles: data?.roles,
           permissions: data?.permissions,
@@ -92,7 +92,7 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
       await authStore.checkAuthenticationRequirements();
 
       // If this fails, the server is just confused
-      const success = await authStore.verifyOrRefreshLoginOnce();
+      const success = await authStore.verifyOrRefreshLoginOnceOrLogout();
       if (success) {
         if (!config?.url) {
           throw new Error("No URL in axios config, cannot retry");

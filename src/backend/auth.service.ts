@@ -10,6 +10,7 @@ export interface LoginRequiredResponse {
   loginRequired: boolean;
   registration: boolean;
   wizardState: WizardSettingsDto;
+  isDemoMode: boolean;
 }
 
 export class AuthService {

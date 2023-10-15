@@ -124,7 +124,7 @@ onMounted(async () => {
     return;
   }
 
-  const success = await authStore.verifyOrRefreshLoginOnce();
+  const success = await authStore.verifyOrRefreshLoginOnceOrLogout();
   if (success || authStore.loginRequired === false) {
     const routePath = route.query.redirect;
 
