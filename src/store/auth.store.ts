@@ -61,7 +61,7 @@ export const useAuthStore = defineStore("auth", {
         try {
           await AuthService.logout();
         } catch (e) {
-          useSnackbar().error("Server could not process logout, but local logout was successful");
+          console.error("Server could not process logout, but local logout was successful", e);
         }
       }
       this.setIdToken(undefined);
