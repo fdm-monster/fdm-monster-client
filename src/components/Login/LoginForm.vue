@@ -149,11 +149,13 @@ async function login() {
   try {
     loading.value = true;
     await authStore.login(username.value, password.value);
+    password.value = "";
     loading.value = false;
   } catch (e) {
     loading.value = false;
     if ((e as AxiosError)?.response?.status === 401) {
       errorMessage.value = "Invalid credentials";
+      password.value = "";
       return;
     }
 
@@ -161,6 +163,7 @@ async function login() {
       title: "Error logging in",
       subtitle: "Please test your connection and try again.",
     });
+    password.value = "";
 
     return;
   }
