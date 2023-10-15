@@ -38,13 +38,15 @@
               </li>
               <li>Created at {{ formatIntlDate(user.createdAt) }}</li>
               <li v-if="user.isDemoUser">Demo user account</li>
-              <li v-if="user.isRootUser">Root user account (created autonomously)</li>
               <li v-if="!user.isVerified">
                 <span class="error--text">Account not verified</span>
               </li>
               <li>
                 Role(s)
                 <ul>
+                  <li v-if="user.isRootUser">
+                    <v-chip class="mb-2 mt-2" small> OWNER </v-chip>
+                  </li>
                   <li v-for="role of convertRoles(user.roles)" :key="role">
                     <v-chip class="mb-2 mt-2" small>
                       {{ role }}
