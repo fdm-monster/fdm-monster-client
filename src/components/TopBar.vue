@@ -4,6 +4,9 @@
       <span class="font-weight-light">FDM</span>
       <strong>Monster</strong>
     </v-toolbar-title>
+
+    <v-spacer v-if="isDemoMode" />
+    <h2 class="text-uppercase text--white" v-if="isDemoMode">DEMO MODE</h2>
     <v-spacer></v-spacer>
 
     <PrintJobsMenu />
@@ -101,6 +104,10 @@ const expiry = computed(() => {
 
 const username = computed(() => {
   return profileStore.username;
+});
+
+const isDemoMode = computed(() => {
+  return profileStore.isDemoUser;
 });
 
 async function logout() {
