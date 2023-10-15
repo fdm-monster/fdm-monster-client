@@ -56,6 +56,15 @@
               <v-alert v-if="errorMessage" class="mt-6" color="error" dense outlined>
                 {{ errorMessage }}
               </v-alert>
+              <v-alert
+                v-if="authStore.lastLogoutReason"
+                class="mt-6"
+                color="error darken-1"
+                dense
+                outlined
+              >
+                Reason for automatic logout: {{ authStore.lastLogoutReason }}
+              </v-alert>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -139,6 +148,7 @@ async function login() {
   try {
     loading.value = true;
     await authStore.login(username.value, password.value);
+    authStore.lastLogoutReason = null;
     password.value = "";
     loading.value = false;
   } catch (e) {

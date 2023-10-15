@@ -5,7 +5,7 @@ import { AuthService, type Tokens } from "@/backend/auth.service";
 import { Axios, AxiosError, HttpStatusCode } from "axios";
 import { WizardSettingsDto } from "@/models/settings/settings.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
-import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
+import { AUTH_ERROR_REASON, convertAuthErrorReason } from "@/shared/auth.constants";
 import { useEventBus } from "@vueuse/core/index";
 
 export interface IClaims extends JwtPayload {
@@ -19,6 +19,7 @@ export interface AuthState {
   registration: boolean | null;
   token: string | null;
   wizardState: WizardSettingsDto | null;
+  lastLogoutReason: string | null;
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -29,6 +30,7 @@ export const useAuthStore = defineStore("auth", {
     loginRequired: null,
     registration: null,
     wizardState: null,
+    lastLogoutReason: null,
   }),
   actions: {
     async checkAuthenticationRequirements() {
@@ -50,6 +52,7 @@ export const useAuthStore = defineStore("auth", {
         });
     },
     async login(username: string, password: string): Promise<Tokens | null> {
+      this.lastLogoutReason = null;
       return await AuthService.postLogin(username, password)
         .then((response) => {
           this.setTokens(response.data.token, response.data.refreshToken);
@@ -60,8 +63,11 @@ export const useAuthStore = defineStore("auth", {
           throw e;
         });
     },
-    async logout(callServerLogout = false) {
+    async logout(callServerLogout = false, reason?: string) {
       console.debug(`Logging out (calling server ${callServerLogout})`);
+      if (reason) {
+        this.lastLogoutReason = reason;
+      }
       if (callServerLogout && !!this.tokenClaims && !this.isLoginExpired) {
         try {
           await AuthService.logout();
@@ -90,7 +96,7 @@ export const useAuthStore = defineStore("auth", {
         // Detect reasons for which we should not refresh, and handle the emitted event to change the UI page
         const { reasonCode, url } = this.extractSpecialReasonCode(e1 as AxiosError);
         if (reasonCode) {
-          await this.logout(false);
+          await this.logout(false, convertAuthErrorReason(reasonCode));
           console.error(
             `[AuthStore] 401 Unauthorized - emitting 'auth:${reasonCode}' with reason ${reasonCode}`
           );

@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useAuthStore } from "@/store/auth.store";
 import { useEventBus } from "@vueuse/core";
-import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
+import { convertAuthErrorReason } from "@/shared/auth.constants";
 
 /**
  * Made async for future possibility of getting base URI externally or asynchronously
@@ -92,6 +92,15 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
       // Detect if this is a special reason code, and if so, don't handle it here
       const { reasonCode, url } = authStore.extractSpecialReasonCode(error);
       if (reasonCode) {
+        await authStore.logout(false, convertAuthErrorReason(reasonCode));
+        console.error(
+          `[AuthStore] 401 Unauthorized - emitting 'auth:${reasonCode}' with reason ${reasonCode}`
+        );
+        useEventBus(`auth:${reasonCode}`).emit({
+          url,
+          error: error.message,
+          reasonCode,
+        });
         return Promise.reject(error);
       }
 

@@ -184,7 +184,9 @@ accountNotVerifiedEventKey.on(async () => {
   );
   snackbar.error("Account not verified, please ask an administrator to verify your account.");
   setOverlay(true, "Account not verified, please ask an administrator to verify your account.");
-  await router.push({ name: RouteNames.Login });
+  if (router.currentRoute.name !== RouteNames.Login) {
+    await router.push({ name: RouteNames.Login });
+  }
   setOverlay(false);
 });
 
@@ -198,7 +200,9 @@ passwordChangeRequiredEventKey.on(async () => {
   );
   snackbar.error("Password change required, please change your password.");
   setOverlay(true, "Password change required, please change your password.");
-  await router.push({ name: RouteNames.Login });
+  if (router.currentRoute.name !== RouteNames.Login) {
+    await router.push({ name: RouteNames.Login });
+  }
   setOverlay(false);
 });
 
