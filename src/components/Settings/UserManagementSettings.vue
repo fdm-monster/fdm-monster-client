@@ -30,21 +30,22 @@
               Your account
             </strong>
           </v-list-item-title>
-          <v-list-item-subtitle> </v-list-item-subtitle>
+          <v-list-item-subtitle></v-list-item-subtitle>
           <span class="grey--text darken-4">
             <ul>
-              <li v-if="user.isVerified">
-                <span class="success--text">Account verified</span>
+              <li>
+                <span v-if="user.isVerified" class="success--text">Account verified</span>
+                <span v-else class="error--text">Account not verified</span>
               </li>
               <li>Created at {{ formatIntlDate(user.createdAt) }}</li>
               <li v-if="user.isDemoUser">Demo user account</li>
-              <li v-if="user.isRootUser">Root user account (created autonomously)</li>
-              <li v-if="!user.isVerified">
-                <span class="error--text">Account not verified</span>
-              </li>
+
               <li>
                 Role(s)
                 <ul>
+                  <li v-if="user.isRootUser">
+                    <v-chip class="mb-2 mt-2" small> OWNER </v-chip>
+                  </li>
                   <li v-for="role of convertRoles(user.roles)" :key="role">
                     <v-chip class="mb-2 mt-2" small>
                       {{ role }}
@@ -57,32 +58,32 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-btn
+            :disabled="isCurrentAccount(user) || user.isRootUser"
+            :color="user.isVerified ? 'error darken-4' : 'success'"
+            @click="verifyUser(user, !user.isVerified)"
+          >
+            <v-icon class="mr-2">shield</v-icon>
+            <span v-if="!user.isVerified">Verify account</span>
+            <span v-if="user.isVerified">Unverify account</span>
+          </v-btn>
+          <v-btn
+            :color="user.isRootUser ? 'error darken-4' : 'success'"
+            :disabled="isCurrentAccount(user) || !profile?.isRootUser"
+            class="mt-2"
+            @click="setRootUser(user, !user.isRootUser)"
+          >
+            <v-icon class="mr-2">key</v-icon>
+            <span v-if="user.isRootUser">Remove owner</span>
+            <span v-if="!user.isRootUser">Set owner</span>
+          </v-btn>
+          <v-btn
+            :disabled="isCurrentAccount(user) || user.isRootUser"
+            class="mt-2"
             color="error darken-2"
             @click="deleteUser(user)"
-            :disabled="isCurrentAccount(user)"
           >
             <v-icon class="mr-2">delete</v-icon>
             Delete
-          </v-btn>
-          <v-btn
-            v-if="!user.isVerified"
-            class="mt-2"
-            color="success"
-            @click="verifyUser(user)"
-            :disabled="isCurrentAccount(user)"
-          >
-            <v-icon class="mr-2">shield</v-icon>
-            Verify account
-          </v-btn>
-          <v-btn
-            v-if="user.isVerified"
-            class="mt-2"
-            color="error darken-4"
-            @click="verifyUser(user, false)"
-            :disabled="isCurrentAccount(user)"
-          >
-            <v-icon class="mr-2">shield</v-icon>
-            Unverify account
           </v-btn>
         </v-list-item-action>
       </v-list-item>
@@ -159,7 +160,13 @@ async function deleteUser(user: User) {
 }
 
 async function verifyUser(user: User, isVerified: boolean = true) {
-  if (!confirm(`Are you sure you want to verify ${user.username}?`)) {
+  if (user.isRootUser) {
+    snackbar.error("You are not allowed to do perform this action on an owner");
+    return;
+  }
+  if (
+    !confirm(`Are you sure you want to ${isVerified ? "verify" : "unverify"} ${user.username}?`)
+  ) {
     return;
   }
 
@@ -175,5 +182,36 @@ async function verifyUser(user: User, isVerified: boolean = true) {
   loading.value = false;
 
   snackbar.info(isVerified ? `User ${user.username} verified` : `User ${user.username} unverified`);
+}
+
+async function setRootUser(user: User, isRootUser: boolean = true) {
+  if (!profile.value?.isRootUser) {
+    snackbar.error("You are not allowed to do perform this action as you're not an owner");
+  }
+
+  if (
+    !confirm(
+      `You are about to ${isRootUser ? "set" : "remove"} owner rights on ${
+        user.username
+      }. Are you sure?`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    loading.value = true;
+    await UserService.setRootUser(user.id, isRootUser);
+    await userQuery.refetch();
+  } catch (e) {
+    loading.value = false;
+    console.error(e);
+    throw e;
+  }
+  loading.value = false;
+
+  snackbar.info(
+    isRootUser ? `User ${user.username} set to owner` : `User ${user.username} is no longer owner`
+  );
 }
 </script>

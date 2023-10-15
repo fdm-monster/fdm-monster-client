@@ -56,6 +56,15 @@
               <v-alert v-if="errorMessage" class="mt-6" color="error" dense outlined>
                 {{ errorMessage }}
               </v-alert>
+              <v-alert
+                v-if="authStore.lastLogoutReason"
+                class="mt-6"
+                color="error darken-1"
+                dense
+                outlined
+              >
+                Reason for automatic logout: {{ authStore.lastLogoutReason }}
+              </v-alert>
             </v-form>
           </v-card-text>
           <v-card-actions>
@@ -96,6 +105,7 @@ import { useEventBus } from "@vueuse/core";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { RouteNames } from "@/router/route-names";
+import { AUTH_ERROR_REASON, convertAuthErrorReason } from "@/shared/auth.constants";
 
 const authStore = useAuthStore();
 const errorMessage = ref("");
@@ -123,21 +133,10 @@ onMounted(async () => {
     return;
   }
 
-  const success = await authStore.verifyOrRefreshLoginOnce();
-  if (success || authStore.loginRequired === false) {
-    const routePath = route.query.redirect;
-
-    if (!routePath) {
-      console.debug("LoginView, no query param, redirecting to home");
-      await router.push({ name: "Home" });
-      return;
-    } else {
-      console.debug("LoginView, query param, redirecting to", routePath);
-      await router.push({
-        path: routePath as string,
-      });
-      return;
-    }
+  // Check if login is already valid, if so route away safely
+  const success = await authStore.verifyOrRefreshLoginOnceOrLogout();
+  if (success) {
+    await routeToRedirect();
   }
 });
 
@@ -149,11 +148,30 @@ async function login() {
   try {
     loading.value = true;
     await authStore.login(username.value, password.value);
+    authStore.lastLogoutReason = null;
+    password.value = "";
     loading.value = false;
   } catch (e) {
     loading.value = false;
     if ((e as AxiosError)?.response?.status === 401) {
-      errorMessage.value = "Invalid credentials";
+      password.value = "";
+
+      const reasonCode: keyof typeof AUTH_ERROR_REASON = ((e as AxiosError)?.response?.data as any)
+        ?.reasonCode;
+      const convertedReason = convertAuthErrorReason(reasonCode);
+      if (reasonCode === AUTH_ERROR_REASON.AccountNotVerified) {
+        snackbar.error(
+          convertedReason,
+          "Please ask your administrator to verify your account and try again."
+        );
+      } else if (reasonCode === AUTH_ERROR_REASON.PasswordChangeRequired) {
+        snackbar.error(
+          convertedReason,
+          "Your password needs to be changed. This feature is sadly not finished"
+        );
+      }
+
+      errorMessage.value = convertedReason;
       return;
     }
 
@@ -161,6 +179,8 @@ async function login() {
       title: "Error logging in",
       subtitle: "Please test your connection and try again.",
     });
+    errorMessage.value = "Error logging in - status code " + (e as AxiosError)?.response?.status;
+    password.value = "";
 
     return;
   }

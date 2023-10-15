@@ -5,18 +5,42 @@
       <br />
 
       <div v-if="errorCaught">
-        <h1>FDM Monster Connection Error</h1>
-        <p>Could not connect to the backend. Please check your configuration.</p>
-        <v-sheet class="pa-4 rounded" color="grey darken-2" width="70%">
+        <h1>FDM Monster Server Error</h1>
+        <p>Did not expect this answer from the server. Please check your configuration and logs.</p>
+        <v-sheet class="pa-4 rounded" color="grey darken-2" width="80%">
           Details:
           <div class="mt-2 mb-2">{{ JSON.stringify(errorCaught, null, 4) }}</div>
+          <div class="mt-2 mb-2" v-if="errorUrl">Original URL: {{ errorUrl }}</div>
+          <div class="mt-2 mb-2" v-if="errorResponse">Response body: {{ errorResponse }}</div>
           <br />
-          <v-btn class="mr-5" color="secondary" @click="copyError()"
-            ><v-icon class="mr-2">content_copy</v-icon>Copy error details</v-btn
+          <v-btn class="mb-2" color="secondary" @click="copyError()">
+            <v-icon class="mr-2">content_copy</v-icon>
+            Copy error details
+          </v-btn>
+          <br />
+          <v-btn color="primary mb-2" @click="reloadPage()">
+            <v-icon class="mr-2">refresh</v-icon>reload the page
+          </v-btn>
+          <br />
+          <v-btn
+            color="darken-2 mb-2"
+            href="https://docs.fdm-monster.net"
+            style="color: white"
+            target="_blank"
           >
-          <v-btn color="primary" @click="reloadPage()"
-            ><v-icon class="mr-2">refresh</v-icon>reload the page</v-btn
+            <v-icon class="mr-2">menu_book</v-icon>
+            view documentation
+          </v-btn>
+          <br />
+          <v-btn
+            color="purple darken-4"
+            href="https://discord.gg/mwA8uP8CMc"
+            style="color: white"
+            target="_blank"
           >
+            <v-icon class="mr-2">chat</v-icon>
+            join our Discord
+          </v-btn>
         </v-sheet>
 
         <img
@@ -50,6 +74,8 @@ import { useRouter } from "vue-router/composables";
 import { sleep } from "@/utils/time.utils";
 import { RouteNames } from "@/router/route-names";
 import { AppService } from "@/backend/app.service";
+import { AxiosError } from "axios";
+import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -60,6 +86,8 @@ const router = useRouter();
 const overlayMessage = ref("");
 const loading = ref(true);
 const errorCaught = ref(null);
+const errorUrl = ref(null);
+const errorResponse = ref(null);
 const snackbar = useSnackbar();
 const socketIoClient: SocketIoService = new SocketIoService();
 
@@ -80,17 +108,11 @@ function setOverlay(overlayEnabled: boolean, message: string = "") {
     overlayMessage.value = "";
   } else {
     overlayMessage.value = message;
+    errorCaught.value = null;
+    errorUrl.value = null;
+    errorResponse.value = null;
   }
   overlay.value = overlayEnabled;
-}
-
-async function routeToLoginSafely() {
-  setOverlay(true, "Login expired, going back to login");
-  await sleep(500);
-  if (router.currentRoute.name !== RouteNames.Login) {
-    await router.push({ name: RouteNames.Login });
-  }
-  setOverlay(false);
 }
 
 async function loadAppWithAuthenticationReady() {
@@ -132,10 +154,12 @@ authPermissionDeniedKey.on(async (event) => {
   setOverlay(false);
 });
 
-// Currently unused
+// In use (shared/http-client.ts)
 const authFailKey = useEventBus("auth:failure");
-authFailKey.on(async () => {
-  console.debug("[AppLoader] Event received: 'auth:failure', going back to login");
+authFailKey.on(async (event: any) => {
+  console.debug(
+    `[AppLoader] Event received: 'auth:failure', going back to login, context: ${event}`
+  );
   setOverlay(true, "Authentication failed, going back to login");
 
   if (router.currentRoute.name !== RouteNames.Login) {
@@ -152,6 +176,36 @@ loginEventKey.on(async () => {
   await loadAppWithAuthenticationReady();
 });
 
+// Emitted by auth.store.ts handleAndEmitAuthenticationError
+const accountNotVerifiedEventKey = useEventBus(`auth:${AUTH_ERROR_REASON.AccountNotVerified}`);
+accountNotVerifiedEventKey.on(async () => {
+  console.debug(
+    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.AccountNotVerified}', going to login`
+  );
+  snackbar.error("Account not verified, please ask an administrator to verify your account.");
+  setOverlay(true, "Account not verified, please ask an administrator to verify your account.");
+  if (router.currentRoute.name !== RouteNames.Login) {
+    await router.push({ name: RouteNames.Login });
+  }
+  setOverlay(false);
+});
+
+// Emitted by auth.store.ts handleAndEmitAuthenticationError
+const passwordChangeRequiredEventKey = useEventBus(
+  `auth:${AUTH_ERROR_REASON.PasswordChangeRequired}`
+);
+passwordChangeRequiredEventKey.on(async () => {
+  console.debug(
+    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.PasswordChangeRequired}', going to login`
+  );
+  snackbar.error("Password change required, please change your password.");
+  setOverlay(true, "Password change required, please change your password.");
+  if (router.currentRoute.name !== RouteNames.Login) {
+    await router.push({ name: RouteNames.Login });
+  }
+  setOverlay(false);
+});
+
 onUnmounted(() => {
   if (socketIoClient) {
     socketIoClient.disconnect();
@@ -160,13 +214,31 @@ onUnmounted(() => {
 
 onBeforeMount(async () => {
   loading.value = true;
-  setOverlay(true, "Loading spools");
+  // Pick random string out of array of strings
+  const loadingMessages = [
+    "Loading FDM Monster",
+    "Loading it all",
+    "Loading features",
+    "Loading what needs to be loaded",
+    "Farming potatoes",
+    "Wiping the floor",
+    "Cleaning cobwebs",
+    "Loading filament.dll",
+    "Loading 3D_printer.exe",
+    "Loading spools",
+  ];
+
+  const message = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+  setOverlay(true, message);
 
   try {
     await AppService.test();
+    // Nice test for error handling
+    // throw new Error("test");
   } catch (e) {
     loading.value = false;
     errorCaught.value = e;
+    errorUrl.value = "api/test";
     return;
   }
 
@@ -198,16 +270,31 @@ onBeforeMount(async () => {
   // What if refreshToken is not present or not valid?
   setOverlay(true, "Refreshing login");
   console.debug("[AppLoader] Verifying or refreshing login once");
-  const refreshSuccess = await authStore.verifyOrRefreshLoginOnce();
-  if (!refreshSuccess) {
-    console.debug("[AppLoader] No success refreshing");
-    setOverlay(true, "Login expired, going back to login");
-    await sleep(500);
-    if (router.currentRoute.name !== RouteNames.Login) {
-      await router.push({ name: RouteNames.Login });
+  try {
+    const { success, handled } = await authStore.verifyOrRefreshLoginOnceOrLogout();
+    if (handled) {
+      console.debug("[AppLoader] received handled event, hiding overlay");
+      return;
     }
-    setOverlay(false);
-    // Dont load app as it will be redirected to login
+
+    if (!success) {
+      console.debug("[AppLoader] No success refreshing");
+      setOverlay(true, "Login expired, going back to login");
+
+      await sleep(500);
+      if (router.currentRoute.name !== RouteNames.Login) {
+        await router.push({ name: RouteNames.Login });
+      }
+      setOverlay(false);
+      // Dont load app as it will be redirected to login
+      return;
+    }
+  } catch (e) {
+    console.log("[AppLoader] Error when refreshing login", e);
+    loading.value = false;
+    errorCaught.value = (e as AxiosError).message;
+    errorUrl.value = (e as AxiosError).config?.url;
+    errorResponse.value = (e as AxiosError).response?.data;
     return;
   }
 

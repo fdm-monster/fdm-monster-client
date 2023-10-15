@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useAuthStore } from "@/store/auth.store";
 import { useEventBus } from "@vueuse/core";
+import { convertAuthErrorReason } from "@/shared/auth.constants";
 
 /**
  * Made async for future possibility of getting base URI externally or asynchronously
@@ -75,7 +76,7 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
           roles?: string[];
           permissions?: string[];
         };
-        console.error("403 Forbidden", data);
+        console.error("[HttpClient] 403 Forbidden", data);
         useEventBus("auth:permission-denied").emit({
           roles: data?.roles,
           permissions: data?.permissions,
@@ -88,11 +89,29 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
       const authStore = useAuthStore();
       authStore.loadTokens();
 
+      // Detect if this is a special reason code, and if so, don't handle it here
+      const { reasonCode, url } = authStore.extractSpecialReasonCode(error);
+      if (reasonCode) {
+        await authStore.logout(false, convertAuthErrorReason(reasonCode));
+        console.error(
+          `[AuthStore] 401 Unauthorized - emitting 'auth:${reasonCode}' with reason ${reasonCode}`
+        );
+        useEventBus(`auth:${reasonCode}`).emit({
+          url,
+          error: error.message,
+          reasonCode,
+        });
+        return Promise.reject(error);
+      }
+
       // If this is called on AppLoader and failing, poll it if status 0
       await authStore.checkAuthenticationRequirements();
 
       // If this fails, the server is just confused
-      const success = await authStore.verifyOrRefreshLoginOnce();
+      const { success, handled } = await authStore.verifyOrRefreshLoginOnceOrLogout();
+      if (handled) {
+        return Promise.reject(error);
+      }
       if (success) {
         if (!config?.url) {
           throw new Error("No URL in axios config, cannot retry");

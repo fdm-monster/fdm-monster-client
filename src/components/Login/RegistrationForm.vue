@@ -34,7 +34,15 @@
               <label> Username </label>
               <v-text-field
                 v-model="username"
-                :rules="[(v) => !!v || 'Username is required']"
+                :rules="[
+                  (v) => !!v || 'Username is required',
+                  (v) => (v?.length ?? 0) >= 3 || 'Username must be of length 3 or greater',
+                  (v) =>
+                    !v.toLowerCase().includes('admin') || 'Username may not contain the word admin',
+                  (v) =>
+                    !v.toLowerCase().includes('root') || 'Username may not contain the word root',
+                  (v) => !(v.toLowerCase() === 'demo') || 'Username may not equal the word demo',
+                ]"
                 autofocus
                 name="login"
                 label="Username"
@@ -90,7 +98,7 @@
             </v-btn>
           </v-card-actions>
           <v-card-actions>
-            <v-btn :loading="loading" style="width: 100%" class="pa-4" large @click="gotoLogin()">
+            <v-btn style="width: 100%" class="pa-4" large @click="gotoLogin()">
               <v-icon class="mr-2">arrow_left</v-icon>Back to Login
             </v-btn>
           </v-card-actions>

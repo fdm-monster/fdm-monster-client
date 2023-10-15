@@ -162,9 +162,12 @@ appRouter.beforeEach(async (to, from, next) => {
   if (!to?.meta?.requiresAuth || authStore.loginRequired === false) {
     console.debug(`No auth required on route ${to.fullPath}`);
     return next();
-  } else if (authStore.loginRequired === null) {
-    return next();
-  } else {
+  }
+  // TODO why is this here again? This causes the app not to initialize properly (SocketIO/settings in AppLoader)
+  // else if (authStore.loginRequired === null) {
+  //   return next();
+  // }
+  else {
     console.debug(
       `Auth required on route ${to.fullPath} (loginRequired=${authStore.loginRequired}, registration=${authStore.registration}, wizardState=${authStore.wizardState}, requiresAuth=${to?.meta?.requiresAuth})`
     );

@@ -28,6 +28,7 @@ export class SocketIoService {
   private snackbar = useSnackbar();
 
   async setupSocketConnection() {
+    console.debug("Setting up socket.io client");
     const apiBase = await getBaseUri();
     const authStore = useAuthStore();
     authStore.loadTokens();
@@ -42,6 +43,7 @@ export class SocketIoService {
 
   disconnect() {
     if (this.socket) {
+      console.debug("Disconnecting socket.io client");
       this.socket.disconnect();
     }
   }
