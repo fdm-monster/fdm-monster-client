@@ -96,6 +96,7 @@ import { useEventBus } from "@vueuse/core";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { RouteNames } from "@/router/route-names";
+import { AUTH_ERROR_REASON, convertAuthErrorReason } from "@/shared/auth.constants";
 
 const authStore = useAuthStore();
 const errorMessage = ref("");
@@ -154,8 +155,19 @@ async function login() {
   } catch (e) {
     loading.value = false;
     if ((e as AxiosError)?.response?.status === 401) {
-      errorMessage.value = "Invalid credentials";
       password.value = "";
+
+      const reasonCode: keyof typeof AUTH_ERROR_REASON = ((e as AxiosError)?.response?.data as any)
+        ?.reasonCode;
+      const convertedReason = convertAuthErrorReason(reasonCode);
+      if (reasonCode === AUTH_ERROR_REASON.AccountNotVerified) {
+        snackbar.openErrorMessage({
+          title: convertedReason,
+          subtitle: "Please ask your administrator to verify your account and try again.",
+        });
+      }
+
+      errorMessage.value = convertedReason;
       return;
     }
 
@@ -163,6 +175,7 @@ async function login() {
       title: "Error logging in",
       subtitle: "Please test your connection and try again.",
     });
+    errorMessage.value = "Error logging in - status code " + (e as AxiosError)?.response?.status;
     password.value = "";
 
     return;
