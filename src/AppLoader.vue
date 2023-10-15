@@ -146,7 +146,7 @@ authPermissionDeniedKey.on(async (event) => {
   setOverlay(false);
 });
 
-// Currently unused
+// In use (shared/http-client.ts)
 const authFailKey = useEventBus("auth:failure");
 authFailKey.on(async (event: any) => {
   console.debug(
@@ -176,7 +176,22 @@ onUnmounted(() => {
 
 onBeforeMount(async () => {
   loading.value = true;
-  setOverlay(true, "Loading spools");
+  // Pick random string out of array of strings
+  const loadingMessages = [
+    "Loading FDM Monster",
+    "Loading it all",
+    "Loading features",
+    "Loading what needs to be loaded",
+    "Farming potatoes",
+    "Wiping the floor",
+    "Cleaning cobwebs",
+    "Loading filament.dll",
+    "Loading 3D_printer.exe",
+    "Loading spools",
+  ];
+
+  const message = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+  setOverlay(true, message);
 
   try {
     await AppService.test();
