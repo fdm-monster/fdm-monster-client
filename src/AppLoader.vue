@@ -10,6 +10,8 @@
         <v-sheet class="pa-4 rounded" color="grey darken-2" width="80%">
           Details:
           <div class="mt-2 mb-2">{{ JSON.stringify(errorCaught, null, 4) }}</div>
+          <div class="mt-2 mb-2" v-if="errorUrl">Original URL: {{ errorUrl }}</div>
+          <div class="mt-2 mb-2" v-if="errorResponse">Response body: {{ errorResponse }}</div>
           <br />
           <v-btn class="mb-2" color="secondary" @click="copyError()">
             <v-icon class="mr-2">content_copy</v-icon>
@@ -83,6 +85,8 @@ const router = useRouter();
 const overlayMessage = ref("");
 const loading = ref(true);
 const errorCaught = ref(null);
+const errorUrl = ref(null);
+const errorResponse = ref(null);
 const snackbar = useSnackbar();
 const socketIoClient: SocketIoService = new SocketIoService();
 
@@ -103,6 +107,9 @@ function setOverlay(overlayEnabled: boolean, message: string = "") {
     overlayMessage.value = "";
   } else {
     overlayMessage.value = message;
+    errorCaught.value = null;
+    errorUrl.value = null;
+    errorResponse.value = null;
   }
   overlay.value = overlayEnabled;
 }
@@ -200,6 +207,7 @@ onBeforeMount(async () => {
   } catch (e) {
     loading.value = false;
     errorCaught.value = e;
+    errorUrl.value = "api/test";
     return;
   }
 
@@ -249,6 +257,8 @@ onBeforeMount(async () => {
     console.log("[AppLoader] Error when refreshing login", e);
     loading.value = false;
     errorCaught.value = (e as AxiosError).message;
+    errorUrl.value = (e as AxiosError).config?.url;
+    errorResponse.value = (e as AxiosError).response?.data;
     return;
   }
 
