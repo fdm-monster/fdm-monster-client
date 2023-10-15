@@ -21,6 +21,7 @@ export class ServerApi {
   static customGCodeRoute = `${ServerApi.base}/custom-gcode`;
 
   static userRoute = `${ServerApi.base}/user`;
+  static rolesRoute = `${ServerApi.base}/user/roles`;
   static userProfileRoute = `${ServerApi.userRoute}/profile`;
 
   static settingsRoute = `${ServerApi.base}/settings`;
@@ -90,4 +91,6 @@ export class ServerApi {
 
   static userChangeUsernameRoute = (id: string) => `${ServerApi.userRoute}/${id}/change-username`;
   static userChangePasswordRoute = (id: string) => `${ServerApi.userRoute}/${id}/change-password`;
+  static userDeleteRoute = (id: string) => `${ServerApi.userRoute}/${id}`;
+  static userSetVerifiedRoute = (id: string) => `${ServerApi.userRoute}/${id}/set-verified`;
 }
