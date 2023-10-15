@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useAuthStore } from "@/store/auth.store";
 import { useEventBus } from "@vueuse/core";
+import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
 
 /**
  * Made async for future possibility of getting base URI externally or asynchronously
@@ -88,11 +89,20 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
       const authStore = useAuthStore();
       authStore.loadTokens();
 
+      // Detect if this is a special reason code, and if so, don't handle it here
+      const { reasonCode, url } = authStore.extractSpecialReasonCode(error);
+      if (reasonCode) {
+        return Promise.reject(error);
+      }
+
       // If this is called on AppLoader and failing, poll it if status 0
       await authStore.checkAuthenticationRequirements();
 
       // If this fails, the server is just confused
-      const success = await authStore.verifyOrRefreshLoginOnceOrLogout();
+      const { success, handled } = await authStore.verifyOrRefreshLoginOnceOrLogout();
+      if (handled) {
+        return Promise.reject(error);
+      }
       if (success) {
         if (!config?.url) {
           throw new Error("No URL in axios config, cannot retry");

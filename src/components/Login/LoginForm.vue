@@ -154,6 +154,11 @@ async function login() {
           convertedReason,
           "Please ask your administrator to verify your account and try again."
         );
+      } else if (reasonCode === AUTH_ERROR_REASON.PasswordChangeRequired) {
+        snackbar.error(
+          convertedReason,
+          "Your password needs to be changed. This feature is sadly not finished"
+        );
       }
 
       errorMessage.value = convertedReason;

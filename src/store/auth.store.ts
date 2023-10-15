@@ -5,6 +5,8 @@ import { AuthService, type Tokens } from "@/backend/auth.service";
 import { Axios, AxiosError, HttpStatusCode } from "axios";
 import { WizardSettingsDto } from "@/models/settings/settings.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
+import { useEventBus } from "@vueuse/core/index";
 
 export interface IClaims extends JwtPayload {
   name: string;
@@ -73,39 +75,80 @@ export const useAuthStore = defineStore("auth", {
     async verifyOrRefreshLoginOnceOrLogout() {
       try {
         await AuthService.verifyLogin();
-        return true;
+        return { success: true };
       } catch (e1) {
-        console.error("verifyOrRefreshLoginOnce: failed to verify login", e1);
+        console.error("[AuthStore.verifyOrRefreshLoginOnce]: failed to verify login", e1);
 
         const error = e1 as AxiosError;
         if (!error.response || error.response?.status !== HttpStatusCode.Unauthorized) {
           // Ensure no request-retry is done, nor other error processing
-          console.error("verifyOrRefreshLoginOnce: unknown error", error.status);
+          console.error("[AuthStore.verifyOrRefreshLoginOnce]: unknown error", error.status);
+          // This is meant to be caught by AppLoader, which know how to break the flow and extract the error data (body, url)
           throw e1;
         }
 
-        // Try to refresh the token
-        if (this.hasRefreshToken) {
-          try {
-            await this.refreshLoginToken();
-            await AuthService.verifyLogin();
-          } catch (e2: any | AxiosError) {
-            const error = e2 as AxiosError;
-            if (error.response?.status === HttpStatusCode.Unauthorized) {
-              await this.logout(false);
-              console.error("verifyOrRefreshLoginOnce: failed to refresh token", error.status);
-              return false;
-            } else {
-              // Ensure no request-retry is done, nor other error processing
-              throw e2;
-            }
-          }
-          return true;
-        } else {
+        // Detect reasons for which we should not refresh, and handle the emitted event to change the UI page
+        const { reasonCode, url } = this.extractSpecialReasonCode(e1 as AxiosError);
+        if (reasonCode) {
           await this.logout(false);
-          return false;
+          console.error(
+            `[AuthStore] 401 Unauthorized - emitting 'auth:${reasonCode}' with reason ${reasonCode}`
+          );
+          useEventBus(`auth:${reasonCode}`).emit({
+            url,
+            error: error.message,
+            reasonCode,
+          });
+          // The caller must abort their action, but avoid rerouting to login - special case
+          return { success: false, handled: true };
         }
+        if (!this.hasRefreshToken) {
+          // The caller must abort their action, but may reroute to login
+          return { success: false, handled: false };
+        }
+
+        // Try to refresh the token
+        try {
+          await this.refreshLoginToken();
+          await AuthService.verifyLogin();
+        } catch (e2: any | AxiosError) {
+          // Failure at this point is handled ruthlessly
+          const error = e2 as AxiosError;
+          if (error.response?.status === HttpStatusCode.Unauthorized) {
+            await this.logout(false);
+            console.error(
+              "[AuthStore.verifyOrRefreshLoginOnce]: failed to refresh token",
+              error.status
+            );
+            // Refresh was successful
+            return { success: false, handled: false };
+          } else {
+            // Ensure no request-retry is done, nor other error processing
+            throw e2;
+          }
+        }
+
+        // Refresh was successful
+        return { success: true, handled: false };
       }
+    },
+    extractSpecialReasonCode(error: AxiosError) {
+      // Detect reasons for which we should not retry
+      // - AccountNotVerified the admin has not verified the account yet and this needs to be shown to the user
+      // - PasswordChangeRequired the user needs to change their password
+      const reasonCode: keyof typeof AUTH_ERROR_REASON = (error?.response?.data as any)?.reasonCode;
+      if (reasonCode) {
+        console.error("[AuthStore] 401 Unauthorized - Checking received reason code", reasonCode);
+      }
+      if (
+        reasonCode &&
+        (reasonCode === AUTH_ERROR_REASON.AccountNotVerified ||
+          reasonCode === AUTH_ERROR_REASON.PasswordChangeRequired)
+      ) {
+        return { reasonCode, url: error?.config?.url };
+      }
+
+      return { reasonCode: null, url: null };
     },
     loadTokens() {
       this.token = localStorage.getItem("token");

@@ -75,6 +75,7 @@ import { sleep } from "@/utils/time.utils";
 import { RouteNames } from "@/router/route-names";
 import { AppService } from "@/backend/app.service";
 import { AxiosError } from "axios";
+import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -175,6 +176,32 @@ loginEventKey.on(async () => {
   await loadAppWithAuthenticationReady();
 });
 
+// Emitted by auth.store.ts handleAndEmitAuthenticationError
+const accountNotVerifiedEventKey = useEventBus(`auth:${AUTH_ERROR_REASON.AccountNotVerified}`);
+accountNotVerifiedEventKey.on(async () => {
+  console.debug(
+    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.AccountNotVerified}', going to login`
+  );
+  snackbar.error("Account not verified, please ask an administrator to verify your account.");
+  setOverlay(true, "Account not verified, please ask an administrator to verify your account.");
+  await router.push({ name: RouteNames.Login });
+  setOverlay(false);
+});
+
+// Emitted by auth.store.ts handleAndEmitAuthenticationError
+const passwordChangeRequiredEventKey = useEventBus(
+  `auth:${AUTH_ERROR_REASON.PasswordChangeRequired}`
+);
+passwordChangeRequiredEventKey.on(async () => {
+  console.debug(
+    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.PasswordChangeRequired}', going to login`
+  );
+  snackbar.error("Password change required, please change your password.");
+  setOverlay(true, "Password change required, please change your password.");
+  await router.push({ name: RouteNames.Login });
+  setOverlay(false);
+});
+
 onUnmounted(() => {
   if (socketIoClient) {
     socketIoClient.disconnect();
@@ -240,8 +267,13 @@ onBeforeMount(async () => {
   setOverlay(true, "Refreshing login");
   console.debug("[AppLoader] Verifying or refreshing login once");
   try {
-    const refreshSuccess = await authStore.verifyOrRefreshLoginOnceOrLogout();
-    if (!refreshSuccess) {
+    const { success, handled } = await authStore.verifyOrRefreshLoginOnceOrLogout();
+    if (handled) {
+      console.debug("[AppLoader] received handled event, hiding overlay");
+      return;
+    }
+
+    if (!success) {
       console.debug("[AppLoader] No success refreshing");
       setOverlay(true, "Login expired, going back to login");
 
