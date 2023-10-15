@@ -39,4 +39,9 @@ export class UserService extends BaseService {
     const path = ServerApi.userSetVerifiedRoute(id);
     return await this.postApi(path, { isVerified });
   }
+
+  static async setRootUser(id: string, isRootUser: boolean) {
+    const path = ServerApi.userSetRootUserRoute(id);
+    return await this.postApi(path, { isRootUser });
+  }
 }

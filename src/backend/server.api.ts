@@ -93,4 +93,5 @@ export class ServerApi {
   static userChangePasswordRoute = (id: string) => `${ServerApi.userRoute}/${id}/change-password`;
   static userDeleteRoute = (id: string) => `${ServerApi.userRoute}/${id}`;
   static userSetVerifiedRoute = (id: string) => `${ServerApi.userRoute}/${id}/set-verified`;
+  static userSetRootUserRoute = (id: string) => `${ServerApi.userRoute}/${id}/set-root-user`;
 }
