@@ -124,21 +124,10 @@ onMounted(async () => {
     return;
   }
 
+  // Check if login is already valid, if so route away safely
   const success = await authStore.verifyOrRefreshLoginOnceOrLogout();
-  if (success || authStore.loginRequired === false) {
-    const routePath = route.query.redirect;
-
-    if (!routePath) {
-      console.debug("LoginView, no query param, redirecting to home");
-      await router.push({ name: "Home" });
-      return;
-    } else {
-      console.debug("LoginView, query param, redirecting to", routePath);
-      await router.push({
-        path: routePath as string,
-      });
-      return;
-    }
+  if (success) {
+    await routeToRedirect();
   }
 });
 
@@ -161,10 +150,10 @@ async function login() {
         ?.reasonCode;
       const convertedReason = convertAuthErrorReason(reasonCode);
       if (reasonCode === AUTH_ERROR_REASON.AccountNotVerified) {
-        snackbar.openErrorMessage({
-          title: convertedReason,
-          subtitle: "Please ask your administrator to verify your account and try again.",
-        });
+        snackbar.error(
+          convertedReason,
+          "Please ask your administrator to verify your account and try again."
+        );
       }
 
       errorMessage.value = convertedReason;
