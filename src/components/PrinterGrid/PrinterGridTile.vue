@@ -153,6 +153,9 @@
           Maintenance reason: <br />
           {{ printer.disabledReason }}
         </v-tooltip>
+        <small v-if="largeTilesEnabled && currentPrintingFilePath">
+          <strong>File:</strong> {{ currentPrintingFilePath }}
+        </small>
       </v-container>
       <v-container v-else-if="gridStore.gridEditMode">
         <v-icon size="48">add</v-icon>
@@ -164,9 +167,13 @@
         absolute
         bottom
         color="green"
-        height="10"
+        height="13"
       >
-        <span class="xsmall-resized-font">{{ currentPrintingFilePath }}</span>
+        <span class="xsmall-resized-font">{{
+          largeTilesEnabled
+            ? currentJob.progress?.completion.toFixed(1) + "%"
+            : currentPrintingFilePath
+        }}</span>
       </v-progress-linear>
     </v-card>
   </div>
