@@ -1,11 +1,5 @@
 <template>
   <div>
-    <img
-      alt="FDM Monster Background"
-      class="grid-bg-img align-content-center"
-      src="/img/logo.svg"
-      style="opacity: 0.08"
-    />
     <v-banner v-if="gridStore.gridEditMode" style="cursor: move">
       <v-row style="margin-bottom: -5px">
         <v-col>
@@ -72,6 +66,12 @@
         </v-row>
       </v-col>
     </v-row>
+    <img
+      alt="FDM Monster Background"
+      class="grid-bg-img align-content-center"
+      src="/img/logo.svg"
+      style="opacity: 0.08; pointer-events: none"
+    />
   </div>
 </template>
 

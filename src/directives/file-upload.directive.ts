@@ -4,9 +4,9 @@ import {
   convertMultiPrinterFileToQueue,
   convertPrinterMultiFileToQueue,
 } from "@/utils/uploads-state.utils";
-import { usePrinterStore } from "../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
-import { useSnackbar } from "../shared/snackbar.composable";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 const bindDropConditionally = (el: HTMLElement, printers: Printer[], context?: Vue) => {
   const printersStore = usePrinterStore();
