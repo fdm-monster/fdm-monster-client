@@ -23,49 +23,50 @@ const bindDropConditionally = (el: HTMLElement, bindingValue: PrinterBindingValu
     el.ondragover = null;
     el.ondragleave = null;
     return;
-  } else {
-    el.style.border = defaultBorder;
-    el.ondrop = async (e) => {
-      el.style.border = defaultBorder;
-      e.preventDefault();
-      if (!e.dataTransfer) {
-        console.debug("No data transferred to drop printer");
-        return;
-      }
-
-      const buffer = e.dataTransfer.getData("text");
-      const data = JSON.parse(buffer) as PrinterPlace;
-      const isRecognized = isPrinterPlaceDataTransfer(data);
-      if (!isRecognized) {
-        console.debug("Drop not recognized", data);
-        return;
-      }
-
-      const floorId = floorStore.selectedFloor?.id;
-      if (!floorId?.length) throw new Error("Floor is not set");
-      const printerId = data.printerId;
-      if (!printerId?.length) throw new Error("PrinterId was not provided");
-
-      await FloorService.addPrinterToFloor(floorId, {
-        printerId,
-        x: bindingValue.x,
-        y: bindingValue.y,
-      });
-    };
-    el.ondragover = (ev: DragEvent) => {
-      if (!ev?.dataTransfer) return;
-
-      if (ev.dataTransfer && [...ev!.dataTransfer.items].filter((i) => i.kind === "file").length) {
-        return;
-      }
-      el.style.border = hoverBorder;
-      ev.preventDefault();
-    };
-    el.ondragleave = (ev: DragEvent) => {
-      el.style.border = defaultBorder;
-      ev.preventDefault();
-    };
   }
+
+  el.style.border = defaultBorder;
+  el.ondrop = async (e) => {
+    el.style.border = defaultBorder;
+    e.preventDefault();
+    if (!e.dataTransfer) {
+      return;
+    }
+
+    const buffer = e.dataTransfer.getData("text");
+    const data = JSON.parse(buffer) as PrinterPlace;
+    const isRecognized = isPrinterPlaceDataTransfer(data);
+    if (!isRecognized) {
+      console.debug("Drop not recognized", data);
+      return;
+    }
+
+    const floorId = floorStore.selectedFloor?.id;
+    if (!floorId?.length) throw new Error("Floor is not set");
+    const printerId = data.printerId;
+    if (!printerId?.length) throw new Error("PrinterId was not provided");
+
+    await FloorService.addPrinterToFloor(floorId, {
+      printerId,
+      x: bindingValue.x,
+      y: bindingValue.y,
+    });
+  };
+  el.ondragover = (ev: DragEvent) => {
+    if (!ev?.dataTransfer) {
+      return;
+    }
+
+    if (ev.dataTransfer && [...ev!.dataTransfer.items].filter((i) => i.kind === "file").length) {
+      return;
+    }
+    el.style.border = hoverBorder;
+    ev.preventDefault();
+  };
+  el.ondragleave = (ev: DragEvent) => {
+    el.style.border = defaultBorder;
+    ev.preventDefault();
+  };
 };
 
 export function registerPrinterPlaceDirective() {

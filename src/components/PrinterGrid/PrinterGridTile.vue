@@ -176,17 +176,17 @@
 import { defineComponent, PropType } from "vue";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 import { PrintersService } from "@/backend";
-import { usePrinterStore } from "../../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { useGridStore } from "../../store/grid.store";
-import { FloorService } from "../../backend/floor.service";
-import { useSettingsStore } from "../../store/settings.store";
-import { useFloorStore } from "../../store/floor.store";
-import { interpretStates } from "../../shared/printer-state.constants";
-import { usePrinterStateStore } from "../../store/printer-state.store";
-import { Printer } from "../../models/printers/printer.model";
-import { useSnackbar } from "../../shared/snackbar.composable";
+import { useGridStore } from "@/store/grid.store";
+import { FloorService } from "@/backend/floor.service";
+import { useSettingsStore } from "@/store/settings.store";
+import { useFloorStore } from "@/store/floor.store";
+import { interpretStates } from "@/shared/printer-state.constants";
+import { usePrinterStateStore } from "@/store/printer-state.store";
+import { Printer } from "@/models/printers/printer.model";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
