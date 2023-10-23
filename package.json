@@ -34,7 +34,7 @@
     "socket.io-client": "4.7.2",
     "validator": "13.11.0",
     "vee-validate": "3.4.15",
-    "vue": "2.7.14",
+    "vue": "2.7.15",
     "vue-router": "3.6.5",
     "vuedraggable": "2.24.3",
     "vuetify": "2.7.1"
@@ -74,7 +74,7 @@
     "typescript": "5.2.2",
     "vue-cli-plugin-vuetify": "2.5.8",
     "vue-svg-loader": "0.16.0",
-    "vue-template-compiler": "2.7.14",
+    "vue-template-compiler": "2.7.15",
     "vuetify-loader": "1.9.2",
     "webpack": "5.89.0"
   }
