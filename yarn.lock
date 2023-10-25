@@ -1807,9 +1807,9 @@
   integrity sha512-MThCETMkHDHTnFZHp71L+SqTtD5d6XHftFCVR1xRJdWM3qGrlQ2VCXaj0SKVcyJej2e1Opa2c7iknu1llxCDNQ==
 
 "@tanstack/vue-query@^5.0.0":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@tanstack/vue-query/-/vue-query-5.0.5.tgz#5eca3a8485eb5ed671f522d9c78e50822778fccc"
-  integrity sha512-PFzHu2pOPoJ1yX/vDz60TzIUETmRyq2+1lu+nonIfED7qc62rQnwUvA7x/KCLtu7a6r8r/IvCaYMXUU28GNVOw==
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/vue-query/-/vue-query-5.4.1.tgz#e37c9f76bde8ea2b50a413309f3e0aab468dec89"
+  integrity sha512-xACG5qUV1jp8t/Uk72VsCXu3UcwNdGwL4t+F+DqDl00LkDoRhjH/AWKSQc7EVKI6S8Pla4IjAvL8wLbpLtCncw==
   dependencies:
     "@tanstack/match-sorter-utils" "^8.8.4"
     "@tanstack/query-core" "5.0.5"
