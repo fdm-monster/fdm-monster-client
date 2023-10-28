@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { FailedQueuedUpload, QueuedUpload } from "@/models/uploads/queued-upload.model";
 import { PrinterFileService } from "@/backend";
-import { useSnackbar } from "../shared/snackbar.composable";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 export interface UploadsState {
   queuedUploads: QueuedUpload[];
