@@ -2,9 +2,8 @@ import { defineStore } from "pinia";
 import { useJwt } from "@vueuse/integrations/useJwt";
 import type { JwtPayload } from "jwt-decode";
 import { AuthService, type Tokens } from "@/backend/auth.service";
-import { Axios, AxiosError, HttpStatusCode } from "axios";
+import { AxiosError, HttpStatusCode } from "axios";
 import { WizardSettingsDto } from "@/models/settings/settings.model";
-import { useSnackbar } from "@/shared/snackbar.composable";
 import { AUTH_ERROR_REASON, convertAuthErrorReason } from "@/shared/auth.constants";
 import { useEventBus } from "@vueuse/core/index";
 
