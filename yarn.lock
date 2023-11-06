@@ -1806,10 +1806,10 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.7.2.tgz#c4a994d6f2b0a6901741a805c32da94db964880d"
   integrity sha512-vPYoNCOI8W+jFLnyEAYQL7/qURE7XzVE/TvkmNSko8LU55jFshee342p4GNFOTsYFgJty7Da5bw4m2P3vaKWMw==
 
-"@tanstack/vue-query@5.7.2":
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/@tanstack/vue-query/-/vue-query-5.7.2.tgz#a3cbb644a711ab64ee7aee0308a88a631504bb70"
-  integrity sha512-XTKeVZvXg2s8hBjqJFLUGX7fdEV6AntgfnUK3SWjn4r4QgZF+Sycb2TMDdln2dNzrxH3s01QVlliQ16B3BapyA==
+"@tanstack/vue-query@5.7.3":
+  version "5.7.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/vue-query/-/vue-query-5.7.3.tgz#e4fb5fccb7a3b6c8155d3159460aef101db15992"
+  integrity sha512-jly+s82btmWpdZA5ifmA1qHvua4l6uKGV/tvUryTxNpW9g6hqtMyYcNinjZAZqhIYsVHmOhfAld3vgET/8hjqg==
   dependencies:
     "@tanstack/match-sorter-utils" "^8.8.4"
     "@tanstack/query-core" "5.7.2"
