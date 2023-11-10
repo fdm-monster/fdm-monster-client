@@ -23,7 +23,7 @@
     "@tanstack/vue-query": "5.8.1",
     "@vue/composition-api": "1.7.2",
     "@vueuse/core": "10.6.0",
-    "@vueuse/integrations": "10.5.0",
+    "@vueuse/integrations": "10.6.0",
     "axios": "1.6.1",
     "core-js": "3.33.2",
     "jwt-decode": "3.1.2",
