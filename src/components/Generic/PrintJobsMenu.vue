@@ -112,7 +112,7 @@ export default defineComponent({
         const fileName = p.job?.job?.file.name;
         const fileNameSearch = fileName?.toLowerCase() || "";
         const printerUrlSearch = p.printer.printerURL?.toLowerCase() || "";
-        const searchSearch = p.printer.printerName?.toLowerCase() || "";
+        const searchSearch = p.printer.name?.toLowerCase() || "";
 
         const combineSearch = `${fileNameSearch} ${printerUrlSearch} ${searchSearch}`;
         return !this.search || combineSearch.includes(this.search.toLowerCase());

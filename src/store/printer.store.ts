@@ -47,7 +47,7 @@ export const usePrinterStore = defineStore("Printers", {
       const data = await PrintersService.createPrinter(newPrinter);
       this.printers.push(data);
       this.printers.sort((a: Printer, b: Printer) =>
-        a.printerName?.toLowerCase()?.localeCompare(b?.printerName?.toLowerCase()) ? 1 : -1
+        a.name?.toLowerCase()?.localeCompare(b?.name?.toLowerCase()) ? 1 : -1
       );
       return data;
     },
@@ -106,7 +106,7 @@ export const usePrinterStore = defineStore("Printers", {
         this.sideNavPrinter = printers.find((p) => p.id === viewedPrinterId);
       }
       this.printers = printers.sort((a: Printer, b: Printer) =>
-        a.printerName?.toLowerCase()?.localeCompare(b?.printerName?.toLowerCase()) ? 1 : -1
+        a.name?.toLowerCase()?.localeCompare(b?.name?.toLowerCase()) ? 1 : -1
       );
     },
     _popPrinter(printerId: string) {

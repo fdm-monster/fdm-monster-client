@@ -10,10 +10,10 @@ import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 
 export class PrintersService extends BaseService {
   static applyLoginDetailsPatchForm(
-    patch: { printerURL: string; apiKey: string; printerName: string },
+    patch: { printerURL: string; apiKey: string; name: string },
     formData: PreCreatePrinter
   ) {
-    formData.printerName = patch.printerName || newRandomNamePair();
+    formData.name = patch.name || newRandomNamePair();
     formData.apiKey = patch.apiKey;
   }
 
@@ -23,7 +23,7 @@ export class PrintersService extends BaseService {
 
     newFormData.id = printer.id;
     newFormData.printerURL = printer.printerURL;
-    newFormData.printerName = printer.printerName || newRandomNamePair();
+    newFormData.name = printer.name || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
     newFormData.enabled = printer.enabled;
     return newFormData;

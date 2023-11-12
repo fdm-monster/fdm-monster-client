@@ -198,15 +198,15 @@ export default defineComponent({
     updatePrinters() {
       const pIds = this.filteredFdmPrinters.map((p) => p.id);
       const preSearchPrints = pIds.length
-        ? this.loadedCompletions.filter((c) => pIds.includes(c._id))
+        ? this.loadedCompletions.filter((c) => pIds.includes(c.id))
         : this.loadedCompletions;
 
       const preSortPrints = this.printerNameSearch?.length
         ? preSearchPrints.filter((p) => {
-            const printer = this.floorFdmPrinters.find((f) => f.id === p._id);
+            const printer = this.floorFdmPrinters.find((f) => f.id === p.id);
             if (!printer) return false;
 
-            return (printer.printerName + printer.printerURL)
+            return (printer.name + printer.printerURL)
               .toLowerCase()
               .includes(this.printerNameSearch.toLowerCase());
           })

@@ -519,7 +519,7 @@ export default defineComponent({
     avatarInitials() {
       const viewedPrinter = this.storedSideNavPrinter;
       if (viewedPrinter && this.drawerOpened) {
-        return generateInitials(viewedPrinter.printerName);
+        return generateInitials(viewedPrinter.name);
       }
     },
     openPrinterURL() {

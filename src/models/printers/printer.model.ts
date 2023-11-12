@@ -22,7 +22,7 @@ export interface Printer {
   enabled: boolean;
   dateAdded: number;
   disabledReason: string;
-  printerName: string;
+  name: string;
   webSocketURL: string;
   apiKey: string;
   printerURL: string;

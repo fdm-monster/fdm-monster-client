@@ -57,7 +57,7 @@ export const useUploadsStore = defineStore("Uploads", {
           this.failedUploads.push(failedUpload);
           snackbar.openErrorMessage({
             title: "Upload failure",
-            subtitle: `File ${file.name}Upload failed for  to printer ${printer.printerName}`,
+            subtitle: `File ${file.name}Upload failed for  to printer ${printer.name}`,
           });
         } else {
           snackbar.openErrorMessage({
