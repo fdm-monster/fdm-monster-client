@@ -1,4 +1,5 @@
 export interface ShortEvent {
+  printerId: string;
   status: string;
   fileName: string;
   createdAt: number;
@@ -25,7 +26,7 @@ export type PrintJobEvents = {
 };
 
 export interface PrinterCompletions {
-  _id: string;
+  id: string;
   printCount: number;
   eventCount: number;
   successCount: number;
