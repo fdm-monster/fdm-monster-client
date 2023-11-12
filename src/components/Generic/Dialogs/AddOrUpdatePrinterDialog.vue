@@ -194,7 +194,7 @@ export default defineComponent({
     },
     avatarInitials() {
       if (this.formData) {
-        return generateInitials(this.formData?.printerName);
+        return generateInitials(this.formData?.name);
       }
       return "?";
     },
@@ -217,7 +217,7 @@ export default defineComponent({
       const printer = this.storedPrinter;
       if (!printer) return;
       const loginDetails = await PrintersService.getPrinterLoginDetails(printer.id);
-      const connectionString = `{"printerURL": "${loginDetails.printerURL}", "apiKey": "${loginDetails.apiKey}", "printerName": "${printer.printerName}"}`;
+      const connectionString = `{"printerURL": "${loginDetails.printerURL}", "apiKey": "${loginDetails.apiKey}", "printerName": "${printer.name}"}`;
 
       if (!this.isClipboardApiAvailable) {
         this.copyPasteConnectionString = connectionString;
@@ -267,7 +267,7 @@ export default defineComponent({
     async createPrinter(newPrinterData: CreatePrinter) {
       await this.printersStore.createPrinter(newPrinterData);
       this.snackbar.openInfoMessage({
-        title: `Printer ${newPrinterData.printerName} created`,
+        title: `Printer ${newPrinterData.name} created`,
       });
     },
     async updatePrinter(updatedPrinter: CreatePrinter) {
@@ -279,7 +279,7 @@ export default defineComponent({
       });
 
       this.snackbar.openInfoMessage({
-        title: `Printer ${updatedPrinter.printerName} updated`,
+        title: `Printer ${updatedPrinter.name} updated`,
       });
     },
     async submit() {
@@ -294,7 +294,7 @@ export default defineComponent({
       this.closeDialog();
     },
     async duplicatePrinter() {
-      this.formData.printerName = newRandomNamePair();
+      this.formData.name = newRandomNamePair();
       this.printersStore.updateDialogPrinter = undefined;
     },
     closeDialog() {
