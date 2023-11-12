@@ -22,7 +22,7 @@
                 <v-col>
                   <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
                     <v-text-field
-                      v-model="formData.printerName"
+                      v-model="formData.name"
                       :counter="printerNameRules.max"
                       :error-messages="errors"
                       autofocus
@@ -217,7 +217,7 @@ export default defineComponent({
       const printer = this.storedPrinter;
       if (!printer) return;
       const loginDetails = await PrintersService.getPrinterLoginDetails(printer.id);
-      const connectionString = `{"printerURL": "${loginDetails.printerURL}", "apiKey": "${loginDetails.apiKey}", "printerName": "${printer.name}"}`;
+      const connectionString = `{"printerURL": "${loginDetails.printerURL}", "apiKey": "${loginDetails.apiKey}", "name": "${printer.name}"}`;
 
       if (!this.isClipboardApiAvailable) {
         this.copyPasteConnectionString = connectionString;

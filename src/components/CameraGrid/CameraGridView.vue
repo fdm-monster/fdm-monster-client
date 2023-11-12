@@ -19,7 +19,7 @@
           <v-card-title>
             <v-icon v-if="camera.cameraStream.printerId" class="mr-2" dense>print</v-icon>
             <v-icon v-else class="mr-2" dense>camera_alt</v-icon>
-            {{ camera?.cameraStream.name ?? camera?.printer?.printerName ?? "Camera" }}
+            {{ camera?.cameraStream.name ?? camera?.printer?.name ?? "Camera" }}
           </v-card-title>
           <img :src="camera.cameraStream?.streamURL" width="100%" />
           <br />

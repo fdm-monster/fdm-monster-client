@@ -31,7 +31,7 @@
             v-model="filteredFdmPrinters"
             :items="floorFdmPrinters"
             clearable
-            item-text="printerName"
+            item-text="name"
             label="FDM Printers"
             multiple
             open-on-clear
@@ -73,8 +73,8 @@
         </thead>
         <tbody>
           <tr v-for="item in shownCompletions" :key="item.name">
-            <td>{{ printer(item._id)?.printerName }}</td>
-            <td>{{ floorOfPrinter(item._id)?.name }}</td>
+            <td>{{ printer(item.id)?.name }}</td>
+            <td>{{ floorOfPrinter(item.id)?.name }}</td>
             <td>
               &#215; {{ item.failureCount }} / &#128504; {{ item.successCount }}
               <strong>~{{ item.printCount }}</strong>

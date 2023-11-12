@@ -16,7 +16,7 @@
               @click="openPrinter(selectedPrinter)"
               @click:close="deselectPrinter(selectedPrinter)"
             >
-              {{ selectedPrinter.printerName }}
+              {{ selectedPrinter.name }}
             </v-chip>
           </v-chip-group>
         </v-col>

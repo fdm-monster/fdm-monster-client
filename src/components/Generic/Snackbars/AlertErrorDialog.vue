@@ -14,7 +14,7 @@
         <ul>
           <li v-for="(upload, index) in failedUploads" :key="index">
             File: {{ upload.file?.name }}<br />
-            Printer: {{ upload.printer?.printerName }}<br />
+            Printer: {{ upload.printer?.name }}<br />
             Reason: <small>{{ upload?.error }}</small>
           </li>
         </ul>

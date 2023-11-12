@@ -3,7 +3,7 @@
     <validation-observer ref="validationObserver" v-slot="{ invalid }">
       <v-card class="pa-4">
         <v-card-title>
-          <span class="text-h5"> Mark '{{ printer?.printerName }}' for maintenance </span>
+          <span class="text-h5"> Mark '{{ printer?.name }}' for maintenance </span>
         </v-card-title>
         <v-alert color="secondary">Keep this info clear and stick to convention</v-alert>
         <v-card-text>

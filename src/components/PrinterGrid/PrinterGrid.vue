@@ -15,7 +15,7 @@
               small
               @dragstart="onDragStart(printer, $event)"
             >
-              {{ printer.printerName }}
+              {{ printer.name }}
             </v-chip>
           </v-chip-group>
         </v-col>
