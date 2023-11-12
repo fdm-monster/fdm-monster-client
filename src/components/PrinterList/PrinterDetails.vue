@@ -7,7 +7,7 @@
   >
     <v-row>
       <v-col>
-        Name: {{ printer.printerName }} <br />
+        Name: {{ printer.name }} <br />
         URL: {{ printer.printerURL }} <br />
         Host:
         <v-chip small>{{ apiState }}</v-chip>

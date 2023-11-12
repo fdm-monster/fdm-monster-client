@@ -65,9 +65,9 @@
           {{ item.enabled }}
         </v-switch>
       </template>
-      <template v-slot:item.printerName="{ item }">
+      <template v-slot:item.name="{ item }">
         <v-chip color="primary" dark>
-          {{ item.printerName || item.printerURL }}
+          {{ item.name || item.printerURL }}
         </v-chip>
       </template>
       <template v-slot:item.floor="{ item }">
@@ -160,7 +160,7 @@ export default defineComponent({
         text: "Printer Name",
         align: "start",
         sortable: true,
-        value: "printerName",
+        value: "name",
       },
       { text: "Floor", value: "floor", sortable: false },
       { text: "Actions", value: "actions", sortable: false },

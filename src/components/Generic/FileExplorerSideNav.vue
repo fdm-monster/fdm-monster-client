@@ -28,7 +28,7 @@
       </v-list-item-avatar>
       <v-list-item-content v-if="storedSideNavPrinter">
         <v-list-item-title>
-          {{ storedSideNavPrinter.printerName }}
+          {{ storedSideNavPrinter.name }}
 
           <strong v-if="!isEnabled || !isOnline" class="d-flex justify-center static-disabled">
             {{ isEnabled ? "Enabled" : "Disabled" }} -

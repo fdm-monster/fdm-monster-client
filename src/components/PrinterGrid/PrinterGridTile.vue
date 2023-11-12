@@ -36,7 +36,7 @@
       </v-icon>
       <v-container v-if="printerId" class="tile-inner fill-height">
         <small class="small-resized-font">
-          {{ printer.printerName }}
+          {{ printer.name }}
         </small>
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">

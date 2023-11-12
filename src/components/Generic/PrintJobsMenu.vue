@@ -64,7 +64,7 @@
                 Elapsed:
                 <strong>{{ Math.round(job?.progress.printTime / 60) }} minutes</strong>
                 <br />
-                Printer: <strong>{{ printer.printerName }}</strong>
+                Printer: <strong>{{ printer.name }}</strong>
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>

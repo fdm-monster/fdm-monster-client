@@ -104,26 +104,10 @@
         </v-toolbar>
 
         <v-list v-if="selectedFloor">
-          <v-list-item v-if="!floorPrinterAssignmentHidden()">
-            <!-- New group -->
-            <v-list-item-content>
-              <v-select
-                :items="unassignedPrinters"
-                item-text="name"
-                label="Not assigned"
-                no-data-text="No printer groups left, create more"
-                outlined
-                return-object
-                @change="addPrinterToFloor(selectedFloor, $event)"
-              ></v-select>
-            </v-list-item-content>
-          </v-list-item>
-
-          <!-- Existing groups -->
           <v-list-item v-for="x in showAddedPrinters" :key="x">
             <v-list-item-content v-if="printerInFloor(selectedFloor, x)">
               <v-list-item-title>
-                {{ printerInFloor(selectedFloor, x).printerName }}
+                {{ printerInFloor(selectedFloor, x).name }}
               </v-list-item-title>
             </v-list-item-content>
 
@@ -142,13 +126,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Floor } from "../../models/floors/floor.model";
-import { usePrinterStore } from "../../store/printer.store";
+import { Floor } from "@/models/floors/floor.model";
+import { usePrinterStore } from "@/store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { Printer } from "../../models/printers/printer.model";
-import { floorPrinterAssignmentHidden } from "../../shared/experimental.constants";
-import { useFloorStore } from "../../store/floor.store";
+import { Printer } from "@/models/printers/printer.model";
+import { useFloorStore } from "@/store/floor.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
 interface Data {
@@ -190,9 +173,6 @@ export default defineComponent({
     },
   },
   methods: {
-    floorPrinterAssignmentHidden() {
-      return floorPrinterAssignmentHidden;
-    },
     printerInFloor(floor: Floor, index: number): Printer | undefined {
       if (!floor?.printers) return;
 
