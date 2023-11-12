@@ -105,26 +105,21 @@ import PrinterUrlAction from "@/components/Generic/Actions/PrinterUrlAction.vue"
 import PrinterSettingsAction from "@/components/Generic/Actions/PrinterSettingsAction.vue";
 import PrinterConnectionAction from "@/components/Generic/Actions/PrinterConnectionAction.vue";
 import PrinterEmergencyStopAction from "@/components/Generic/Actions/PrinterEmergencyStopAction.vue";
-import { PrusaFirmwareReleaseModel } from "@/models/plugins/firmware-updates/prusa-firmware-release.model";
-import { PrinterFirmwareStateModel } from "@/models/plugins/firmware-updates/printer-firmware-state.model";
 import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameAction.vue";
 
-import { usePrinterStore } from "../../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
 import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
-import { useFloorStore } from "../../store/floor.store";
-import { usePrinterStateStore } from "../../store/printer-state.store";
+import { useFloorStore } from "@/store/floor.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 interface Data {
   showJsonImportDialog: boolean;
   search: string;
   expanded: Printer[];
   tableHeaders: any[];
-  firmwareTableHeaders: any[];
-  firmwareUpdateStates: PrinterFirmwareStateModel[];
-  firmwareReleases: PrusaFirmwareReleaseModel[];
 }
 
 export default defineComponent({
@@ -149,8 +144,6 @@ export default defineComponent({
   },
   props: {},
   data: (): Data => ({
-    firmwareUpdateStates: [],
-    firmwareReleases: [],
     showJsonImportDialog: false,
     search: "",
     expanded: [],
@@ -167,24 +160,6 @@ export default defineComponent({
       { text: "Socket Update", value: "socketupdate", sortable: false },
       { text: "", value: "data-table-expand" },
     ],
-    firmwareTableHeaders: [
-      {
-        text: "Printer Name",
-        align: "start",
-        sortable: true,
-        value: "printerName",
-      },
-      {
-        text: "Firmware Version",
-        sortable: true,
-        value: "firmware",
-      },
-      {
-        text: "Plugin installed",
-        value: "pluginInstalled",
-      },
-      { text: "Actions", value: "actions", sortable: false },
-    ],
   }),
   async created() {},
   async mounted() {},
@@ -200,28 +175,10 @@ export default defineComponent({
     diffSeconds(timestamp: number) {
       if (!timestamp) return;
       const now = Date.now();
-      const diff = (now - timestamp) / 1000;
-      return diff;
+      return (now - timestamp) / 1000;
     },
     floorOfPrinter(printerId: string) {
       return this.floorStore.floorOfPrinter(printerId);
-    },
-    isVirtualFirmware(firmwareTag: string) {
-      const firmwareTagUpper = firmwareTag?.toUpperCase();
-      if (!firmwareTagUpper) return false;
-      if (firmwareTagUpper.includes("VIRTUAL")) return true;
-    },
-    isUpdatableFirmware(firmwareTag: string) {
-      const firmwareTagUpper = firmwareTag?.toUpperCase();
-      if (!firmwareTagUpper) return false;
-      return !this.isVirtualFirmware(firmwareTag);
-    },
-    isPluginInstalled(printer: Printer) {
-      const firmwarePluginState = this.firmwareUpdateStates.find((f) => f.id === printer.id);
-      return firmwarePluginState?.pluginInstalled || false;
-    },
-    async restartOctoPrint(printer: Printer) {
-      await PrintersService.restartOctoPrint(printer.id);
     },
     openEditDialog(printer: Printer) {
       this.printerStore.setUpdateDialogPrinter(printer);
