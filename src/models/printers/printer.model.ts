@@ -15,6 +15,4 @@ export interface PrinterDto {
   webSocketURL: string;
   apiKey: string;
   printerURL: string;
-
-  fileList: PrinterFileDto[];
 }

@@ -146,7 +146,7 @@
                 <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
               </span>
               <span v-else>
-                <small>{{ printerState.text?.toUpperCase() }}</small>
+                <small>{{ printerState?.text?.toUpperCase() }}</small>
               </span>
             </small>
           </template>
