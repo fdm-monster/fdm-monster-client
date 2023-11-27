@@ -28,7 +28,9 @@ export const usePrinterStore = defineStore("Printers", {
   }),
   getters: {
     printer() {
-      return (printerId?: string) => this.printers.find((p) => p.id === printerId);
+      return (printerId?: string) => {
+        return this.printers.find((p) => p.id == printerId);
+      };
     },
     isSelectedPrinter(state) {
       return (printerId?: string) =>
@@ -70,7 +72,6 @@ export const usePrinterStore = defineStore("Printers", {
     setMaintenanceDialogPrinter(printer?: PrinterDto) {
       this.maintenanceDialogPrinter = printer;
     },
-    /* Printers */
     async updatePrinter({
       printerId,
       updatedPrinter,
