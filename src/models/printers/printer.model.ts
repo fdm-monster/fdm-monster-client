@@ -5,20 +5,9 @@ export interface LoginDetails {
   printerURL: string;
 }
 
-export interface LastPrintedFile {
-  fileName: string;
-  editTimestamp: number;
-  parsedColor: string;
-  parsedVisualizationRAL: number;
-  parsedAmount: number;
-  parsedMaterial: string;
-  parsedOrderCode: string;
-}
-
 export interface Printer {
   id: string;
   correlationToken?: string;
-  lastPrintedFile: LastPrintedFile;
   enabled: boolean;
   dateAdded: number;
   disabledReason: string;

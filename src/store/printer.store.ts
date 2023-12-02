@@ -144,7 +144,7 @@ export const usePrinterStore = defineStore("Printers", {
     async loadPrinterFiles({ printerId, recursive }: { printerId: string; recursive: boolean }) {
       const fileList = await PrinterFileService.getFiles(printerId, recursive);
 
-      fileList.files.sort((f1, f2) => {
+      fileList.sort((f1, f2) => {
         return f1.date < f2.date ? 1 : -1;
       });
 
@@ -152,11 +152,11 @@ export const usePrinterStore = defineStore("Printers", {
       if (!fileBucket) {
         fileBucket = {
           printerId,
-          ...fileList,
+          fileList,
         };
         this.printerFileBuckets.push(fileBucket);
       } else {
-        fileBucket.files = fileList.files;
+        fileBucket.fileList = fileList;
       }
 
       // Note: just the list, not the bucket
