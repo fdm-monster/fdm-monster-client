@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
 import { usePrinterStore } from "../../../store/printer.store";
 import { usePrinterStateStore } from "../../../store/printer-state.store";
@@ -41,7 +41,7 @@ export default defineComponent({
   async created() {},
   async mounted() {},
   props: {
-    printer: Object as PropType<Printer>,
+    printer: Object as PropType<PrinterDto>,
   },
   computed: {
     printerId() {

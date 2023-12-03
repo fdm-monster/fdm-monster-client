@@ -78,7 +78,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import PrinterGrid from "@/components/PrinterGrid/PrinterGrid.vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
 import { formatBytes } from "@/utils/file-size.util";
 import { convertMultiPrinterFileToQueue } from "@/utils/uploads-state.utils";
@@ -108,7 +108,7 @@ export default defineComponent({
   props: {},
   data(): {
     selectedFile?: File;
-    viewedPrinter?: Printer;
+    viewedPrinter?: PrinterDto;
   } {
     return {
       selectedFile: undefined,
@@ -169,10 +169,10 @@ export default defineComponent({
 
       this.selectedFile = this.fileUpload.files[0];
     },
-    deselectPrinter(printer: Printer) {
+    deselectPrinter(printer: PrinterDto) {
       this.printersStore.toggleSelectedPrinter(printer);
     },
-    openPrinter(printer: Printer) {
+    openPrinter(printer: PrinterDto) {
       PrintersService.openPrinterURL(printer.printerURL);
     },
   },

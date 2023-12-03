@@ -1,16 +1,15 @@
 import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { FileUploadCommands } from "@/models/printers/file-upload-commands.model";
-import { PrinterFileCache } from "@/models/printers/printer-file-cache.model";
-import { ClearedFilesResult, PrinterFile } from "@/models/printers/printer-file.model";
-import { Printer } from "@/models/printers/printer.model";
-import { useSnackbar } from "../shared/snackbar.composable";
+import { ClearedFilesResult, PrinterFileDto } from "@/models/printers/printer-file.model";
+import { PrinterDto } from "@/models/printers/printer.model";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 export class PrinterFileService extends BaseService {
   static async getFiles(printerId: string, recursive = false) {
     const path = `${ServerApi.printerFilesRoute}/${printerId}/?recursive=${recursive}`;
 
-    return (await this.getApi(path)) as PrinterFileCache;
+    return (await this.getApi(path)) as PrinterFileDto[];
   }
 
   /**
@@ -20,7 +19,7 @@ export class PrinterFileService extends BaseService {
   static async getFileCache(printerId: any) {
     const path = `${ServerApi.printerFilesCacheRoute(printerId)}`;
 
-    return (await this.getApi(path)) as PrinterFileCache;
+    return (await this.getApi(path)) as PrinterFileDto[];
   }
 
   static async batchReprintFiles(printerIds: string[]) {
@@ -34,7 +33,7 @@ export class PrinterFileService extends BaseService {
   }
 
   static async uploadFile(
-    printer: Printer,
+    printer: PrinterDto,
     file: File,
     commands: FileUploadCommands = {
       select: true,
@@ -83,7 +82,7 @@ export class PrinterFileService extends BaseService {
     return this.deleteApi(urlPath);
   }
 
-  static downloadFile(file: PrinterFile) {
+  static downloadFile(file: PrinterFileDto) {
     window.location.href = file.refs.download;
   }
 }

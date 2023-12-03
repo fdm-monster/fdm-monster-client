@@ -1,24 +1,13 @@
-import { PrinterFileCache } from "./printer-file-cache.model";
+import { PrinterFileDto } from "@/models/printers/printer-file.model";
 
 export interface LoginDetails {
   apiKey: string;
   printerURL: string;
 }
 
-export interface LastPrintedFile {
-  fileName: string;
-  editTimestamp: number;
-  parsedColor: string;
-  parsedVisualizationRAL: number;
-  parsedAmount: number;
-  parsedMaterial: string;
-  parsedOrderCode: string;
-}
-
-export interface Printer {
+export interface PrinterDto {
   id: string;
   correlationToken?: string;
-  lastPrintedFile: LastPrintedFile;
   enabled: boolean;
   dateAdded: number;
   disabledReason: string;
@@ -27,5 +16,5 @@ export interface Printer {
   apiKey: string;
   printerURL: string;
 
-  fileList: PrinterFileCache;
+  fileList: PrinterFileDto[];
 }

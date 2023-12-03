@@ -130,7 +130,7 @@ import { Floor } from "@/models/floors/floor.model";
 import { usePrinterStore } from "@/store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { useFloorStore } from "@/store/floor.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
@@ -173,7 +173,7 @@ export default defineComponent({
     },
   },
   methods: {
-    printerInFloor(floor: Floor, index: number): Printer | undefined {
+    printerInFloor(floor: Floor, index: number): PrinterDto | undefined {
       if (!floor?.printers) return;
 
       const floorPrinter = floor.printers[index - 1];

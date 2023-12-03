@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { Floor } from "@/models/floors/floor.model";
 import { useSettingsStore } from "./settings.store";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "./printer.store";
 import { FloorService } from "@/backend/floor.service";
 
@@ -32,7 +32,7 @@ export const useFloorStore = defineStore("Floors", {
         );
       };
     },
-    floorlessPrinters(state): Printer[] {
+    floorlessPrinters(state): PrinterDto[] {
       const printersStore = usePrinterStore();
       return printersStore.printers.filter(
         (p) => !state.floors.find((f) => f.printers.find((fp) => fp.printerId === p.id))
@@ -49,9 +49,9 @@ export const useFloorStore = defineStore("Floors", {
       if (!this.selectedFloor) return [];
 
       const positions = this.selectedFloor.printers;
-      const matrix: (Printer | undefined)[][] = [];
+      const matrix: (PrinterDto | undefined)[][] = [];
       for (let i = 0; i < gridCols; i++) {
-        const row: (Printer | undefined)[] = [];
+        const row: (PrinterDto | undefined)[] = [];
         matrix.push(row);
         for (let j = 0; j < gridRows; j++) {
           const position = positions.find((p) => p.x === i && p.y === j);

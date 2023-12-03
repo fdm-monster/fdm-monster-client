@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import {
   convertMultiPrinterFileToQueue,
   convertPrinterMultiFileToQueue,
@@ -8,7 +8,7 @@ import { usePrinterStore } from "@/store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
-const bindDropConditionally = (el: HTMLElement, printers: Printer[], context?: Vue) => {
+const bindDropConditionally = (el: HTMLElement, printers: PrinterDto[], context?: Vue) => {
   const printersStore = usePrinterStore();
   const uploadsStore = useUploadsStore();
   const snackbar = useSnackbar();

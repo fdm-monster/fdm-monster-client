@@ -1,6 +1,6 @@
 import { ServerApi } from "@/backend/server.api";
 import { BaseService } from "@/backend/base.service";
-import { LoginDetails, Printer } from "@/models/printers/printer.model";
+import { LoginDetails, PrinterDto } from "@/models/printers/printer.model";
 import {
   CreatePrinter,
   getDefaultCreatePrinter,
@@ -38,7 +38,7 @@ export class PrintersService extends BaseService {
   static async getPrinters() {
     const path = ServerApi.printerRoute;
 
-    return (await this.getApi<Printer[]>(path)) as Printer[];
+    return (await this.getApi<PrinterDto[]>(path)) as PrinterDto[];
   }
 
   static async getPrinterLoginDetails(printerId: string) {
@@ -72,13 +72,13 @@ export class PrintersService extends BaseService {
   static async createPrinter(printer: CreatePrinter) {
     const path = ServerApi.printerRoute;
 
-    return (await this.postApi(path, printer)) as Printer;
+    return (await this.postApi(path, printer)) as PrinterDto;
   }
 
   static async batchImportPrinters(printers: CreatePrinter[]) {
     const path = ServerApi.printerBatchRoute;
 
-    return (await this.postApi(path, printers)) as Printer[];
+    return (await this.postApi(path, printers)) as PrinterDto[];
   }
 
   static async deletePrinter(printerId: string) {
@@ -90,19 +90,19 @@ export class PrintersService extends BaseService {
   static async updatePrinter(printerId: string, printer: CreatePrinter) {
     const path = ServerApi.getPrinterRoute(printerId);
 
-    return (await this.patchApi(path, printer)) as Printer;
+    return (await this.patchApi(path, printer)) as PrinterDto;
   }
 
   static async updatePrinterMaintenance(printerId: string, disabledReason: string | null = null) {
     const path = ServerApi.postPrinterDisabledReasonRoute(printerId);
 
-    return (await this.patchApi(path, { disabledReason })) as Printer;
+    return (await this.patchApi(path, { disabledReason })) as PrinterDto;
   }
 
   static async testConnection(printer: CreatePrinter) {
     const path = ServerApi.printerTestConnectionRoute;
 
-    return (await this.postApi(path, printer)) as Printer;
+    return (await this.postApi(path, printer)) as PrinterDto;
   }
 
   static async toggleEnabled(printerId: string, enabled: boolean) {

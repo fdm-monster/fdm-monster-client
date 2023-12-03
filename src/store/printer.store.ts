@@ -1,26 +1,25 @@
 import { defineStore } from "pinia";
-import { Printer } from "@/models/printers/printer.model";
-import { PrinterFileBucket } from "@/models/printers/printer-file-bucket.model";
-import { ClearedFilesResult } from "@/models/printers/printer-file.model";
+import { PrinterDto } from "@/models/printers/printer.model";
+import { ClearedFilesResult, PrinterFileDto } from "@/models/printers/printer-file.model";
 import { PrinterFileService, PrintersService } from "@/backend";
 import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { usePrinterStateStore } from "./printer-state.store";
 
 interface State {
-  printers: Printer[];
-  printerFileBuckets: PrinterFileBucket[];
+  printers: PrinterDto[];
+  printerFileCache: Record<string, PrinterFileDto[]>;
 
-  sideNavPrinter?: Printer;
-  updateDialogPrinter?: Printer;
-  selectedPrinters: Printer[];
-  maintenanceDialogPrinter?: Printer;
+  sideNavPrinter?: PrinterDto;
+  updateDialogPrinter?: PrinterDto;
+  selectedPrinters: PrinterDto[];
+  maintenanceDialogPrinter?: PrinterDto;
 }
 
 export const usePrinterStore = defineStore("Printers", {
   state: (): State => ({
     printers: [],
-    printerFileBuckets: [],
+    printerFileCache: {},
 
     sideNavPrinter: undefined,
     updateDialogPrinter: undefined,
@@ -33,25 +32,22 @@ export const usePrinterStore = defineStore("Printers", {
     },
     isSelectedPrinter(state) {
       return (printerId?: string) =>
-        !!state.selectedPrinters.find((p: Printer) => p.id === printerId);
-    },
-    printerFileBucket() {
-      return (printerId?: string) => this.printerFileBuckets.find((p) => p.printerId === printerId);
+        !!state.selectedPrinters.find((p: PrinterDto) => p.id === printerId);
     },
     printerFiles() {
-      return (printerId?: string) => this.printerFileBucket(printerId)?.files;
+      return (printerId: string) => this.printerFileCache[printerId];
     },
   },
   actions: {
     async createPrinter(newPrinter: CreatePrinter) {
       const data = await PrintersService.createPrinter(newPrinter);
       this.printers.push(data);
-      this.printers.sort((a: Printer, b: Printer) =>
+      this.printers.sort((a: PrinterDto, b: PrinterDto) =>
         a.name?.toLowerCase()?.localeCompare(b?.name?.toLowerCase()) ? 1 : -1
       );
       return data;
     },
-    toggleSelectedPrinter(printer: Printer) {
+    toggleSelectedPrinter(printer: PrinterDto) {
       const printerStateStore = usePrinterStateStore();
       const selectedPrinterIndex = this.selectedPrinters.findIndex((sp) => sp.id == printer.id);
       if (selectedPrinterIndex === -1) {
@@ -65,13 +61,13 @@ export const usePrinterStore = defineStore("Printers", {
     clearSelectedPrinters() {
       this.selectedPrinters = [];
     },
-    setSideNavPrinter(printer?: Printer) {
+    setSideNavPrinter(printer?: PrinterDto) {
       this.sideNavPrinter = printer;
     },
-    setUpdateDialogPrinter(printer?: Printer) {
+    setUpdateDialogPrinter(printer?: PrinterDto) {
       this.updateDialogPrinter = printer;
     },
-    setMaintenanceDialogPrinter(printer?: Printer) {
+    setMaintenanceDialogPrinter(printer?: PrinterDto) {
       this.maintenanceDialogPrinter = printer;
     },
     /* Printers */
@@ -96,7 +92,7 @@ export const usePrinterStore = defineStore("Printers", {
       this._popPrinter(printerId);
       return data;
     },
-    setPrinters(printers: Printer[]) {
+    setPrinters(printers: PrinterDto[]) {
       if (!printers?.length) {
         this.printers = [];
         return;
@@ -105,12 +101,12 @@ export const usePrinterStore = defineStore("Printers", {
       if (viewedPrinterId) {
         this.sideNavPrinter = printers.find((p) => p.id === viewedPrinterId);
       }
-      this.printers = printers.sort((a: Printer, b: Printer) =>
+      this.printers = printers.sort((a: PrinterDto, b: PrinterDto) =>
         a.name?.toLowerCase()?.localeCompare(b?.name?.toLowerCase()) ? 1 : -1
       );
     },
     _popPrinter(printerId: string) {
-      const printerIndex = this.printers.findIndex((p: Printer) => p.id === printerId);
+      const printerIndex = this.printers.findIndex((p: PrinterDto) => p.id === printerId);
 
       if (printerIndex !== -1) {
         this.printers.splice(printerIndex, 1);
@@ -118,8 +114,8 @@ export const usePrinterStore = defineStore("Printers", {
         console.warn("Printer was not popped as it did not occur in state", printerId);
       }
     },
-    _replacePrinter({ printerId, printer }: { printerId: string; printer: Printer }) {
-      const printerIndex = this.printers.findIndex((p: Printer) => p.id === printerId);
+    _replacePrinter({ printerId, printer }: { printerId: string; printer: PrinterDto }) {
+      const printerIndex = this.printers.findIndex((p: PrinterDto) => p.id === printerId);
 
       if (printerIndex !== -1) {
         this.printers[printerIndex] = printer;
@@ -136,45 +132,34 @@ export const usePrinterStore = defineStore("Printers", {
       if (!result?.failedFiles) {
         throw new Error("No failed files were returned");
       }
-      const bucket = this.printerFileBuckets.find((b) => b.printerId === printerId);
+      const bucket = this.printerFileCache[printerId];
       if (bucket) {
-        bucket.files = result.failedFiles;
+        this.printerFileCache[printerId] = result.failedFiles;
       }
     },
-    async loadPrinterFiles({ printerId, recursive }: { printerId: string; recursive: boolean }) {
-      const fileList = await PrinterFileService.getFiles(printerId, recursive);
+    async loadPrinterFiles(printerId: string, recursive: boolean) {
+      const files = await PrinterFileService.getFiles(printerId, recursive);
 
-      fileList.files.sort((f1, f2) => {
+      files.sort((f1, f2) => {
         return f1.date < f2.date ? 1 : -1;
       });
 
-      let fileBucket = this.printerFileBuckets.find((p) => p.printerId === printerId);
-      if (!fileBucket) {
-        fileBucket = {
-          printerId,
-          ...fileList,
-        };
-        this.printerFileBuckets.push(fileBucket);
-      } else {
-        fileBucket.files = fileList.files;
-      }
-
-      // Note: just the list, not the bucket
-      return fileList;
+      this.printerFileCache[printerId] = files;
+      return files;
     },
-    async deletePrinterFile({ printerId, fullPath }: { printerId: string; fullPath: string }) {
+    async deletePrinterFile(printerId: string, fullPath: string) {
       await PrinterFileService.deleteFileOrFolder(printerId, fullPath);
 
-      const fileBucket = this.printerFileBuckets.find((p) => p.printerId === printerId);
-      if (!fileBucket?.files) {
+      const fileBucket = this.printerFileCache[printerId];
+      if (!fileBucket?.length) {
         console.warn("Printer file list was nonexistent", printerId);
         return;
       }
 
-      const deletedFileIndex = fileBucket.files.findIndex((f) => f.path === fullPath);
+      const deletedFileIndex = fileBucket.findIndex((f) => f.path === fullPath);
 
       if (deletedFileIndex !== -1) {
-        fileBucket.files.splice(deletedFileIndex, 1);
+        fileBucket.splice(deletedFileIndex, 1);
       } else {
         console.warn("File was not purged as it did not occur in state", fullPath);
       }

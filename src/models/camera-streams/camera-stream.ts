@@ -1,4 +1,4 @@
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 
 export interface CreateCameraStreamDto {
   streamURL: string;
@@ -13,6 +13,6 @@ export interface CameraStream {
 }
 
 export interface CameraWithPrinter {
-  printer: Printer;
+  printer: PrinterDto;
   cameraStream: CameraStream;
 }

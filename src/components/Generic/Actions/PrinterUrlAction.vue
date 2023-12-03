@@ -12,13 +12,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
 
 export default defineComponent({
   name: "PrinterUrlAction",
   props: {
-    printer: Object as PropType<Printer>,
+    printer: Object as PropType<PrinterDto>,
   },
   computed: {
     printerId() {
@@ -26,7 +26,7 @@ export default defineComponent({
     },
   },
   methods: {
-    openPrinterURL(printer: Printer) {
+    openPrinterURL(printer: PrinterDto) {
       PrintersService.openPrinterURL(printer.printerURL);
     },
   },

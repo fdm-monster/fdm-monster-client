@@ -111,7 +111,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Floor } from "../../models/floors/floor.model";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintCompletionsService } from "@/backend/print-completions.service";
 import { PrinterCompletions } from "@/models/print-completions/print-completions.model";
 import { usePrinterStore } from "../../store/printer.store";
@@ -120,8 +120,8 @@ import { useFloorStore } from "../../store/floor.store";
 interface Data {
   loadedCompletions: PrinterCompletions[];
   shownCompletions: PrinterCompletions[];
-  floorFdmPrinters: Printer[];
-  filteredFdmPrinters: Printer[];
+  floorFdmPrinters: PrinterDto[];
+  filteredFdmPrinters: PrinterDto[];
   filteredFloors: Floor[];
   printerNameSearch: string;
 }

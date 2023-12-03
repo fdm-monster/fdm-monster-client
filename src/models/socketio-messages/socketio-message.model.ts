@@ -1,4 +1,4 @@
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { Floor } from "../floors/floor.model";
 import { ById } from "@/utils/types/byid.utils";
 import { PrinterState } from "../printers/visual-state.model";
@@ -33,7 +33,7 @@ export type SocketStateById = ById<SocketState>;
 export type PrinterEventsById = ById<PrinterEvents>;
 
 export interface SocketIoUpdateMessage {
-  printers: Printer[];
+  printers: PrinterDto[];
   socketStates: SocketStateById;
   printerEvents: PrinterEventsById;
   trackedUploads: UploadStates;

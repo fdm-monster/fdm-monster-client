@@ -19,14 +19,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
 import { useSnackbar } from "../../../shared/snackbar.composable";
 
 export default defineComponent({
   name: "SyncPrinterNameAction",
   props: {
-    printer: Object as PropType<Printer>,
+    printer: Object as PropType<PrinterDto>,
   },
   setup() {
     return {
@@ -39,7 +39,7 @@ export default defineComponent({
     },
   },
   methods: {
-    async syncPrinterName(printer: Printer) {
+    async syncPrinterName(printer: PrinterDto) {
       await PrinterSettingsService.syncPrinterName(printer.id);
       this.snackbar.openInfoMessage({
         title: "Synced printer name to OctoPrint",
