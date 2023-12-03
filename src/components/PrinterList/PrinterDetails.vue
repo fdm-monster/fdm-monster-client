@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import FileControlList from "@/components/PrinterList/FileControlList.vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import RefreshFilesAction from "@/components/Generic/Actions/RefreshFilesAction.vue";
 import { usePrinterStore } from "../../store/printer.store";
 import { usePrinterStateStore } from "../../store/printer-state.store";
@@ -54,7 +54,7 @@ export default defineComponent({
   async created() {},
   async mounted() {},
   props: {
-    printer: Object as PropType<Printer>,
+    printer: Object as PropType<PrinterDto>,
   },
   data: (): Data => ({
     dragging: false,

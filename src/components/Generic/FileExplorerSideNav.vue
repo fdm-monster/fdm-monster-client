@@ -32,7 +32,7 @@
 
           <strong v-if="!isEnabled || !isOnline" class="d-flex justify-center static-disabled">
             {{ isEnabled ? "Enabled" : "Disabled" }} -
-            {{ !isOnline ? "Offline" : printerState.text?.toUpperCase() }}
+            {{ !isOnline ? "Offline" : printerState?.text?.toUpperCase() }}
           </strong>
           <strong
             v-if="isEnabled && printerState?.text && isOperational && isOnline"
@@ -375,25 +375,24 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Printer } from "../../models/printers/printer.model";
-import { generateInitials } from "../../shared/noun-adjectives.data";
-import { PrinterFileService, PrintersService } from "../../backend";
-import { PrinterFile } from "../../models/printers/printer-file.model";
-import { PrinterFileBucket } from "../../models/printers/printer-file-bucket.model";
-import { formatBytes } from "../../utils/file-size.util";
-import { usePrinterStore } from "../../store/printer.store";
+import { PrinterDto } from "@/models/printers/printer.model";
+import { generateInitials } from "@/shared/noun-adjectives.data";
+import { PrinterFileService, PrintersService } from "@/backend";
+import { PrinterFileDto } from "@/models/printers/printer-file.model";
+import { formatBytes } from "@/utils/file-size.util";
+import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
-import { useDialogsStore } from "../../store/dialog.store";
-import { PrinterJobService } from "../../backend/printer-job.service";
-import { usePrinterStateStore } from "../../store/printer-state.store";
-import { interpretStates } from "../../shared/printer-state.constants";
-import { useSettingsStore } from "../../store/settings.store";
+import { useDialogsStore } from "@/store/dialog.store";
+import { PrinterJobService } from "@/backend/printer-job.service";
+import { usePrinterStateStore } from "@/store/printer-state.store";
+import { interpretStates } from "@/shared/printer-state.constants";
+import { useSettingsStore } from "@/store/settings.store";
 import { featureFlagsList } from "@/models/server/features.model";
 import { useFeatureStore } from "@/store/features.store";
 
 interface Data {
   fileSearch?: string;
-  shownFileBucket?: PrinterFileBucket;
+  shownFileCache?: PrinterFileDto[];
   drawerOpened: boolean;
   loading: boolean;
 }
@@ -414,7 +413,7 @@ export default defineComponent({
   props: {},
   data: (): Data => ({
     fileSearch: undefined,
-    shownFileBucket: undefined,
+    shownFileCache: undefined,
     drawerOpened: false,
     loading: true,
   }),
@@ -442,7 +441,7 @@ export default defineComponent({
     },
     filesListed() {
       return (
-        this.shownFileBucket?.files.filter((f) =>
+        this.shownFileCache?.filter((f) =>
           this.fileSearch?.length
             ? `${f.name}${f.path}`.toLowerCase().includes(this.fileSearch)
             : true
@@ -461,10 +460,7 @@ export default defineComponent({
       if (!this.printerId) {
         return false;
       }
-      return (
-        this.shownFileBucket?.files?.length &&
-        this.printerStateStore.isApiResponding(this.printerId)
-      );
+      return this.shownFileCache?.length && this.printerStateStore.isApiResponding(this.printerId);
     },
     currentJob() {
       if (!this.printerId) {
@@ -508,7 +504,7 @@ export default defineComponent({
       if (!progress) return "";
       return progress?.toFixed(1);
     },
-    isFileBeingPrinted(file: PrinterFile) {
+    isFileBeingPrinted(file: PrinterFileDto) {
       if (!this.printerId) {
         return false;
       }
@@ -567,29 +563,15 @@ export default defineComponent({
 
       // Offline printer fallback
       if (this.printerStateStore.isApiResponding(printerId)) {
-        const fileCache = await this.printersStore.loadPrinterFiles({
-          printerId,
-          recursive: false,
-        });
-        this.shownFileBucket = {
-          printerId,
-          ...fileCache,
-        };
+        this.shownFileCache = await this.printersStore.loadPrinterFiles(printerId, false);
       } else {
-        const fileCache = await PrinterFileService.getFileCache(printerId);
-        this.shownFileBucket = {
-          printerId,
-          ...fileCache,
-        };
+        this.shownFileCache = await PrinterFileService.getFileCache(printerId);
       }
       this.loading = false;
     },
-    async deleteFile(file: PrinterFile) {
+    async deleteFile(file: PrinterFileDto) {
       if (!this.printerId) return;
-      await this.printersStore.deletePrinterFile({
-        printerId: this.printerId,
-        fullPath: file.path,
-      });
+      await this.printersStore.deletePrinterFile(this.printerId, file.path);
     },
     async clickStopPrint() {
       if (!this.printerId) return;
@@ -612,7 +594,7 @@ export default defineComponent({
       this.loading = true;
       await this.printersStore.clearPrinterFiles(this.printerId);
       this.loading = false;
-      this.shownFileBucket = this.printersStore.printerFileBucket(this.printerId);
+      this.shownFileCache = this.printersStore.printerFiles(this.printerId);
     },
     clickSettings() {
       if (!this.storedSideNavPrinter) return;
@@ -620,14 +602,14 @@ export default defineComponent({
       this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
       this.closeDrawer();
     },
-    async clickPrintFile(file: PrinterFile) {
+    async clickPrintFile(file: PrinterFileDto) {
       if (!this.printerId) return;
       await this.printerStateStore.selectAndPrintFile({
         printerId: this.printerId,
         fullPath: file.path,
       });
     },
-    clickDownloadFile(file: PrinterFile) {
+    clickDownloadFile(file: PrinterFileDto) {
       PrinterFileService.downloadFile(file);
     },
     closeDrawer() {
@@ -635,14 +617,14 @@ export default defineComponent({
     },
   },
   watch: {
-    async storedSideNavPrinter(viewedPrinter?: Printer, oldVal?: Printer) {
+    async storedSideNavPrinter(viewedPrinter?: PrinterDto, oldVal?: PrinterDto) {
       this.drawerOpened = !!viewedPrinter;
       const printerId = viewedPrinter?.id;
       if (!viewedPrinter || !printerId) {
         return;
       }
 
-      if (!this.shownFileBucket || viewedPrinter.id !== this.shownFileBucket.printerId || !oldVal) {
+      if (!this.shownFileCache || viewedPrinter.id !== oldVal?.id || !oldVal) {
         await this.refreshFiles();
       }
     },

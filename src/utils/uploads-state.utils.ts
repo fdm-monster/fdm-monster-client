@@ -1,5 +1,5 @@
 import { FileUploadCommands } from "@/models/printers/file-upload-commands.model";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { QueuedUpload } from "@/models/uploads/queued-upload.model";
 
 /**
@@ -9,7 +9,7 @@ import { QueuedUpload } from "@/models/uploads/queued-upload.model";
  * @param printedFileName
  */
 export function convertPrinterMultiFileToQueue(
-  printer: Printer,
+  printer: PrinterDto,
   files: File[],
   printedFileName: string | null
 ): QueuedUpload[] {
@@ -39,7 +39,7 @@ export function convertPrinterMultiFileToQueue(
  * @param commands
  */
 export function convertMultiPrinterFileToQueue(
-  printers: Printer[],
+  printers: PrinterDto[],
   file: File,
   commands: FileUploadCommands = {
     select: true,

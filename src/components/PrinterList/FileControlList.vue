@@ -17,9 +17,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { PrinterFile } from "@/models/printers/printer-file.model";
-import { PrinterFileCache } from "@/models/printers/printer-file-cache.model";
-import { usePrinterStore } from "../../store/printer.store";
+import { PrinterFileDto } from "@/models/printers/printer-file.model";
+import { usePrinterStore } from "@/store/printer.store";
 
 export default defineComponent({
   name: "FileControlList",
@@ -32,19 +31,15 @@ export default defineComponent({
   async created() {},
   async mounted() {},
   props: {
-    fileList: Object as PropType<PrinterFileCache>,
+    fileList: Object as PropType<PrinterFileDto[]>,
     printerId: String,
   },
   computed: {},
   methods: {
-    async deleteFile(file: PrinterFile) {
+    async deleteFile(file: PrinterFileDto) {
       if (!this.fileList || !this.printerId) return;
 
-      // this.fileList.files =
-      await this.printersStore.deletePrinterFile({
-        printerId: this.printerId,
-        fullPath: file.path,
-      });
+      await this.printersStore.deletePrinterFile(this.printerId, file.path);
     },
   },
   watch: {},

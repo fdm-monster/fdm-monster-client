@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import {
   PrinterEventsById,
   SocketStateById,
@@ -25,7 +25,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
   getters: {
     operationalPrintersById() {
       const printerStore = usePrinterStore();
-      const printersById: ById<Printer> = {};
+      const printersById: ById<PrinterDto> = {};
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         if (printerEvents?.current?.payload?.state?.flags?.operational) {
@@ -87,7 +87,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
     onlinePrinters() {
       const printerStore = usePrinterStore();
-      const onlinePrinters: ById<Printer> = {};
+      const onlinePrinters: ById<PrinterDto> = {};
       this.printerIds.forEach((id) => {
         const socketState = this.socketStatesById[id];
         if (socketState?.api === "responding") {
@@ -138,7 +138,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
     printersWithJob() {
       const printerStore = usePrinterStore();
-      const printersWithJobById: { printer: Printer; job: CurrentOrHistoryPayload }[] = [];
+      const printersWithJobById: { printer: PrinterDto; job: CurrentOrHistoryPayload }[] = [];
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         const flags = printerEvents?.current?.payload?.state?.flags;

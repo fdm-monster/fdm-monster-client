@@ -1,11 +1,11 @@
-import { PrinterFileCache } from "./printer-file-cache.model";
+import { PrinterFileDto } from "@/models/printers/printer-file.model";
 
 export interface LoginDetails {
   apiKey: string;
   printerURL: string;
 }
 
-export interface Printer {
+export interface PrinterDto {
   id: string;
   correlationToken?: string;
   enabled: boolean;
@@ -16,5 +16,5 @@ export interface Printer {
   apiKey: string;
   printerURL: string;
 
-  fileList: PrinterFileCache;
+  fileList: PrinterFileDto[];
 }

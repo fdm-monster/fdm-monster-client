@@ -80,7 +80,7 @@ import { defineComponent } from "vue";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
 import { totalVuetifyColumnCount } from "@/shared/printer-grid.constants";
 import { usePrinterStore } from "@/store/printer.store";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { useGridStore } from "@/store/grid.store";
 import { dragAppId, INTENT, PrinterPlace } from "@/shared/drag.constants";
 import { useSettingsStore } from "@/store/settings.store";
@@ -129,7 +129,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onDragStart(printer: Printer, ev: DragEvent) {
+    onDragStart(printer: PrinterDto, ev: DragEvent) {
       if (!ev.dataTransfer) return;
       if (!printer.id) return;
 

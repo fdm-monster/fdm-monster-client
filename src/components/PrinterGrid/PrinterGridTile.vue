@@ -192,7 +192,7 @@ import { useSettingsStore } from "@/store/settings.store";
 import { useFloorStore } from "@/store/floor.store";
 import { interpretStates } from "@/shared/printer-state.constants";
 import { usePrinterStateStore } from "@/store/printer-state.store";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
 const defaultColor = "rgba(100,100,100,0.1)";
@@ -201,7 +201,7 @@ export default defineComponent({
   name: "PrinterGridTile",
   components: {},
   props: {
-    printer: Object as PropType<Printer>,
+    printer: Object as PropType<PrinterDto>,
     x: Number,
     y: Number,
   },

@@ -43,7 +43,7 @@ import { useDialog } from "@/shared/dialog.composable";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { CameraStream, CameraWithPrinter } from "@/models/camera-streams/camera-stream";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "@/store/printer.store";
 
 const printerStore = usePrinterStore();

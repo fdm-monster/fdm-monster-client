@@ -98,7 +98,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend/printers.service";
 import PrinterDetails from "@/components/PrinterList/PrinterDetails.vue";
 import PrinterUrlAction from "@/components/Generic/Actions/PrinterUrlAction.vue";
@@ -118,7 +118,7 @@ import { usePrinterStateStore } from "@/store/printer-state.store";
 interface Data {
   showJsonImportDialog: boolean;
   search: string;
-  expanded: Printer[];
+  expanded: PrinterDto[];
   tableHeaders: any[];
 }
 
@@ -180,14 +180,14 @@ export default defineComponent({
     floorOfPrinter(printerId: string) {
       return this.floorStore.floorOfPrinter(printerId);
     },
-    openEditDialog(printer: Printer) {
+    openEditDialog(printer: PrinterDto) {
       this.printerStore.setUpdateDialogPrinter(printer);
       this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
     },
     openCreatePrinterDialog() {
       this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
     },
-    clickRow(item: Printer, event: any) {
+    clickRow(item: PrinterDto, event: any) {
       if (event.isExpanded) {
         const index = this.expanded.findIndex((i) => i === item);
         this.expanded.splice(index, 1);
@@ -201,7 +201,7 @@ export default defineComponent({
     async openYamlImportExportDialog() {
       this.dialogsStore.openDialog(DialogName.YamlImportExport);
     },
-    async toggleEnabled(event: any, printer: Printer) {
+    async toggleEnabled(event: any, printer: PrinterDto) {
       if (!printer.id) {
         throw new Error("Printer ID not set, cant toggle enabled");
       }

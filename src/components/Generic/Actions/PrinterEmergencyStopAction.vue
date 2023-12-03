@@ -12,13 +12,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 
 export default defineComponent({
   name: "PrinterEmergencyAction",
   props: {
-    printer: Object as PropType<Printer>,
+    printer: Object as PropType<PrinterDto>,
   },
   computed: {
     printerId() {

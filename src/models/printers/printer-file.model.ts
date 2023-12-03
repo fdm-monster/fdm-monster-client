@@ -26,7 +26,7 @@ export interface Statistics {
   };
 }
 
-export interface PrinterFile {
+export interface PrinterFileDto {
   date: number;
   display: string;
   gcodeAnalysis: GCodeAnalysis;
@@ -43,6 +43,6 @@ export interface PrinterFile {
 }
 
 export interface ClearedFilesResult {
-  failedFiles: PrinterFile[];
-  succeededFiles: PrinterFile[];
+  failedFiles: PrinterFileDto[];
+  succeededFiles: PrinterFileDto[];
 }

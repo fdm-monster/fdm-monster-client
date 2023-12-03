@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "../../../store/printer.store";
 
 export default defineComponent({
@@ -20,7 +20,7 @@ export default defineComponent({
   async created() {},
   async mounted() {},
   props: {
-    printer: Object as PropType<Printer>,
+    printer: Object as PropType<PrinterDto>,
   },
   computed: {
     printerId() {

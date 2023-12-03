@@ -1,5 +1,5 @@
 import { PrinterState } from "@/models/printers/visual-state.model";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { useSettingsStore } from "@/store/settings.store";
 
@@ -32,7 +32,7 @@ const LABEL = {
 } as const;
 
 export function interpretStates(
-  printer: Printer,
+  printer: PrinterDto,
   socketState: SocketState,
   printerState: PrinterState
 ) {

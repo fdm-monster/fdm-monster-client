@@ -52,7 +52,7 @@
 import { defineComponent } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { PrintersService } from "@/backend";
-import { Printer } from "@/models/printers/printer.model";
+import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "../../../store/printer.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialogsStore } from "@/store/dialog.store";
@@ -149,7 +149,7 @@ export default defineComponent({
     },
   },
   watch: {
-    async printer(viewedPrinter?: Printer, _?: Printer) {
+    async printer(viewedPrinter?: PrinterDto, _?: PrinterDto) {
       const printerId = viewedPrinter?.id;
       if (!viewedPrinter || !printerId) return;
     },
