@@ -25,7 +25,7 @@
     "@vueuse/core": "10.7.0",
     "@vueuse/integrations": "10.7.0",
     "axios": "1.6.2",
-    "core-js": "3.33.3",
+    "core-js": "3.34.0",
     "jwt-decode": "3.1.2",
     "luxon": "3.4.4",
     "pinia": "2.1.7",
