@@ -126,7 +126,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Floor } from "@/models/floors/floor.model";
+import { FloorDto } from "@/models/floors/floor.model";
 import { usePrinterStore } from "@/store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
@@ -173,7 +173,7 @@ export default defineComponent({
     },
   },
   methods: {
-    printerInFloor(floor: Floor, index: number): PrinterDto | undefined {
+    printerInFloor(floor: FloorDto, index: number): PrinterDto | undefined {
       if (!floor?.printers) return;
 
       const floorPrinter = floor.printers[index - 1];
@@ -215,7 +215,7 @@ export default defineComponent({
       await this.floorStore.deleteFloor(this.selectedFloor.id);
       this.snackbar.info("Floor deleted");
     },
-    async deletePrinterFromFloor(floor: Floor, index: number) {
+    async deletePrinterFromFloor(floor: FloorDto, index: number) {
       const printer = this.printerInFloor(floor, index);
       if (!floor?.id || !printer?.id) return;
 

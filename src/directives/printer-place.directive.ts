@@ -42,7 +42,6 @@ const bindDropConditionally = (el: HTMLElement, bindingValue: PrinterBindingValu
     }
 
     const floorId = floorStore.selectedFloor?.id;
-    if (!floorId?.length) throw new Error("Floor is not set");
     if (!floorId) throw new Error("Floor is not set");
     const printerId = data.printerId;
     if (!printerId) throw new Error("PrinterId was not provided");

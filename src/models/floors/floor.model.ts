@@ -1,24 +1,24 @@
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 
-export interface PrinterInFloor {
+export interface PrinterInFloorDto {
   id?: string;
   printerId: string;
   x: number;
   y: number;
 }
 
-export interface Floor {
+export interface FloorDto {
   id: string;
   name: string;
   floor: number;
-  printers: PrinterInFloor[];
+  printers: PrinterInFloorDto[];
 }
 
 export interface PreCreateFloor {
   id?: string;
   name: string;
   floor: string;
-  printers: PrinterInFloor[];
+  printers: PrinterInFloorDto[];
 }
 
 export const getDefaultCreateFloor = (): PreCreateFloor => ({
