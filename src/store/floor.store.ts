@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
-import { Floor } from "@/models/floors/floor.model";
+import { FloorDto } from "@/models/floors/floor.model";
 import { useSettingsStore } from "./settings.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "./printer.store";
 import { FloorService } from "@/backend/floor.service";
+import { IdType } from "@/utils/id.type";
 
 export interface State {
-  floors: Floor[];
-  selectedFloor: Floor | null;
+  floors: FloorDto[];
+  selectedFloor: FloorDto | null;
 }
 
 export const useFloorStore = defineStore("Floors", {
@@ -27,7 +28,7 @@ export const useFloorStore = defineStore("Floors", {
     },
     floorOfPrinter() {
       return (printerId: string) => {
-        return this.floors.find((f: Floor) =>
+        return this.floors.find((f: FloorDto) =>
           f.printers.map((pid) => pid.printerId).includes(printerId)
         );
       };
@@ -68,32 +69,32 @@ export const useFloorStore = defineStore("Floors", {
   },
   actions: {
     async loadFloors() {
-      const data = await FloorService.getFloors();
-      this.saveFloors(data);
-      return data;
+      const floors = await FloorService.getFloors();
+      this.saveFloors(floors);
+      return floors;
     },
-    async createFloor(newPrinterFloor: Floor) {
+    async createFloor(newPrinterFloor: FloorDto) {
       const data = await FloorService.createFloor(newPrinterFloor);
       this.floors.push(data);
       return data;
     },
-    saveFloors(floors: Floor[]) {
+    saveFloors(floors: FloorDto[]) {
       if (!floors?.length) return;
       this.floors = floors.sort((f, f2) => f.floor - f2.floor);
       const floorId = this.selectedFloor?.id;
       const foundFloor = this.floors.find((f) => f.id === floorId);
       this.selectedFloor = !foundFloor ? this.floors[0] : foundFloor;
     },
-    async deleteFloor(floorId: string) {
+    async deleteFloor(floorId: IdType) {
       await FloorService.deleteFloor(floorId);
       this._popPrinterFloor(floorId);
     },
-    async updateFloorName({ floorId, name }: { floorId: string; name: string }) {
+    async updateFloorName({ floorId, name }: { floorId: IdType; name: string }) {
       const floor = await FloorService.updateFloorName(floorId, name);
       this._replaceFloor(floor);
       return floor;
     },
-    async updateFloorNumber({ floorId, floorNumber }: { floorId: string; floorNumber: number }) {
+    async updateFloorNumber({ floorId, floorNumber }: { floorId: IdType; floorNumber: number }) {
       const floor = await FloorService.updateFloorNumber(floorId, floorNumber);
       this._replaceFloor(floor);
       return floor;
@@ -104,8 +105,8 @@ export const useFloorStore = defineStore("Floors", {
       x,
       y,
     }: {
-      floorId: string;
-      printerId: string;
+      floorId: IdType;
+      printerId: IdType;
       x: number;
       y: number;
     }) {
@@ -126,17 +127,17 @@ export const useFloorStore = defineStore("Floors", {
       this.selectedFloor = newFloor;
       return newFloor;
     },
-    async deletePrinterFromFloor({ floorId, printerId }: { floorId: string; printerId: string }) {
+    async deletePrinterFromFloor({ floorId, printerId }: { floorId: IdType; printerId: IdType }) {
       const result = await FloorService.deletePrinterFromFloor(floorId, printerId);
       this._replaceFloor(result);
     },
-    _popPrinterFloor(floorId: string) {
+    _popPrinterFloor(floorId: IdType) {
       const foundFloorIndex = this.floors.findIndex((pg) => pg.id === floorId);
       if (foundFloorIndex !== -1) {
         this.floors.splice(foundFloorIndex, 1);
       }
     },
-    _replaceFloor(printerFloor: Floor) {
+    _replaceFloor(printerFloor: FloorDto) {
       const foundFloorIndex = this.floors.findIndex((pf) => pf.id === printerFloor.id);
       if (foundFloorIndex !== -1) {
         this.floors[foundFloorIndex] = printerFloor;

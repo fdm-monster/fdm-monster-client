@@ -1,4 +1,4 @@
-import { PrinterFileDto } from "@/models/printers/printer-file.model";
+import { IdType } from "@/utils/id.type";
 
 export interface LoginDetails {
   apiKey: string;
@@ -6,7 +6,7 @@ export interface LoginDetails {
 }
 
 export interface PrinterDto {
-  id: string;
+  id: IdType;
   correlationToken?: string;
   enabled: boolean;
   dateAdded: number;
@@ -15,6 +15,4 @@ export interface PrinterDto {
   webSocketURL: string;
   apiKey: string;
   printerURL: string;
-
-  fileList: PrinterFileDto[];
 }

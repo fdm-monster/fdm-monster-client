@@ -1,7 +1,7 @@
 import { PrinterDto } from "@/models/printers/printer.model";
-import { Floor } from "../floors/floor.model";
-import { ById } from "@/utils/types/byid.utils";
-import { PrinterState } from "../printers/visual-state.model";
+import { FloorDto } from "../floors/floor.model";
+import { IdType } from "@/utils/id.type";
+import { CurrentOrHistoryPayload } from "@/models/printers/printer-current-job.model";
 
 export interface TrackedUpload {
   correlationToken: string;
@@ -27,15 +27,27 @@ export interface SocketState {
   api: string;
 }
 
-export type PrinterEvents = PrinterState;
-
-export type SocketStateById = ById<SocketState>;
-export type PrinterEventsById = ById<PrinterEvents>;
+export interface PrinterState {
+  connected: {
+    payload: any;
+    receivedAt: number;
+  };
+  plugins: any[];
+  events: any[];
+  current: {
+    payload: CurrentOrHistoryPayload;
+    receivedAt: number;
+  };
+  history: {
+    payload: CurrentOrHistoryPayload;
+    receivedAt: number;
+  };
+}
 
 export interface SocketIoUpdateMessage {
   printers: PrinterDto[];
-  socketStates: SocketStateById;
-  printerEvents: PrinterEventsById;
+  socketStates: Record<IdType, SocketState>;
+  printerEvents: Record<IdType, PrinterState>;
   trackedUploads: UploadStates;
-  floors: Floor[];
+  floors: FloorDto[];
 }

@@ -95,7 +95,7 @@
             v-on="on"
             @click.prevent.stop="openPrinterURL()"
           >
-            <v-list-item-avatar size="20px" class="ml-3 mr-6 ma-5">
+            <v-list-item-avatar class="ml-3 mr-6 ma-5" size="20px">
               <v-img src="/img/octoprint-tentacle.svg"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
@@ -111,12 +111,12 @@
           <v-list-item
             class="extra-dense-list-item"
             link
-            @click.prevent.stop="toggleEnabled()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="toggleEnabled()"
           >
             <v-list-item-avatar>
-              <v-icon :color="isEnabled ? 'primary' : 'green'" dark> dns </v-icon>
+              <v-icon :color="isEnabled ? 'primary' : 'green'" dark> dns</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
               <span v-if="isEnabled">Disable Printer Location</span>
@@ -132,9 +132,9 @@
           <v-list-item
             class="extra-dense-list-item"
             link
-            @click.prevent.stop="toggleMaintenance()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="toggleMaintenance()"
           >
             <v-list-item-avatar>
               <v-icon :color="!isUnderMaintenance ? 'primary' : 'green'" dark>
@@ -156,15 +156,15 @@
       <v-tooltip left>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item
-            class="extra-dense-list-item"
             :disabled="!storedSideNavPrinter?.enabled || !isOnline"
+            class="extra-dense-list-item"
             link
-            @click.prevent.stop="togglePrinterConnection()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="togglePrinterConnection()"
           >
             <v-list-item-avatar>
-              <v-icon> usb </v-icon>
+              <v-icon> usb</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
               <span v-if="isStoppable">Disconnect USB & Stop Print</span>
@@ -176,23 +176,23 @@
         <span>Disconnect USB, disrupting any print</span>
       </v-tooltip>
 
-      <v-tooltip left v-if="featureStore.hasFeature('pauseResumePrinterCommand')">
+      <v-tooltip v-if="featureStore.hasFeature('pauseResumePrinterCommand')" left>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item
-            class="extra-dense-list-item"
             :disabled="!isOnline || !isPrinting"
+            class="extra-dense-list-item"
             link
-            @click.prevent.stop="isPaused ? clickResumePrint() : clickPausePrint()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="isPaused ? clickResumePrint() : clickPausePrint()"
           >
             <v-list-item-avatar>
               <v-icon v-if="!isPaused">pause</v-icon>
               <v-icon v-if="isPaused">play_circle_outline</v-icon>
             </v-list-item-avatar>
-            <v-list-item-content>{{
-              isPaused ? "Resume print" : "Pause print"
-            }}</v-list-item-content>
+            <v-list-item-content
+              >{{ isPaused ? "Resume print" : "Pause print" }}
+            </v-list-item-content>
           </v-list-item>
         </template>
         <span>Send Pause or Resume command</span>
@@ -201,17 +201,17 @@
       <v-tooltip left>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item
-            class="extra-dense-list-item"
             :disabled="!isStoppable"
+            class="extra-dense-list-item"
             link
-            @click.prevent.stop="clickStopPrint()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="clickStopPrint()"
           >
             <v-list-item-avatar>
               <v-icon>stop</v-icon>
             </v-list-item-avatar>
-            <v-list-item-content> Cancel print </v-list-item-content>
+            <v-list-item-content> Cancel print</v-list-item-content>
           </v-list-item>
         </template>
         <span>Cancel print gracefully</span>
@@ -220,18 +220,18 @@
       <v-tooltip left>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item
-            class="extra-dense-list-item"
             :disabled="!canBeCleared"
+            class="extra-dense-list-item"
             link
-            @click.prevent.stop="clickClearFiles()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="clickClearFiles()"
           >
             <v-list-item-avatar>
               <v-icon>delete</v-icon>
             </v-list-item-avatar>
 
-            <v-list-item-content> Delete files </v-list-item-content>
+            <v-list-item-content> Delete files</v-list-item-content>
           </v-list-item>
         </template>
         <span>Clear all files present on OctoPrint (local)</span>
@@ -242,9 +242,9 @@
           <v-list-item
             class="extra-dense-list-item"
             link
-            @click.prevent.stop="refreshFiles()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="refreshFiles()"
           >
             <v-list-item-avatar>
               <v-icon>refresh</v-icon>
@@ -260,9 +260,9 @@
           <v-list-item
             class="extra-dense-list-item"
             link
-            @click.prevent.stop="clickSettings()"
             v-bind="attrs"
             v-on="on"
+            @click.prevent.stop="clickSettings()"
           >
             <v-list-item-avatar>
               <v-icon>settings</v-icon>
@@ -425,6 +425,10 @@ export default defineComponent({
       return this.storedSideNavPrinter?.id;
     },
     isOnline() {
+      console.warn(
+        this.printerId,
+        this.printerId ? this.printerStateStore.isApiResponding(this.printerId) : false
+      );
       return this.printerId ? this.printerStateStore.isApiResponding(this.printerId) : false;
     },
     isOperational() {

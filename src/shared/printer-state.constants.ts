@@ -1,6 +1,5 @@
-import { PrinterState } from "@/models/printers/visual-state.model";
+import { PrinterState, SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { PrinterDto } from "@/models/printers/printer.model";
-import { SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { useSettingsStore } from "@/store/settings.store";
 
 const COLOR = {

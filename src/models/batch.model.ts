@@ -1,7 +1,9 @@
+import { IdType } from "@/utils/id.type";
+
 export interface BatchSingletonModel {
   success?: boolean;
   failure?: boolean;
-  printerId: string;
+  printerId: IdType;
   time: number;
   error?: string;
 }

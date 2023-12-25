@@ -1,8 +1,9 @@
 import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
+import { IdType } from "@/utils/id.type";
 
 export class PrinterSettingsService extends BaseService {
-  static async getSettings(printerId: string) {
+  static async getSettings(printerId: IdType) {
     const path = `${ServerApi.getPrinterSettingsRoute(printerId)}`;
 
     return await this.getApi(path);
@@ -13,13 +14,13 @@ export class PrinterSettingsService extends BaseService {
    * @param printerId
    * @param enabled
    */
-  static async setGCodeAnalysis(printerId: string, enabled = false) {
+  static async setGCodeAnalysis(printerId: IdType, enabled = false) {
     const path = `${ServerApi.setPrinterSettingsGCodeAnalysisRoute(printerId)}`;
 
     return await this.postApi(path, { enabled });
   }
 
-  static async syncPrinterName(printerId: string) {
+  static async syncPrinterName(printerId: IdType) {
     const path = `${ServerApi.syncPrinterNameSettingRoute(printerId)}`;
 
     return await this.postApi(path);
