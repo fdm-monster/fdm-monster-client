@@ -89,7 +89,6 @@ export const usePrinterStateStore = defineStore("PrinterState", {
           const printer = printerStore.printer(id);
           if (printer) {
             onlinePrinters[id] = printer;
-            console.log(onlinePrinters);
           } else {
             throw new Error(
               `PrinterStore contains no printer with id ${id} but socket state is opened`

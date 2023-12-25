@@ -425,10 +425,6 @@ export default defineComponent({
       return this.storedSideNavPrinter?.id;
     },
     isOnline() {
-      console.warn(
-        this.printerId,
-        this.printerId ? this.printerStateStore.isApiResponding(this.printerId) : false
-      );
       return this.printerId ? this.printerStateStore.isApiResponding(this.printerId) : false;
     },
     isOperational() {

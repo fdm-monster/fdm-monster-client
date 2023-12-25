@@ -82,7 +82,6 @@ watch(
       ?.find((cameraStream) => cameraStream.cameraStream.id === context.cameraId);
     cameraStream.value.name = stream?.cameraStream.name;
     cameraStream.value.streamURL = stream?.cameraStream.streamURL;
-    console.log(context);
   }
 );
 

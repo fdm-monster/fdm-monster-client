@@ -35,7 +35,6 @@ export const useTestPrinterStore = defineStore("TestPrinter", {
           )
           .map((e) => {
             const event = e.event.startsWith("WS_") ? "Socket" : "API";
-            console.log(e.event);
             return {
               event,
               payload: e.payload
