@@ -107,7 +107,7 @@
           <v-list-item v-for="x in showAddedPrinters" :key="x">
             <v-list-item-content v-if="printerInFloor(selectedFloor, x)">
               <v-list-item-title>
-                {{ printerInFloor(selectedFloor, x).name }}
+                {{ printerInFloor(selectedFloor, x)?.name }}
               </v-list-item-title>
             </v-list-item-content>
 

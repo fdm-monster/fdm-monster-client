@@ -1,4 +1,5 @@
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
+import { IdType } from "@/utils/id.type";
 
 export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
   id: undefined,
@@ -9,7 +10,7 @@ export const getDefaultCreatePrinter = (): PreCreatePrinter => ({
 });
 
 export interface PreCreatePrinter {
-  id?: string; // Only in case of update
+  id?: IdType; // Only in case of update
   enabled: boolean;
   name: string;
   printerURL: string | undefined;
@@ -17,7 +18,7 @@ export interface PreCreatePrinter {
 }
 
 export interface CreatePrinter {
-  id?: string; // Only in case of update
+  id?: IdType; // Only in case of update
   enabled: boolean;
   name: string;
   printerURL: string;

@@ -34,9 +34,9 @@
       >
         usb_off
       </v-icon>
-      <v-container v-if="printerId" class="tile-inner fill-height">
+      <v-container v-if="printer?.id" class="tile-inner fill-height">
         <small class="small-resized-font">
-          {{ printer.name }}
+          {{ printer?.name }}
         </small>
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
@@ -67,8 +67,8 @@
           <!-- Connect USB -->
           <v-btn
             v-if="
-              !printerStateStore.isPrinterOperational(printerId) &&
-              printerStateStore.isApiResponding(printerId)
+              !printerStateStore.isPrinterOperational(printer?.id) &&
+              printerStateStore.isApiResponding(printer?.id)
             "
             icon
             @click.prevent.stop="clickConnectUsb()"
@@ -77,7 +77,7 @@
           </v-btn>
 
           <!-- Emergency stop button -->
-          <v-tooltip v-if="printerStateStore.isPrinterOperational(printerId)" bottom>
+          <v-tooltip v-if="printerStateStore.isPrinterOperational(printer?.id)" bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 elevation="4"
@@ -97,7 +97,7 @@
 
           <!-- Refresh connectivity button -->
           <v-tooltip
-            v-if="printer.enabled && printerStateStore.isPrinterNotOnline(printerId)"
+            v-if="printer.enabled && printerStateStore.isPrinterNotOnline(printer.id)"
             bottom
           >
             <template v-slot:activator="{ on, attrs }">
@@ -231,7 +231,7 @@ export default defineComponent({
       return this.settingsStore.largeTiles;
     },
     printerState() {
-      if (!this.printerId?.length) return;
+      if (!this.printerId) return;
       const printer = this.printerStore.printer(this.printerId);
       if (!printer) return;
 
@@ -246,11 +246,11 @@ export default defineComponent({
       return states.rgb || defaultColor;
     },
     currentJob() {
-      if (!this.printerId?.length) return;
+      if (!this.printerId) return;
       return this.printerStateStore.printerJobsById[this.printerId];
     },
     currentPrintingFilePath() {
-      if (!this.printerId?.length) return;
+      if (!this.printerId) return;
       return this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
     },
   },
@@ -259,7 +259,7 @@ export default defineComponent({
       this.printerStore.setSideNavPrinter(this.printer);
     },
     async clickRefreshSocket() {
-      if (!this.printerId?.length) return;
+      if (!this.printerId) return;
       await PrintersService.refreshSocket(this.printerId);
       this.snackbar.openInfoMessage({
         title: "Refreshing OctoPrint connection state",
@@ -274,7 +274,7 @@ export default defineComponent({
       this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
     },
     async clickEmergencyStop() {
-      if (!this.printerId?.length) return;
+      if (!this.printerId) return;
       if (
         confirm("Are you sure to abort the print in Emergency Stop mode? Please reconnect after.")
       ) {
@@ -282,8 +282,8 @@ export default defineComponent({
       }
     },
     async clickConnectUsb() {
-      if (!this.printerId?.length) return;
-      await PrintersService.sendPrinterConnectCommand(this.printerId);
+      if (!this.printerId) return;
+      await PrintersService.sendPrinterConnectCommand(this.printerId!);
     },
     async selectOrUnplacePrinter() {
       if (!this.printer || !this.printerId) return;

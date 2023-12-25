@@ -4,6 +4,7 @@ import { useSettingsStore } from "./settings.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "./printer.store";
 import { FloorService } from "@/backend/floor.service";
+import { IdType } from "@/utils/id.type";
 
 export interface State {
   floors: FloorDto[];
@@ -84,16 +85,16 @@ export const useFloorStore = defineStore("Floors", {
       const foundFloor = this.floors.find((f) => f.id === floorId);
       this.selectedFloor = !foundFloor ? this.floors[0] : foundFloor;
     },
-    async deleteFloor(floorId: string) {
+    async deleteFloor(floorId: IdType) {
       await FloorService.deleteFloor(floorId);
       this._popPrinterFloor(floorId);
     },
-    async updateFloorName({ floorId, name }: { floorId: string; name: string }) {
+    async updateFloorName({ floorId, name }: { floorId: IdType; name: string }) {
       const floor = await FloorService.updateFloorName(floorId, name);
       this._replaceFloor(floor);
       return floor;
     },
-    async updateFloorNumber({ floorId, floorNumber }: { floorId: string; floorNumber: number }) {
+    async updateFloorNumber({ floorId, floorNumber }: { floorId: IdType; floorNumber: number }) {
       const floor = await FloorService.updateFloorNumber(floorId, floorNumber);
       this._replaceFloor(floor);
       return floor;
@@ -104,8 +105,8 @@ export const useFloorStore = defineStore("Floors", {
       x,
       y,
     }: {
-      floorId: string;
-      printerId: string;
+      floorId: IdType;
+      printerId: IdType;
       x: number;
       y: number;
     }) {
@@ -126,11 +127,11 @@ export const useFloorStore = defineStore("Floors", {
       this.selectedFloor = newFloor;
       return newFloor;
     },
-    async deletePrinterFromFloor({ floorId, printerId }: { floorId: string; printerId: string }) {
+    async deletePrinterFromFloor({ floorId, printerId }: { floorId: IdType; printerId: IdType }) {
       const result = await FloorService.deletePrinterFromFloor(floorId, printerId);
       this._replaceFloor(result);
     },
-    _popPrinterFloor(floorId: string) {
+    _popPrinterFloor(floorId: IdType) {
       const foundFloorIndex = this.floors.findIndex((pg) => pg.id === floorId);
       if (foundFloorIndex !== -1) {
         this.floors.splice(foundFloorIndex, 1);

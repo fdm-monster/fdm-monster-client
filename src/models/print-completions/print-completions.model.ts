@@ -1,3 +1,5 @@
+import { IdType } from "@/utils/id.type";
+
 export interface ShortEvent {
   printerId: string;
   status: string;
@@ -14,7 +16,7 @@ export interface ContextEvent extends ShortEvent {
       | {
           status: string;
           createdAt: number;
-          printerId: string;
+          printerId: IdType;
         };
   };
 }
@@ -26,7 +28,7 @@ export type PrintJobEvents = {
 };
 
 export interface PrinterCompletions {
-  id: string;
+  id: IdType;
   printCount: number;
   eventCount: number;
   successCount: number;

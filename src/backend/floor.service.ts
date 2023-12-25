@@ -2,6 +2,7 @@ import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { FloorDto, getDefaultCreateFloor, PreCreateFloor } from "@/models/floors/floor.model";
+import { IdType } from "@/utils/id.type";
 
 export class FloorService extends BaseService {
   static convertPrinterFloorToCreateForm(printerFloor?: FloorDto): PreCreateFloor {
@@ -42,34 +43,34 @@ export class FloorService extends BaseService {
     return (await this.postApi(path, floor)) as FloorDto;
   }
 
-  static async updateFloorName(floorId: string, name: string) {
+  static async updateFloorName(floorId: IdType, name: string) {
     const path = `${ServerApi.updatePrinterFloorNameRoute(floorId)}/`;
 
     return (await this.patchApi(path, { name })) as FloorDto;
   }
 
-  static async updateFloorNumber(floorId: string, floor: number) {
+  static async updateFloorNumber(floorId: IdType, floor: number) {
     const path = `${ServerApi.updatePrinterFloorNumberRoute(floorId)}/`;
 
     return (await this.patchApi(path, { floor })) as FloorDto;
   }
 
-  static async deleteFloor(floorId: string) {
+  static async deleteFloor(floorId: IdType) {
     const path = `${ServerApi.getFloorRoute(floorId)}/`;
 
     return await this.deleteApi(path);
   }
 
   static async addPrinterToFloor(
-    floorId: string,
-    body: { printerId: string; x: number; y: number }
+    floorId: IdType,
+    body: { printerId: IdType; x: number; y: number }
   ) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
     return (await this.postApi(path, body)) as FloorDto;
   }
 
-  static async deletePrinterFromFloor(floorId: string, printerId: string) {
+  static async deletePrinterFromFloor(floorId: IdType, printerId: IdType) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
     return (await this.deleteApi(path, { printerId })) as FloorDto;

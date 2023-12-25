@@ -1,3 +1,5 @@
+import { IdType } from "@/utils/id.type";
+
 export class ServerApi {
   static base = "/api";
 
@@ -43,55 +45,55 @@ export class ServerApi {
   static pluginFirmwareUpdateRoute = `${ServerApi.pluginRoute}/firmware-update`;
   static pluginFirmwareReleasesRoute = `${ServerApi.pluginFirmwareUpdateRoute}/releases`;
 
-  static getPrinterRoute = (id: string) => `${ServerApi.printerRoute}/${id}`;
-  static postPrinterDisabledReasonRoute = (id: string) =>
+  static getPrinterRoute = (id: IdType) => `${ServerApi.printerRoute}/${id}`;
+  static postPrinterDisabledReasonRoute = (id: IdType) =>
     `${ServerApi.printerRoute}/${id}/disabled-reason`;
-  static getPrinterLoginDetailsRoute = (id: string) =>
+  static getPrinterLoginDetailsRoute = (id: IdType) =>
     `${ServerApi.getPrinterRoute(id)}/login-details`;
-  static restartOctoPrintRoute = (id: string) =>
+  static restartOctoPrintRoute = (id: IdType) =>
     `${ServerApi.getPrinterRoute(id)}/restart-octoprint`;
 
-  static refreshSocketRoute = (id: string) => `${ServerApi.getPrinterRoute(id)}/refresh-socket`;
-  static getPrinterSettingsRoute = (id: string) => `${ServerApi.printerSettingsRoute}/${id}`;
-  static setPrinterSettingsGCodeAnalysisRoute = (id: string) =>
+  static refreshSocketRoute = (id: IdType) => `${ServerApi.getPrinterRoute(id)}/refresh-socket`;
+  static getPrinterSettingsRoute = (id: IdType) => `${ServerApi.printerSettingsRoute}/${id}`;
+  static setPrinterSettingsGCodeAnalysisRoute = (id: IdType) =>
     `${ServerApi.getPrinterSettingsRoute(id)}/gcode-analysis`;
-  static syncPrinterNameSettingRoute = (id: string) =>
+  static syncPrinterNameSettingRoute = (id: IdType) =>
     `${ServerApi.getPrinterSettingsRoute(id)}/sync-printername`;
-  static getFloorRoute = (id: string) => `${ServerApi.floorRoute}/${id}`;
-  static setSelectedFloorRoute = (floorId: string) =>
+  static getFloorRoute = (id: IdType) => `${ServerApi.floorRoute}/${id}`;
+  static setSelectedFloorRoute = (floorId: IdType) =>
     `${ServerApi.floorRoute}/selected-floor/${floorId}`;
-  static addOrRemovePrinterFromFloorRoute = (id: string) =>
+  static addOrRemovePrinterFromFloorRoute = (id: IdType) =>
     `${ServerApi.getFloorRoute(id)}/printer`;
-  static sendEmergencyM112Route = (id: string) =>
+  static sendEmergencyM112Route = (id: IdType) =>
     `${ServerApi.customGCodeRoute}/send-emergency-m112/${id}`;
-  static installFirmwareUpdatePluginRoute = (id: string) =>
+  static installFirmwareUpdatePluginRoute = (id: IdType) =>
     `${ServerApi.pluginFirmwareUpdateRoute}/${id}/install-firmware-update-plugin`;
-  static configurePluginSettingsRoute = (id: string) =>
+  static configurePluginSettingsRoute = (id: IdType) =>
     `${ServerApi.pluginFirmwareUpdateRoute}/${id}/configure-plugin-settings`;
-  static flashFirmwareRoute = (id: string) =>
+  static flashFirmwareRoute = (id: IdType) =>
     `${ServerApi.pluginFirmwareUpdateRoute}/${id}/flash-firmware`;
-  static updatePrinterFloorNameRoute = (id: string) => `${ServerApi.getFloorRoute(id)}/name`;
-  static updatePrinterFloorNumberRoute = (id: string) =>
+  static updatePrinterFloorNameRoute = (id: IdType) => `${ServerApi.getFloorRoute(id)}/name`;
+  static updatePrinterFloorNumberRoute = (id: IdType) =>
     `${ServerApi.getFloorRoute(id)}/floor-number`;
-  static printerFilesClearRoute = (id: string) => `${ServerApi.printerFilesRoute}/${id}/clear`;
-  static printerFilesSelectAndPrintRoute = (id: string) =>
+  static printerFilesClearRoute = (id: IdType) => `${ServerApi.printerFilesRoute}/${id}/clear`;
+  static printerFilesSelectAndPrintRoute = (id: IdType) =>
     `${ServerApi.printerFilesRoute}/${id}/select`;
-  static printerFilesUploadRoute = (id: string) => `${ServerApi.printerFilesRoute}/${id}/upload`;
-  static printerFilesCacheRoute = (id: string) => `${ServerApi.printerFilesRoute}/${id}/cache`;
-  static printerEnabledRoute = (id: string) => `${ServerApi.getPrinterRoute(id)}/enabled`;
-  static printerSerialConnectRoute = (id: string) =>
+  static printerFilesUploadRoute = (id: IdType) => `${ServerApi.printerFilesRoute}/${id}/upload`;
+  static printerFilesCacheRoute = (id: IdType) => `${ServerApi.printerFilesRoute}/${id}/cache`;
+  static printerEnabledRoute = (id: IdType) => `${ServerApi.getPrinterRoute(id)}/enabled`;
+  static printerSerialConnectRoute = (id: IdType) =>
     `${ServerApi.getPrinterRoute(id)}/serial-connect`;
-  static printerSerialDisconnectRoute = (id: string) =>
+  static printerSerialDisconnectRoute = (id: IdType) =>
     `${ServerApi.getPrinterRoute(id)}/serial-disconnect`;
 
-  static printerJobRoute = (id: string) => `${ServerApi.getPrinterRoute(id)}/job`;
-  static printerStopJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/stop`;
-  static printerPauseJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/pause`;
-  static printerResumeJobRoute = (id: string) => `${ServerApi.printerJobRoute(id)}/resume`;
+  static printerJobRoute = (id: IdType) => `${ServerApi.getPrinterRoute(id)}/job`;
+  static printerStopJobRoute = (id: IdType) => `${ServerApi.printerJobRoute(id)}/stop`;
+  static printerPauseJobRoute = (id: IdType) => `${ServerApi.printerJobRoute(id)}/pause`;
+  static printerResumeJobRoute = (id: IdType) => `${ServerApi.printerJobRoute(id)}/resume`;
 
-  static userChangeUsernameRoute = (id: string) => `${ServerApi.userRoute}/${id}/change-username`;
-  static userChangePasswordRoute = (id: string) => `${ServerApi.userRoute}/${id}/change-password`;
-  static userDeleteRoute = (id: string) => `${ServerApi.userRoute}/${id}`;
-  static userSetVerifiedRoute = (id: string) => `${ServerApi.userRoute}/${id}/set-verified`;
-  static userSetRootUserRoute = (id: string) => `${ServerApi.userRoute}/${id}/set-root-user`;
+  static userChangeUsernameRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/change-username`;
+  static userChangePasswordRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/change-password`;
+  static userDeleteRoute = (id: IdType) => `${ServerApi.userRoute}/${id}`;
+  static userSetVerifiedRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-verified`;
+  static userSetRootUserRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-root-user`;
 }

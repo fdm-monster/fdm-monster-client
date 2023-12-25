@@ -81,9 +81,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { ServerPrivateService } from "@/backend/server-private.service";
-import { BatchService } from "../../backend/batch.service";
-import { usePrinterStore } from "../../store/printer.store";
-import { useFeatureStore } from "../../store/features.store";
+import { BatchService } from "@/backend/batch.service";
+import { usePrinterStore } from "@/store/printer.store";
+import { useFeatureStore } from "@/store/features.store";
 
 interface Data {
   property: number;
