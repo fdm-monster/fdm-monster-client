@@ -18,8 +18,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.vue\""
   },
   "dependencies": {
-    "@sentry/tracing": "7.91.0",
-    "@sentry/vue": "7.91.0",
+    "@sentry/tracing": "7.92.0",
+    "@sentry/vue": "7.92.0",
     "@tanstack/vue-query": "5.17.1",
     "@vue/composition-api": "1.7.2",
     "@vueuse/core": "10.7.1",
