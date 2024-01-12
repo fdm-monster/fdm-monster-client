@@ -171,7 +171,9 @@
       >
         <span class="xsmall-resized-font">{{
           largeTilesEnabled
-            ? currentJob.progress?.completion.toFixed(1) + "%"
+            ? currentJob.progress?.completion
+              ? currentJob.progress?.completion?.toFixed(1) + "%"
+              : "-"
             : currentPrintingFilePath
         }}</span>
       </v-progress-linear>

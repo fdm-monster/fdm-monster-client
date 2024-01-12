@@ -15,7 +15,7 @@ import { IdType } from "@/utils/id.type";
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
   TestPrinterState = "test-printer-state",
-  CompletionEvent = "completion-event",
+  // CompletionEvent = "completion-event",
   HostState = "host-state",
   ApiAccessibility = "api-accessibility",
 }

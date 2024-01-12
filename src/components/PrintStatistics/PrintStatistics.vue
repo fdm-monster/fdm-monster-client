@@ -73,8 +73,8 @@
         </thead>
         <tbody>
           <tr v-for="item in shownCompletions" :key="item.name">
-            <td>{{ printer(item.id)?.name }}</td>
-            <td>{{ floorOfPrinter(item.id)?.name }}</td>
+            <td>{{ printer(item.printerId)?.name ?? "?" }}</td>
+            <td>{{ floorOfPrinter(item.printerId)?.name ?? "?" }}</td>
             <td>
               &#215; {{ item.failureCount }} / &#128504; {{ item.successCount }}
               <strong>~{{ item.printCount }}</strong>

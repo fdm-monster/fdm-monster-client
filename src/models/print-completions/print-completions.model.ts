@@ -29,6 +29,7 @@ export type PrintJobEvents = {
 
 export interface PrinterCompletions {
   id: IdType;
+  printerId: IdType;
   printCount: number;
   eventCount: number;
   successCount: number;
