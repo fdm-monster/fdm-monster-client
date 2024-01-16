@@ -50,7 +50,14 @@
     <v-btn icon @click="showHelp = true">
       <v-icon>help</v-icon>
     </v-btn>
-    <v-dialog v-model="showHelp" eager fullscreen transition="dialog-bottom-transition" width="90%">
+    <v-dialog
+      v-model="showHelp"
+      style="background-color: white"
+      eager
+      fullscreen
+      transition="dialog-bottom-transition"
+      width="90%"
+    >
       <v-btn @click="showHelp = false"
         >Close Help
         <v-icon>close</v-icon>
@@ -61,7 +68,12 @@
           Showing help from docs.fdm-monster.net
         </v-toolbar>
 
-        <iframe height="100%" src="https://docs.fdm-monster.net/software_usage" width="100%" />
+        <iframe
+          style="background-color: white"
+          height="100%"
+          src="https://docs.fdm-monster.net"
+          width="100%"
+        />
       </v-card>
     </v-dialog>
   </v-app-bar>

@@ -51,25 +51,34 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title> Select a release to upgrade to:</v-list-item-title>
+          <v-list-item-subtitle>
+            Minimum required version: {{ minimum?.tag_name }}</v-list-item-subtitle
+          >
 
           <span v-if="loading"> <v-alert>Loading releases...</v-alert></span>
+          <v-alert v-if="!loading && !filteredReleases?.length">No releases to show.</v-alert>
           <v-radio-group v-model="selectedRelease">
             <v-radio
               v-for="release in filteredReleases"
               :key="release.tag_name"
               :disabled="
-                isCurrentRelease(release) || !isUpgradeOrAllowedDowngrade(release, current)
+                isCurrentRelease(release) ||
+                !isUpgradeOrAllowedDowngrade(release, current) ||
+                isBelowMinimum(release)
               "
               :label="`${release.tag_name}${
                 !isUpgradeOrAllowedDowngrade(release, current)
-                  ? ' (cannot downgrade)'
-                  : '' || (isCurrentRelease(release) ? ' (current)' : '')
+                  ? ' (cannot downgrade, '
+                  : ' (' || (isCurrentRelease(release) ? ' (current, ' : '(')
+              }${
+                isVersionUnstable(release)
+                  ? `${isBelowMinimum(release) ? 'below minimum' : 'unstable'})`
+                  : ')'
               }`"
               :value="release.tag_name"
             >
             </v-radio>
           </v-radio-group>
-          <v-alert v-if="!loading && !filteredReleases?.length">No releases to show.</v-alert>
           <div>
             <v-alert v-if="showPrereleases" color="primary" max-width="500px">
               You are viewing prereleases, please install such versions at your own risk!
@@ -141,15 +150,14 @@ async function loadReleases() {
 }
 
 const filteredReleases = computed(() => {
-  const currentlyUnstable = isCurrentUnstable();
   return loadedClientReleases.value.filter((release) => {
-    const isMinimumVersion = minor(release.tag_name) === minor(minimum.value!.tag_name);
+    const isMinimumVersionOrHigher = minor(release.tag_name) === minor(minimum.value!.tag_name);
     const isReleaseCandidate = isVersionUnstable(release);
     const isDraft = release.draft;
 
     return (
-      isMinimumVersion &&
-      (currentlyUnstable || showPrereleases.value || !isReleaseCandidate) &&
+      isMinimumVersionOrHigher &&
+      (isCurrentUnstable() || showPrereleases.value || !isReleaseCandidate) &&
       !isDraft
     );
   });
@@ -166,12 +174,16 @@ function isCurrentUnstable() {
 }
 
 function isVersionUnstable(release?: IRelease) {
-  if (release?.tag_name.length) {
+  if (release?.tag_name?.length) {
     return (
       release.prerelease || release.tag_name.includes("rc") || release.tag_name.includes("unstable")
     );
   }
   return false;
+}
+
+function isBelowMinimum(release: IRelease) {
+  return compare(release.tag_name, minimum.value!.tag_name) === -1;
 }
 
 function isUpgradeOrAllowedDowngrade(release: IRelease, current?: IRelease) {
@@ -182,7 +194,11 @@ function isUpgradeOrAllowedDowngrade(release: IRelease, current?: IRelease) {
   if (allowDowngrade.value) {
     return true;
   }
-  return compare(release.tag_name, current.tag_name) !== -1;
+
+  return (
+    compare(release.tag_name, current.tag_name) !== -1 &&
+    compare(minimum.value!.tag_name, current.tag_name) !== -1
+  );
 }
 
 function isCurrentRelease(release: IRelease) {
