@@ -5,8 +5,11 @@ import { IClientReleases } from "@/models/server/client-releases.model";
 import { getHttpClient } from "@/shared/http-client";
 
 export class AppService extends BaseService {
-  static async updateClientDistGithub(tag_name: string) {
-    return await this.postApi("api/server/update-client-bundle-github", { tag_name });
+  static async updateClientDistGithub(version?: string, allowDowngrade?: boolean) {
+    return await this.postApi("api/server/update-client-bundle-github", {
+      downloadRelease: version,
+      allowDowngrade,
+    });
   }
 
   static async getClientReleases() {
