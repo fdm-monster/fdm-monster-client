@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-banner v-if="gridStore.gridEditMode" style="cursor: move">
+    <v-banner v-if="gridStore.gridEditMode">
       <v-row style="margin-bottom: -5px">
         <v-col>
           <span>
@@ -13,6 +13,7 @@
               :key="printer.id"
               draggable
               small
+              style="cursor: move"
               @dragstart="onDragStart(printer, $event)"
             >
               {{ printer.name }}
