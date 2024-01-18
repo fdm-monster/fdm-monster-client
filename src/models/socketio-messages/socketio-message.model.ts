@@ -27,7 +27,7 @@ export interface SocketState {
   api: string;
 }
 
-export interface PrinterState {
+export interface PrinterStateDto {
   connected: {
     payload: any;
     receivedAt: number;
@@ -47,7 +47,7 @@ export interface PrinterState {
 export interface SocketIoUpdateMessage {
   printers: PrinterDto[];
   socketStates: Record<IdType, SocketState>;
-  printerEvents: Record<IdType, PrinterState>;
+  printerEvents: Record<IdType, PrinterStateDto>;
   trackedUploads: UploadStates;
   floors: FloorDto[];
 }

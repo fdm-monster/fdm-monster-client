@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import {
-  PrinterState,
+  PrinterStateDto,
   SocketIoUpdateMessage,
 } from "@/models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "@/store/printer.store";
@@ -76,7 +76,7 @@ export class SocketIoService {
 
     if (message.printerEvents) {
       this.printerStateStore.setPrinterEvents(
-        message.printerEvents as Record<IdType, PrinterState>
+        message.printerEvents as Record<IdType, PrinterStateDto>
       );
     }
   }
