@@ -1,15 +1,16 @@
 import { defineStore } from "pinia";
 import { PrinterDto } from "@/models/printers/printer.model";
-import { PrinterState, SocketState } from "@/models/socketio-messages/socketio-message.model";
+import { PrinterStateDto, SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "./printer.store";
 import { PrinterFileService } from "@/backend";
 import { useSettingsStore } from "./settings.store";
 import { CurrentOrHistoryPayload } from "@/models/printers/printer-current-job.model";
 import { IdType } from "@/utils/id.type";
+import { isPrinterIdling, isPrinterPrinting } from "@/shared/printer-state.constants";
 
 interface State {
   printerIds: IdType[];
-  printerEventsById: Record<IdType, PrinterState>;
+  printerEventsById: Record<IdType, PrinterStateDto>;
   socketStatesById: Record<IdType, SocketState>;
 }
 
@@ -42,7 +43,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       };
     },
     printingPrintersById() {
-      const printersById: Record<IdType, PrinterState> = {};
+      const printersById: Record<IdType, PrinterStateDto> = {};
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         if (printerEvents?.current?.payload?.state?.flags?.printing) {
@@ -97,6 +98,25 @@ export const usePrinterStateStore = defineStore("PrinterState", {
         }
       });
       return onlinePrinters;
+    },
+    onlinePrintersWithStates(): { printerState: PrinterStateDto; printer: PrinterDto }[] {
+      return Object.values(this.onlinePrinters).map((printer) => {
+        return {
+          printer,
+          printerState: this.printerEventsById[printer.id],
+        };
+      });
+    },
+    printingCount(): number {
+      const printerStateStore = usePrinterStateStore();
+      return Object.values(printerStateStore.onlinePrintersWithStates).filter((p) =>
+        isPrinterPrinting(p.printerState)
+      ).length;
+    },
+    operationalNotPrintingCount(): number {
+      return this.onlinePrintersWithStates.filter((pws) =>
+        isPrinterIdling(pws.printer, pws.printerState)
+      ).length;
     },
     isApiResponding() {
       return (printerId: IdType) => {
@@ -169,7 +189,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       this.socketStatesById = socketStates;
       this.printerIds = Object.keys(socketStates);
     },
-    setPrinterEvents(printerEvents: Record<IdType, PrinterState>) {
+    setPrinterEvents(printerEvents: Record<IdType, PrinterStateDto>) {
       this.printerEventsById = printerEvents;
       // TODO check id's different from printer events and socket states
     },

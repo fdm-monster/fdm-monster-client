@@ -24,7 +24,30 @@
     <div class="ma-4 pt-6">
       <v-switch v-model="gridStore.gridEditMode" label="Printer Relocate Mode"></v-switch>
     </div>
+
     <v-spacer></v-spacer>
+    <span class="d-flex flex-wrap gap-2">
+      <span class="pr-2">
+        <v-icon>print</v-icon>
+        {{ printerStateStore.printingCount }}
+      </span>
+      <span class="pr-2">
+        <v-icon>ac_unit</v-icon>
+        {{ printerStateStore.operationalNotPrintingCount }}
+      </span>
+      <span class="pr-2">
+        <v-icon>handyman</v-icon>
+        {{ printerStore.maintenanceCount }}
+      </span>
+      <span class="pr-2">
+        <v-icon>usb_off</v-icon>
+        {{ printerStore.disconnectedCount }}
+      </span>
+      <span class="pr-2">
+        <v-icon>print_disabled</v-icon>
+        {{ printerStore.disabledCount }}
+      </span>
+    </span>
   </v-toolbar>
 </template>
 
@@ -33,6 +56,7 @@ import { defineComponent } from "vue";
 import { usePrinterStore } from "@/store/printer.store";
 import { useGridStore } from "@/store/grid.store";
 import { useFloorStore } from "@/store/floor.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 export default defineComponent({
   name: "HomeToolbar",
@@ -40,6 +64,7 @@ export default defineComponent({
   setup() {
     return {
       printerStore: usePrinterStore(),
+      printerStateStore: usePrinterStateStore(),
       floorStore: useFloorStore(),
       gridStore: useGridStore(),
     };

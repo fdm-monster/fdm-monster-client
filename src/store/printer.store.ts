@@ -6,6 +6,12 @@ import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { usePrinterStateStore } from "./printer-state.store";
 import { IdType } from "@/utils/id.type";
+import {
+  isPrinterDisabled,
+  isPrinterDisconnected,
+  isPrinterInMaintenance,
+  isPrinterPrinting,
+} from "@/shared/printer-state.constants";
 
 interface State {
   printers: PrinterDto[];
@@ -39,6 +45,18 @@ export const usePrinterStore = defineStore("Printers", {
     },
     printerFiles() {
       return (printerId: IdType) => this.printerFileCache[printerId];
+    },
+    disabledCount(): number {
+      return this.printers.filter(isPrinterDisabled).length;
+    },
+    disconnectedCount(): number {
+      const printerStateStore = usePrinterStateStore();
+      return this.printers.filter((p) =>
+        isPrinterDisconnected(p, printerStateStore.printerEventsById[p.id])
+      ).length;
+    },
+    maintenanceCount(): number {
+      return this.printers.filter((p) => isPrinterInMaintenance(p)).length;
     },
   },
   actions: {

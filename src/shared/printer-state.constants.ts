@@ -1,4 +1,4 @@
-import { PrinterState, SocketState } from "@/models/socketio-messages/socketio-message.model";
+import { PrinterStateDto, SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSettingsStore } from "@/store/settings.store";
 
@@ -33,7 +33,7 @@ const LABEL = {
 export function interpretStates(
   printer: PrinterDto,
   socketState: SocketState,
-  printerState: PrinterState
+  printerState: PrinterStateDto
 ) {
   const settingsStore = useSettingsStore();
   const debugPrinterInterpretState =
@@ -145,3 +145,31 @@ export function interpretStates(
     };
   }
 }
+
+const toCurrentState = (printerState: PrinterStateDto) => printerState?.current?.payload.state;
+
+export const isPrinterPrinting = (printerState: PrinterStateDto) =>
+  toCurrentState(printerState).flags.printing;
+
+export const isPrinterPaused = (printerState: PrinterStateDto) =>
+  toCurrentState(printerState).flags?.paused || toCurrentState(printerState).flags?.pausing;
+
+export const isPrinterDisconnected = (printer: PrinterDto, printerState: PrinterStateDto) =>
+  (!isPrinterInMaintenance(printer) &&
+    printer?.enabled &&
+    !toCurrentState(printerState)?.flags.operational) ||
+  toCurrentState(printerState)?.flags.error ||
+  toCurrentState(printerState)?.flags.closedOrError;
+
+export const isPrinterDisabled = (printer: PrinterDto) =>
+  !isPrinterInMaintenance(printer) && !printer?.enabled;
+
+export const isPrinterInMaintenance = (printer?: PrinterDto) =>
+  !printer?.enabled && printer?.disabledReason?.length;
+
+export const isPrinterIdling = (printer: PrinterDto, printerState: PrinterStateDto) =>
+  toCurrentState(printerState)?.flags &&
+  !toCurrentState(printerState).flags.printing &&
+  toCurrentState(printerState).flags.operational &&
+  !isPrinterDisabled(printer) &&
+  !isPrinterInMaintenance(printer);
