@@ -44,7 +44,7 @@ jobs:
 
       # Build bundle
       - run: yarn set version berry
-      - run: yarn install --immutable --immutable-cache --check-cache
+      - run: yarn install --immutable
       - run: yarn run build
 
       # Clear fields that make installing harder
