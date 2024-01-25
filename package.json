@@ -1,7 +1,6 @@
 {
   "name": "@fdm-monster/client",
   "version": "1.5.0-rc5",
-  "private": false,
   "author": "David Zwart",
   "license": "AGPL-3.0-or-later",
   "repository": {
@@ -10,6 +9,7 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:production": "vue-cli-service serve --mode production",
     "build": "vue-cli-service build --skip-plugins pwa,workbox",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
@@ -77,5 +77,6 @@
     "vue-template-compiler": "2.7.16",
     "vuetify-loader": "1.9.2",
     "webpack": "5.90.0"
-  }
+  },
+  "packageManager": "yarn@4.0.2"
 }
