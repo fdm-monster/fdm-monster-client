@@ -43,6 +43,7 @@ jobs:
           echo "CLIENT_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
 
       # Build bundle
+      - run: yarn set version berry
       - run: yarn install --immutable --immutable-cache --check-cache
       - run: yarn run build
 
