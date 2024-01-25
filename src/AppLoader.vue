@@ -4,14 +4,14 @@
       <GridLoader v-if="loading" :size="20" class="ma-auto" color="#a70015" />
       <br />
 
-      <div v-if="errorCaught">
+      <div v-if="errorCaught" style="margin: 50px">
         <h1>FDM Monster Server Error</h1>
         <p>Did not expect this answer from the server. Please check your configuration and logs.</p>
         <v-sheet class="pa-4 rounded" color="grey darken-2" width="80%">
           Details:
           <div class="mt-2 mb-2">{{ JSON.stringify(errorCaught, null, 4) }}</div>
-          <div class="mt-2 mb-2" v-if="errorUrl">Original URL: {{ errorUrl }}</div>
-          <div class="mt-2 mb-2" v-if="errorResponse">Response body: {{ errorResponse }}</div>
+          <div v-if="errorUrl" class="mt-2 mb-2">Original URL: {{ errorUrl }}</div>
+          <div v-if="errorResponse" class="mt-2 mb-2">Response body: {{ errorResponse }}</div>
           <br />
           <v-btn class="mb-2" color="secondary" @click="copyError()">
             <v-icon class="mr-2">content_copy</v-icon>

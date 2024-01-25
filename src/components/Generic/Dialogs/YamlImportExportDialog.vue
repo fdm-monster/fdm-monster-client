@@ -19,7 +19,7 @@
             <v-file-input
               v-model="importFile"
               accept=".yaml"
-              label="Select a YAML file for import"
+              label="Select a YAML file for import *"
             ></v-file-input>
           </div>
           <div v-else>
