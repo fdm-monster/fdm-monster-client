@@ -12,6 +12,7 @@ import {
   isPrinterInMaintenance,
   isPrinterPrinting,
 } from "@/shared/printer-state.constants";
+import { BatchService } from "@/backend/batch.service";
 
 interface State {
   printers: PrinterDto[];
@@ -208,7 +209,7 @@ export const usePrinterStore = defineStore("Printers", {
 
       this.clearSelectedPrinters();
 
-      const results = await PrinterFileService.batchReprintFiles(printerIds);
+      const results = await BatchService.batchReprintFiles(printerIds);
       console.debug(results);
     },
   },

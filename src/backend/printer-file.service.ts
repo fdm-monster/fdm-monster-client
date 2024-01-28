@@ -23,11 +23,6 @@ export class PrinterFileService extends BaseService {
     return (await this.getApi(path)) as PrinterFileDto[];
   }
 
-  static async batchReprintFiles(printerIds: IdType[]) {
-    const path = ServerApi.printerFilesBatchReprintRoute;
-    return await this.postApi(path, { printerIds });
-  }
-
   static async selectAndPrintFile(printerId: IdType, filePath: string, print = true) {
     const path = ServerApi.printerFilesSelectAndPrintRoute(printerId);
     return await this.postApi(path, { filePath, print });

@@ -1,5 +1,6 @@
 import { BaseService } from "./base.service";
 import { IdType } from "@/utils/id.type";
+import { ServerApi } from "@/backend/server.api";
 
 export class BatchService extends BaseService {
   static async batchConnectUsb(printerIds: IdType[]) {
@@ -12,5 +13,15 @@ export class BatchService extends BaseService {
 
   static async batchToggleEnabled(printerIds: IdType[], enabled: boolean) {
     return await this.postApi(`api/batch/toggle-enabled`, { printerIds, enabled });
+  }
+
+  static async batchGetLastPrintedFiles(printerIds: IdType[]) {
+    const path = ServerApi.batchGetLastPrintedFilesRoute;
+    return await this.postApi(path, { printerIds });
+  }
+
+  static async batchReprintFiles(printerIds: IdType[]) {
+    const path = ServerApi.batchReprintFilesRoute;
+    return await this.postApi(path, { printerIds });
   }
 }

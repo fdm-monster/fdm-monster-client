@@ -35,7 +35,7 @@ export const useDialogsStore = defineStore("Dialog", {
     },
   },
   actions: {
-    openDialog(id: DialogName, context?: any) {
+    openDialog<T = any>(id: DialogName, context?: T) {
       let dialog = this.dialogsById[id];
       if (!dialog) {
         dialog = this.registerDialogReference(id);
