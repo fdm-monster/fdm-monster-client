@@ -9,65 +9,57 @@
     <slot></slot>
   </v-dialog>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
-import { usePrinterStore } from "../../../store/printer.store";
+
+<script lang="ts" setup>
+import { computed, onBeforeUnmount, onMounted } from "vue";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { onKeyStroke } from "@vueuse/core";
+import { useDialog } from "@/shared/dialog.composable";
 
-export default defineComponent({
-  name: "BaseDialog",
-  components: {},
-  setup: () => {
-    return {
-      printersStore: usePrinterStore(),
-      dialogsStore: useDialogsStore(),
-    };
+const props = defineProps({
+  id: {
+    type: String as () => DialogName,
+    required: true,
   },
-  async created() {
-    onKeyStroke("Escape", (e) => {
-      if (this.showingDialog) {
-        e.preventDefault();
-        this.emitEscape();
-      }
-    });
+  maxWidth: {
+    type: String,
+    default: "400px",
   },
-  async mounted() {
-    this.dialogsStore.registerDialogReference(this.id);
-  },
-  beforeDestroy() {
-    this.dialogsStore.unregisterDialogReference(this.id);
-  },
-  props: {
-    id: {
-      type: String as () => DialogName,
-      required: true,
-    },
-    maxWidth: {
-      type: String,
-      default: "400px",
-    },
-  },
-  computed: {
-    dialog() {
-      return this.id ? this.dialogsStore.dialogsById[this.id] : undefined;
-    },
-    showingDialog() {
-      if (!this.id) return;
-
-      const isOpened = this.dialogsStore.isDialogOpened(this.id);
-      if (isOpened) {
-        console.debug(`[BaseDialog ${this.id}] Showing dialog: ${this.dialog?.opened}`);
-      }
-      return isOpened;
-    },
-  },
-  methods: {
-    emitEscape() {
-      this.$emit("escape");
-    },
-  },
-  watch: {},
 });
+const dialogsStore = useDialogsStore();
+const emit = defineEmits(["escape", "opened"]);
+const dialog = useDialog(props.id);
+
+function onOpened(input: any) {
+  emit("opened", input);
+}
+
+onMounted(async () => {
+  onKeyStroke("Escape", (e) => {
+    if (showingDialog.value) {
+      e.preventDefault();
+      emitEscape();
+    }
+  });
+  dialogsStore.registerDialogReference(props.id, onOpened);
+});
+
+onBeforeUnmount(() => {
+  dialogsStore.unregisterDialogReference(props.id);
+});
+
+const showingDialog = computed(() => {
+  if (!props.id) return;
+
+  const isOpened = dialogsStore.isDialogOpened(props.id);
+  if (isOpened) {
+    console.debug(`[BaseDialog ${props.id}] Showing dialog: ${dialog?.isDialogOpened()}`);
+  }
+  return isOpened;
+});
+
+function emitEscape() {
+  emit("escape");
+}
 </script>

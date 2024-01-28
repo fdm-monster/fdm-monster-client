@@ -182,10 +182,10 @@ export default defineComponent({
     },
     openEditDialog(printer: PrinterDto) {
       this.printerStore.setUpdateDialogPrinter(printer);
-      this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
+      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
     },
     openCreatePrinterDialog() {
-      this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
+      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
     },
     clickRow(item: PrinterDto, event: any) {
       if (event.isExpanded) {
@@ -196,10 +196,10 @@ export default defineComponent({
       }
     },
     async openImportJsonPrintersDialog() {
-      this.dialogsStore.openDialog(DialogName.BatchJsonCreate);
+      this.dialogsStore.openDialogWithContext(DialogName.BatchJsonCreate);
     },
     async openYamlImportExportDialog() {
-      this.dialogsStore.openDialog(DialogName.YamlImportExport);
+      this.dialogsStore.openDialogWithContext(DialogName.YamlImportExport);
     },
     async toggleEnabled(event: any, printer: PrinterDto) {
       if (!printer.id) {

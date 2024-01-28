@@ -49,7 +49,7 @@ Sentry.init({
 
 Vue.use(PiniaVuePlugin);
 Vue.use(VueRouter);
-Vue.component(BaseDialog.name, BaseDialog);
+Vue.component("BaseDialog", BaseDialog);
 
 Vue.config.errorHandler = (err) => {
   if (err instanceof AxiosError) {

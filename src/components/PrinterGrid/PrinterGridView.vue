@@ -91,6 +91,7 @@ import { useGridStore } from "@/store/grid.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { useDialog } from "@/shared/dialog.composable";
 
 const gridStore = useGridStore();
 const printersStore = usePrinterStore();
@@ -118,10 +119,10 @@ const clearSelectedPrinters = () => {
 };
 
 const batchReprintFiles = async () => {
-  dialogsStore.openDialog(
-    DialogName.BatchReprintDialog,
+  const output = await useDialog(DialogName.BatchReprintDialog).handleAsync(
     printersStore.selectedPrinters?.map((p) => p.id)
   );
+  console.log("Dialog completed", output);
   // await printersStore.batchReprintFiles();
 };
 
