@@ -76,8 +76,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import { computed, defineComponent, onMounted, ref } from "vue";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
 import { totalVuetifyColumnCount } from "@/shared/printer-grid.constants";
 import { usePrinterStore } from "@/store/printer.store";
@@ -87,75 +87,44 @@ import { dragAppId, INTENT, PrinterPlace } from "@/shared/drag.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFloorStore } from "@/store/floor.store";
 
-export default defineComponent({
-  components: { PrinterGridTile },
-  data(): {
-    maxColumnUnits: number;
-  } {
-    return {
-      maxColumnUnits: totalVuetifyColumnCount,
-    };
-  },
-  setup() {
-    console.debug("Setup grid");
-    return {
-      printerStore: usePrinterStore(),
-      floorStore: useFloorStore(),
-      settingsStore: useSettingsStore(),
-      gridStore: useGridStore(),
-    };
-  },
-  async created() {
-    await this.printerStore.loadPrinters();
-    await this.floorStore.loadFloors();
-  },
-  computed: {
-    printerMatrix() {
-      return this.floorStore.gridSortedPrinters;
-    },
-    columnWidth() {
-      return totalVuetifyColumnCount / this.columns;
-    },
-    columns() {
-      return this.settingsStore.gridCols / 2;
-    },
-    rows() {
-      return this.settingsStore.gridRows / 2;
-    },
-    printers() {
-      return this.printerStore.printers;
-    },
-    selectedFloorLevel() {
-      return this.floorStore.selectedFloor?.floor;
-    },
-  },
-  methods: {
-    onDragStart(printer: PrinterDto, ev: DragEvent) {
-      if (!ev.dataTransfer) return;
-      if (!printer.id) return;
+const maxColumnUnits = ref(totalVuetifyColumnCount);
+console.debug("Setup grid");
 
-      ev.dataTransfer.setData(
-        "text",
-        JSON.stringify({
-          appId: dragAppId,
-          intent: INTENT.PRINTER_PLACE,
-          printerId: printer.id,
-        } as PrinterPlace)
-      );
-    },
-    getPrinter(col: number, row: number) {
-      const x = col;
-      const y = row;
-      if (!this.printerMatrix?.length || !this.printerMatrix[x]) return undefined;
-      return this.printerMatrix[x][y];
-    },
-    updateGridMatrix() {
-      this.printerMatrix = this.floorStore.gridSortedPrinters;
-    },
-  },
-  async mounted() {},
-  beforeDestroy() {},
+const printerStore = usePrinterStore();
+const floorStore = useFloorStore();
+const settingsStore = useSettingsStore();
+const gridStore = useGridStore();
+
+onMounted(async () => {
+  await printerStore.loadPrinters();
+  await floorStore.loadFloors();
 });
+
+const printerMatrix = computed(() => floorStore.gridSortedPrinters);
+const columns = computed(() => settingsStore.gridCols / 2);
+const columnWidth = computed(() => totalVuetifyColumnCount / columns.value);
+const rows = computed(() => settingsStore.gridRows / 2);
+
+function onDragStart(printer: PrinterDto, ev: DragEvent) {
+  if (!ev.dataTransfer) return;
+  if (!printer.id) return;
+
+  ev.dataTransfer.setData(
+    "text",
+    JSON.stringify({
+      appId: dragAppId,
+      intent: INTENT.PRINTER_PLACE,
+      printerId: printer.id,
+    } as PrinterPlace)
+  );
+}
+
+function getPrinter(col: number, row: number) {
+  const x = col;
+  const y = row;
+  if (!printerMatrix.value?.length || !printerMatrix.value[x]) return undefined;
+  return printerMatrix.value[x][y];
+}
 </script>
 
 <style>

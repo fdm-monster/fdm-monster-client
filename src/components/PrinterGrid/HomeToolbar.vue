@@ -14,13 +14,13 @@
       </v-btn>
     </v-btn-toggle>
 
-    <v-btn color="primary" class="mt-0 ml-6" v-if="!printerStore.printers?.length" to="/printers">
+    <v-btn v-if="!printerStore.printers?.length" class="mt-0 ml-6" color="primary" to="/printers">
       You have no printers. Click here to start!
     </v-btn>
-    <v-alert color="primary" class="mt-4 ml-12" v-if="floorStore.floorlessPrinters.length">
+    <v-alert v-if="floorStore.floorlessPrinters.length" class="mt-4 ml-12" color="primary">
       <v-icon>warning</v-icon>
-      {{ floorStore.floorlessPrinters.length }} unplaced printer(s)!</v-alert
-    >
+      {{ floorStore.floorlessPrinters.length }} unplaced printer(s)!
+    </v-alert>
     <div class="ma-4 pt-6">
       <v-switch v-model="gridStore.gridEditMode" label="Printer Relocate Mode"></v-switch>
     </div>
@@ -51,41 +51,25 @@
   </v-toolbar>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import { computed, ref } from "vue";
 import { usePrinterStore } from "@/store/printer.store";
 import { useGridStore } from "@/store/grid.store";
 import { useFloorStore } from "@/store/floor.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 
-export default defineComponent({
-  name: "HomeToolbar",
-  components: {},
-  setup() {
-    return {
-      printerStore: usePrinterStore(),
-      printerStateStore: usePrinterStateStore(),
-      floorStore: useFloorStore(),
-      gridStore: useGridStore(),
-    };
-  },
-  data(): {
-    selectedFloorToggleIndex: number;
-  } {
-    return {
-      selectedFloorToggleIndex: 0,
-    };
-  },
-  computed: {
-    floors() {
-      return this.floorStore.floors;
-    },
-  },
-  methods: {
-    changeFloorIndex(index: any) {
-      this.floorStore.changeSelectedFloorByIndex(index);
-      this.selectedFloorToggleIndex = index;
-    },
-  },
+const printerStore = usePrinterStore();
+const printerStateStore = usePrinterStateStore();
+const floorStore = useFloorStore();
+const gridStore = useGridStore();
+const selectedFloorToggleIndex = ref<number>(0);
+
+const floors = computed(() => {
+  return floorStore.floors;
 });
+
+function changeFloorIndex(index: any) {
+  floorStore.changeSelectedFloorByIndex(index);
+  selectedFloorToggleIndex.value = index;
+}
 </script>
