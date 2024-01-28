@@ -89,7 +89,6 @@ import { useFeatureStore } from "@/store/features.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { useGridStore } from "@/store/grid.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
-import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialog } from "@/shared/dialog.composable";
 
@@ -98,7 +97,6 @@ const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
 const uploadsStore = useUploadsStore();
 const featureStore = useFeatureStore();
-const dialogsStore = useDialogsStore();
 const snackbar = useSnackbar();
 
 const selectedFile = ref<File | undefined>(undefined);
@@ -122,7 +120,7 @@ const batchReprintFiles = async () => {
   const output = await useDialog(DialogName.BatchReprintDialog).handleAsync(
     printersStore.selectedPrinters?.map((p) => p.id)
   );
-  console.log("Dialog completed", output);
+  console.log("[PrinterGridView] Dialog completed", output);
   // await printersStore.batchReprintFiles();
 };
 

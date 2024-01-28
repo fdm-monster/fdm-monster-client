@@ -5,7 +5,12 @@ import { watchEffect } from "vue";
 export function useDialog<T = any, O = any>(dialogId: DialogName) {
   const dialogStore = useDialogsStore();
 
-  function openDialog(context?: T) {
+  async function openDialog(context?: T) {
+    const beforeOpenedCallback = dialogStore.getBeforeOpenedCallback(dialogId);
+    if (beforeOpenedCallback) {
+      beforeOpenedCallback(context);
+    }
+
     dialogStore.openDialogWithContext(dialogId, context);
 
     const openedCallback = dialogStore.getOpenedCallback(dialogId);
@@ -22,7 +27,7 @@ export function useDialog<T = any, O = any>(dialogId: DialogName) {
     closeDialog: (output?: O) => dialogStore.closeDialog(dialogId, output),
     isDialogOpened: () => dialogStore.isDialogOpened(dialogId),
     handleAsync: async (input: T): Promise<O> => {
-      openDialog(input);
+      await openDialog(input);
 
       return new Promise<O>((resolve) => {
         watchEffect(() => {

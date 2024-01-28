@@ -2,13 +2,14 @@ import { IdType } from "@/utils/id.type";
 import { OctoPrintStatisticsDto, Prints, Refs } from "@/models/printers/printer-file.model";
 import { GcodeAnalysisDto } from "@/models/printers/gcode/gcode-analysis.model";
 
-interface ReprintFileDto {
+export interface ReprintFileDto {
   file?: CreateOrUpdatePrinterFileDto;
   reprintState: ReprintState;
   connectionState: ConnectionState | null;
   printerId: IdType;
 }
-enum ReprintState {
+
+export enum ReprintState {
   PrinterNotAvailable = 0,
   NoLastPrint = 1,
   LastPrintReady = 2,

@@ -87,7 +87,6 @@ import { dragAppId, INTENT, PrinterPlace } from "@/shared/drag.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFloorStore } from "@/store/floor.store";
 
-const maxColumnUnits = ref(totalVuetifyColumnCount);
 console.debug("Setup grid");
 
 const printerStore = usePrinterStore();

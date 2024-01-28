@@ -1,6 +1,7 @@
 import { BaseService } from "./base.service";
 import { IdType } from "@/utils/id.type";
 import { ServerApi } from "@/backend/server.api";
+import { ReprintFileDto } from "@/models/batch/reprint.dto";
 
 export class BatchService extends BaseService {
   static async batchConnectUsb(printerIds: IdType[]) {
@@ -17,11 +18,11 @@ export class BatchService extends BaseService {
 
   static async batchGetLastPrintedFiles(printerIds: IdType[]) {
     const path = ServerApi.batchGetLastPrintedFilesRoute;
-    return await this.postApi(path, { printerIds });
+    return await this.postApi<ReprintFileDto[]>(path, { printerIds });
   }
 
-  static async batchReprintFiles(printerIds: IdType[]) {
+  static async batchReprintFiles(printerPathCouples: { printerIds: IdType; path: string }[]) {
     const path = ServerApi.batchReprintFilesRoute;
-    return await this.postApi(path, { printerIds });
+    return await this.postApi(path, printerPathCouples);
   }
 }

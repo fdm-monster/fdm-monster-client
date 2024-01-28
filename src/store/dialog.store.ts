@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 
-interface DialogReference {
+interface DialogReference<T = any> {
   id: DialogName;
   opened: boolean;
-  openedCallback?: (input?: any) => any;
-  callbackRegistered: boolean;
+  beforeOpenedCallback?: (input?: T) => void;
+  openedCallback?: (input?: T) => void;
   context?: any;
   output?: any;
 }
@@ -25,6 +25,9 @@ export const useDialogsStore = defineStore("Dialog", {
   getters: {
     dialogs(): DialogReference[] {
       return this.ids.map((i) => this.dialogsById[i]);
+    },
+    getBeforeOpenedCallback() {
+      return (id: DialogName) => this.dialogsById[id]?.beforeOpenedCallback;
     },
     getOpenedCallback() {
       return (id: DialogName) => this.dialogsById[id]?.openedCallback;
@@ -77,7 +80,13 @@ export const useDialogsStore = defineStore("Dialog", {
       delete this.dialogsById[id];
       this.ids = this.ids.filter((i) => i !== id);
     },
-    registerDialogReference(id?: DialogName, openedCallback?: (input?: any) => any) {
+    registerDialogReference<T = any>(
+      id?: DialogName,
+      callbacks?: {
+        beforeOpenedCallback?: (input?: T) => void;
+        openedCallback?: (input?: T) => void;
+      }
+    ) {
       if (!id) {
         throw new Error("Cannot unregister undefined dialog reference");
       }
@@ -92,8 +101,8 @@ export const useDialogsStore = defineStore("Dialog", {
       const dialogRef = {
         id,
         opened: false,
-        openedCallback,
-        callbackRegistered: !!openedCallback,
+        beforeOpenedCallback: callbacks?.beforeOpenedCallback,
+        openedCallback: callbacks?.openedCallback,
       };
       this.dialogsById[id] = dialogRef;
       this.ids.push(id);

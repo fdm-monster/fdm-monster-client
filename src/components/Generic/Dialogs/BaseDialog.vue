@@ -28,11 +28,15 @@ const props = defineProps({
   },
 });
 const dialogsStore = useDialogsStore();
-const emit = defineEmits(["escape", "opened"]);
+const emit = defineEmits(["escape", "opened", "beforeOpened"]);
 const dialog = useDialog(props.id);
 
-function onOpened(input: any) {
-  emit("opened", input);
+function openedCallback(input: any) {
+  return emit("opened", input);
+}
+
+function beforeOpenedCallback(input: any) {
+  return emit("beforeOpened", input);
 }
 
 onMounted(async () => {
@@ -42,7 +46,10 @@ onMounted(async () => {
       emitEscape();
     }
   });
-  dialogsStore.registerDialogReference(props.id, onOpened);
+  dialogsStore.registerDialogReference(props.id, {
+    beforeOpenedCallback,
+    openedCallback,
+  });
 });
 
 onBeforeUnmount(() => {
