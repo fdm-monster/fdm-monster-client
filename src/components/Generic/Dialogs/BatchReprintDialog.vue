@@ -10,16 +10,20 @@
       <v-card-title>
         <span class="text-h5"> Batch - Submit Reprint Jobs </span>
       </v-card-title>
-      <v-alert v-if="errorLoading?.length" color="danger">
+      <v-alert v-if="errorLoading?.length" color="error">
         {{ errorLoading }}
       </v-alert>
       <span v-if="loading"> Loading... </span>
       <div v-else>
-        <div v-for="print of data" :key="print.printerId">
-          Printer State: <v-chip>{{ print.connectionState }}</v-chip> <br />
+        <div v-for="print of reprintableFiles" :key="print.printerId">
+          Printer State:
+          <v-chip>{{ print.connectionState }}</v-chip>
+          <br />
           Printer File: {{ print.file?.path }}
-          <VImg width="150" src="img/thumbail_unknown.jpg" />
+          <!--          <VImg width="150" src="img/thumbail_unknown.jpg" />-->
         </div>
+
+        <VBtn @click="submitBatchReprints()">Submit Batch Reprint</VBtn>
       </div>
     </v-card>
   </BaseDialog>
@@ -32,12 +36,13 @@ import { BatchService } from "@/backend/batch.service";
 import { IdType } from "@/utils/id.type";
 import { ReprintFileDto } from "@/models/batch/reprint.dto";
 import { usePrinterStore } from "@/store/printer.store";
+import { errorSummary } from "@/utils/error.utils";
 
 const printerStore = usePrinterStore();
 const inputPrinterIds = ref();
 const dialog = useDialog(DialogName.BatchReprintDialog);
 const loading = ref(false);
-const data = ref<ReprintFileDto[]>([]);
+const reprintableFiles = ref<ReprintFileDto[]>([]);
 const errorLoading = ref("");
 
 onMounted(() => {
@@ -56,7 +61,7 @@ function onBeforeDialogOpened(_: IdType[]) {
 async function onDialogOpened(printerIds: IdType[]) {
   inputPrinterIds.value = printerIds;
   try {
-    data.value = await BatchService.batchGetLastPrintedFiles(inputPrinterIds.value);
+    reprintableFiles.value = await BatchService.batchGetLastPrintedFiles(inputPrinterIds.value);
   } catch (e: any) {
     errorLoading.value = e.code.toString() ?? "";
   }
@@ -65,10 +70,18 @@ async function onDialogOpened(printerIds: IdType[]) {
 
 async function submitBatchReprints() {
   try {
-    await BatchService.batchReprintFiles([]);
+    await BatchService.batchReprintFiles(
+      reprintableFiles.value
+        .filter((v) => v.file?.path)
+        .map((v) => ({
+          printerId: v.printerId,
+          path: v.file?.path || "",
+        }))
+    );
     printerStore.clearSelectedPrinters();
-  } catch (e) {
-    errorLoading.value = e.toString();
+    closeDialog();
+  } catch (e: any) {
+    errorLoading.value = errorSummary(e);
   }
 }
 

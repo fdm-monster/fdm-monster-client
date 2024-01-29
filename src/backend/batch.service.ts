@@ -21,8 +21,8 @@ export class BatchService extends BaseService {
     return await this.postApi<ReprintFileDto[]>(path, { printerIds });
   }
 
-  static async batchReprintFiles(printerPathCouples: { printerIds: IdType; path: string }[]) {
+  static async batchReprintFiles(prints: { printerId: IdType; path: string }[]) {
     const path = ServerApi.batchReprintFilesRoute;
-    return await this.postApi(path, printerPathCouples);
+    return await this.postApi(path, { prints });
   }
 }

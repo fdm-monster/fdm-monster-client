@@ -47,7 +47,7 @@
             <v-icon class="pr-2" small>delete</v-icon>
             Clear all ({{ selectedPrinters.length }})
           </v-btn>
-          <v-btn class="ml-2" color="primary" x-small @click="$refs.fileUpload.click()">
+          <v-btn class="ml-2" color="primary" x-small @click="$refs.fileUpload?.click()">
             Select gcode file
           </v-btn>
           <v-btn
