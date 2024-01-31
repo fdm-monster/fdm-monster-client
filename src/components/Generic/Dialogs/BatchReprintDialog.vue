@@ -1,7 +1,7 @@
 <template>
   <BaseDialog
     :id="dialog.dialogId"
-    max-width="700px"
+    max-width="900px"
     @beforeOpened="onBeforeDialogOpened"
     @escape="closeDialog()"
     @opened="onDialogOpened"
@@ -10,21 +10,42 @@
       <v-card-title>
         <span class="text-h5"> Batch - Submit Reprint Jobs </span>
       </v-card-title>
-      <v-alert v-if="errorLoading?.length" color="error">
-        {{ errorLoading }}
-      </v-alert>
-      <span v-if="loading"> Loading... </span>
-      <div v-else>
-        <div v-for="print of reprintableFiles" :key="print.printerId">
-          Printer State:
-          <v-chip>{{ print.connectionState }}</v-chip>
-          <br />
-          Printer File: {{ print.file?.path }}
-          <!--          <VImg width="150" src="img/thumbail_unknown.jpg" />-->
-        </div>
+      <v-card-text>
+        <v-alert v-if="errorLoading?.length" color="error">
+          {{ errorLoading }}
+        </v-alert>
+        <span v-if="loading"> Loading... </span>
+        <div v-else>
+          <div>Checked printerIds: {{ selectedPrints.join(", ") }}</div>
+          <div
+            v-for="print of reprintableFiles"
+            :key="print.printerId"
+            style="border: 1px solid gray; padding: 10px"
+          >
+            <v-checkbox
+              v-model="selectedPrints"
+              :value="print.printerId"
+              :multiple="true"
+            ></v-checkbox>
+            Printer State:
+            <v-chip>{{ print.connectionState }}</v-chip>
+            <br />
+            Printer File: {{ print.file?.path }} <br />
+            <v-chip v-if="print.reprintState == 2">Print Ready</v-chip>
+            <v-chip v-else-if="print.reprintState == 1">No Reprint Available</v-chip>
+            <v-chip v-else>Printer Not Available</v-chip>
+          </div>
 
-        <VBtn @click="submitBatchReprints()">Submit Batch Reprint</VBtn>
-      </div>
+          <VBtn @click="submitBatchReprints()">Submit Batch Reprint</VBtn>
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-card-actions>
+          <em class="red--text">* indicates required field</em>
+          <v-spacer></v-spacer>
+          <v-btn text @click="dialog.closeDialog()">Close</v-btn>
+        </v-card-actions>
+      </v-card-actions>
     </v-card>
   </BaseDialog>
 </template>
@@ -39,6 +60,7 @@ import { usePrinterStore } from "@/store/printer.store";
 import { errorSummary } from "@/utils/error.utils";
 
 const printerStore = usePrinterStore();
+const selectedPrints = ref([]);
 const inputPrinterIds = ref();
 const dialog = useDialog(DialogName.BatchReprintDialog);
 const loading = ref(false);
