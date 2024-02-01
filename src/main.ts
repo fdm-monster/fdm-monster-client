@@ -15,6 +15,7 @@ import { useSnackbar } from "./shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
+import { version as packageJsonVersion } from "../package.json";
 
 Vue.config.productionTip = false;
 Vue.config.silent = true;
@@ -34,6 +35,7 @@ Sentry.init({
     }),
     replayIntegration(),
   ],
+  release: packageJsonVersion,
   enabled: process.env.NODE_ENV === "production",
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
