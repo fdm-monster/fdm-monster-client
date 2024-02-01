@@ -10,11 +10,11 @@ import { registerFileDropDirective } from "@/directives/file-upload.directive";
 import { PiniaVuePlugin } from "pinia";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
 import * as Sentry from "@sentry/vue";
-import { BrowserTracing } from "@sentry/vue";
-import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
+import { BrowserTracing, captureException } from "@sentry/vue";
 import { useSnackbar } from "./shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { VueQueryPlugin } from "@tanstack/vue-query";
+import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 
 Vue.config.productionTip = false;
 Vue.config.silent = true;
@@ -24,7 +24,6 @@ configureVeeValidate();
 registerFileDropDirective();
 registerPrinterPlaceDirective();
 
-console.debug("Production", process.env.NODE_ENV === "production");
 Sentry.init({
   Vue,
   dsn: "https://f64683e8d1cb4ac291434993cff1bf9b@o4503975545733120.ingest.sentry.io/4503975546912768",
@@ -69,6 +68,8 @@ Vue.config.errorHandler = (err) => {
     subtitle: err.message,
     timeout: 5000,
   });
+
+  captureException(err);
 };
 
 Vue.use(VueQueryPlugin);

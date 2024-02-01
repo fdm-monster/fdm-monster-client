@@ -76,6 +76,7 @@ import { RouteNames } from "@/router/route-names";
 import { AppService } from "@/backend/app.service";
 import { AxiosError } from "axios";
 import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
+import { captureException } from "@sentry/vue";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -129,6 +130,7 @@ async function loadAppWithAuthenticationReady() {
       title: "Error",
       subtitle: "Error when loading settings, features and/or profile.",
     });
+    captureException(e);
   }
 
   await socketIoClient.setupSocketConnection();
@@ -239,6 +241,8 @@ onBeforeMount(async () => {
     loading.value = false;
     errorCaught.value = e;
     errorUrl.value = "api/test";
+    // Disable capture to sentry when it overloads
+    captureException(e);
     return;
   }
 
@@ -295,6 +299,7 @@ onBeforeMount(async () => {
     errorCaught.value = (e as AxiosError).message;
     errorUrl.value = (e as AxiosError).config?.url;
     errorResponse.value = (e as AxiosError).response?.data;
+    captureException(e);
     return;
   }
 
