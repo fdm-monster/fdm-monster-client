@@ -10,7 +10,7 @@ import { registerFileDropDirective } from "@/directives/file-upload.directive";
 import { PiniaVuePlugin } from "pinia";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
 import * as Sentry from "@sentry/vue";
-import { BrowserTracing, captureException } from "@sentry/vue";
+import { BrowserTracing, captureException, replayIntegration } from "@sentry/vue";
 import { useSnackbar } from "./shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { VueQueryPlugin } from "@tanstack/vue-query";
@@ -32,7 +32,7 @@ Sentry.init({
       routingInstrumentation: Sentry.vueRouterInstrumentation(appRouter),
       // tracingOrigins: ["localhost", "monsterpi.local", /^\//],
     }),
-    new Sentry.Replay(),
+    replayIntegration(),
   ],
   enabled: process.env.NODE_ENV === "production",
   // Set tracesSampleRate to 1.0 to capture 100%
