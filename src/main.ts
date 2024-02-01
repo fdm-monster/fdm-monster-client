@@ -10,11 +10,12 @@ import { registerFileDropDirective } from "@/directives/file-upload.directive";
 import { PiniaVuePlugin } from "pinia";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
 import * as Sentry from "@sentry/vue";
-import { BrowserTracing } from "@sentry/vue";
-import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
+import { BrowserTracing, captureException, replayIntegration } from "@sentry/vue";
 import { useSnackbar } from "./shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { VueQueryPlugin } from "@tanstack/vue-query";
+import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
+import { version as packageJsonVersion } from "../package.json";
 
 Vue.config.productionTip = false;
 Vue.config.silent = true;
@@ -32,8 +33,9 @@ Sentry.init({
       routingInstrumentation: Sentry.vueRouterInstrumentation(appRouter),
       // tracingOrigins: ["localhost", "monsterpi.local", /^\//],
     }),
-    new Sentry.Replay(),
+    replayIntegration(),
   ],
+  release: packageJsonVersion,
   enabled: process.env.NODE_ENV === "production",
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
@@ -68,6 +70,8 @@ Vue.config.errorHandler = (err) => {
     subtitle: err.message,
     timeout: 5000,
   });
+
+  captureException(err);
 };
 
 Vue.use(VueQueryPlugin);

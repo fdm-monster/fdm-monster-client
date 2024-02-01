@@ -25,6 +25,10 @@
               <v-icon class="pr-2">save</v-icon>
               Save
             </v-btn>
+            <v-btn color="secondary" @click="sendTestSentryException()">
+              <v-icon class="pr-2">bug_report</v-icon>
+              Test Error
+            </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -68,6 +72,7 @@ import { SettingsService } from "@/backend";
 import { setSentryEnabled } from "@/utils/sentry.util";
 import { ServerPrivateService } from "@/backend/server-private.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import { captureException } from "@sentry/vue";
 
 const snackBar = useSnackbar();
 const settingsStore = useSettingsStore();
@@ -89,6 +94,19 @@ onMounted(async () => {
 async function saveSentryDiagnosticsSettings() {
   await SettingsService.setSentryDiagnosticsSettings(sentryDiagnosticsEnabled.value);
   setSentryEnabled(sentryDiagnosticsEnabled.value);
+}
+
+async function sendTestSentryException() {
+  const text = `Test Error ${Date.now()} Sentry enabled: ${sentryDiagnosticsEnabled.value}`;
+  try {
+    throw new Error(text);
+  } catch (e) {
+    captureException(e);
+    snackBar.openInfoMessage({
+      title: "Test report was sent",
+      subtitle: `Content: ${text}`,
+    });
+  }
 }
 
 async function downloadLogDump() {

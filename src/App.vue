@@ -52,8 +52,7 @@ import { uploadProgressTest } from "./utils/test.util";
 import { useAuthStore } from "./store/auth.store";
 import AppLoader from "./AppLoader.vue";
 import AddOrUpdateCameraStreamDialog from "@/components/Generic/Dialogs/AddOrUpdateCameraStreamDialog.vue";
-
-interface Data {}
+import { sleep } from "@/utils/time.utils";
 
 export default defineComponent({
   name: "AppView",
@@ -91,15 +90,11 @@ export default defineComponent({
 
     uploadProgressTest(false);
   },
-  beforeDestroy() {},
-  props: {},
-  data: (): Data => ({}),
   computed: {
     queuedUploads() {
       return this.uploadsStore.queuedUploads;
     },
   },
-  methods: {},
   watch: {
     async queuedUploads() {
       await this.uploadsStore.handleNextUpload();
