@@ -25,6 +25,7 @@ configureVeeValidate();
 registerFileDropDirective();
 registerPrinterPlaceDirective();
 
+console.debug("Production", process.env.NODE_ENV === "production");
 Sentry.init({
   Vue,
   dsn: "https://f64683e8d1cb4ac291434993cff1bf9b@o4503975545733120.ingest.sentry.io/4503975546912768",
