@@ -146,7 +146,7 @@ export function interpretStates(
   }
 }
 
-const toCurrentState = (printerState: PrinterStateDto) => printerState?.current?.payload.state;
+const toCurrentState = (printerState: PrinterStateDto) => printerState?.current?.payload?.state;
 
 export const isPrinterPrinting = (printerState: PrinterStateDto) =>
   toCurrentState(printerState)?.flags.printing;
