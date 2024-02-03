@@ -25,6 +25,7 @@
     <BatchJsonCreateDialog />
     <YamlImportExportDialog />
     <FileExplorerSideNav />
+    <BatchReprintDialog />
   </v-app>
 </template>
 
@@ -42,6 +43,7 @@ import { useSettingsStore } from "./store/settings.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
 import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
+import BatchReprintDialog from "@/components/Generic/Dialogs/BatchReprintDialog.vue";
 import { useFeatureStore } from "./store/features.store";
 import { useSnackbar } from "./shared/snackbar.composable";
 import AppProgressSnackbar from "./components/Generic/Snackbars/AppProgressSnackbar.vue";
@@ -71,6 +73,7 @@ export default defineComponent({
     PrinterMaintenanceDialog,
     FileExplorerSideNav,
     BatchJsonCreateDialog,
+    BatchReprintDialog,
   },
   setup: () => {
     return {

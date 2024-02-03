@@ -273,7 +273,7 @@ export default defineComponent({
     },
     clickOpenSettings() {
       this.printerStore.setUpdateDialogPrinter(this.printer);
-      this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
+      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
     },
     async clickEmergencyStop() {
       if (!this.printerId) return;

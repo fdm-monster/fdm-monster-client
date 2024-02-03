@@ -1,4 +1,14 @@
 {
+  "vueCompilerOptions": {
+    "experimentalModelPropName": {
+      "checked": {
+        "input": {
+          "type": "checkbox"
+        },
+        "v-checkbox": true
+      }
+    }
+  },
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",

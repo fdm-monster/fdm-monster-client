@@ -1,4 +1,4 @@
-import { GCodeAnalysis } from "@/models/printers/gcode/gcode-analysis.model";
+import { GcodeAnalysisDto } from "@/models/printers/gcode/gcode-analysis.model";
 
 export interface LastPrintMoment {
   date: number;
@@ -17,7 +17,7 @@ export interface Refs {
   resource: string;
 }
 
-export interface Statistics {
+export interface OctoPrintStatisticsDto {
   averagePrintTime: {
     [k: string]: number; //profile name like _default
   };
@@ -29,7 +29,7 @@ export interface Statistics {
 export interface PrinterFileDto {
   date: number;
   display: string;
-  gcodeAnalysis: GCodeAnalysis;
+  gcodeAnalysis: GcodeAnalysisDto;
   hash: string;
   name: string;
   origin: string;
@@ -37,7 +37,7 @@ export interface PrinterFileDto {
   prints: Prints;
   refs: Refs;
   size: number;
-  statistics: Statistics;
+  statistics: OctoPrintStatisticsDto;
   type: string;
   typePath: string[]; // machinecode gcode
 }

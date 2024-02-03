@@ -22,7 +22,7 @@ export interface PrintingArea {
   minZ: number;
 }
 
-export interface GCodeAnalysis {
+export interface GcodeAnalysisDto {
   dimensions: GCodeDimensions;
   estimatedPrintTime: number;
   filament: FilamentToolCollection;

@@ -10,7 +10,6 @@ import {
   isPrinterDisabled,
   isPrinterDisconnected,
   isPrinterInMaintenance,
-  isPrinterPrinting,
 } from "@/shared/printer-state.constants";
 
 interface State {
@@ -199,17 +198,6 @@ export const usePrinterStore = defineStore("Printers", {
       if (answer) {
         await PrinterJobService.stopPrintJob(printer.id);
       }
-    },
-    async batchReprintFiles() {
-      const printerIds = this.selectedPrinters.map((p) => p.id);
-      if (!printerIds.length) {
-        throw new Error("No printers selected to reprint files");
-      }
-
-      this.clearSelectedPrinters();
-
-      const results = await PrinterFileService.batchReprintFiles(printerIds);
-      console.debug(results);
     },
   },
 });

@@ -14,10 +14,14 @@ export class ServerApi {
 
   static floorRoute = `${ServerApi.base}/floor`;
 
+  static batchRoute = `${ServerApi.base}/batch`;
+  static batchGetLastPrintedFilesRoute = `${ServerApi.batchRoute}/reprint/list`;
+  static batchReprintFilesRoute = `${ServerApi.batchRoute}/reprint/execute`;
+
   static printCompletionRoute = `${ServerApi.base}/print-completion`;
 
   static printerFilesRoute = `${ServerApi.base}/printer-files`;
-  static printerFilesBatchReprintRoute = `${ServerApi.printerFilesRoute}/batch/reprint-files`;
+
   static printerFilesPurgeRoute = `${ServerApi.printerFilesRoute}/purge`;
 
   static customGCodeRoute = `${ServerApi.base}/custom-gcode`;

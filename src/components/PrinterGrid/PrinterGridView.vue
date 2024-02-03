@@ -47,7 +47,7 @@
             <v-icon class="pr-2" small>delete</v-icon>
             Clear all ({{ selectedPrinters.length }})
           </v-btn>
-          <v-btn class="ml-2" color="primary" x-small @click="$refs.fileUpload.click()">
+          <v-btn class="ml-2" color="primary" x-small @click="$refs.fileUpload?.click()">
             Select gcode file
           </v-btn>
           <v-btn
@@ -75,8 +75,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import { computed, ref } from "vue";
 import PrinterGrid from "@/components/PrinterGrid/PrinterGrid.vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
@@ -89,92 +89,80 @@ import { useFeatureStore } from "@/store/features.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { useGridStore } from "@/store/grid.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { useDialog } from "@/shared/dialog.composable";
 
-export default defineComponent({
-  name: "PrinterGridView",
-  components: { PrinterGrid, HomeToolbar },
-  setup: () => {
-    return {
-      gridStore: useGridStore(),
-      printersStore: usePrinterStore(),
-      printerStateStore: usePrinterStateStore(),
-      uploadsStore: useUploadsStore(),
-      featureStore: useFeatureStore(),
-      snackbar: useSnackbar(),
-    };
-  },
-  async created() {},
-  async mounted() {},
-  props: {},
-  data(): {
-    selectedFile?: File;
-    viewedPrinter?: PrinterDto;
-  } {
-    return {
-      selectedFile: undefined,
-      viewedPrinter: undefined,
-    };
-  },
-  computed: {
-    isBatchReprintFeatureAvailable(): boolean {
-      return this.featureStore.hasFeature("batchReprintCalls");
-    },
-    hasPrintersSelected(): boolean {
-      return this.selectedPrinters?.length > 0;
-    },
-    selectedPrinters() {
-      return this.printersStore.selectedPrinters;
-    },
-    fileUpload() {
-      return this.$refs.fileUpload as InstanceType<typeof HTMLInputElement>;
-    },
-  },
-  methods: {
-    deselectFile() {
-      (this.$refs.fileUpload as InstanceType<typeof HTMLInputElement>)!.value = "";
-      this.selectedFile = undefined;
-    },
-    formatBytes: formatBytes,
-    clearSelectedPrinters() {
-      this.printersStore.clearSelectedPrinters();
-    },
-    async batchReprintFiles() {
-      await this.printersStore.batchReprintFiles();
-    },
-    async uploadFile() {
-      const selectedPrinters = this.selectedPrinters;
-      const accessiblePrinters = selectedPrinters.filter((p) =>
-        this.printerStateStore.isApiResponding(p.id)
-      );
+const gridStore = useGridStore();
+const printersStore = usePrinterStore();
+const printerStateStore = usePrinterStateStore();
+const uploadsStore = useUploadsStore();
+const featureStore = useFeatureStore();
+const snackbar = useSnackbar();
 
-      if (!this.selectedFile) return;
+const selectedFile = ref<File | undefined>(undefined);
+const isBatchReprintFeatureAvailable = computed(() => featureStore.hasFeature("batchReprintCalls"));
+const hasPrintersSelected = computed(() => printersStore.selectedPrinters.length > 0);
+const selectedPrinters = computed(() => printersStore.selectedPrinters);
+const fileUpload = ref<HTMLInputElement | null>(null);
 
-      // Checking and informing user
-      const incompleteListCount = selectedPrinters.length - accessiblePrinters.length;
-      if (incompleteListCount > 0) {
-        this.snackbar.openInfoMessage({
-          title: `${incompleteListCount} printers inaccessible`,
-          subtitle: "These were skipped from uploading.",
-        });
-      }
+const deselectFile = () => {
+  if (fileUpload.value) {
+    fileUpload.value.value = "";
+    selectedFile.value = undefined;
+  }
+};
 
-      const uploads = convertMultiPrinterFileToQueue(accessiblePrinters, this.selectedFile);
-      this.uploadsStore.queueUploads(uploads);
+const clearSelectedPrinters = () => {
+  printersStore.clearSelectedPrinters();
+};
 
-      this.fileUpload!.value = "";
-      this.clearSelectedPrinters();
-    },
-    filesSelected() {
-      if (!this.fileUpload.files) return (this.selectedFile = undefined);
+const batchReprintFiles = async () => {
+  const output = await useDialog(DialogName.BatchReprintDialog).handleAsync(
+    printersStore.selectedPrinters?.map((p) => p.id)
+  );
+  console.log("[PrinterGridView] Dialog completed", output);
+  // await printersStore.batchReprintFiles();
+};
 
-      this.selectedFile = this.fileUpload.files[0];
-    },
-    deselectPrinter(printer: PrinterDto) {
-      this.printersStore.toggleSelectedPrinter(printer);
-    },
-    openPrinter(printer: PrinterDto) {
-      PrintersService.openPrinterURL(printer.printerURL);
-    },
-  },
-});
+const uploadFile = () => {
+  const selectedPrintersValue = selectedPrinters.value;
+  const accessiblePrinters = selectedPrintersValue.filter((p) =>
+    printerStateStore.isApiResponding(p.id)
+  );
+
+  if (!selectedFile.value) return;
+
+  // Checking and informing user
+  const incompleteListCount = selectedPrintersValue.length - accessiblePrinters.length;
+  if (incompleteListCount > 0) {
+    snackbar.openInfoMessage({
+      title: `${incompleteListCount} printers inaccessible`,
+      subtitle: "These were skipped from uploading.",
+    });
+  }
+
+  const uploads = convertMultiPrinterFileToQueue(accessiblePrinters, selectedFile.value);
+  uploadsStore.queueUploads(uploads);
+
+  if (fileUpload.value) {
+    fileUpload.value.value = "";
+  }
+  clearSelectedPrinters();
+};
+
+const filesSelected = () => {
+  if (fileUpload.value && fileUpload.value.files) {
+    selectedFile.value = fileUpload.value.files[0];
+  } else {
+    selectedFile.value = undefined;
+  }
+};
+
+const deselectPrinter = (printer: PrinterDto) => {
+  printersStore.toggleSelectedPrinter(printer);
+};
+
+const openPrinter = (printer: PrinterDto) => {
+  PrintersService.openPrinterURL(printer.printerURL);
+};
 </script>

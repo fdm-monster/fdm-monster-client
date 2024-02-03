@@ -181,7 +181,7 @@ export default defineComponent({
       return this.printersStore.printer(floorPrinter.printerId);
     },
     async createFloor() {
-      this.dialogsStore.openDialog(DialogName.AddOrUpdateFloorDialog);
+      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdateFloorDialog);
     },
     setEditedPrinterFloorName() {
       this.editedFloorName = this.selectedFloor.name;

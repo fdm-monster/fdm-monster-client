@@ -108,30 +108,18 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import { AppService } from "../../backend/app.service";
-import { version } from "../../../package.json";
+<script lang="ts" setup>
+import { onMounted, ref } from "vue";
+import { AppService } from "@/backend/app.service";
+import { version as clientVersion } from "../../../package.json";
 
-export default defineComponent({
-  name: "AboutView",
-  components: {},
-  setup: () => {
-    return {
-      serverVersion: ref(""),
-      monsterPiVersion: ref<string | null>(""),
-      version,
-    };
-  },
-  async created() {},
-  async mounted() {
-    const versionSpec = await AppService.getVersion();
-    this.serverVersion = versionSpec.version;
-    this.monsterPiVersion = versionSpec.monsterPi;
-  },
-  props: {},
-  computed: {},
-  methods: {},
-  watch: {},
+const serverVersion = ref("");
+const monsterPiVersion = ref<string | null>("");
+const version = ref(clientVersion);
+
+onMounted(async () => {
+  const versionSpec = await AppService.getVersion();
+  serverVersion.value = versionSpec.version;
+  monsterPiVersion.value = versionSpec.monsterPi;
 });
 </script>

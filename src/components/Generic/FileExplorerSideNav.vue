@@ -553,7 +553,7 @@ export default defineComponent({
       }
 
       this.printersStore.setMaintenanceDialogPrinter(this.storedSideNavPrinter);
-      this.dialogsStore.openDialog(DialogName.PrinterMaintenanceDialog);
+      this.dialogsStore.openDialogWithContext(DialogName.PrinterMaintenanceDialog);
       this.closeDrawer();
     },
     async refreshFiles() {
@@ -599,7 +599,7 @@ export default defineComponent({
     clickSettings() {
       if (!this.storedSideNavPrinter) return;
       this.printersStore.setUpdateDialogPrinter(this.storedSideNavPrinter);
-      this.dialogsStore.openDialog(DialogName.AddOrUpdatePrinterDialog);
+      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
       this.closeDrawer();
     },
     async clickPrintFile(file: PrinterFileDto) {
