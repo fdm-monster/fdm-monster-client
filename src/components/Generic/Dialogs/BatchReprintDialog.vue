@@ -111,7 +111,6 @@ function onBeforeDialogOpened(_: IdType[]) {
   loading.value = true;
 }
 
-// asd
 async function onDialogOpened(printerIds: IdType[]) {
   inputPrinterIds.value = printerIds;
   try {
