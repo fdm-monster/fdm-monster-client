@@ -67,12 +67,10 @@
                 isBelowMinimum(release)
               "
               :label="`${release.tag_name}${
-                !isUpgradeOrAllowedDowngrade(release, current)
-                  ? ' (cannot downgrade, '
-                  : ' (' || (isCurrentRelease(release) ? ' (current, ' : '(')
-              }${
+                isCurrentRelease(release) ? ' - currently installed ' : ''
+              } ${!isUpgradeOrAllowedDowngrade(release, current) ? '(no downgrade, ' : '('}${
                 isVersionUnstable(release)
-                  ? `${isBelowMinimum(release) ? 'below minimum' : 'unstable'})`
+                  ? `${isBelowMinimum(release) ? 'below minimum' : 'unstable version'})`
                   : ')'
               }`"
               :value="release.tag_name"
