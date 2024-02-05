@@ -1550,6 +1550,7 @@ __metadata:
     "@vueuse/integrations": "npm:10.7.2"
     axios: "npm:1.6.7"
     babel-jest: "npm:29.7.0"
+    chart.js: "npm:4.4.1"
     core-js: "npm:3.35.1"
     cypress: "npm:13.6.4"
     eslint: "npm:8.56.0"
@@ -1575,6 +1576,7 @@ __metadata:
     validator: "npm:13.11.0"
     vee-validate: "npm:3.4.15"
     vue: "npm:2.7.16"
+    vue-chartjs: "npm:5.3.0"
     vue-cli-plugin-vuetify: "npm:2.5.8"
     vue-router: "npm:3.6.5"
     vue-svg-loader: "npm:0.16.0"
@@ -2197,6 +2199,13 @@ __metadata:
     "@jridgewell/resolve-uri": "npm:^3.1.0"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
   checksum: 10c0/18cf19f88e2792c1c91515f2b629aae05f3cdbb2e60c3886e16e80725234ce26dd10144c4981c05d9366e7094498c0b4fe5c1a89f4a730d7376a4ba4af448149
+  languageName: node
+  linkType: hard
+
+"@kurkle/color@npm:^0.3.0":
+  version: 0.3.2
+  resolution: "@kurkle/color@npm:0.3.2"
+  checksum: 10c0/a9e8e3e35dcd59dec4dd4f0105919c05e24823a96347bcf152965c29e48d6290b66d5fb96c071875db752e10930724c48ce6d338fefbd65e0ce5082d5c78970e
   languageName: node
   linkType: hard
 
@@ -5191,6 +5200,15 @@ __metadata:
   version: 2.0.1
   resolution: "char-regex@npm:2.0.1"
   checksum: 10c0/ec592229ac3ef18f2ea1f5676ae9a829c37150db55fd7f709edce1bcdc9f506de22ae19388d853704806e51af71fe9239bcb7e7be583296951bfbf2a9a9763a2
+  languageName: node
+  linkType: hard
+
+"chart.js@npm:4.4.1":
+  version: 4.4.1
+  resolution: "chart.js@npm:4.4.1"
+  dependencies:
+    "@kurkle/color": "npm:^0.3.0"
+  checksum: 10c0/ef0cd10118bfa66695b109cbb331be99193b19f1ac2bb7f35f8c71aa45a355f17d1c87d5fa6727a2b026ace4c7fa8ab557e9f61a9f13f1f39f58500bbd0c26d1
   languageName: node
   linkType: hard
 
@@ -14606,6 +14624,16 @@ __metadata:
     core-util-is: "npm:1.0.2"
     extsprintf: "npm:^1.2.0"
   checksum: 10c0/37ccdf8542b5863c525128908ac80f2b476eed36a32cb944de930ca1e2e78584cc435c4b9b4c68d0fc13a47b45ff364b4be43aa74f8804f9050140f660fb660d
+  languageName: node
+  linkType: hard
+
+"vue-chartjs@npm:5.3.0":
+  version: 5.3.0
+  resolution: "vue-chartjs@npm:5.3.0"
+  peerDependencies:
+    chart.js: ^4.1.1
+    vue: ^3.0.0-0 || ^2.7.0
+  checksum: 10c0/c6aebc4434d329843fbb7c5209317fd44a5a1fb91c60b43c2e03bc999c2427c0787eb30458fa5575e26004a426b5f4c764a3bdc5c6f9793379fc7d039c0575ff
   languageName: node
   linkType: hard
 

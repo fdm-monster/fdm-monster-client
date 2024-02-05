@@ -4,6 +4,10 @@ import { ServerApi } from "@/backend/server.api";
 import { ReprintFileDto } from "@/models/batch/reprint.dto";
 
 export class BatchService extends BaseService {
+  static async batchSettingsGet<T = any>(printerIds: IdType[]) {
+    return await this.postApi<T>("api/batch/settings/get", { printerIds });
+  }
+
   static async batchConnectUsb(printerIds: IdType[]) {
     return await this.postApi("api/batch/connect/usb", { printerIds });
   }
