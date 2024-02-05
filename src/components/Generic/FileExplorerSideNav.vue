@@ -150,6 +150,35 @@
         <span>Deactivate, set under repair, without impacting print</span>
       </v-tooltip>
 
+      <v-tooltip left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item
+            class="extra-dense-list-item"
+            link
+            v-bind="attrs"
+            v-on="on"
+            @click.prevent.stop="refreshSocketState()"
+          >
+            <v-list-item-avatar>
+              <v-icon
+                :color="!isUnderMaintenance ? 'primary' : 'green'"
+                class="grey-lighten-1"
+                dark
+              >
+                autorenew
+              </v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <span>Refresh State <small>- this does not affect the print!</small></span>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <span
+          >Let FDM Monster know you are experiencing inconsistencies, reset all volatile
+          states</span
+        >
+      </v-tooltip>
+
       <v-divider></v-divider>
       <v-subheader inset>Commands</v-subheader>
 
@@ -373,9 +402,8 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { PrinterDto } from "@/models/printers/printer.model";
+<script lang="ts" setup>
+import { computed, ref, watch } from "vue";
 import { generateInitials } from "@/shared/noun-adjectives.data";
 import { PrinterFileService, PrintersService } from "@/backend";
 import { PrinterFileDto } from "@/models/printers/printer-file.model";
@@ -387,255 +415,253 @@ import { PrinterJobService } from "@/backend/printer-job.service";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { interpretStates } from "@/shared/printer-state.constants";
 import { useSettingsStore } from "@/store/settings.store";
-import { featureFlagsList } from "@/models/server/features.model";
 import { useFeatureStore } from "@/store/features.store";
 
-interface Data {
-  fileSearch?: string;
-  shownFileCache?: PrinterFileDto[];
-  drawerOpened: boolean;
-  loading: boolean;
+const printersStore = usePrinterStore();
+const printerStateStore = usePrinterStateStore();
+const dialogsStore = useDialogsStore();
+const featureStore = useFeatureStore();
+
+const fileSearch = ref<string | undefined>(undefined);
+const shownFileCache = ref<PrinterFileDto[] | undefined>(undefined);
+const drawerOpened = ref(false);
+const loading = ref(true);
+
+const storedSideNavPrinter = computed(() => printersStore.sideNavPrinter);
+const printerId = computed(() => storedSideNavPrinter.value?.id);
+const isOnline = computed(() =>
+  printerId.value ? printerStateStore.isApiResponding(printerId.value) : false
+);
+const isOperational = computed(() =>
+  printerId.value ? printerStateStore.isPrinterOperational(printerId.value) : false
+);
+
+const isEnabled = computed(() => {
+  return storedSideNavPrinter.value?.enabled;
+});
+
+const isUnderMaintenance = computed(() => {
+  return !!storedSideNavPrinter.value?.disabledReason?.length;
+});
+
+const isPrinting = computed(() => {
+  return printerId.value ? printerStateStore.isPrinterPrinting(printerId.value) : false;
+});
+
+const filesListed = computed(() => {
+  return (
+    shownFileCache.value?.filter((f) =>
+      fileSearch.value?.length
+        ? `${f.name}${f.path}`.toLowerCase().includes(fileSearch.value)
+        : true
+    ) || []
+  );
+});
+
+const isStoppable = computed(() => {
+  if (!storedSideNavPrinter.value || !printerId.value) return false;
+  return printerStateStore.isPrinterStoppable(printerId.value);
+});
+
+const isPaused = computed(() => {
+  if (!storedSideNavPrinter.value || !printerId.value) return false;
+  return printerStateStore.isPrinterPaused(printerId.value);
+});
+const canBeCleared = computed(() => {
+  if (!printerId.value) {
+    return false;
+  }
+  return shownFileCache.value?.length && printerStateStore.isApiResponding(printerId.value);
+});
+
+const currentJob = computed(() => {
+  if (!printerId.value) {
+    throw new Error("Printer ID not set, cannot get current job");
+  }
+  return printerStateStore.printerJobsById[printerId.value];
+});
+const currentPrintingFilePath = computed(() => {
+  if (!printerId.value) {
+    throw new Error("Printer ID not set, cannot get current printing file name");
+  }
+  return printerStateStore.printingFilePathsByPrinterId[printerId.value];
+});
+
+const printerState = computed(() => {
+  if (!printerId.value || !storedSideNavPrinter.value) return null;
+
+  const printerEvents = printerStateStore.printerEventsById[printerId.value];
+  const socketState = printerStateStore.socketStatesById[printerId.value];
+  const states = interpretStates(storedSideNavPrinter.value, socketState, printerEvents);
+
+  const debugInterpretedState =
+    useSettingsStore().frontendDebugSettings?.showInterpretedPrinterState;
+  if (debugInterpretedState) {
+    console.debug(
+      "[FileExplorerSideNav] rendered for printerId",
+      printerId.value,
+      states?.text,
+      states?.color,
+      states?.rgb
+    );
+  }
+  return states;
+});
+
+const refreshFiles = async () => {
+  loading.value = true;
+  const currentPrinterId = storedSideNavPrinter.value?.id;
+  if (!currentPrinterId) return;
+
+  if (printerStateStore.isApiResponding(currentPrinterId)) {
+    shownFileCache.value = await printersStore.loadPrinterFiles(currentPrinterId, false);
+  } else {
+    shownFileCache.value = await PrinterFileService.getFileCache(currentPrinterId);
+  }
+  loading.value = false;
+};
+
+const deleteFile = async (file: PrinterFileDto) => {
+  if (!printerId.value) return;
+  await printersStore.deletePrinterFile(printerId.value, file.path);
+};
+
+// ... (continue with other methods)
+
+watch(storedSideNavPrinter, async (viewedPrinter, oldVal) => {
+  drawerOpened.value = !!viewedPrinter;
+  const currentPrinterId = viewedPrinter?.id;
+  if (!viewedPrinter || !currentPrinterId) {
+    return;
+  }
+
+  if (!shownFileCache.value || viewedPrinter.id !== oldVal?.id || !oldVal) {
+    await refreshFiles();
+  }
+});
+
+watch(drawerOpened, (newVal) => {
+  if (!newVal) {
+    printersStore.setSideNavPrinter(undefined);
+  }
+});
+
+function truncateProgress(progress?: number) {
+  if (!progress) return "";
+  return progress?.toFixed(1);
 }
 
-export default defineComponent({
-  name: "FileExplorerSideNav",
-  components: {},
-  setup: () => {
-    return {
-      printersStore: usePrinterStore(),
-      printerStateStore: usePrinterStateStore(),
-      dialogsStore: useDialogsStore(),
-      featureStore: useFeatureStore(),
-    };
-  },
-  async created() {},
-  async mounted() {},
-  props: {},
-  data: (): Data => ({
-    fileSearch: undefined,
-    shownFileCache: undefined,
-    drawerOpened: false,
-    loading: true,
-  }),
-  computed: {
-    storedSideNavPrinter() {
-      return this.printersStore.sideNavPrinter;
-    },
-    printerId() {
-      return this.storedSideNavPrinter?.id;
-    },
-    isOnline() {
-      return this.printerId ? this.printerStateStore.isApiResponding(this.printerId) : false;
-    },
-    isOperational() {
-      return this.printerId ? this.printerStateStore.isPrinterOperational(this.printerId) : false;
-    },
-    isPrinting() {
-      return this.printerId ? this.printerStateStore.isPrinterPrinting(this.printerId) : false;
-    },
-    isEnabled() {
-      return this.storedSideNavPrinter?.enabled;
-    },
-    isUnderMaintenance() {
-      return !!this.storedSideNavPrinter?.disabledReason?.length;
-    },
-    filesListed() {
-      return (
-        this.shownFileCache?.filter((f) =>
-          this.fileSearch?.length
-            ? `${f.name}${f.path}`.toLowerCase().includes(this.fileSearch)
-            : true
-        ) || []
-      );
-    },
-    isStoppable() {
-      if (!this.storedSideNavPrinter || !this.printerId) return false;
-      return this.printerStateStore.isPrinterStoppable(this.printerId);
-    },
-    isPaused() {
-      if (!this.storedSideNavPrinter || !this.printerId) return false;
-      return this.printerStateStore.isPrinterPaused(this.printerId);
-    },
-    canBeCleared() {
-      if (!this.printerId) {
-        return false;
-      }
-      return this.shownFileCache?.length && this.printerStateStore.isApiResponding(this.printerId);
-    },
-    currentJob() {
-      if (!this.printerId) {
-        throw new Error("Printer ID not set, cannot get current job");
-      }
-      return this.printerStateStore.printerJobsById[this.printerId];
-    },
-    currentPrintingFilePath() {
-      if (!this.printerId) {
-        throw new Error("Printer ID not set, cannot get current printing file name");
-      }
-      return this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
-    },
-    printerState() {
-      if (!this.printerId || !this.storedSideNavPrinter) return null;
+function isFileBeingPrinted(file: PrinterFileDto) {
+  if (!printerId.value) {
+    return false;
+  }
 
-      const printerEvents = this.printerStateStore.printerEventsById[this.printerId];
-      const socketState = this.printerStateStore.socketStatesById[this.printerId];
-      const states = interpretStates(this.storedSideNavPrinter, socketState, printerEvents);
+  const jobFilePath = printerStateStore.printingFilePathsByPrinterId[printerId.value];
+  return jobFilePath === file.name;
+}
 
-      const debugInterpretedState =
-        useSettingsStore().frontendDebugSettings?.showInterpretedPrinterState;
-      if (debugInterpretedState) {
-        console.debug(
-          "[FileExplorerSideNav] rendered for printerId",
-          this.printerId,
-          states?.text,
-          states?.color,
-          states?.rgb
-        );
-      }
-      return states;
-    },
-  },
-  methods: {
-    featureFlagsList() {
-      return featureFlagsList;
-    },
-    formatBytes: formatBytes,
-    truncateProgress(progress?: number) {
-      if (!progress) return "";
-      return progress?.toFixed(1);
-    },
-    isFileBeingPrinted(file: PrinterFileDto) {
-      if (!this.printerId) {
-        return false;
-      }
+function avatarInitials() {
+  const viewedPrinter = storedSideNavPrinter.value;
+  if (viewedPrinter && drawerOpened.value) {
+    return generateInitials(viewedPrinter.name);
+  }
+}
 
-      const jobFilePath = this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
-      return jobFilePath === file.name;
-    },
-    avatarInitials() {
-      const viewedPrinter = this.storedSideNavPrinter;
-      if (viewedPrinter && this.drawerOpened) {
-        return generateInitials(viewedPrinter.name);
-      }
-    },
-    openPrinterURL() {
-      if (!this.storedSideNavPrinter) return;
-      PrintersService.openPrinterURL(this.storedSideNavPrinter.printerURL);
-      this.closeDrawer();
-    },
-    async togglePrinterConnection() {
-      if (!this.printerId) return;
-      if (this.printerStateStore.isPrinterOperational(this.printerId)) {
-        return await PrintersService.sendPrinterDisconnectCommand(this.printerId);
-      }
-      await PrintersService.sendPrinterConnectCommand(this.printerId);
-    },
-    async toggleEnabled() {
-      if (!this.printerId) {
-        throw new Error("Printer ID not set, cant toggle enabled");
-      }
-      if (!this.storedSideNavPrinter) {
-        throw new Error("Cant toggle enabled, sidenav printer unset");
-      }
-      const newSetting = !this.storedSideNavPrinter.enabled;
-      await PrintersService.toggleEnabled(this.printerId, newSetting);
-    },
-    async toggleMaintenance() {
-      if (!this.printerId) {
-        throw new Error("Printer ID not set, cant toggle maintenance");
-      }
-      if (!this.storedSideNavPrinter) {
-        throw new Error("Cant toggle enabled, sidenav printer unset");
-      }
-      if (this.isUnderMaintenance) {
-        await PrintersService.updatePrinterMaintenance(this.printerId);
-        return;
-      }
+function openPrinterURL() {
+  if (!storedSideNavPrinter.value) return;
+  PrintersService.openPrinterURL(storedSideNavPrinter.value.printerURL);
+  closeDrawer();
+}
 
-      this.printersStore.setMaintenanceDialogPrinter(this.storedSideNavPrinter);
-      this.dialogsStore.openDialogWithContext(DialogName.PrinterMaintenanceDialog);
-      this.closeDrawer();
-    },
-    async refreshFiles() {
-      this.loading = true;
-      const printerId = this.storedSideNavPrinter?.id;
-      if (!printerId) return;
+async function togglePrinterConnection() {
+  if (!printerId.value) return;
+  if (printerStateStore.isPrinterOperational(printerId.value)) {
+    return await PrintersService.sendPrinterDisconnectCommand(printerId.value);
+  }
+  await PrintersService.sendPrinterConnectCommand(printerId.value);
+}
 
-      // Offline printer fallback
-      if (this.printerStateStore.isApiResponding(printerId)) {
-        this.shownFileCache = await this.printersStore.loadPrinterFiles(printerId, false);
-      } else {
-        this.shownFileCache = await PrinterFileService.getFileCache(printerId);
-      }
-      this.loading = false;
-    },
-    async deleteFile(file: PrinterFileDto) {
-      if (!this.printerId) return;
-      await this.printersStore.deletePrinterFile(this.printerId, file.path);
-    },
-    async clickStopPrint() {
-      if (!this.printerId) return;
+async function toggleEnabled() {
+  if (!printerId.value) {
+    throw new Error("Printer ID not set, cant toggle enabled");
+  }
+  if (!storedSideNavPrinter.value) {
+    throw new Error("Cant toggle enabled, sidenav printer unset");
+  }
+  const newSetting = !storedSideNavPrinter.value.enabled;
+  await PrintersService.toggleEnabled(printerId.value, newSetting);
+}
 
-      if (confirm("Are you sure to cancel the current print job?")) {
-        await PrinterJobService.stopPrintJob(this.printerId);
-      }
-    },
-    async clickPausePrint() {
-      if (!this.printerId) return;
+async function toggleMaintenance() {
+  if (!printerId.value) {
+    throw new Error("Printer ID not set, cant toggle maintenance");
+  }
+  if (!storedSideNavPrinter.value) {
+    throw new Error("Cant toggle enabled, sidenav printer unset");
+  }
+  if (isUnderMaintenance.value) {
+    await PrintersService.updatePrinterMaintenance(printerId.value);
+    return;
+  }
 
-      await PrinterJobService.pausePrintJob(this.printerId);
-    },
-    async clickResumePrint() {
-      if (!this.printerId) return;
-      await PrinterJobService.resumePrintJob(this.printerId);
-    },
-    async clickClearFiles() {
-      if (!this.printerId) return;
-      this.loading = true;
-      await this.printersStore.clearPrinterFiles(this.printerId);
-      this.loading = false;
-      this.shownFileCache = this.printersStore.printerFiles(this.printerId);
-    },
-    clickSettings() {
-      if (!this.storedSideNavPrinter) return;
-      this.printersStore.setUpdateDialogPrinter(this.storedSideNavPrinter);
-      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
-      this.closeDrawer();
-    },
-    async clickPrintFile(file: PrinterFileDto) {
-      if (!this.printerId) return;
-      await this.printerStateStore.selectAndPrintFile({
-        printerId: this.printerId,
-        fullPath: file.path,
-      });
-    },
-    clickDownloadFile(file: PrinterFileDto) {
-      PrinterFileService.downloadFile(file);
-    },
-    closeDrawer() {
-      this.printersStore.setSideNavPrinter(undefined);
-    },
-  },
-  watch: {
-    async storedSideNavPrinter(viewedPrinter?: PrinterDto, oldVal?: PrinterDto) {
-      this.drawerOpened = !!viewedPrinter;
-      const printerId = viewedPrinter?.id;
-      if (!viewedPrinter || !printerId) {
-        return;
-      }
+  printersStore.setMaintenanceDialogPrinter(storedSideNavPrinter.value);
+  dialogsStore.openDialogWithContext(DialogName.PrinterMaintenanceDialog);
+  closeDrawer();
+}
 
-      if (!this.shownFileCache || viewedPrinter.id !== oldVal?.id || !oldVal) {
-        await this.refreshFiles();
-      }
-    },
-    drawerOpened(newVal: boolean) {
-      // Due to the animation delay the nav model lags behind enough for SSE to pick up and override
-      if (!newVal) {
-        this.printersStore.setSideNavPrinter(undefined);
-      }
-    },
-  },
-});
+async function refreshSocketState() {
+  await PrintersService.refreshSocket(printerId.value);
+}
+
+async function clickStopPrint() {
+  if (!printerId.value) return;
+
+  if (confirm("Are you sure to cancel the current print job?")) {
+    await PrinterJobService.stopPrintJob(printerId.value);
+  }
+}
+
+async function clickPausePrint() {
+  if (!printerId.value) return;
+
+  await PrinterJobService.pausePrintJob(printerId.value);
+}
+
+async function clickResumePrint() {
+  if (!printerId.value) return;
+  await PrinterJobService.resumePrintJob(printerId.value);
+}
+
+async function clickClearFiles() {
+  if (!printerId.value) return;
+  loading.value = true;
+  await printersStore.clearPrinterFiles(printerId.value);
+  loading.value = false;
+  shownFileCache.value = printersStore.printerFiles(printerId.value);
+}
+
+function clickSettings() {
+  if (!storedSideNavPrinter.value) return;
+  printersStore.setUpdateDialogPrinter(storedSideNavPrinter.value);
+  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
+  closeDrawer();
+}
+
+async function clickPrintFile(file: PrinterFileDto) {
+  if (!printerId.value) return;
+  await printerStateStore.selectAndPrintFile({
+    printerId: printerId.value,
+    fullPath: file.path,
+  });
+}
+
+function clickDownloadFile(file: PrinterFileDto) {
+  PrinterFileService.downloadFile(file);
+}
+
+function closeDrawer() {
+  printersStore.setSideNavPrinter(undefined);
+}
 </script>
 
 <style>

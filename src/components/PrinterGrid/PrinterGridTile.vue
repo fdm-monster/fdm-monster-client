@@ -116,7 +116,7 @@
               <span>Retry connecting to OctoPrint API</span>
             </template>
           </v-tooltip>
-          <v-btn icon @click.prevent.stop="clickInfo()">
+          <v-btn elevation="5" icon @click.prevent.stop="clickInfo()">
             <v-icon>menu_open</v-icon>
           </v-btn>
         </div>
