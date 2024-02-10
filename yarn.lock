@@ -3603,26 +3603,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/compiler-core@npm:3.4.17":
-  version: 3.4.17
-  resolution: "@vue/compiler-core@npm:3.4.17"
+"@vue/compiler-core@npm:3.4.18":
+  version: 3.4.18
+  resolution: "@vue/compiler-core@npm:3.4.18"
   dependencies:
     "@babel/parser": "npm:^7.23.9"
-    "@vue/shared": "npm:3.4.17"
+    "@vue/shared": "npm:3.4.18"
     entities: "npm:^4.5.0"
     estree-walker: "npm:^2.0.2"
     source-map-js: "npm:^1.0.2"
-  checksum: 10c0/a7fbbdb755ca476e753e4ce07d4c8b19408b8db52607548f36b4d767894f9fa483fa112a97bc148e2ecd1eb629d8ae27ed627ec5e8131738d10d2155b2b76fbd
+  checksum: 10c0/732f7f7fbc131f12013c994f459ec3d76f56688af01a93d10205deace4996d586f0e95ff7c415e98cc9238ca00d3f66c79ca3da01c37923bce2610787dbbff6b
   languageName: node
   linkType: hard
 
-"@vue/compiler-dom@npm:3.4.17":
-  version: 3.4.17
-  resolution: "@vue/compiler-dom@npm:3.4.17"
+"@vue/compiler-dom@npm:3.4.18":
+  version: 3.4.18
+  resolution: "@vue/compiler-dom@npm:3.4.18"
   dependencies:
-    "@vue/compiler-core": "npm:3.4.17"
-    "@vue/shared": "npm:3.4.17"
-  checksum: 10c0/37fab523170a60d2728dcb69b973c4cf55d5408e6a0e349ea0a24c87357a890eafedd5d81b8ccd053f80096f6962ddc5db02481780f4414bcb66ad019b726905
+    "@vue/compiler-core": "npm:3.4.18"
+    "@vue/shared": "npm:3.4.18"
+  checksum: 10c0/88e521e4758b297d6fb48a08e2a281c8484d8d33582fc7b70b832b003b06e383048d0b70e8435f5e5312724a74489e1802bee0b613e9ea5c96d2616f24614669
   languageName: node
   linkType: hard
 
@@ -3642,29 +3642,29 @@ __metadata:
   linkType: hard
 
 "@vue/compiler-sfc@npm:^3.4.15":
-  version: 3.4.17
-  resolution: "@vue/compiler-sfc@npm:3.4.17"
+  version: 3.4.18
+  resolution: "@vue/compiler-sfc@npm:3.4.18"
   dependencies:
     "@babel/parser": "npm:^7.23.9"
-    "@vue/compiler-core": "npm:3.4.17"
-    "@vue/compiler-dom": "npm:3.4.17"
-    "@vue/compiler-ssr": "npm:3.4.17"
-    "@vue/shared": "npm:3.4.17"
+    "@vue/compiler-core": "npm:3.4.18"
+    "@vue/compiler-dom": "npm:3.4.18"
+    "@vue/compiler-ssr": "npm:3.4.18"
+    "@vue/shared": "npm:3.4.18"
     estree-walker: "npm:^2.0.2"
     magic-string: "npm:^0.30.6"
     postcss: "npm:^8.4.33"
     source-map-js: "npm:^1.0.2"
-  checksum: 10c0/be22bc208aac3d6414483f0ad7fe5b46a6df4d3f991015da01241783bb9cd6eb037e0fc48bf4e8d62144e75fce484bf90fac8eea758d69241a5eefeea53b7fff
+  checksum: 10c0/8c25ef66d0de168a7f482cc86a2b826d4684c8975cf4cd86974df6f69afbe2b59181d9c5ea8a915099f6ea425d31e988b5100d33a6c71966ee2b75bd3e6a5d0f
   languageName: node
   linkType: hard
 
-"@vue/compiler-ssr@npm:3.4.17":
-  version: 3.4.17
-  resolution: "@vue/compiler-ssr@npm:3.4.17"
+"@vue/compiler-ssr@npm:3.4.18":
+  version: 3.4.18
+  resolution: "@vue/compiler-ssr@npm:3.4.18"
   dependencies:
-    "@vue/compiler-dom": "npm:3.4.17"
-    "@vue/shared": "npm:3.4.17"
-  checksum: 10c0/cc4a779939f1dad6f743d5f5af2dce8a4346d7abc275a1cb02999596f318a4c7f3779ff58457fa3cc9e99092f7d718b4c76f74b134c607179c7cf193815ae87c
+    "@vue/compiler-dom": "npm:3.4.18"
+    "@vue/shared": "npm:3.4.18"
+  checksum: 10c0/34676a7c061ee4ff73692e46524cf27da60e134a4477c8fbafa5c998a718dc9df189a66a4417c5018daa913eeb77a7b0510d35209e7da75c08422fdf7bbcdb79
   languageName: node
   linkType: hard
 
@@ -3735,10 +3735,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/shared@npm:3.4.17":
-  version: 3.4.17
-  resolution: "@vue/shared@npm:3.4.17"
-  checksum: 10c0/2b5f5dbbc58cc88019184ff79ac8237ab131cd7187acfd3660a7eb0acf0db48536a0776b10f06be7425ab5d61dda8971fe6d2cff61936987b91bdc4511790211
+"@vue/shared@npm:3.4.18":
+  version: 3.4.18
+  resolution: "@vue/shared@npm:3.4.18"
+  checksum: 10c0/2e4884f1cb7a48c79356ef9905a4839a3dfde9134f8f6aa929b0b4b48b76cef3ba6b58295c342889510ace6e2c57c9bcfaee4080033daad2d090ac8bad20a7c0
   languageName: node
   linkType: hard
 
@@ -6414,9 +6414,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.648":
-  version: 1.4.662
-  resolution: "electron-to-chromium@npm:1.4.662"
-  checksum: 10c0/f69634614a66a37ff61a68ec80744ea942872bad0a081d1d01de19acb9114dea54274cce31e66f8a60f54a7b19efae2c3a425e02f32ad4adb6478d504dbaed11
+  version: 1.4.665
+  resolution: "electron-to-chromium@npm:1.4.665"
+  checksum: 10c0/c97e00510f4a3f9dfa213957b997cd3f759fedece2627716b39f72294214f45e30f7e2ee3cc58a0ddb4b9b60e4ef07fd505200619c2f9aa31b89ce0bfc558679
   languageName: node
   linkType: hard
 
@@ -13338,9 +13338,9 @@ __metadata:
   linkType: hard
 
 "spdx-license-ids@npm:^3.0.0":
-  version: 3.0.16
-  resolution: "spdx-license-ids@npm:3.0.16"
-  checksum: 10c0/7d88b8f01308948bb3ea69c066448f2776cf3d35a410d19afb836743086ced1566f6824ee8e6d67f8f25aa81fa86d8076a666c60ac4528caecd55e93edb5114e
+  version: 3.0.17
+  resolution: "spdx-license-ids@npm:3.0.17"
+  checksum: 10c0/ddf9477b5afc70f1a7d3bf91f0b8e8a1c1b0fa65d2d9a8b5c991b1a2ba91b693d8b9749700119d5ce7f3fbf307ac421087ff43d321db472605e98a5804f80eac
   languageName: node
   linkType: hard
 
