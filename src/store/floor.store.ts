@@ -21,13 +21,13 @@ export const useFloorStore = defineStore("Floors", {
       return state.floors.sort((f, f2) => f.floor - f2.floor);
     },
     floor(state) {
-      return (floorId: string) => state.floors.find((pf) => pf.id === floorId);
+      return (floorId: IdType) => state.floors.find((pf) => pf.id === floorId);
     },
     floorNames(state) {
       return state.floors.map((f) => f.name);
     },
     floorOfPrinter() {
-      return (printerId: string) => {
+      return (printerId: IdType) => {
         return this.floors.find((f: FloorDto) =>
           f.printers.map((pid) => pid.printerId).includes(printerId)
         );

@@ -7,7 +7,7 @@ export interface CreateCameraStreamDto {
 }
 
 export interface CameraStream {
-  id: string;
+  id?: IdType;
   printerId?: IdType;
   streamURL: string;
   name?: string;
