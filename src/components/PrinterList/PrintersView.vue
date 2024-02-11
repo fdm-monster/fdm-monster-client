@@ -71,7 +71,29 @@
         </v-chip>
       </template>
       <template v-slot:item.floor="{ item }">
-        <v-chip v-if="item.id" color="primary" dark> {{ floorOfPrinter(item.id)?.name }}</v-chip>
+        <v-chip v-if="item.id" color="primary"> {{ floorOfPrinter(item.id)?.name }}</v-chip>
+      </template>
+      <template v-slot:item.group v-if="hasPrinterGroupFeature">
+        <v-chip color="" small> Group1</v-chip>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-chip
+              class="ml-2"
+              color=""
+              small
+              v-bind="attrs"
+              v-on="on"
+              :disabled="!groupsWithPrinters.length"
+            >
+              <v-icon small>add</v-icon>
+            </v-chip>
+          </template>
+          <v-list>
+            <v-list-item v-for="(item, index) in []" :key="index">
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </template>
       <template v-slot:item.actions="{ item }">
         <PrinterUrlAction :printer="item" />
@@ -118,17 +140,7 @@ import { PrinterDto } from "@/models/printers/printer.model";
 import { useFeatureStore } from "@/store/features.store";
 import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
-
-const search = ref("");
-const expanded = ref([]);
-const tableHeaders = [
-  { text: "Enabled", value: "enabled" },
-  { text: "Printer Name", align: "start", sortable: true, value: "name" },
-  { text: "Floor", value: "floor", sortable: false },
-  { text: "Actions", value: "actions", sortable: false },
-  { text: "Socket Update", value: "socketupdate", sortable: false },
-  { text: "", value: "data-table-expand" },
-];
+import { GroupWithPrintersDto, PrinterGroupService } from "@/backend/printer-group.service";
 
 const snackbar = useSnackbar();
 const printerStore = usePrinterStore();
@@ -137,26 +149,40 @@ const printerStateStore = usePrinterStateStore();
 const floorStore = useFloorStore();
 const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
+const groupsWithPrinters = ref<GroupWithPrintersDto[]>([]);
+
+const search = ref("");
+const expanded = ref([]);
+const hasPrinterGroupFeature = computed(() => featureStore.hasFeature("printerGroupsApi"));
+const tableHeaders = computed(() => [
+  { text: "Enabled", value: "enabled" },
+  { text: "Printer Name", align: "start", sortable: true, value: "name" },
+  { text: "Floor", value: "floor", sortable: false },
+  ...(hasPrinterGroupFeature.value ? [{ text: "Group(s)", value: "group", sortable: true }] : []),
+  { text: "Actions", value: "actions", sortable: false },
+  { text: "Socket Update", value: "socketupdate", sortable: false },
+  { text: "", value: "data-table-expand" },
+]);
 
 async function loadData() {
   loading.value = true;
-
+  const printers = await PrinterGroupService.getGroupsWithPrinters();
   loading.value = false;
+  return printers;
 }
-
-const hasPrinterGroupFeature = computed(() => featureStore.hasFeature("printerGroupsApi"));
 const printerGroupsQuery = useQuery({
   queryKey: ["printerGroups"],
   queryFn: loadData,
   enabled() {
     return hasPrinterGroupFeature.value;
   },
+  throwOnError(error, query) {
+    throw error;
+  },
 });
 
 const printers = computed(() => printerStore.printers);
 const currentEventReceivedAt = computed(() => printerStateStore.printerCurrentEventReceivedAtById);
-
-// if (hasPrinterGroupFeature)
 
 const diffSeconds = (timestamp: number) => {
   if (!timestamp) return;
