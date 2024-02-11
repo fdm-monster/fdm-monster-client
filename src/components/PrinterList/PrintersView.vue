@@ -4,11 +4,23 @@
       <v-card-title>
         Printers
         <v-spacer></v-spacer>
+        <v-select
+          v-if="hasPrinterGroupFeature && groupsWithPrinters.length"
+          multiple
+          :items="groupsWithPrinters"
+          item-text="name"
+          :return-object="true"
+          v-model="filteredGroupsWithPrinters"
+          placeholder="Select group to filter by"
+          prepend-icon="filter_list"
+          label="Filter by groups"
+        >
+        </v-select>
         <v-text-field
           v-model="search"
           class="p-2"
           clearable
-          label="Search"
+          label="Printer search"
           prepend-icon="search"
           single-line
         ></v-text-field>
@@ -224,6 +236,7 @@ const floorStore = useFloorStore();
 const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
 const groupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
+const filteredGroupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
 const newGroupName = ref("");
 const updatedGroupName = ref("");
 const selectedGroup = ref<number>();
@@ -259,7 +272,15 @@ const printerGroupsQuery = useQuery({
   },
 });
 
-const printers = computed(() => printerStore.printers);
+const printers = computed(() => {
+  if (!hasPrinterGroupFeature.value || !filteredGroupsWithPrinters.value?.length) {
+    return printerStore.printers;
+  }
+  const printerIdsInFilteredGroups =
+    filteredGroupsWithPrinters.value.flatMap((g) => g.printers.map((p) => p.printerId)) || [];
+  return printerStore.printers.filter((p) => printerIdsInFilteredGroups.includes(p.id));
+});
+
 const currentEventReceivedAt = computed(() => printerStateStore.printerCurrentEventReceivedAtById);
 const selectedGroupObject = computed(() => {
   if (!selectedGroup.value && selectedGroup.value !== 0) return;
