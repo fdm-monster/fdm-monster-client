@@ -13,6 +13,8 @@ export class FeaturesModel {
   logDumpZip?: IFeatureFlag;
   clearLogFiles?: IFeatureFlag;
   batchTogglePrinterEnabled?: IFeatureFlag;
+  cameraStream?: IFeatureFlag;
+  printerGroupsApi?: IFeatureFlag;
 }
 
 export type TFeatureFlags = keyof FeaturesModel;
@@ -21,4 +23,11 @@ export const featureFlagsList: TFeatureFlags[] = [
   "batchConnectUsbCalls",
   "batchConnectSocketCalls",
   "newSockets",
+  "anonymousDiagnosticsToggle",
+  "pauseResumePrinterCommand",
+  "logDumpZip",
+  "clearLogFiles",
+  "batchTogglePrinterEnabled",
+  "cameraStream",
+  "printerGroupsApi",
 ];

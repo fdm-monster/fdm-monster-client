@@ -21,8 +21,13 @@ export class ServerApi {
   static printCompletionRoute = `${ServerApi.base}/print-completion`;
 
   static printerFilesRoute = `${ServerApi.base}/printer-files`;
-
   static printerFilesPurgeRoute = `${ServerApi.printerFilesRoute}/purge`;
+
+  static printerGroupRoute = `${ServerApi.base}/printer-group`;
+  static createGroupRoute = `${ServerApi.base}/printer-group`;
+  static deleteGroupRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}`;
+  static addPrinterToGroupRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}/printer`;
+  static deletePrinterFromGroupRoute = ServerApi.addPrinterToGroupRoute;
 
   static customGCodeRoute = `${ServerApi.base}/custom-gcode`;
 
