@@ -51,4 +51,12 @@ export class PrinterGroupService extends BaseService {
     };
     return (await this.deleteApi(path, body)) as GroupWithPrintersDto<IdType>[];
   }
+
+  static async updateGroupName(groupId: IdType, name: string) {
+    const path = `${ServerApi.updateGroupNameRoute(groupId)}`;
+    const body = {
+      name,
+    };
+    return (await this.patchApi(path, body)) as GroupWithPrintersDto<IdType>[];
+  }
 }

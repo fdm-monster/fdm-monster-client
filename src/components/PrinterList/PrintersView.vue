@@ -142,16 +142,37 @@
         <h3>Existing groups:</h3>
 
         <v-container>
-          <v-chip
-            small
-            v-for="group of groupsWithPrinters"
-            :key="group.id"
-            close
-            @click:close="deleteGroup(group.id)"
-            class="mr-3"
+          <v-chip-group
+            v-model="selectedGroup"
+            @change="selectGroupForUpdatingName()"
+            active-class="primary--text"
+            column
           >
-            {{ group.name }}
-          </v-chip>
+            <v-chip
+              small
+              v-for="group of groupsWithPrinters"
+              :key="group.id"
+              close
+              @click:close="deleteGroup(group.id)"
+              class="mr-3"
+            >
+              {{ group.name }}
+            </v-chip>
+          </v-chip-group>
+        </v-container>
+
+        <h3 class="mt-3">Update group name</h3>
+        <v-container>
+          <v-alert v-if="!selectedGroupObject"> Select a group to update its name. </v-alert>
+          <v-text-field
+            :disabled="!selectedGroupObject"
+            v-model="updatedGroupName"
+            label="Group Name"
+            placeholder="Type group name here"
+          >
+            Name
+          </v-text-field>
+          <v-btn @click="updateGroupName(selectedGroupObject)">Update name</v-btn>
         </v-container>
 
         <h3 class="mt-3">Add group</h3>
@@ -164,8 +185,8 @@
           >
             Name
           </v-text-field>
+          <v-btn @click="createGroup()">Create new group</v-btn>
         </v-container>
-        <v-btn @click="createGroup()">Save</v-btn>
       </v-card-text>
     </v-card>
   </div>
@@ -204,6 +225,8 @@ const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
 const groupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
 const newGroupName = ref("");
+const updatedGroupName = ref("");
+const selectedGroup = ref<number>();
 
 const search = ref("");
 const expanded = ref([]);
@@ -238,6 +261,11 @@ const printerGroupsQuery = useQuery({
 
 const printers = computed(() => printerStore.printers);
 const currentEventReceivedAt = computed(() => printerStateStore.printerCurrentEventReceivedAtById);
+const selectedGroupObject = computed(() => {
+  if (!selectedGroup.value && selectedGroup.value !== 0) return;
+
+  return groupsWithPrinters.value[selectedGroup.value];
+});
 
 const diffSeconds = (timestamp: number) => {
   if (!timestamp) return;
@@ -293,6 +321,28 @@ const createGroup = async () => {
   await printerGroupsQuery.refetch();
   newGroupName.value = "";
   snackbar.info("Created group");
+};
+
+const selectGroupForUpdatingName = () => {
+  if (!selectedGroupObject.value) return;
+
+  updatedGroupName.value = selectedGroupObject.value?.name;
+};
+
+const updateGroupName = async (group?: GroupWithPrintersDto) => {
+  if (!group?.id) {
+    throw new Error("Group id was not defined");
+  }
+  const existingGroup = groupsWithPrinters.value.find((g) => g.id === group.id);
+  if (!existingGroup) {
+    throw new Error("Group was not found, please reload the page");
+  }
+  if (!updatedGroupName.value?.trim()?.length) {
+    throw new Error("Please set a non-empty group name");
+  }
+
+  await PrinterGroupService.updateGroupName(group.id, updatedGroupName.value.trim());
+  await printerGroupsQuery.refetch();
 };
 
 const deleteGroup = async (groupId: IdType) => {
