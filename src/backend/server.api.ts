@@ -26,6 +26,7 @@ export class ServerApi {
   static printerGroupRoute = `${ServerApi.base}/printer-group`;
   static createGroupRoute = `${ServerApi.base}/printer-group`;
   static deleteGroupRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}`;
+  static updateGroupNameRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}/name`;
   static addPrinterToGroupRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}/printer`;
   static deletePrinterFromGroupRoute = ServerApi.addPrinterToGroupRoute;
 
