@@ -75,23 +75,22 @@
           <v-chip v-if="item.id" color="primary"> {{ floorOfPrinter(item.id)?.name }}</v-chip>
         </template>
         <template v-if="hasPrinterGroupFeature" v-slot:item.group="{ item }">
-          <v-chip close small @click:close="deletePrinterFromGroup(1, item)"> Fake</v-chip>
           <v-chip
             v-for="group of groupsOfPrinter(item.id)"
             :key="group.id"
             close
-            color=""
             small
-            @click:close="deletePrinterFromGroup(group.id, item)"
+            class="ml-2"
+            @click:close="deletePrinterFromGroup(group.id, item.id)"
           >
             {{ group.name }}
           </v-chip>
+
           <v-menu offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-chip
                 :disabled="!groupsWithPrinters.length"
                 class="ml-2"
-                color=""
                 small
                 v-bind="attrs"
                 v-on="on"
@@ -99,10 +98,18 @@
                 <v-icon small>add</v-icon>
               </v-chip>
             </template>
-            <v-list>
-              <v-list-item v-for="(item, index) in []" :key="index">
-                <v-list-item-title>{{ item.name }}</v-list-item-title>
-              </v-list-item>
+
+            <v-list dense style="border: 1px solid dimgray">
+              <v-subheader>ADD TO GROUP</v-subheader>
+              <v-list-item-group>
+                <v-list-item
+                  @click="addPrinterToGroup(group.id, item.id)"
+                  v-for="(group, index) in nonGroupsOfPrinter(item.id)"
+                  :key="index"
+                >
+                  <v-list-item-title>{{ group.name }}</v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
             </v-list>
           </v-menu>
         </template>
@@ -128,29 +135,36 @@
       </v-data-table>
     </v-card>
 
-    <v-card class="mt-4">
+    <v-card class="mt-4" v-if="hasPrinterGroupFeature">
       <v-card-title>Printer Groups</v-card-title>
 
       <v-card-text>
         <h3>Existing groups:</h3>
 
-        <v-chip
-          small
-          v-for="group of groupsWithPrinters"
-          :key="group.id"
-          :label="group.name"
-          close
-          @click:close="deleteGroup(group.id)"
-        >
-          {{ group.name }}
-        </v-chip>
+        <v-container>
+          <v-chip
+            small
+            v-for="group of groupsWithPrinters"
+            :key="group.id"
+            close
+            @click:close="deleteGroup(group.id)"
+            class="mr-3"
+          >
+            {{ group.name }}
+          </v-chip>
+        </v-container>
 
-        <h3>Add group</h3>
+        <h3 class="mt-3">Add group</h3>
 
-        <v-text-field v-model="newGroupName" label="Group Name" placeholder="Type group name here">
-          Name</v-text-field
-        >
-
+        <v-container>
+          <v-text-field
+            v-model="newGroupName"
+            label="Group Name"
+            placeholder="Type group name here"
+          >
+            Name
+          </v-text-field>
+        </v-container>
         <v-btn @click="createGroup()">Save</v-btn>
       </v-card-text>
     </v-card>
@@ -235,6 +249,10 @@ const groupsOfPrinter = (printerId: IdType) => {
   return groupsWithPrinters.value.filter((g) => g.printers.find((p) => p.printerId === printerId));
 };
 
+const nonGroupsOfPrinter = (printerId: IdType) => {
+  return groupsWithPrinters.value.filter((g) => !g.printers.find((p) => p.printerId === printerId));
+};
+
 const floorOfPrinter = (printerId: IdType) => {
   return floorStore.floorOfPrinter(printerId);
 };
@@ -273,23 +291,37 @@ const createGroup = async () => {
 
   await PrinterGroupService.createGroup(newGroupName.value.trim());
   await printerGroupsQuery.refetch();
+  newGroupName.value = "";
   snackbar.info("Created group");
 };
 
 const deleteGroup = async (groupId: IdType) => {
+  const existingGroup = groupsWithPrinters.value.find((g) => g.id === groupId);
+  if (!existingGroup) {
+    throw new Error("Group was not found, please reload the page");
+  }
+
+  const printerCount = existingGroup.printers.length;
+  if (
+    printerCount > 0 &&
+    !confirm(`This group contains ${printerCount} printers, are you sure to delete it?`)
+  ) {
+    return;
+  }
+
   await PrinterGroupService.deleteGroup(groupId);
   await printerGroupsQuery.refetch();
   snackbar.info("Deleted group");
 };
 
-const addPrinterToGroup = async (groupId: IdType, printer: PrinterDto) => {
-  await PrinterGroupService.addPrinterToGroup(groupId, printer.id);
+const addPrinterToGroup = async (groupId: IdType, printerId: IdType) => {
+  await PrinterGroupService.addPrinterToGroup(groupId, printerId);
   await printerGroupsQuery.refetch();
   snackbar.info("Added printer to group");
 };
 
-const deletePrinterFromGroup = async (groupId: IdType, printer: PrinterDto) => {
-  await PrinterGroupService.deletePrinterFromGroup(groupId, printer.id);
+const deletePrinterFromGroup = async (groupId: IdType, printerId: IdType) => {
+  await PrinterGroupService.deletePrinterFromGroup(groupId, printerId);
   await printerGroupsQuery.refetch();
   snackbar.info("Removed printer from group");
 };
