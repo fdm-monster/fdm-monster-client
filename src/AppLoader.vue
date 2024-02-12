@@ -76,7 +76,7 @@ import { AppService } from "@/backend/app.service";
 import { AxiosError } from "axios";
 import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
 import { captureException } from "@sentry/vue";
-import { socketIoClient } from "@/store/connection.store";
+import { SocketIoService } from "@/shared/socketio.service";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -90,6 +90,7 @@ const errorCaught = ref(null);
 const errorUrl = ref(null);
 const errorResponse = ref(null);
 const snackbar = useSnackbar();
+const socketIoClient: SocketIoService = new SocketIoService();
 
 function reloadPage() {
   window.location.reload();

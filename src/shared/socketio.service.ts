@@ -11,6 +11,7 @@ import { useSnackbar } from "./snackbar.composable";
 import { getBaseUri } from "@/shared/http-client";
 import { useAuthStore } from "@/store/auth.store";
 import { IdType } from "@/utils/id.type";
+import { appSocketIO, constructSocket, getSocketState } from "@/store/connection.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -21,7 +22,6 @@ enum IO_MESSAGES {
 }
 
 export class SocketIoService {
-  private socket: Socket;
   private printerStore = usePrinterStore();
   private floorStore = useFloorStore();
   private printerStateStore = usePrinterStateStore();
@@ -29,12 +29,7 @@ export class SocketIoService {
   private snackbar = useSnackbar();
 
   socketState() {
-    return {
-      active: this.socket.active,
-      connected: this.socket.connected,
-      id: this.socket.id,
-      recovered: this.socket.recovered,
-    };
+    return getSocketState();
   }
 
   async setupSocketConnection() {
@@ -42,19 +37,18 @@ export class SocketIoService {
     const apiBase = await getBaseUri();
     const authStore = useAuthStore();
     authStore.loadTokens();
-    this.socket = io(apiBase, {
-      auth: authStore.loginRequired ? { token: authStore.token } : undefined,
-    });
-    this.socket.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
-    this.socket.on(IO_MESSAGES.TestPrinterState, (data) => {
+    constructSocket(apiBase, authStore.loginRequired ? authStore.token : undefined);
+
+    appSocketIO?.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
+    appSocketIO?.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);
     });
   }
 
   disconnect() {
-    if (this.socket) {
+    if (appSocketIO) {
       console.debug("Disconnecting socket.io client");
-      this.socket.disconnect();
+      appSocketIO.disconnect();
     }
   }
 
