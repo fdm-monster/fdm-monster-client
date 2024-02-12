@@ -227,6 +227,7 @@ import { useFeatureStore } from "@/store/features.store";
 import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { GroupWithPrintersDto, PrinterGroupService } from "@/backend/printer-group.service";
+import { AppService } from "@/backend/app.service";
 
 const snackbar = useSnackbar();
 const printerStore = usePrinterStore();
@@ -248,7 +249,9 @@ const tableHeaders = computed(() => [
   { text: "Enabled", value: "enabled" },
   { text: "Printer Name", align: "start", sortable: true, value: "name" },
   { text: "Floor", value: "floor", sortable: false },
-  ...(hasPrinterGroupFeature.value ? [{ text: "Group(s)", value: "group", sortable: true }] : []),
+  ...(featureStore.hasFeature("printerGroupsApi")
+    ? [{ text: "Group(s)", value: "group", sortable: true }]
+    : []),
   { text: "Actions", value: "actions", sortable: false },
   { text: "Socket Update", value: "socketupdate", sortable: false },
   { text: "", value: "data-table-expand" },
@@ -256,24 +259,22 @@ const tableHeaders = computed(() => [
 
 async function loadData() {
   loading.value = true;
-  groupsWithPrinters.value = await PrinterGroupService.getGroupsWithPrinters();
+  await featureStore.loadFeatures();
+  if (featureStore.hasFeature("printerGroupsApi")) {
+    const response = await PrinterGroupService.getGroupsWithPrinters();
+    groupsWithPrinters.value = response;
+  }
   loading.value = false;
-  return printers;
+  return groupsWithPrinters;
 }
 
 const printerGroupsQuery = useQuery({
   queryKey: ["printerGroups"],
   queryFn: loadData,
-  enabled() {
-    return hasPrinterGroupFeature.value;
-  },
-  throwOnError(error, query) {
-    throw error;
-  },
 });
 
 const printers = computed(() => {
-  if (!hasPrinterGroupFeature.value || !filteredGroupsWithPrinters.value?.length) {
+  if (!featureStore.hasFeature("printerGroupsApi") || !filteredGroupsWithPrinters.value?.length) {
     return printerStore.printers;
   }
   const printerIdsInFilteredGroups =
