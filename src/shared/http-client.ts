@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useAuthStore } from "@/store/auth.store";
 import { useEventBus } from "@vueuse/core";
 import { convertAuthErrorReason } from "@/shared/auth.constants";
+import { captureException } from "@sentry/vue";
 
 /**
  * Made async for future possibility of getting base URI externally or asynchronously
@@ -64,6 +65,7 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
       if (![HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(response.status)) {
         // Timeout issues etc?
         console.error("Error in axios response interceptor which is not 401 or 403", error);
+        captureException(error);
         return Promise.reject({
           message: `${error.message} - URL ${config?.url}`,
           stack: error.stack,
