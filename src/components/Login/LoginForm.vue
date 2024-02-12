@@ -126,7 +126,9 @@ onMounted(async () => {
   authStore.loadTokens();
   await authStore.checkAuthenticationRequirements();
   if (authStore.loginRequired === false) {
+    // As AppLoader might not trigger, we trigger it ourselves
     console.debug("LoginView, no login required, redirecting to", route.query.redirect, "or home");
+    loginEvent.emit(true);
     return await routeToRedirect();
   }
   if (!authStore.hasRefreshToken) {

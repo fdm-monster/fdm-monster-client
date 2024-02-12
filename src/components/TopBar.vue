@@ -44,7 +44,7 @@
     <span v-if="isDevEnv && expiry" class="ml-2"> AuthExp {{ expiry }} </span>
 
     <span v-if="isDevEnv" class="ml-2">
-      <small v-if="!socketState">No Socket</small>
+      <small v-if="socketState.setup">No Socket</small>
       <small v-else>
         Socket {{ socketState.id }} A:{{ socketState.active ? 1 : 0 }} C:{{
           socketState.connected ? 1 : 0
@@ -98,7 +98,7 @@ import { useRouter } from "vue-router/composables";
 import { routeToLogin } from "@/router/utils";
 import { useIntervalFn } from "@vueuse/core";
 import { isDevEnv, isProdEnv } from "@/shared/app.constants";
-import { socketIoClient } from "@/store/connection.store";
+import { getSocketState } from "@/store/connection.store";
 
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
@@ -126,7 +126,7 @@ const expiry = computed(() => {
 });
 
 const socketState = computed(() => {
-  return socketIoClient.socketState();
+  return getSocketState();
 });
 
 const username = computed(() => {
