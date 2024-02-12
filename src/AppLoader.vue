@@ -69,7 +69,6 @@ import { setSentryEnabled } from "@/utils/sentry.util";
 import { useFeatureStore } from "@/store/features.store";
 import { useProfileStore } from "@/store/profile.store";
 import { useEventBus } from "@vueuse/core";
-import { SocketIoService } from "@/shared/socketio.service";
 import { useRouter } from "vue-router/composables";
 import { sleep } from "@/utils/time.utils";
 import { RouteNames } from "@/router/route-names";
@@ -77,6 +76,7 @@ import { AppService } from "@/backend/app.service";
 import { AxiosError } from "axios";
 import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
 import { captureException } from "@sentry/vue";
+import { socketIoClient } from "@/store/connection.store";
 
 const authStore = useAuthStore();
 const settingsStore = useSettingsStore();
@@ -90,7 +90,6 @@ const errorCaught = ref(null);
 const errorUrl = ref(null);
 const errorResponse = ref(null);
 const snackbar = useSnackbar();
-const socketIoClient: SocketIoService = new SocketIoService();
 
 function reloadPage() {
   window.location.reload();

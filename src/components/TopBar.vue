@@ -6,7 +6,7 @@
     </v-toolbar-title>
 
     <v-spacer v-if="isDemoMode" />
-    <h2 class="text-uppercase text--white" v-if="isDemoMode">DEMO MODE</h2>
+    <h2 v-if="isDemoMode" class="text-uppercase text--white">DEMO MODE</h2>
     <v-spacer></v-spacer>
 
     <PrintJobsMenu />
@@ -41,7 +41,17 @@
       </v-list>
     </v-menu>
 
-    <span class="ml-2" v-if="isDevEnv && expiry"> AuthExp {{ expiry }} </span>
+    <span v-if="isDevEnv && expiry" class="ml-2"> AuthExp {{ expiry }} </span>
+
+    <span v-if="isDevEnv" class="ml-2">
+      <small v-if="!socketState">No Socket</small>
+      <small v-else>
+        Socket {{ socketState.id }} A:{{ socketState.active ? 1 : 0 }} C:{{
+          socketState.connected ? 1 : 0
+        }}
+        R:{{ socketState.recovered ? 1 : 0 }}
+      </small>
+    </span>
 
     <v-btn v-if="authStore.loginRequired === true" class="ml-2" color="secondary" @click="logout()">
       <v-icon class="mr-2">logout</v-icon>
@@ -52,9 +62,9 @@
     </v-btn>
     <v-dialog
       v-model="showHelp"
-      style="background-color: white"
       eager
       fullscreen
+      style="background-color: white"
       transition="dialog-bottom-transition"
       width="90%"
     >
@@ -69,9 +79,9 @@
         </v-toolbar>
 
         <iframe
-          style="background-color: white"
           height="100%"
           src="https://docs.fdm-monster.net"
+          style="background-color: white"
           width="100%"
         />
       </v-card>
@@ -88,6 +98,7 @@ import { useRouter } from "vue-router/composables";
 import { routeToLogin } from "@/router/utils";
 import { useIntervalFn } from "@vueuse/core";
 import { isDevEnv, isProdEnv } from "@/shared/app.constants";
+import { socketIoClient } from "@/store/connection.store";
 
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
@@ -112,6 +123,10 @@ const expiry = computed(() => {
   }
   const diffValue = authStore.tokenClaims.exp - now.value / 1000;
   return `${Math.round(diffValue)}s`;
+});
+
+const socketState = computed(() => {
+  return socketIoClient.socketState();
 });
 
 const username = computed(() => {

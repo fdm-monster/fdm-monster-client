@@ -28,6 +28,15 @@ export class SocketIoService {
   private testPrinterStore = useTestPrinterStore();
   private snackbar = useSnackbar();
 
+  socketState() {
+    return {
+      active: this.socket.active,
+      connected: this.socket.connected,
+      id: this.socket.id,
+      recovered: this.socket.recovered,
+    };
+  }
+
   async setupSocketConnection() {
     console.debug("Setting up socket.io client");
     const apiBase = await getBaseUri();
