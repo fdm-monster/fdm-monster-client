@@ -10,7 +10,7 @@ import { registerFileDropDirective } from "@/directives/file-upload.directive";
 import { PiniaVuePlugin } from "pinia";
 import { registerPrinterPlaceDirective } from "@/directives/printer-place.directive";
 import * as Sentry from "@sentry/vue";
-import { BrowserTracing, captureException, replayIntegration } from "@sentry/vue";
+import { browserTracingIntegration, captureException, replayIntegration } from "@sentry/vue";
 import { useSnackbar } from "./shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { VueQueryPlugin } from "@tanstack/vue-query";
@@ -30,18 +30,20 @@ Sentry.init({
   Vue,
   dsn: "https://f64683e8d1cb4ac291434993cff1bf9b@o4503975545733120.ingest.sentry.io/4503975546912768",
   integrations: [
-    new BrowserTracing({
-      routingInstrumentation: Sentry.vueRouterInstrumentation(appRouter),
-      // tracingOrigins: ["localhost", "monsterpi.local", /^\//],
+    browserTracingIntegration({
+      router: appRouter,
     }),
     replayIntegration(),
   ],
+
   release: packageJsonVersion,
+  environment: process.env.NODE_ENV,
   enabled: process.env.NODE_ENV === "production",
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.
   // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
+  // tracePropagationTargets: ["localhost", /^https:\/\/yourserver\.io\/api/],
   // Capture Replay for 10% of all sessions,
   // plus for 100% of sessions with an error
   replaysSessionSampleRate: 0.1,

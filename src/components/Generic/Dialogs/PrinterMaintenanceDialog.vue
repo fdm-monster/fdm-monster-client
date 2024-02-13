@@ -48,15 +48,14 @@
   </BaseDialog>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import { computed, ref } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { PrintersService } from "@/backend";
-import { PrinterDto } from "@/models/printers/printer.model";
-import { usePrinterStore } from "../../../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialogsStore } from "@/store/dialog.store";
-import { useDialog } from "../../../shared/dialog.composable";
+import { useDialog } from "@/shared/dialog.composable";
 
 interface Data {
   selectedQuickItems: string[];
@@ -64,95 +63,71 @@ interface Data {
   formData: any;
 }
 
-export default defineComponent({
-  name: "UpdatePrinterDialog",
-  components: {
-    ValidationObserver,
-    ValidationProvider,
-  },
-  setup: () => {
-    const dialog = useDialog(DialogName.PrinterMaintenanceDialog);
-    return {
-      printersStore: usePrinterStore(),
-      dialogsStore: useDialogsStore(),
-      dialog,
-    };
-  },
-  async created() {},
-  async mounted() {},
-  props: {},
-  data: (): Data => ({
-    selectedQuickItems: [],
-    quickItems: [
-      "Broken part",
-      "Blob",
-      "Maxtemp",
-      "Preheat error",
-      "Cable USB ",
-      "Bed thermal runaway",
-      "Thermistor Heatbed",
-      "Thermistor Heatblock",
-      "Thermal Runaway",
-      "Mintemp Nozzle",
-      "Mintemp Heatbed",
-      "Nozzle",
-      "Nozzle Clog",
-      "Fan Hotend",
-      "Fan Part cooling",
-      "Extruder rattle",
-      "Extruder",
-      "Z Axis",
-      "X Axis",
-      "Y Axis",
-      "Rented",
-      "Motherboard",
-      "Other",
-      "Clean",
-    ],
-    formData: {},
-  }),
-  computed: {
-    validationObserver() {
-      return this.$refs.validationObserver as InstanceType<typeof ValidationObserver>;
-    },
-    printer() {
-      return this.printersStore.maintenanceDialogPrinter;
-    },
-  },
-  methods: {
-    async isValid() {
-      return await this.validationObserver.validate();
-    },
-    updateText() {
-      this.formData.disabledReason = this.selectedQuickItems.join(", ");
-    },
-    async submit() {
-      if (!(await this.isValid())) return;
+const selectedQuickItems = ref([]);
+const quickItems = [
+  "Broken part",
+  "Blob",
+  "Maxtemp",
+  "Preheat error",
+  "Cable USB ",
+  "Bed thermal runaway",
+  "Thermistor Heatbed",
+  "Thermistor Heatblock",
+  "Thermal Runaway",
+  "Mintemp Nozzle",
+  "Mintemp Heatbed",
+  "Nozzle",
+  "Nozzle Clog",
+  "Fan Hotend",
+  "Fan Part cooling",
+  "Extruder rattle",
+  "Extruder",
+  "Z Axis",
+  "X Axis",
+  "Y Axis",
+  "Rented",
+  "Motherboard",
+  "Other",
+  "Clean",
+];
+const formData = ref<{
+  disabledReason?: string;
+}>({});
+const printersStore = usePrinterStore();
+const dialogsStore = useDialogsStore();
+const dialog = useDialog(DialogName.PrinterMaintenanceDialog);
 
-      const printerId = this.printer?.id;
-      if (!printerId) {
-        this.formData = {};
-        this.closeDialog();
-        return;
-      }
+const validationObserver = ref(null);
+const printer = computed(() => printersStore.maintenanceDialogPrinter);
 
-      const disabledReason = this.formData.disabledReason;
-      await PrintersService.updatePrinterMaintenance(printerId, disabledReason);
+const isValid = async () => {
+  return await validationObserver.value.validate();
+};
 
-      this.formData = {};
-      this.closeDialog();
-    },
-    closeDialog() {
-      this.selectedQuickItems = [];
-      this.dialog.closeDialog();
-      this.printersStore.setMaintenanceDialogPrinter();
-    },
-  },
-  watch: {
-    async printer(viewedPrinter?: PrinterDto, _?: PrinterDto) {
-      const printerId = viewedPrinter?.id;
-      if (!viewedPrinter || !printerId) return;
-    },
-  },
-});
+const updateText = () => {
+  formData.value.disabledReason = selectedQuickItems.value.join(", ");
+};
+
+const submit = async () => {
+  if (!(await isValid())) return;
+
+  const printerId = printer.value?.id;
+  if (!printerId) {
+    formData.value = {};
+    closeDialog();
+    return;
+  }
+
+  const disabledReason = formData.value.disabledReason;
+  await PrintersService.updatePrinterMaintenance(printerId, disabledReason);
+
+  formData.value = {};
+  closeDialog();
+};
+
+const closeDialog = () => {
+  selectedQuickItems.value = [];
+  dialog.closeDialog();
+  printersStore.setMaintenanceDialogPrinter();
+};
 </script>

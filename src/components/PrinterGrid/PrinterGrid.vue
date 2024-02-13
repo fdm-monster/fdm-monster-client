@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, onMounted } from "vue";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
 import { totalVuetifyColumnCount } from "@/shared/printer-grid.constants";
 import { usePrinterStore } from "@/store/printer.store";
