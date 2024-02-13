@@ -4,44 +4,8 @@
       <v-row>
         <v-col>
           <v-icon>filter_list</v-icon>
-          Filtering {{ filteredFloors.length }} of {{ floors.length }} floors (optional)
+          Filter by printer name (optional)
         </v-col>
-        <v-col>
-          <v-select
-            v-model="filteredFloors"
-            :items="floors"
-            clearable
-            item-text="name"
-            label="Floors"
-            multiple
-            return-object
-          >
-          </v-select>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col>
-          <v-icon>filter_list</v-icon>
-          Filtering {{ filteredFdmPrinters.length }} of {{ floorFdmPrinters.length }} FDM printers
-          (optional)
-        </v-col>
-        <v-col>
-          <v-select
-            v-model="filteredFdmPrinters"
-            :items="floorFdmPrinters"
-            clearable
-            item-text="name"
-            label="FDM Printers"
-            multiple
-            open-on-clear
-            return-object
-          >
-          </v-select>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>Filter by printer name (optional)</v-col>
         <v-col>
           <v-text-field
             v-model="printerNameSearch"
@@ -72,7 +36,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in shownCompletions" :key="item.name">
+          <tr v-for="item in shownCompletions" :key="item.id">
             <td>{{ printer(item.printerId)?.name ?? "?" }}</td>
             <td>{{ floorOfPrinter(item.printerId)?.name ?? "?" }}</td>
             <td>
@@ -108,119 +72,73 @@
   </v-sheet>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { FloorDto } from "../../models/floors/floor.model";
-import { PrinterDto } from "@/models/printers/printer.model";
+<script lang="ts" setup>
+import { onMounted, ref, watch } from "vue";
 import { PrintCompletionsService } from "@/backend/print-completions.service";
 import { PrinterCompletions } from "@/models/print-completions/print-completions.model";
-import { usePrinterStore } from "../../store/printer.store";
-import { useFloorStore } from "../../store/floor.store";
+import { usePrinterStore } from "@/store/printer.store";
+import { useFloorStore } from "@/store/floor.store";
 
-interface Data {
-  loadedCompletions: PrinterCompletions[];
-  shownCompletions: PrinterCompletions[];
-  floorFdmPrinters: PrinterDto[];
-  filteredFdmPrinters: PrinterDto[];
-  filteredFloors: FloorDto[];
-  printerNameSearch: string;
-}
+const loadedCompletions = ref<PrinterCompletions[]>([]);
+const shownCompletions = ref<PrinterCompletions[]>([]);
+const printerNameSearch = ref<string>("");
 
-export default defineComponent({
-  name: "PrintCompletionTimeline",
-  components: {},
-  setup: () => {
-    return {
-      printerStore: usePrinterStore(),
-      floorStore: useFloorStore(),
-    };
-  },
-  data(): Data {
-    return {
-      loadedCompletions: [],
-      shownCompletions: [],
-      // Final result of all floors
-      floorFdmPrinters: [],
-      filteredFdmPrinters: [],
-      filteredFloors: [],
-      printerNameSearch: "",
-    };
-  },
-  async mounted() {
-    await this.loadCompletions();
-  },
-  computed: {
-    floors() {
-      return this.floorStore.floors;
-    },
-  },
-  watch: {
-    printerFloors() {
-      this.updateFloors();
-    },
-    filteredFloors() {
-      this.updateFloors();
-    },
-    filteredFdmPrinters() {
-      this.updatePrinters();
-    },
-    printerNameSearch() {
-      this.updatePrinters();
-    },
-  },
-  methods: {
-    async loadCompletions() {
-      this.loadedCompletions = [];
-      this.shownCompletions = [];
-      this.loadedCompletions = await PrintCompletionsService.getCompletions();
-      this.updateFloors();
-      this.updatePrinters();
-    },
-    printer(printerId: string) {
-      return this.printerStore.printer(printerId);
-    },
-    floorOfPrinter(printerId: string) {
-      return this.floorStore.floorOfPrinter(printerId);
-    },
-    updateFloors() {
-      if (!this.filteredFloors?.length) {
-        this.floorFdmPrinters = this.printerStore.printers;
-        return;
-      }
-      const flattenedPrinterIds = this.filteredFloors.flatMap((f) => {
-        return f.printers.map((fp) => fp.printerId);
-      });
-      this.floorFdmPrinters = this.printerStore.printers.filter((fp) => {
-        if (!fp.id) return false;
-        return flattenedPrinterIds.includes(fp.id);
-      });
-    },
-    updatePrinters() {
-      const pIds = this.filteredFdmPrinters.map((p) => p.id);
-      const preSearchPrints = pIds.length
-        ? this.loadedCompletions.filter((c) => pIds.includes(c.id))
-        : this.loadedCompletions;
+const printerStore = usePrinterStore();
+const floorStore = useFloorStore();
 
-      const preSortPrints = this.printerNameSearch?.length
-        ? preSearchPrints.filter((p) => {
-            const printer = this.floorFdmPrinters.find((f) => f.id === p.id);
-            if (!printer) return false;
-
-            return (printer.name + printer.printerURL)
-              .toLowerCase()
-              .includes(this.printerNameSearch.toLowerCase());
-          })
-        : preSearchPrints;
-
-      this.shownCompletions = preSortPrints.sort((p1, p2) => {
-        if (p1.failureCount === p2.failureCount) {
-          return p1.printCount > p2.printCount ? -1 : 1;
-        }
-        return p1.failureCount > p2.failureCount ? -1 : 1;
-      });
-    },
-  },
+onMounted(async () => {
+  await loadCompletions();
 });
-</script>
 
-<style lang="scss"></style>
+watch([() => printerNameSearch.value], () => {
+  updatePrinters();
+});
+
+const loadCompletions = async () => {
+  loadedCompletions.value = [];
+  shownCompletions.value = [];
+  loadedCompletions.value = await PrintCompletionsService.getCompletions();
+  updatePrinters();
+};
+
+const printer = (printerId: string) => {
+  return printerStore.printer(printerId);
+};
+
+const floorOfPrinter = (printerId: string) => {
+  return floorStore.floorOfPrinter(printerId);
+};
+
+const updatePrinters = () => {
+  const pIds = printerStore.printers.map((p) => p.id);
+
+  // Determine printers from store, any unknown ID's filtered out
+  const preSearchPrints = pIds.length
+    ? loadedCompletions.value.filter((c) => pIds.includes(c.printerId))
+    : loadedCompletions.value;
+
+  console.log("pre", preSearchPrints, printerNameSearch.value?.length);
+
+  const preSortPrints = printerNameSearch.value?.length
+    ? preSearchPrints.filter((p) => {
+        const printer = printerStore.printers.find((spr) => spr.id === p.printerId);
+        if (!printer) return false;
+
+        return (printer.name + printer.printerURL)
+          .toLowerCase()
+          .includes(printerNameSearch.value.toLowerCase());
+      })
+    : preSearchPrints;
+
+  console.log("presort", preSortPrints);
+
+  shownCompletions.value = preSortPrints.sort((p1, p2) => {
+    if (p1.failureCount === p2.failureCount) {
+      return p1.printCount > p2.printCount ? -1 : 1;
+    }
+    return p1.failureCount > p2.failureCount ? -1 : 1;
+  });
+
+  console.log("post", shownCompletions.value);
+};
+</script>
