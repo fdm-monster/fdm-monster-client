@@ -85,6 +85,25 @@
                 size="36"
                 v-bind="attrs"
                 v-on="on"
+                @click.prevent.stop="clickOpenPrinterControlDialog()"
+              >
+                <v-icon>open_with</v-icon>
+              </v-btn>
+            </template>
+            <template v-slot:default>
+              <span>Control your printer head or extruder.</span>
+            </template>
+          </v-tooltip>
+
+          <!-- Emergency stop button -->
+          <v-tooltip v-if="printerStateStore.isPrinterOperational(printer?.id)" bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                elevation="4"
+                icon
+                size="36"
+                v-bind="attrs"
+                v-on="on"
                 @click.prevent.stop="clickEmergencyStop()"
               >
                 <v-icon>dangerous</v-icon>
@@ -182,11 +201,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 import { PrintersService } from "@/backend";
 import { usePrinterStore } from "@/store/printer.store";
-import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useGridStore } from "@/store/grid.store";
 import { FloorService } from "@/backend/floor.service";
@@ -196,109 +214,147 @@ import { interpretStates } from "@/shared/printer-state.constants";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import { useDialog } from "@/shared/dialog.composable";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
 export default defineComponent({
   name: "PrinterGridTile",
-  components: {},
   props: {
-    printer: Object as PropType<PrinterDto>,
-    x: Number,
-    y: Number,
+    printer: { type: Object as PropType<PrinterDto | undefined>, required: true },
+    x: { type: Number, required: true },
+    y: { type: Number, required: true },
   },
-  setup() {
-    return {
-      printerStore: usePrinterStore(),
-      printerStateStore: usePrinterStateStore(),
-      floorStore: useFloorStore(),
-      settingsStore: useSettingsStore(),
-      gridStore: useGridStore(),
-      dialogsStore: useDialogsStore(),
-      snackbar: useSnackbar(),
-    };
-  },
-  computed: {
-    printerId() {
-      return this.printer?.id;
-    },
-    selected() {
-      if (!this.printerId) return false;
-      return this.printerStore.isSelectedPrinter(this.printerId);
-    },
-    unselected() {
-      return this.printerStore.selectedPrinters?.length && !this.selected;
-    },
-    largeTilesEnabled() {
-      return this.settingsStore.largeTiles;
-    },
-    printerState() {
-      if (!this.printerId) return;
-      const printer = this.printerStore.printer(this.printerId);
+  setup(props) {
+    const printerStore = usePrinterStore();
+    const printerStateStore = usePrinterStateStore();
+    const floorStore = useFloorStore();
+    const settingsStore = useSettingsStore();
+    const gridStore = useGridStore();
+    const controlDialog = useDialog(DialogName.PrinterControlDialog);
+    const addOrUpdateDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
+    const snackbar = useSnackbar();
+
+    const printerId = computed(() => props.printer?.id);
+
+    const selected = computed(() => {
+      if (!printerId.value) return false;
+      return printerStore.isSelectedPrinter(printerId.value);
+    });
+
+    const unselected = computed(() => {
+      return printerStore.selectedPrinters?.length && !selected.value;
+    });
+
+    const largeTilesEnabled = computed(() => {
+      return settingsStore.largeTiles;
+    });
+
+    const printerState = computed(() => {
+      if (!printerId.value) return;
+      const printer = printerStore.printer(printerId.value);
       if (!printer) return;
 
-      const printerEvents = this.printerStateStore.printerEventsById[this.printerId];
-      const socketState = this.printerStateStore.socketStatesById[this.printerId];
+      const printerEvents = printerStateStore.printerEventsById[printerId.value];
+      const socketState = printerStateStore.socketStatesById[printerId.value];
       const states = interpretStates(printer, socketState, printerEvents);
+      console.log("states", states);
       return states;
-    },
-    printerStateColor() {
-      const states = this.printerState;
-      if (!states) return defaultColor;
+    });
+
+    const printerStateColor = computed(() => {
+      const states = printerState.value;
+      if (!states) {
+        return defaultColor;
+      }
+      console.log("Returning", states.rgb, defaultColor);
       return states.rgb || defaultColor;
-    },
-    currentJob() {
-      if (!this.printerId) return;
-      return this.printerStateStore.printerJobsById[this.printerId];
-    },
-    currentPrintingFilePath() {
-      if (!this.printerId) return;
-      return this.printerStateStore.printingFilePathsByPrinterId[this.printerId];
-    },
-  },
-  methods: {
-    clickInfo() {
-      this.printerStore.setSideNavPrinter(this.printer);
-    },
-    async clickRefreshSocket() {
-      if (!this.printerId) return;
-      await PrintersService.refreshSocket(this.printerId);
-      this.snackbar.openInfoMessage({
+    });
+
+    const currentJob = computed(() => {
+      if (!printerId.value) return;
+      return printerStateStore.printerJobsById[printerId.value];
+    });
+
+    const currentPrintingFilePath = computed(() => {
+      if (!printerId.value) return;
+      return printerStateStore.printingFilePathsByPrinterId[printerId.value];
+    });
+
+    const clickInfo = () => {
+      printerStore.setSideNavPrinter(props.printer);
+    };
+
+    const clickRefreshSocket = async () => {
+      if (!printerId.value) return;
+      await PrintersService.refreshSocket(printerId.value);
+      snackbar.openInfoMessage({
         title: "Refreshing OctoPrint connection state",
       });
-    },
-    clickOpenPrinterURL() {
-      if (!this.printer) return;
-      PrintersService.openPrinterURL(this.printer.printerURL);
-    },
-    clickOpenSettings() {
-      this.printerStore.setUpdateDialogPrinter(this.printer);
-      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
-    },
-    async clickEmergencyStop() {
-      if (!this.printerId) return;
+    };
+
+    const clickOpenPrinterURL = () => {
+      if (!props.printer) return;
+      PrintersService.openPrinterURL(props.printer.printerURL);
+    };
+
+    const clickOpenSettings = () => {
+      printerStore.setUpdateDialogPrinter(props.printer);
+      addOrUpdateDialog.openDialog();
+    };
+
+    const clickOpenPrinterControlDialog = async () => {
+      if (!printerId.value) {
+        throw new Error("PrinterId not set, cant open dialog");
+      }
+
+      await controlDialog.openDialog({ printerId });
+    };
+
+    const clickEmergencyStop = async () => {
+      if (!printerId.value) return;
       if (
         confirm("Are you sure to abort the print in Emergency Stop mode? Please reconnect after.")
       ) {
-        await CustomGcodeService.postEmergencyM112Command(this.printerId);
+        await CustomGcodeService.postEmergencyM112Command(printerId.value);
       }
-    },
-    async clickConnectUsb() {
-      if (!this.printerId) return;
-      await PrintersService.sendPrinterConnectCommand(this.printerId!);
-    },
-    async selectOrUnplacePrinter() {
-      if (!this.printer || !this.printerId) return;
-      if (this.gridStore.gridEditMode) {
-        const floorId = this.floorStore.selectedFloor?.id;
-        if (!floorId) throw new Error("Cant clear printer, floor not selected");
-        await FloorService.deletePrinterFromFloor(floorId, this.printerId);
+    };
 
+    const clickConnectUsb = async () => {
+      if (!printerId.value) return;
+      await PrintersService.sendPrinterConnectCommand(printerId.value);
+    };
+
+    const selectOrUnplacePrinter = async () => {
+      if (!props.printer || !printerId.value) return;
+      if (gridStore.gridEditMode) {
+        const floorId = floorStore.selectedFloor?.id;
+        if (!floorId) throw new Error("Cant clear printer, floor not selected");
+        await FloorService.deletePrinterFromFloor(floorId, printerId.value);
         return;
       }
+      printerStore.toggleSelectedPrinter(props.printer);
+    };
 
-      this.printerStore.toggleSelectedPrinter(this.printer);
-    },
+    return {
+      selected,
+      unselected,
+      largeTilesEnabled,
+      printerState,
+      printerStateColor,
+      currentJob,
+      currentPrintingFilePath,
+      gridStore,
+      printerStateStore,
+      clickInfo,
+      clickRefreshSocket,
+      clickOpenPrinterControlDialog,
+      clickOpenPrinterURL,
+      clickOpenSettings,
+      clickEmergencyStop,
+      clickConnectUsb,
+      selectOrUnplacePrinter,
+    };
   },
 });
 </script>

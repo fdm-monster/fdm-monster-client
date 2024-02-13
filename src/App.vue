@@ -26,6 +26,7 @@
     <YamlImportExportDialog />
     <FileExplorerSideNav />
     <BatchReprintDialog />
+    <PrinterControlDialog />
   </v-app>
 </template>
 
@@ -54,11 +55,12 @@ import { uploadProgressTest } from "./utils/test.util";
 import { useAuthStore } from "./store/auth.store";
 import AppLoader from "./AppLoader.vue";
 import AddOrUpdateCameraStreamDialog from "@/components/Generic/Dialogs/AddOrUpdateCameraStreamDialog.vue";
-import { sleep } from "@/utils/time.utils";
+import PrinterControlDialog from "@/components/Generic/Dialogs/PrinterControlDialog.vue";
 
 export default defineComponent({
   name: "AppView",
   components: {
+    PrinterControlDialog,
     AddOrUpdateCameraStreamDialog,
     AppInfoSnackbar,
     AppErrorSnackbar,
