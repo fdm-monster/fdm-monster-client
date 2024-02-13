@@ -6,7 +6,12 @@
     persistent
     @close="emitEscape()"
   >
-    <slot></slot>
+    <slot>
+      <div class="pa-3 text--primary">
+        No content defined in dialog.
+        <v-btn @click="dialog.closeDialog()"><v-icon class="mr-3">close</v-icon>Close</v-btn>
+      </div></slot
+    >
   </v-dialog>
 </template>
 

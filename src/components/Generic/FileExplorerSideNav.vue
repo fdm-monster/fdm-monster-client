@@ -449,8 +449,9 @@ const isPrinting = computed(() => {
 });
 
 const filesListed = computed(() => {
+  if (!shownFileCache.value?.length) return [];
   return (
-    shownFileCache.value?.filter((f) =>
+    shownFileCache.value.filter((f) =>
       fileSearch.value?.length
         ? `${f.name}${f.path}`.toLowerCase().includes(fileSearch.value)
         : true

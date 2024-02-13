@@ -14,12 +14,17 @@ export interface Offsets {
   tool1Temp?: number;
 }
 
+export interface ToolTemp {
+  actual: number;
+  target: number;
+}
+
 export interface Temp {
-  bed: number;
-  chamber: number;
+  bed: ToolTemp;
+  chamber: ToolTemp;
   time: number;
-  tool0: number;
-  tool1?: number;
+  tool0: ToolTemp;
+  tool1?: ToolTemp;
 }
 
 export interface CurrentOrHistoryPayload {

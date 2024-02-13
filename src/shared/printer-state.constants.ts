@@ -85,10 +85,13 @@ export function interpretStates(
   // Second level: socket state
   const socketAuthenticated = socketState.socket === "authenticated";
   const socketAuthing = socketState.socket === "authenticating";
-  let currentState = printerState?.current?.payload.state;
-  if (!currentState) {
-    currentState = printerState?.history?.payload.state;
-  }
+  const currentState = printerState?.current?.payload?.state;
+
+  // History might be way outdated
+  // if (!currentState) {
+  //   currentState = printerState?.history?.payload?.state;
+  // }
+
   const flags = currentState?.flags;
   if (!socketAuthenticated || !flags) {
     const s = socketAuthenticated ? 1 : 0;
