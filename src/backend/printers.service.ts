@@ -70,6 +70,21 @@ export class PrintersService extends BaseService {
     return await this.postApi(path);
   }
 
+  static async sendPrinterJogCommand(
+    printerId: IdType,
+    amounts: { x?: number; y?: number; z?: number }
+  ) {
+    const path = ServerApi.printerJogCommandRoute(printerId);
+
+    return await this.postApi(path, amounts);
+  }
+
+  static async sendPrinterHomeCommand(printerId: IdType, axes: string[]) {
+    const path = ServerApi.printerHomeCommandRoute(printerId);
+
+    return await this.postApi(path, axes);
+  }
+
   static async createPrinter(printer: CreatePrinter) {
     const path = ServerApi.printerRoute;
 
