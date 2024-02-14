@@ -30,7 +30,7 @@
               <v-btn class="primary" outlined x-large @click="jogPrinterHead(-1, 0, 0)">
                 <v-icon>west</v-icon>
               </v-btn>
-              <v-btn class="primary" outlined x-large @click="homeAxes()">
+              <v-btn class="primary" outlined x-large @click="homeAxes(['x', 'y'])">
                 <v-icon>home</v-icon>
               </v-btn>
               <v-btn class="primary" outlined x-large @click="jogPrinterHead(1, 0, 0)">
@@ -52,6 +52,10 @@
               <br />
               <v-btn class="primary" outlined x-large @click="jogPrinterHead(0, 0, 1)">
                 <v-icon>north</v-icon>
+              </v-btn>
+              <br />
+              <v-btn class="primary" outlined x-large @click="homeAxes(['z'])">
+                <v-icon>home</v-icon>
               </v-btn>
               <br />
               <v-btn class="primary" outlined x-large @click="jogPrinterHead(1, 0, 1)">
@@ -119,8 +123,8 @@ const jogPrinterHead = async (x: number, y: number, z: number) => {
   });
 };
 
-const homeAxes = async () => {
-  await PrintersService.sendPrinterHomeCommand(printerId.value, {});
+const homeAxes = async (axes: string[]) => {
+  await PrintersService.sendPrinterHomeCommand(printerId.value, axes);
 };
 
 const closeDialog = () => {

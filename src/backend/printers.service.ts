@@ -79,13 +79,10 @@ export class PrintersService extends BaseService {
     return await this.postApi(path, amounts);
   }
 
-  static async sendPrinterHomeCommand(
-    printerId: IdType,
-    amounts: { x?: number; y?: number; z?: number }
-  ) {
+  static async sendPrinterHomeCommand(printerId: IdType, axes: string[]) {
     const path = ServerApi.printerHomeCommandRoute(printerId);
 
-    return await this.postApi(path, amounts);
+    return await this.postApi(path, axes);
   }
 
   static async createPrinter(printer: CreatePrinter) {
