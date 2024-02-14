@@ -49,6 +49,14 @@
               <v-icon>info</v-icon>
               &nbsp;Details
             </v-list-item>
+            <v-list-item
+              v-if="hasPrinterControlFeature"
+              :close-on-click="true"
+              @click="clickOpenPrinterControlDialog()"
+            >
+              <v-icon>open_with</v-icon>
+              &nbsp;Control
+            </v-list-item>
             <v-list-item :close-on-click="true" @click="clickOpenPrinterURL()">
               <v-icon>directions</v-icon>
               &nbsp;Visit OctoPrint
@@ -68,7 +76,8 @@
           <v-btn
             v-if="
               !printerStateStore.isPrinterOperational(printer?.id) &&
-              printerStateStore.isApiResponding(printer?.id)
+              printerStateStore.isApiResponding(printer?.id) &&
+              feature
             "
             icon
             @click.prevent.stop="clickConnectUsb()"
@@ -77,7 +86,10 @@
           </v-btn>
 
           <!-- Emergency stop button -->
-          <v-tooltip v-if="printerStateStore.isPrinterOperational(printer?.id)" bottom>
+          <v-tooltip
+            v-if="hasPrinterControlFeature && printerStateStore.isPrinterOperational(printer?.id)"
+            bottom
+          >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 elevation="4"
@@ -215,6 +227,7 @@ import { usePrinterStateStore } from "@/store/printer-state.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useDialog } from "@/shared/dialog.composable";
+import { useFeatureStore } from "@/store/features.store";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
@@ -229,6 +242,7 @@ export default defineComponent({
     const printerStore = usePrinterStore();
     const printerStateStore = usePrinterStateStore();
     const floorStore = useFloorStore();
+    const featureStore = useFeatureStore();
     const settingsStore = useSettingsStore();
     const gridStore = useGridStore();
     const controlDialog = useDialog(DialogName.PrinterControlDialog);
@@ -244,6 +258,10 @@ export default defineComponent({
 
     const unselected = computed(() => {
       return printerStore.selectedPrinters?.length && !selected.value;
+    });
+
+    const hasPrinterControlFeature = computed(() => {
+      return featureStore.hasFeature("printerControlApi");
     });
 
     const largeTilesEnabled = computed(() => {
@@ -346,6 +364,7 @@ export default defineComponent({
       currentPrintingFilePath,
       gridStore,
       printerStateStore,
+      hasPrinterControlFeature,
       clickInfo,
       clickRefreshSocket,
       clickOpenPrinterControlDialog,
