@@ -76,8 +76,7 @@
           <v-btn
             v-if="
               !printerStateStore.isPrinterOperational(printer?.id) &&
-              printerStateStore.isApiResponding(printer?.id) &&
-              feature
+              printerStateStore.isApiResponding(printer?.id)
             "
             icon
             @click.prevent.stop="clickConnectUsb()"
@@ -276,7 +275,6 @@ export default defineComponent({
       const printerEvents = printerStateStore.printerEventsById[printerId.value];
       const socketState = printerStateStore.socketStatesById[printerId.value];
       const states = interpretStates(printer, socketState, printerEvents);
-      console.log("states", states);
       return states;
     });
 
@@ -285,7 +283,6 @@ export default defineComponent({
       if (!states) {
         return defaultColor;
       }
-      console.log("Returning", states.rgb, defaultColor);
       return states.rgb || defaultColor;
     });
 
