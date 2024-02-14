@@ -59,7 +59,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       return (printerId: IdType) => {
         const printerEvents = this.printerEventsById[printerId];
         if (!printerEvents) return false;
-        const flags = printerEvents?.current?.payload.state.flags;
+        const flags = printerEvents?.current?.payload?.state?.flags;
         return flags?.printing || flags?.paused;
       };
     },
@@ -67,7 +67,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       return (printerId: IdType) => {
         const printerEvents = this.printerEventsById[printerId];
         if (!printerEvents) return false;
-        const flags = printerEvents?.current?.payload.state.flags;
+        const flags = printerEvents?.current?.payload?.state?.flags;
         return flags?.paused;
       };
     },
