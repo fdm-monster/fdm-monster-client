@@ -59,6 +59,16 @@
               </v-btn>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col cols="12">
+              <v-btn-toggle v-model="multiplier">
+                <v-btn :value="0.1">0.1</v-btn>
+                <v-btn :value="1">1</v-btn>
+                <v-btn :value="10">10</v-btn>
+                <v-btn :value="100">100</v-btn>
+              </v-btn-toggle>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -72,7 +82,7 @@
 <script lang="ts" setup>
 import { useDialog } from "@/shared/dialog.composable";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { usePrinterStore } from "@/store/printer.store";
 import { IdType } from "@/utils/id.type";
 import { usePrinterStateStore } from "@/store/printer-state.store";
@@ -88,6 +98,8 @@ const printer = computed(() => {
   return printerStore.printer(printerId.value);
 });
 
+const multiplier = ref<number>(10);
+
 const printerTemps = computed(() => {
   const events = printerStateStore.printerEventsById[printerId.value];
   if (
@@ -101,9 +113,9 @@ const printerTemps = computed(() => {
 
 const jogPrinterHead = async (x: number, y: number, z: number) => {
   await PrintersService.sendPrinterJogCommand(printerId.value, {
-    x,
-    y,
-    z,
+    x: x * multiplier.value,
+    y: y * multiplier.value,
+    z: z * multiplier.value,
   });
 };
 

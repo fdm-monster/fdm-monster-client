@@ -274,8 +274,7 @@ export default defineComponent({
 
       const printerEvents = printerStateStore.printerEventsById[printerId.value];
       const socketState = printerStateStore.socketStatesById[printerId.value];
-      const states = interpretStates(printer, socketState, printerEvents);
-      return states;
+      return interpretStates(printer, socketState, printerEvents);
     });
 
     const printerStateColor = computed(() => {
