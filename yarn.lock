@@ -1582,7 +1582,7 @@ __metadata:
     vue-svg-loader: "npm:0.16.0"
     vue-template-compiler: "npm:2.7.16"
     vuedraggable: "npm:2.24.3"
-    vuetify: "npm:2.7.1"
+    vuetify: "npm:2.7.2"
     vuetify-loader: "npm:1.9.2"
     webpack: "npm:5.90.1"
   languageName: unknown
@@ -14836,12 +14836,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vuetify@npm:2.7.1":
-  version: 2.7.1
-  resolution: "vuetify@npm:2.7.1"
+"vuetify@npm:2.7.2":
+  version: 2.7.2
+  resolution: "vuetify@npm:2.7.2"
   peerDependencies:
     vue: ^2.6.4
-  checksum: 10c0/c649412e803ba6c78fdbf4be819385a1925a267db87aab1e1ecf06827d320078ff08cfc1f98f0c3f74664c399106b8634c3b472296ebf4171a3d501c218c8727
+  checksum: 10c0/2c7df556c50d0ab74901d112b3944cf7022c97a58c423cc8572ece129bf81ac077652e0bd59aca29a0999d94d4aae1d06653cec6cc82612e81c48690d78fa60f
   languageName: node
   linkType: hard
 
