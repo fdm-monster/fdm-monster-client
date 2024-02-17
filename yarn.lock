@@ -6537,9 +6537,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.672
-  resolution: "electron-to-chromium@npm:1.4.672"
-  checksum: 10c0/563580218f6a8d1501f4fab78a9f6e7f520037d9f5d69606b1474dab701f1117aab713600ab0f6fb725f0e4d6358576badbe858822b9c2248cdb8240be6a7f51
+  version: 1.4.673
+  resolution: "electron-to-chromium@npm:1.4.673"
+  checksum: 10c0/3e01365ee9b5b32b772ac6437ad4395e4367a2ffb23d651caab67802dbe65e91fca677681c38fa8e14f04ba8e8c79463520ab29b9e5fadf9028e1b1e97772d69
   languageName: node
   linkType: hard
 
@@ -10077,8 +10077,8 @@ __metadata:
   linkType: hard
 
 "js-beautify@npm:^1.14.9, js-beautify@npm:^1.6.12":
-  version: 1.15.0
-  resolution: "js-beautify@npm:1.15.0"
+  version: 1.15.1
+  resolution: "js-beautify@npm:1.15.1"
   dependencies:
     config-chain: "npm:^1.1.13"
     editorconfig: "npm:^1.0.4"
@@ -10089,7 +10089,7 @@ __metadata:
     css-beautify: js/bin/css-beautify.js
     html-beautify: js/bin/html-beautify.js
     js-beautify: js/bin/js-beautify.js
-  checksum: 10c0/49369a52f1d2598e693e3d8785c180a97f8e7877768be51bbc7ded2d8255e6ae10b107a39db11618732a79458e772811b88e2fe17fc3f4017b699e1f65886913
+  checksum: 10c0/4140dd95537143eb429b6c8e47e21310f16c032d97a03163c6c7c0502bc663242a5db08d3ad941b87f24a142ce4f9190c556d2340bcd056545326377dfae5362
   languageName: node
   linkType: hard
 
