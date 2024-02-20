@@ -38,9 +38,19 @@ export const useTestPrinterStore = defineStore("TestPrinter", {
             return {
               event,
               payload: e.payload
+                ?.toString()
                 ?.replace("noResponse", "unreachable")
                 .replace("authFail", "authentication failure"),
-              failure: ["authFail", "noResponse", "aborted", "globalKey"].includes(e.payload),
+              failure: [
+                "authFail",
+                "noResponse",
+                "aborted",
+                "globalKey",
+                "error",
+                "connection error",
+                "closed",
+                "connection closed",
+              ].includes(e.payload?.toString()),
             };
           });
     },
@@ -51,8 +61,7 @@ export const useTestPrinterStore = defineStore("TestPrinter", {
     },
     async createTestPrinter(newPrinter: CreatePrinter) {
       this.testPrinter = newPrinter;
-      const data = await PrintersService.testConnection(newPrinter);
-      return data;
+      return await PrintersService.testConnection(newPrinter);
     },
     saveEvent(event: TestEvent) {
       this.testPrinterEvents?.push(event);
