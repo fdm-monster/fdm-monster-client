@@ -24,6 +24,12 @@
           </div>
           <div v-else>
             <v-checkbox v-model="exportFloors" class="pa-0 ma-0 mt-2 ml-2" label="Include floors" />
+            <v-checkbox
+              v-model="exportGroups"
+              :disabled="disableExportGroups"
+              class="pa-0 ma-0 mt-2 ml-2"
+              label="Include groups"
+            />
             <v-checkbox v-model="exportPrinters" class="pa-0 ma-0 ml-2" label="Include printers" />
             <v-checkbox
               v-model="exportFloorGrid"
@@ -55,17 +61,19 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { usePrinterStore } from "../../../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { ServerPrivateService } from "../../../backend/server-private.service";
-import { useDialog } from "../../../shared/dialog.composable";
-import { useSnackbar } from "../../../shared/snackbar.composable";
+import { ServerPrivateService } from "@/backend/server-private.service";
+import { useDialog } from "@/shared/dialog.composable";
+import { useSnackbar } from "@/shared/snackbar.composable";
+import { useFeatureStore } from "@/store/features.store";
 
 interface Data {
   selectedMode: number;
   exportFloors: boolean;
   exportFloorGrid: boolean;
+  exportGroups: boolean;
   exportPrinters: boolean;
   notes?: string;
   importFile?: File;
@@ -79,22 +87,30 @@ export default defineComponent({
     return {
       printersStore: usePrinterStore(),
       dialogsStore: useDialogsStore(),
+      featureStore: useFeatureStore(),
       dialog,
       snackbar: useSnackbar(),
     };
   },
-  async created() {},
+  async created() {
+    await this.featureStore.loadFeatures();
+    this.exportGroups = this.featureStore.hasFeature("printerGroupsApi");
+  },
   async mounted() {},
   props: {},
   data: (): Data => ({
     selectedMode: 0,
     exportFloors: true,
     exportFloorGrid: true,
+    exportGroups: true,
     exportPrinters: true,
     importFile: undefined,
     notes: "",
   }),
   computed: {
+    disableExportGroups() {
+      return !this.featureStore.hasFeature("printerGroupsApi");
+    },
     isFileProvided() {
       return !!this.importFile;
     },
@@ -110,6 +126,7 @@ export default defineComponent({
 
       await ServerPrivateService.downloadYamlExport({
         exportPrinters: this.exportPrinters,
+        exportGroups: this.exportGroups,
         exportFloorGrid: this.exportFloorGrid,
         printerComparisonStrategiesByPriority: ["name", "url"],
         exportFloors: this.exportFloors,
