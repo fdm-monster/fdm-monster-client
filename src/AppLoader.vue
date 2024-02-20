@@ -133,7 +133,11 @@ async function loadAppWithAuthenticationReady() {
     captureException(e);
   }
 
-  await socketIoClient.setupSocketConnection();
+  if (!socketIoClient.socketState().setup) {
+    await socketIoClient.setupSocketConnection();
+  } else {
+    socketIoClient.reconnect();
+  }
 
   setOverlay(false);
 }

@@ -10,6 +10,9 @@ export const socketState = reactive({
 });
 
 export function constructSocket(apiBase: string, token?: string | null) {
+  if (socketState.setup) {
+    throw new Error("Socket already set up");
+  }
   socketState.setup = false;
   appSocketIO = io(apiBase, {
     auth: token?.length ? { token } : undefined,
@@ -25,6 +28,22 @@ export function constructSocket(apiBase: string, token?: string | null) {
     socketState.id = "";
     socketState.connected = false;
   });
+}
+
+export function resetSocketConnection() {
+  socketState.connected = false;
+  appSocketIO?.close();
+  appSocketIO?.open();
+}
+
+export function deconstructSocket() {
+  if (appSocketIO) {
+    appSocketIO.close();
+  }
+  appSocketIO = null;
+  socketState.setup = false;
+  socketState.connected = false;
+  socketState.id = "";
 }
 
 export function getSocketState() {
