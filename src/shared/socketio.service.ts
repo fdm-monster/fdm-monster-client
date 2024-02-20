@@ -1,4 +1,3 @@
-import { io, Socket } from "socket.io-client";
 import {
   PrinterStateDto,
   SocketIoUpdateMessage,
@@ -11,7 +10,13 @@ import { useSnackbar } from "./snackbar.composable";
 import { getBaseUri } from "@/shared/http-client";
 import { useAuthStore } from "@/store/auth.store";
 import { IdType } from "@/utils/id.type";
-import { appSocketIO, constructSocket, getSocketState } from "@/store/connection.store";
+import {
+  appSocketIO,
+  constructSocket,
+  deconstructSocket,
+  getSocketState,
+  resetSocketConnection,
+} from "@/store/connection.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -42,13 +47,18 @@ export class SocketIoService {
     appSocketIO?.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
     appSocketIO?.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);
+      console.log(data);
     });
   }
 
   disconnect() {
+    deconstructSocket();
+  }
+
+  reconnect() {
     if (appSocketIO) {
-      console.debug("Disconnecting socket.io client");
-      appSocketIO.disconnect();
+      console.debug("Resetting socket.io client connection");
+      resetSocketConnection();
     }
   }
 
