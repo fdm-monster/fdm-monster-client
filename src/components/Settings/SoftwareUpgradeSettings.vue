@@ -51,9 +51,9 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title> Select a release to upgrade to:</v-list-item-title>
-          <v-list-item-subtitle>
-            Minimum required version: {{ minimum?.tag_name }}</v-list-item-subtitle
-          >
+          <v-list-item-subtitle class="mt-2">
+            Minimum required version: {{ minimum?.tag_name }}
+          </v-list-item-subtitle>
 
           <span v-if="loading"> <v-alert>Loading releases...</v-alert></span>
           <v-alert v-if="!loading && !filteredReleases?.length">No releases to show.</v-alert>
@@ -67,12 +67,10 @@
                 isBelowMinimum(release)
               "
               :label="`${release.tag_name}${
-                isCurrentRelease(release) ? ' - currently installed ' : ''
-              } ${!isUpgradeOrAllowedDowngrade(release, current) ? '(no downgrade, ' : '('}${
-                isVersionUnstable(release)
-                  ? `${isBelowMinimum(release) ? 'below minimum' : 'unstable version'})`
-                  : ')'
-              }`"
+                isCurrentRelease(release) ? ', currently installed' : ''
+              }${!isUpgradeOrAllowedDowngrade(release, current) ? ', downgrade not allowed' : ''}${
+                isBelowMinimum(release) ? ', below minimum' : ''
+              }${isVersionUnstable(release) ? ', unstable version' : ''}`"
               :value="release.tag_name"
             >
             </v-radio>
@@ -85,8 +83,8 @@
           <div>
             <v-checkbox v-model="allowDowngrade" label="Allow downgrade"></v-checkbox>
             <v-checkbox
-              :disabled="getIsCurrentUnstable"
               v-model="showPrereleases"
+              :disabled="getIsCurrentUnstable"
               :label="
                 getIsCurrentUnstable
                   ? 'Show prerelease versions (Currently already on prerelease version)'
