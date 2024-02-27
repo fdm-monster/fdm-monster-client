@@ -1547,7 +1547,7 @@ __metadata:
     "@vue/test-utils": "npm:2.4.4"
     "@vue/vue2-jest": "npm:29.2.6"
     "@vueuse/core": "npm:10.9.0"
-    "@vueuse/integrations": "npm:10.8.0"
+    "@vueuse/integrations": "npm:10.9.0"
     axios: "npm:1.6.7"
     babel-jest: "npm:29.7.0"
     chart.js: "npm:4.4.1"
@@ -3935,18 +3935,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:10.8.0":
-  version: 10.8.0
-  resolution: "@vueuse/core@npm:10.8.0"
-  dependencies:
-    "@types/web-bluetooth": "npm:^0.0.20"
-    "@vueuse/metadata": "npm:10.8.0"
-    "@vueuse/shared": "npm:10.8.0"
-    vue-demi: "npm:>=0.14.7"
-  checksum: 10c0/3e0504c406d194e20525edbf6cf13a20c87cca8f86aea0fa6a5800b72f8e556306e059abcf913da671a8ca6e8231bc586a0c7d3fa7426fa3c955d9e54142b8f4
-  languageName: node
-  linkType: hard
-
 "@vueuse/core@npm:10.9.0":
   version: 10.9.0
   resolution: "@vueuse/core@npm:10.9.0"
@@ -3959,12 +3947,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/integrations@npm:10.8.0":
-  version: 10.8.0
-  resolution: "@vueuse/integrations@npm:10.8.0"
+"@vueuse/integrations@npm:10.9.0":
+  version: 10.9.0
+  resolution: "@vueuse/integrations@npm:10.9.0"
   dependencies:
-    "@vueuse/core": "npm:10.8.0"
-    "@vueuse/shared": "npm:10.8.0"
+    "@vueuse/core": "npm:10.9.0"
+    "@vueuse/shared": "npm:10.9.0"
     vue-demi: "npm:>=0.14.7"
   peerDependencies:
     async-validator: "*"
@@ -4004,14 +3992,7 @@ __metadata:
       optional: true
     universal-cookie:
       optional: true
-  checksum: 10c0/f410d514fce9b8718780d1efde2ba4b075a63bb6f6ef03559ad8c52dde853d59641c205e46356c4df1219d233a7e9ee48a41629c592b9116d4a1efcbc756dc97
-  languageName: node
-  linkType: hard
-
-"@vueuse/metadata@npm:10.8.0":
-  version: 10.8.0
-  resolution: "@vueuse/metadata@npm:10.8.0"
-  checksum: 10c0/64903ee0d2cb422c0b48d67c65b83498902378bb986411a160ee7d34f0aaa0d93e0f54b3197473245dd17c2bccaad26ea11a3be7d0640d5adf3ec580e56f82a2
+  checksum: 10c0/ff420121c9a8f4da7a6f54ac9c2d303da3d4ad6b662e510dcb26cc1b97abd64d06f8980663abe819cc3ec1a8f8d336b7ce525893132cceae5f245bb0c0e068ac
   languageName: node
   linkType: hard
 
@@ -4019,15 +4000,6 @@ __metadata:
   version: 10.9.0
   resolution: "@vueuse/metadata@npm:10.9.0"
   checksum: 10c0/7f647b2ae73ff86c4de658c84a51988f7cdfec1643e1e706d5b29034bd949e240cffacf52505ab8e9223bb245f7bafe7f7bfa5c32702172ba29afc4aef96b475
-  languageName: node
-  linkType: hard
-
-"@vueuse/shared@npm:10.8.0":
-  version: 10.8.0
-  resolution: "@vueuse/shared@npm:10.8.0"
-  dependencies:
-    vue-demi: "npm:>=0.14.7"
-  checksum: 10c0/a34567cba79951211bf7d0d0dbe4f79cca17026399d9e5d31460048bb3096a0560f8bb3e30aea9977983075ef01406f34c348f959c7bde299d9dd932f769e53d
   languageName: node
   linkType: hard
 
