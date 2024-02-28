@@ -25,7 +25,7 @@
     "@vueuse/core": "10.9.0",
     "@vueuse/integrations": "10.9.0",
     "axios": "1.6.7",
-    "chart.js": "4.4.1",
+    "chart.js": "4.4.2",
     "core-js": "3.36.0",
     "jwt-decode": "3.1.2",
     "luxon": "3.4.4",
