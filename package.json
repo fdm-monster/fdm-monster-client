@@ -42,7 +42,7 @@
     "vuetify": "2.7.2"
   },
   "devDependencies": {
-    "@fontsource/roboto": "5.0.8",
+    "@fontsource/roboto": "5.0.12",
     "@types/jest": "29.5.12",
     "@types/luxon": "3.4.2",
     "@types/validator": "13.11.9",
