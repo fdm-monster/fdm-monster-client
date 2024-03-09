@@ -163,6 +163,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-define-polyfill-provider@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@babel/helper-define-polyfill-provider@npm:0.6.0"
+  dependencies:
+    "@babel/helper-compilation-targets": "npm:^7.22.6"
+    "@babel/helper-plugin-utils": "npm:^7.22.5"
+    debug: "npm:^4.1.1"
+    lodash.debounce: "npm:^4.0.8"
+    resolve: "npm:^1.14.2"
+  peerDependencies:
+    "@babel/core": ^7.4.0 || ^8.0.0-0 <8.0.0
+  checksum: 10c0/bf6af52fadbbebc5bf71166b91eac4fc21431ec9b0d2a94063f3a3d900ed44aa1384ad23e920a85e7a657fcf3e80edb2eaaac9d902bd1e632f3b50c836b45c53
+  languageName: node
+  linkType: hard
+
 "@babel/helper-environment-visitor@npm:^7.22.20":
   version: 7.22.20
   resolution: "@babel/helper-environment-visitor@npm:7.22.20"
@@ -4630,15 +4645,15 @@ __metadata:
   linkType: hard
 
 "babel-plugin-polyfill-corejs2@npm:^0.4.8":
-  version: 0.4.8
-  resolution: "babel-plugin-polyfill-corejs2@npm:0.4.8"
+  version: 0.4.9
+  resolution: "babel-plugin-polyfill-corejs2@npm:0.4.9"
   dependencies:
     "@babel/compat-data": "npm:^7.22.6"
-    "@babel/helper-define-polyfill-provider": "npm:^0.5.0"
+    "@babel/helper-define-polyfill-provider": "npm:^0.6.0"
     semver: "npm:^6.3.1"
   peerDependencies:
     "@babel/core": ^7.4.0 || ^8.0.0-0 <8.0.0
-  checksum: 10c0/843e7528de0e03a31a6f3837896a95f75b0b24b0294a077246282372279e974400b0bdd82399e8f9cbfe42c87ed56540fd71c33eafb7c8e8b9adac546ecc5fe5
+  checksum: 10c0/2cd47af763eb40aa41f1d6d9cbf1bdd217ff6c28f614b057c0328ee42a4d82cbcdcbc7d081d93e2a2d80446c899f25c3ebec048a63d260ef65a0a364134f71cd
   languageName: node
   linkType: hard
 
@@ -6449,9 +6464,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.697
-  resolution: "electron-to-chromium@npm:1.4.697"
-  checksum: 10c0/be667a5170c0b599b2e7f7ba9a9e4cb3629c51a385df67eea6993a6ecf24e7771f1cb277c533d2bcd8f14e2043ad39082f3a6d35652988b1fb69673ece5ce7b2
+  version: 1.4.699
+  resolution: "electron-to-chromium@npm:1.4.699"
+  checksum: 10c0/328051c526d840f137492ff870b782785666880e5a3df14abe9d04a843b1bfbb07139bf6496ada7958f97b482044cd6021d95db57e46f96b598b36e19c7da93c
   languageName: node
   linkType: hard
 
