@@ -12,14 +12,19 @@
           <v-list-item-content>
             <v-list-item-title> Current versions in use:</v-list-item-title>
             <v-list-item-action-text>
-              <strong>Your server's version is: {{ serverVersion }}</strong>
+              <strong>Your server's version is:</strong> {{ serverVersion }}
               <br />
-              <strong>Your client's version is: {{ version }}</strong>
+              <strong>Your client's version is:</strong> {{ version }}
               <br />
-              <strong v-if="monsterPiVersion">
-                Your MonsterPi version is: {{ monsterPiVersion }}<br />
-              </strong>
-              <strong v-else> No MonsterPi distro was detected. </strong>
+              <div v-if="monsterPiVersion">
+                MonsterPi:
+                <strong> Your MonsterPi version is: </strong>
+                {{ monsterPiVersion }}<br />
+              </div>
+              <div v-else>
+                <strong>MonsterPi:</strong>
+                <div>No MonsterPi distro was detected.</div>
+              </div>
             </v-list-item-action-text>
           </v-list-item-content>
         </v-list-item>
@@ -32,7 +37,9 @@
           <v-list-item-title> Server upgrade</v-list-item-title>
           <v-list-item-subtitle>
             Please visit
-            <a href="https://docs.fdm-monster.net">docs.fdm-monster.net</a>
+            <a href="https://docs.fdm-monster.net/docs/installing/">
+              the installation documentation
+            </a>
             for instructions on how to upgrade the server.
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -43,6 +50,13 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title> Client upgrade</v-list-item-title>
+          <v-list-item-subtitle>
+            Please visit
+            <a href="https://docs.fdm-monster.net/docs/configuration/updating_client_bundle">
+              the installation documentation
+            </a>
+            for instructions on how to upgrade the client bundle.
+          </v-list-item-subtitle>
           <v-list-item-subtitle>
             Upgrade the client webapp for quickly retrieving small fixes and features
           </v-list-item-subtitle>
