@@ -41,10 +41,10 @@
 import { defineComponent } from "vue";
 import { extend, setInteractionMode, ValidationObserver, ValidationProvider } from "vee-validate";
 import { PrintersService } from "@/backend";
-import { usePrinterStore } from "../../../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { useDialog } from "../../../shared/dialog.composable";
+import { useDialog } from "@/shared/dialog.composable";
 
 setInteractionMode("eager");
 extend("json", {
