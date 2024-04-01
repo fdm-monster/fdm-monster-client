@@ -1,6 +1,6 @@
 <template>
   <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog()">
-    <validation-observer ref="validationObserver" v-slot="{ invalid }">
+    <ValidationObserver ref="validationObserver" v-slot="{ invalid }">
       <v-card class="pa-4">
         <v-card-title>
           <span class="text-h5"> Mark '{{ printer?.name }}' for maintenance </span>
@@ -44,7 +44,7 @@
           <v-btn :disabled="invalid" color="blue darken-1" text @click="submit()">Save</v-btn>
         </v-card-actions>
       </v-card>
-    </validation-observer>
+    </ValidationObserver>
   </BaseDialog>
 </template>
 
@@ -54,14 +54,7 @@ import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { PrintersService } from "@/backend";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
-import { useDialogsStore } from "@/store/dialog.store";
 import { useDialog } from "@/shared/dialog.composable";
-
-interface Data {
-  selectedQuickItems: string[];
-  quickItems: string[];
-  formData: any;
-}
 
 const selectedQuickItems = ref([]);
 const quickItems = [
@@ -94,13 +87,14 @@ const formData = ref<{
   disabledReason?: string;
 }>({});
 const printersStore = usePrinterStore();
-const dialogsStore = useDialogsStore();
 const dialog = useDialog(DialogName.PrinterMaintenanceDialog);
 
 const validationObserver = ref(null);
 const printer = computed(() => printersStore.maintenanceDialogPrinter);
 
 const isValid = async () => {
+  if (!validationObserver.value) return false;
+
   return await validationObserver.value.validate();
 };
 
