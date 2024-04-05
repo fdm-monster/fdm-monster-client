@@ -2697,14 +2697,14 @@ __metadata:
   linkType: hard
 
 "@types/express-serve-static-core@npm:*, @types/express-serve-static-core@npm:^4.17.33":
-  version: 4.17.43
-  resolution: "@types/express-serve-static-core@npm:4.17.43"
+  version: 4.19.0
+  resolution: "@types/express-serve-static-core@npm:4.19.0"
   dependencies:
     "@types/node": "npm:*"
     "@types/qs": "npm:*"
     "@types/range-parser": "npm:*"
     "@types/send": "npm:*"
-  checksum: 10c0/12480527eef86ad9f748d785811c88e6bb89f4a76e531cf2e18f1f4f0743e46783cf4d27a939dec96aec8770c54c060d9e697bb8544ecd202098140688c3b222
+  checksum: 10c0/38a13dfbb38d18526276e68dae1097eb0ebef296e76bff2a9bf6831c052c2f87797e910c87bd3f0dd1a1b4136241c9d7c841779a00b22576d12aa9b483a63349
   languageName: node
   linkType: hard
 
@@ -6458,9 +6458,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.726
-  resolution: "electron-to-chromium@npm:1.4.726"
-  checksum: 10c0/f98a0e0686534aa8d7baf425d991a89ef7d8d3b856a8dfc786fdc47e8e57715440877e67bcda31d486aa7f73350718502d0de839229ac84624ee360829f3b201
+  version: 1.4.727
+  resolution: "electron-to-chromium@npm:1.4.727"
+  checksum: 10c0/7a29cdeab08ae08f60af0509242f7a257798fc0031b93342ec39a2bb1ef93496c605c546105b69eadc1c77b9e45b82449a2916804e68f307e0757412d5b7079f
   languageName: node
   linkType: hard
 
@@ -10667,11 +10667,11 @@ __metadata:
   linkType: hard
 
 "magic-string@npm:^0.30.7":
-  version: 0.30.8
-  resolution: "magic-string@npm:0.30.8"
+  version: 0.30.9
+  resolution: "magic-string@npm:0.30.9"
   dependencies:
     "@jridgewell/sourcemap-codec": "npm:^1.4.15"
-  checksum: 10c0/51a1f06f678c082aceddfb5943de9b6bdb88f2ea1385a1c2adf116deb73dfcfa50df6c222901d691b529455222d4d68d0b28be5689ac6f69b3baa3462861f922
+  checksum: 10c0/edbeea35b4f90b58815d8b13899fa412b5bc1e81cae14fe6d24d5c383c5f04331fce2c5a75bfb7926203ab6fc8c71290cdab56703a5b82432d8a1e144d6042e1
   languageName: node
   linkType: hard
 
@@ -14649,9 +14649,9 @@ __metadata:
   linkType: hard
 
 "vue-component-type-helpers@npm:^2.0.0":
-  version: 2.0.7
-  resolution: "vue-component-type-helpers@npm:2.0.7"
-  checksum: 10c0/c350a06e2dec5a3856ac9ef7cc4fd00c1a59a13b812f885dcab8636cf6dd3951d0f66fd8adbee8b49445294f65b48848f115699a8dc654e0b5b09611739df420
+  version: 2.0.10
+  resolution: "vue-component-type-helpers@npm:2.0.10"
+  checksum: 10c0/c2fa121996c62abfea612bb2a5caf16b71a5a967e70bfdea0e9734cfd74a472fd330b2f1cc32efca35a0445051d168b342dce61d41cd8872aa00403ca11d2715
   languageName: node
   linkType: hard
 
