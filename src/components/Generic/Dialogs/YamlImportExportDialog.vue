@@ -96,8 +96,6 @@ export default defineComponent({
     await this.featureStore.loadFeatures();
     this.exportGroups = this.featureStore.hasFeature("printerGroupsApi");
   },
-  async mounted() {},
-  props: {},
   data: (): Data => ({
     selectedMode: 0,
     exportFloors: true,
