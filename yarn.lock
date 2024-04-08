@@ -14649,9 +14649,9 @@ __metadata:
   linkType: hard
 
 "vue-component-type-helpers@npm:^2.0.0":
-  version: 2.0.10
-  resolution: "vue-component-type-helpers@npm:2.0.10"
-  checksum: 10c0/c2fa121996c62abfea612bb2a5caf16b71a5a967e70bfdea0e9734cfd74a472fd330b2f1cc32efca35a0445051d168b342dce61d41cd8872aa00403ca11d2715
+  version: 2.0.11
+  resolution: "vue-component-type-helpers@npm:2.0.11"
+  checksum: 10c0/0ac8ef68c7883342746867dabd9557d27c35030061086a6f44f0319e3c8de4332237623474f5b9829f6517dba7095f923a0fcf08182b63551518b7471d3f7765
   languageName: node
   linkType: hard
 
