@@ -2,8 +2,7 @@ import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { ExportYamlModel } from "@/models/server/export-yaml.model";
 import { downloadFileByBlob } from "@/utils/download-file.util";
-import axios from "axios";
-import { getBaseUri, getHttpClient } from "@/shared/http-client";
+import { getHttpClient } from "@/shared/http-client";
 
 export class ServerPrivateService extends BaseService {
   public static async restartServer() {
@@ -20,10 +19,7 @@ export class ServerPrivateService extends BaseService {
       data: input,
       responseType: "blob",
     });
-    await downloadFileByBlob(
-      (response as any).data as any,
-      "export-fdm-monster-" + Date.now() + ".yaml"
-    );
+    downloadFileByBlob((response as any).data as any, "export-fdm-monster-" + Date.now() + ".yaml");
   }
 
   public static async uploadAndImportYaml(file: File) {
@@ -39,7 +35,7 @@ export class ServerPrivateService extends BaseService {
       url: `api/server/dump-fdm-monster-logs`,
       responseType: "blob",
     });
-    await downloadFileByBlob((response as any).data, "logs-fdm-monster-" + Date.now() + ".zip");
+    downloadFileByBlob((response as any).data, "logs-fdm-monster-" + Date.now() + ".zip");
   }
 
   public static async clearLogFilesOlderThanWeek() {
