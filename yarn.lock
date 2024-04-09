@@ -1598,7 +1598,7 @@ __metadata:
     validator: "npm:13.11.0"
     vee-validate: "npm:3.4.15"
     vue: "npm:2.7.16"
-    vue-chartjs: "npm:5.3.0"
+    vue-chartjs: "npm:5.3.1"
     vue-cli-plugin-vuetify: "npm:2.5.8"
     vue-router: "npm:3.6.5"
     vue-svg-loader: "npm:0.16.0"
@@ -14611,13 +14611,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-chartjs@npm:5.3.0":
-  version: 5.3.0
-  resolution: "vue-chartjs@npm:5.3.0"
+"vue-chartjs@npm:5.3.1":
+  version: 5.3.1
+  resolution: "vue-chartjs@npm:5.3.1"
   peerDependencies:
     chart.js: ^4.1.1
     vue: ^3.0.0-0 || ^2.7.0
-  checksum: 10c0/c6aebc4434d329843fbb7c5209317fd44a5a1fb91c60b43c2e03bc999c2427c0787eb30458fa5575e26004a426b5f4c764a3bdc5c6f9793379fc7d039c0575ff
+  checksum: 10c0/a5788cd62b8e662207c9762794e542f84144e777fd0a907eead1ece7301c74b549f9f5cf402ce972b78a8dbed41baee6603dcc57d3eb11257a663c0c17ad6035
   languageName: node
   linkType: hard
 
