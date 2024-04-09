@@ -33,31 +33,15 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "NavigationDrawer",
-  data() {
-    return {
-      drawer: true,
-      items: [
-        ["home", "Devices", "/"],
-        ["printer", "Printers", "/printers"],
-        ["camera_alt", "CameraGridView", "/cameras"],
-        ["settings", "Settings", "/settings"],
-        ["timeline", "PrintStatistics", "/statistics"],
-        ["contact_support", "About", "/about"],
-      ],
-    };
-  },
-  computed: {
-    routes() {
-      if (!this.$router.options.routes) return [];
-      return this.$router.options.routes.filter((route) => !route.meta || !route.meta.hidden);
-    },
-  },
-});
+<script lang="ts" setup>
+const items = [
+  ["home", "Devices", "/"],
+  ["printer", "Printers", "/printers"],
+  ["camera_alt", "CameraGridView", "/cameras"],
+  ["settings", "Settings", "/settings"],
+  ["timeline", "PrintStatistics", "/statistics"],
+  ["contact_support", "About", "/about"],
+];
 </script>
 
 <style>
