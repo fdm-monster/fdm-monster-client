@@ -228,6 +228,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { GroupWithPrintersDto, PrinterGroupService } from "@/backend/printer-group.service";
 import { AppService } from "@/backend/app.service";
+import { useDialog } from "@/shared/dialog.composable";
 
 const snackbar = useSnackbar();
 const printerStore = usePrinterStore();
@@ -331,7 +332,7 @@ const openImportJsonPrintersDialog = () => {
 };
 
 const openYamlImportExportDialog = () => {
-  dialogsStore.openDialogWithContext(DialogName.YamlImportExport);
+  useDialog(DialogName.YamlImportExport).openDialog();
 };
 
 const createGroup = async () => {

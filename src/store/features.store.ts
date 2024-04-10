@@ -20,8 +20,6 @@ export const useFeatureStore = defineStore("Feature", {
         if (!state.features) {
           console.debug("Feature store not loaded");
           return false;
-        } else {
-          console.debug("Feature store loaded");
         }
 
         const featureDefined = state.features[feature] as IFeatureFlag | undefined;

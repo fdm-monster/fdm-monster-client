@@ -4,8 +4,8 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 interface DialogReference<T = any> {
   id: DialogName;
   opened: boolean;
-  beforeOpenedCallback?: (input?: T) => void;
-  openedCallback?: (input?: T) => void;
+  beforeOpenedCallback?: (input?: T) => void | Promise<void>;
+  openedCallback?: (input?: T) => void | Promise<void>;
   context?: any;
   output?: any;
 }
