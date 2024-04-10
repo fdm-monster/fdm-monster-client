@@ -11,6 +11,7 @@ module.exports = {
     "@vue/typescript/recommended",
     "@vue/prettier", // Quite finicky
     "@vue/eslint-config-typescript",
+    "prettier",
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -23,7 +24,6 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": isProduction ? "warn" : "off",
     "@typescript-eslint/no-empty-function": isProduction ? "warn" : "off",
     "@typescript-eslint/no-inferrable-types": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/ban-ts-comment": "warn",
     "vue/valid-v-slot": [
       "error",
