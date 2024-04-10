@@ -1,5 +1,10 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" max-width="700px" @escape="closeDialog()">
+  <BaseDialog
+    :id="dialog.dialogId"
+    @beforeOpened="onBeforeDialogOpened"
+    max-width="700px"
+    @escape="closeDialog()"
+  >
     <v-card class="pa-4">
       <v-card-title>
         <span class="text-h5"> YAML export and import </span>
@@ -92,10 +97,6 @@ export default defineComponent({
       snackbar: useSnackbar(),
     };
   },
-  async created() {
-    await this.featureStore.loadFeatures();
-    this.exportGroups = this.featureStore.hasFeature("printerGroupsApi");
-  },
   data: (): Data => ({
     selectedMode: 0,
     exportFloors: true,
@@ -117,6 +118,10 @@ export default defineComponent({
     },
   },
   methods: {
+    async onBeforeDialogOpened() {
+      await this.featureStore.loadFeatures();
+      this.exportGroups = this.featureStore.hasFeature("printerGroupsApi");
+    },
     async downloadExportYamlFile() {
       if (this.exportFloorGrid) {
         this.exportPrinters = true;
