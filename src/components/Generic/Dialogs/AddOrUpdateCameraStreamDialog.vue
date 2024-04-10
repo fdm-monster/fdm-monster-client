@@ -81,7 +81,7 @@ watch(
       .getQueryData<CameraWithPrinter[]>(["cameraStream"])
       ?.find((cameraStream) => cameraStream.cameraStream.id === context.cameraId);
     cameraStream.value.name = stream?.cameraStream.name;
-    cameraStream.value.streamURL = stream?.cameraStream.streamURL;
+    cameraStream.value.streamURL = stream?.cameraStream.streamURL || "";
   }
 );
 

@@ -8,14 +8,14 @@ export function useDialog<T = any, O = any>(dialogId: DialogName) {
   async function openDialog(context?: T) {
     const beforeOpenedCallback = dialogStore.getBeforeOpenedCallback(dialogId);
     if (beforeOpenedCallback) {
-      beforeOpenedCallback(context);
+      await beforeOpenedCallback(context);
     }
 
     dialogStore.openDialogWithContext(dialogId, context);
 
     const openedCallback = dialogStore.getOpenedCallback(dialogId);
     if (openedCallback) {
-      openedCallback(context);
+      await openedCallback(context);
     }
   }
 

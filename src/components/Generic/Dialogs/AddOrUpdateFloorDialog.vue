@@ -106,8 +106,6 @@ export default defineComponent({
       this.formData.floor = maxIndex.toString();
     }
   },
-  async mounted() {},
-  props: {},
   data: (): Data => ({
     formData: getDefaultCreateFloor(),
   }),

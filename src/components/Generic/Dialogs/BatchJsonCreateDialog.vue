@@ -84,8 +84,6 @@ export default defineComponent({
   async created() {
     this.numPrinters = 0;
   },
-  async mounted() {},
-  props: {},
   data: (): Data => ({
     formData: {
       json: "",

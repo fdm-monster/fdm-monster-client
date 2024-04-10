@@ -99,14 +99,6 @@ const selectedItems = ref<ReprintFileDto[]>([]);
 const errorLoading = ref("");
 const snackbar = useSnackbar();
 
-onMounted(() => {
-  console.debug("Mounted");
-});
-
-onBeforeUnmount(() => {
-  console.debug("Unmount");
-});
-
 function onBeforeDialogOpened(_: IdType[]) {
   loading.value = true;
 }
