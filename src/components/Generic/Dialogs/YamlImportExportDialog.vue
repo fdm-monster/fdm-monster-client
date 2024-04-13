@@ -20,7 +20,7 @@
         </v-row>
 
         <div>
-          <div v-if="isImportMode()" class="pl-2">
+          <div v-if="isImportMode" class="pl-2">
             <v-file-input
               v-model="importFile"
               accept=".yaml"
@@ -80,7 +80,7 @@ import { ServerPrivateService } from "@/backend/server-private.service";
 import { useDialog } from "@/shared/dialog.composable";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useFeatureStore } from "@/store/features.store";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const featureStore = useFeatureStore();
 const dialog = useDialog(DialogName.YamlImportExport);
@@ -96,17 +96,17 @@ const exportPrinters = ref(true);
 const importFile = ref(undefined);
 const notes = ref("");
 
-const disableExportGroups = () => {
+const disableExportGroups = computed(() => {
   return !featureStore.hasFeature("printerGroupsApi");
-};
+});
 
-const isFileProvided = () => {
+const isFileProvided = computed(() => {
   return !!importFile.value;
-};
+});
 
-const isImportMode = () => {
+const isImportMode = computed(() => {
   return selectedMode.value === 0;
-};
+});
 
 const onBeforeDialogOpened = async () => {
   await featureStore.loadFeatures();
@@ -141,7 +141,6 @@ const uploadAndImportYamlFile = async () => {
     return;
   }
   try {
-    throw new Error("asd");
     await ServerPrivateService.uploadAndImportYaml(importFile.value);
     importFile.value = undefined;
     snackbar.openInfoMessage({
