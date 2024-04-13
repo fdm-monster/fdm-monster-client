@@ -1,5 +1,9 @@
 # Client 13/04/2024 1.5.8
 
+Changes:
+
+- yaml import dialog: convert to setup script
+
 Fixes:
 
 - yaml import: clear import file field when closing dialog
