@@ -2,10 +2,10 @@
   <BaseDialog
     :id="dialog.dialogId"
     @beforeOpened="onBeforeDialogOpened"
-    max-width="700px"
+    max-width="800px"
     @escape="closeDialog()"
   >
-    <v-card class="pa-4">
+    <v-card class="pa-8">
       <v-card-title>
         <span class="text-h5"> YAML export and import </span>
       </v-card-title>
@@ -26,6 +26,13 @@
               accept=".yaml"
               label="Select a YAML file for import *"
             ></v-file-input>
+
+            <v-alert type="error" v-if="errorMessage">
+              {{ errorMessage }}
+              <br />
+              Details: {{ errorDetailedMessage.slice(0, 75) }}
+              <span v-if="errorDetailedMessage.length > 75">...</span>
+            </v-alert>
           </div>
           <div v-else>
             <v-checkbox v-model="exportFloors" class="pa-0 ma-0 mt-2 ml-2" label="Include floors" />
@@ -57,105 +64,98 @@
       </v-card-text>
       <v-card-actions>
         <em class="red--text">* indicates required field</em>
-        <v-spacer></v-spacer>
-        <v-btn text @click="closeDialog()">Close</v-btn>
+        <v-spacer />
+        <v-btn text @click="closeDialog()">
+          <v-icon class="pr-2">close</v-icon>
+          Close
+        </v-btn>
       </v-card-actions>
     </v-card>
   </BaseDialog>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { usePrinterStore } from "@/store/printer.store";
-import { useDialogsStore } from "@/store/dialog.store";
+<script lang="ts" setup>
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { ServerPrivateService } from "@/backend/server-private.service";
 import { useDialog } from "@/shared/dialog.composable";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useFeatureStore } from "@/store/features.store";
+import { computed, ref } from "vue";
 
-interface Data {
-  selectedMode: number;
-  exportFloors: boolean;
-  exportFloorGrid: boolean;
-  exportGroups: boolean;
-  exportPrinters: boolean;
-  notes?: string;
-  importFile?: File;
-}
+const featureStore = useFeatureStore();
+const dialog = useDialog(DialogName.YamlImportExport);
+const snackbar = useSnackbar();
 
-export default defineComponent({
-  name: "YamlImportExportDialog",
-  components: {},
-  setup: () => {
-    const dialog = useDialog(DialogName.YamlImportExport);
-    return {
-      printersStore: usePrinterStore(),
-      dialogsStore: useDialogsStore(),
-      featureStore: useFeatureStore(),
-      dialog,
-      snackbar: useSnackbar(),
-    };
-  },
-  data: (): Data => ({
-    selectedMode: 0,
-    exportFloors: true,
-    exportFloorGrid: true,
-    exportGroups: true,
-    exportPrinters: true,
-    importFile: undefined,
-    notes: "",
-  }),
-  computed: {
-    disableExportGroups() {
-      return !this.featureStore.hasFeature("printerGroupsApi");
-    },
-    isFileProvided() {
-      return !!this.importFile;
-    },
-    isImportMode() {
-      return this.selectedMode === 0;
-    },
-  },
-  methods: {
-    async onBeforeDialogOpened() {
-      await this.featureStore.loadFeatures();
-      this.exportGroups = this.featureStore.hasFeature("printerGroupsApi");
-    },
-    async downloadExportYamlFile() {
-      if (this.exportFloorGrid) {
-        this.exportPrinters = true;
-      }
+const errorMessage = ref("");
+const errorDetailedMessage = ref("");
+const selectedMode = ref(0);
+const exportFloors = ref(true);
+const exportFloorGrid = ref(true);
+const exportGroups = ref(true);
+const exportPrinters = ref(true);
+const importFile = ref(undefined);
+const notes = ref("");
 
-      await ServerPrivateService.downloadYamlExport({
-        exportPrinters: this.exportPrinters,
-        exportGroups: this.exportGroups,
-        exportFloorGrid: this.exportFloorGrid,
-        printerComparisonStrategiesByPriority: ["name", "url"],
-        exportFloors: this.exportFloors,
-        floorComparisonStrategiesByPriority: "floor",
-        notes: this.notes,
-      });
-      this.snackbar.openInfoMessage({
-        title: "Downloaded the YAML file",
-      });
-      this.notes = "";
-    },
-    async uploadAndImportYamlFile() {
-      if (!this.importFile) {
-        throw new Error("The import file was not specified");
-      }
-      await ServerPrivateService.uploadAndImportYaml(this.importFile);
-      this.importFile = undefined;
-      this.snackbar.openInfoMessage({
-        title: "Imported the YAML file",
-      });
-      this.closeDialog();
-    },
-    closeDialog() {
-      this.dialog.closeDialog();
-    },
-  },
-  watch: {},
+const disableExportGroups = computed(() => {
+  return !featureStore.hasFeature("printerGroupsApi");
 });
+
+const isFileProvided = computed(() => {
+  return !!importFile.value;
+});
+
+const isImportMode = computed(() => {
+  return selectedMode.value === 0;
+});
+
+const onBeforeDialogOpened = async () => {
+  await featureStore.loadFeatures();
+  exportGroups.value = featureStore.hasFeature("printerGroupsApi");
+};
+
+const downloadExportYamlFile = async () => {
+  if (exportFloorGrid.value) {
+    exportPrinters.value = true;
+  }
+
+  await ServerPrivateService.downloadYamlExport({
+    exportPrinters: exportPrinters.value,
+    exportGroups: exportGroups.value,
+    exportFloorGrid: exportFloorGrid.value,
+    printerComparisonStrategiesByPriority: ["name", "url"],
+    exportFloors: exportFloors.value,
+    floorComparisonStrategiesByPriority: "floor",
+    notes: notes.value,
+  });
+  snackbar.openInfoMessage({
+    title: "Downloaded the YAML file",
+  });
+  notes.value = "";
+};
+
+const uploadAndImportYamlFile = async () => {
+  errorMessage.value = "";
+  errorDetailedMessage.value = "";
+  if (!importFile.value) {
+    errorMessage.value = "The import file was not specified";
+    return;
+  }
+  try {
+    await ServerPrivateService.uploadAndImportYaml(importFile.value);
+    importFile.value = undefined;
+    snackbar.openInfoMessage({
+      title: "Imported the YAML file",
+    });
+    closeDialog();
+  } catch (e) {
+    errorMessage.value = "An error occurred uring import";
+    errorDetailedMessage.value = (e as Error).message.toString();
+    importFile.value = undefined;
+  }
+};
+
+const closeDialog = () => {
+  importFile.value = undefined;
+  dialog.closeDialog();
+};
 </script>
