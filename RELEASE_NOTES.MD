@@ -1,5 +1,9 @@
 # Client 13/04/2024 1.5.8
 
+Features:
+
+- GIF added to OctoFarm Import Printers dialog showing how the JSON can be retrieved from OctoFarm
+
 Changes:
 
 - yaml import dialog: convert to setup script
