@@ -172,7 +172,10 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="closeDialog()">Close</v-btn>
+        <v-btn text @click="closeDialog()">
+          <v-icon class="mr-2">close</v-icon>
+          Close
+        </v-btn>
       </v-card-actions>
     </v-card>
   </BaseDialog>
