@@ -21,7 +21,7 @@
     <AddOrUpdateCameraStreamDialog />
     <AddOrUpdateFloorDialog />
     <PrinterMaintenanceDialog />
-    <BatchJsonCreateDialog />
+    <OctoFarmImportDialog />
     <YamlImportExportDialog />
     <FileExplorerSideNav />
     <BatchReprintDialog />
@@ -39,7 +39,7 @@ import AddOrUpdatePrinterDialog from "@/components/Generic/Dialogs/AddOrUpdatePr
 import AddOrUpdateCameraStreamDialog from "@/components/Generic/Dialogs/AddOrUpdateCameraStreamDialog.vue";
 import AddOrUpdateFloorDialog from "@/components/Generic/Dialogs/AddOrUpdateFloorDialog.vue";
 import PrinterMaintenanceDialog from "@/components/Generic/Dialogs/PrinterMaintenanceDialog.vue";
-import BatchJsonCreateDialog from "@/components/Generic/Dialogs/BatchJsonCreateDialog.vue";
+import OctoFarmImportDialog from "@/components/Generic/Dialogs/OctoFarmImportDialog.vue";
 import YamlImportExportDialog from "@/components/Generic/Dialogs/YamlImportExportDialog.vue";
 import FileExplorerSideNav from "@/components/Generic/FileExplorerSideNav.vue";
 import BatchReprintDialog from "@/components/Generic/Dialogs/BatchReprintDialog.vue";

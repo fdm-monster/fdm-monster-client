@@ -25,7 +25,7 @@
               v-model="importFile"
               accept=".yaml"
               label="Select a YAML file for import *"
-            ></v-file-input>
+            />
 
             <v-alert type="error" v-if="errorMessage">
               {{ errorMessage }}
@@ -63,7 +63,6 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <em class="red--text">* indicates required field</em>
         <v-spacer />
         <v-btn text @click="closeDialog()">
           <v-icon class="pr-2">close</v-icon>
