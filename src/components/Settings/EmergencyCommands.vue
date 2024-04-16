@@ -1,11 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>settings</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Emergency Commands</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="warning" title="Emergency Commands" />
+
     <v-list subheader three-line>
       <v-subheader>Emergency Commands to rectify problematic situations</v-subheader>
 
@@ -111,6 +107,7 @@ import { Bar } from "vue-chartjs";
 import { IdType } from "@/utils/id.type";
 import { OctoPrintSettingsDto } from "@/backend/dto/octoprint-settings.dto";
 import { sleep } from "@/utils/time.utils";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 

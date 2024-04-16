@@ -1,11 +1,6 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>settings</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Floor Management</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="house_siding" title="Floors" />
 
     <v-list subheader three-line>
       <v-subheader>Floors</v-subheader>
@@ -133,6 +128,7 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useFloorStore } from "@/store/floor.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 interface Data {
   editedFloorName: string;
@@ -142,6 +138,7 @@ interface Data {
 
 export default defineComponent({
   name: "FloorSettings",
+  components: { SettingsToolbar },
   setup: () => {
     return {
       printersStore: usePrinterStore(),

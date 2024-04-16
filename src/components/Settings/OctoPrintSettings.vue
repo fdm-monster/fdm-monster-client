@@ -1,11 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>settings</v-icon>
-      </v-avatar>
-      <v-toolbar-title>OctoPrint Settings</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="bug_report" title="OctoPrint" />
+
     <v-list subheader three-line>
       <v-list-item>
         <v-list-item-content>
@@ -90,6 +86,7 @@ import { usePrinterStore } from "@/store/printer.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useSettingsStore } from "@/store/settings.store";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 interface Data {
   fileHandlingSettings: FileCleanSettings;
@@ -97,6 +94,7 @@ interface Data {
 
 export default defineComponent({
   name: "FdmSettings",
+  components: { SettingsToolbar },
   setup: () => {
     return {
       settingsStore: useSettingsStore(),

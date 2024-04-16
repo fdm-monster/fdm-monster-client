@@ -1,11 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>settings</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Server Protection Settings</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="security" title="Server Protection" />
+
     <v-list subheader three-line>
       <v-list-item v-if="!whitelistSettingsHidden">
         <v-list-item-content>
@@ -187,6 +183,7 @@ import { useSnackbar } from "@/shared/snackbar.composable";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "vue-router/composables";
 import { RouteNames } from "@/router/route-names";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 const router = useRouter();
 const snackbar = useSnackbar();

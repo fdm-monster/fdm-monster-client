@@ -1,11 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>upgrade</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Software Upgrade</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="upgrade" title="Software Upgrade" />
+
     <v-list subheader three-line>
       <v-list-item-content>
         <v-list-item>
@@ -64,14 +60,21 @@
       </v-list-item>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title> Select a release to upgrade to:</v-list-item-title>
-          <v-list-item-subtitle class="mt-2">
+          <v-list-item-title v-if="!rateLimitExceeded">
+            Select a release to upgrade to:</v-list-item-title
+          >
+          <v-list-item-subtitle class="mt-2" v-if="!rateLimitExceeded">
             Minimum required version: {{ minimum?.tag_name }}
           </v-list-item-subtitle>
 
-          <span v-if="loading"> <v-alert>Loading releases...</v-alert></span>
-          <v-alert v-if="!loading && !filteredReleases?.length">No releases to show.</v-alert>
-          <v-radio-group v-model="selectedRelease">
+          <v-alert color="error" v-if="errorMessage" style="color: black" class="mt-4 mb-6">
+            {{ errorMessage }}
+          </v-alert>
+          <span v-else-if="loading"> <v-alert>Loading releases...</v-alert></span>
+          <v-alert v-if="!rateLimitExceeded && !loading && !filteredReleases?.length"
+            >No releases to show.</v-alert
+          >
+          <v-radio-group v-model="selectedRelease" v-if="filteredReleases?.length">
             <v-radio
               v-for="release in filteredReleases"
               :key="release.tag_name"
@@ -95,10 +98,16 @@
             </v-alert>
           </div>
           <div>
-            <v-checkbox v-model="allowDowngrade" label="Allow downgrade"></v-checkbox>
             <v-checkbox
+              :disabled="rateLimitExceeded"
+              v-model="allowDowngrade"
+              class="mt-0"
+              label="Allow downgrade"
+            ></v-checkbox>
+            <v-checkbox
+              class="mt-0"
               v-model="showPrereleases"
-              :disabled="getIsCurrentUnstable"
+              :disabled="getIsCurrentUnstable || rateLimitExceeded"
               :label="
                 getIsCurrentUnstable
                   ? 'Show prerelease versions (Currently already on prerelease version)'
@@ -110,7 +119,9 @@
             Reload release version list
           </v-btn>
           <v-btn
-            :disabled="!selectedRelease?.length || selectedRelease === current?.tag_name"
+            :disabled="
+              !selectedRelease?.length || selectedRelease === current?.tag_name || rateLimitExceeded
+            "
             class="mt-2"
             color="primary"
             variant="flat"
@@ -130,8 +141,12 @@ import { computed, onMounted, ref } from "vue";
 import { version as packageJsonVersion } from "../../../package.json";
 import { IRelease } from "@/models/server/client-releases.model";
 import { compare, minor } from "semver";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { useFeatureStore } from "@/store/features.store";
 
+const errorMessage = ref("");
 const loading = ref(true);
+const rateLimitExceeded = ref(false);
 const allowDowngrade = ref(false);
 const serverVersion = ref("");
 const monsterPiVersion = ref<string | null>("");
@@ -141,6 +156,7 @@ const minimum = ref<IRelease>();
 const selectedRelease = ref<string>();
 const showPrereleases = ref<boolean>(false);
 const loadedClientReleases = ref<IRelease[]>([]);
+const featureStore = useFeatureStore();
 
 onMounted(async () => {
   await loadReleases();
@@ -152,11 +168,38 @@ onMounted(async () => {
 
 async function loadReleases() {
   loading.value = true;
-  const clientReleases = await AppService.getClientReleases();
-  current.value = clientReleases.current;
-  minimum.value = clientReleases.minimum;
-  loadedClientReleases.value = clientReleases.releases;
-  loading.value = false;
+  errorMessage.value = "";
+  rateLimitExceeded.value = false;
+
+  if (featureStore.hasFeature("githubRateLimitApi")) {
+    try {
+      const rateLimit = await AppService.getGithubRateLimit();
+      if (rateLimit.rate.remaining === 0) {
+        const limitResetAt = new Date(rateLimit.rate.reset);
+        const time = limitResetAt.toLocaleTimeString();
+        const diff = rateLimit.rate.reset * 1000 - Date.now();
+        const diffMinutes = Math.ceil(diff / 60000);
+        errorMessage.value = `Server has reached a rate limit of the Github API. This limit will be reset at ${time} (in ${diffMinutes} minutes)`;
+        loading.value = false;
+        rateLimitExceeded.value = true;
+        return;
+      }
+    } catch (e) {
+      loading.value = false;
+      return;
+    }
+  }
+
+  try {
+    const clientReleases = await AppService.getClientReleases();
+    current.value = clientReleases.current;
+    minimum.value = clientReleases.minimum;
+    loadedClientReleases.value = clientReleases.releases;
+  } catch (e) {
+    errorMessage.value = "An error occurred loading the releases: " + e.message;
+  } finally {
+    loading.value = false;
+  }
 }
 
 const filteredReleases = computed(() => {

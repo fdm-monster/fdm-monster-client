@@ -1,11 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>bug_report</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Diagnostics</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="bug_report" title="Diagnostics" />
+
     <v-list subheader three-line>
       <v-subheader
         >Diagnostics to provide bug reports to the developers of this software
@@ -73,6 +69,7 @@ import { setSentryEnabled } from "@/utils/sentry.util";
 import { ServerPrivateService } from "@/backend/server-private.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { captureException } from "@sentry/vue";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 const snackBar = useSnackbar();
 const settingsStore = useSettingsStore();

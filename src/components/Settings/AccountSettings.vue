@@ -1,11 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>account_circle</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Account Settings</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="account_circle" title="Account" />
+
     <v-list subheader three-line>
       <v-list-item-content>
         <v-list-item>
@@ -99,6 +95,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { routeToLogin } from "@/router/utils";
 import { useRouter } from "vue-router/composables";
 import { useSettingsStore } from "@/store/settings.store";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 const settingsStore = useSettingsStore();
 const profileStore = useProfileStore();
