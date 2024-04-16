@@ -1,4 +1,16 @@
-# Client 13/04/2024 1.5.8
+# Client 13/04/2024 develop
+
+Features:
+
+- Settings: Software Upgrade - the GitHub API limit will be tested and shown in the software upgrade UI before attempting to load releases
+- Settings Use a feature flag to determine if server can provide GitHub rate limit information
+
+Changes:
+
+- Settings: The settings toolbars have been refactored: consistent icon, simpler titles and dark color
+- Settings: The settings navigation has been re-ordered and given separations
+
+# Client 13/04/2024 1.5.9
 
 Features:
 
