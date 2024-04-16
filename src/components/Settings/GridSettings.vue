@@ -1,11 +1,6 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>settings</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Grid Settings</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="grid_on" title="Grid" />
 
     <v-list subheader three-line>
       <v-subheader>Grid Rows and Columns</v-subheader>
@@ -61,6 +56,7 @@ import { defineComponent } from "vue";
 import { useSettingsStore } from "../../store/settings.store";
 import { colOptions, rowOptions } from "../../shared/printer-grid.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 interface Data {
   property: number;
@@ -68,7 +64,7 @@ interface Data {
 
 export default defineComponent({
   name: "GridSettings",
-  components: {},
+  components: { SettingsToolbar },
   setup: () => {
     return {
       settingsStore: useSettingsStore(),

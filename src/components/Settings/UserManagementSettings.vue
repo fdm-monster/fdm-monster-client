@@ -1,17 +1,14 @@
 <template>
   <v-card>
-    <v-toolbar color="primary">
-      <v-avatar>
-        <v-icon>settings</v-icon>
-      </v-avatar>
-      <v-toolbar-title>Users</v-toolbar-title>
-    </v-toolbar>
+    <SettingsToolbar icon="group" title="Users" />
+
     <GridLoader
       v-if="loading"
       :size="20"
       color="#a70015"
       style="margin: 250px; position: absolute"
     />
+
     <v-list subheader three-line>
       <v-subheader>Showing all users</v-subheader>
 
@@ -99,6 +96,7 @@ import { formatIntlDate } from "@/utils/date.utils";
 import GridLoader from "@/components/Generic/Loaders/GridLoader.vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 const snackbar = useSnackbar();
 const loading = ref<boolean>(false);

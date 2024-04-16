@@ -16,6 +16,7 @@ export class FeaturesModel {
   cameraStream?: IFeatureFlag;
   printerGroupsApi?: IFeatureFlag;
   printerControlApi?: IFeatureFlag;
+  githubRateLimitApi?: IFeatureFlag;
 }
 
 export type TFeatureFlags = keyof FeaturesModel;
@@ -32,4 +33,5 @@ export const featureFlagsList: TFeatureFlags[] = [
   "cameraStream",
   "printerGroupsApi",
   "printerControlApi",
+  "githubRateLimitApi",
 ];
