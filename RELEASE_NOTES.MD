@@ -1,5 +1,12 @@
 # Client develop
 
+# Client 18/04/2024 1.5.11
+
+Fixes:
+
+- Settings: pre-upload file cleaning settings could not be saved and no message was shown. Now both those things are fixed.
+
+
 # Client 16/04/2024 1.5.10
 
 Features:
