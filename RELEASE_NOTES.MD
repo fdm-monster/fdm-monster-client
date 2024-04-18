@@ -1,5 +1,12 @@
 # Client develop
 
+# Client 18/04/2024 1.5.12
+
+Fixes:
+
+- Settings: software upgrade page for client upgrades would not calculate ability to upgrade correctly (again). Now fixed.
+
+
 # Client 18/04/2024 1.5.11
 
 Fixes:
