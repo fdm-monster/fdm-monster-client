@@ -133,6 +133,10 @@ export default defineComponent({
     async setFileCleanSettings() {
       const serverSettings = await SettingsService.setFileCleanSettings(this.fileHandlingSettings);
       this.fileHandlingSettings = serverSettings.printerFileClean;
+
+      this.snackbar.openInfoMessage({
+        title: `Successfully saved file cleanup settings`,
+      });
     },
     async purgeFiles() {
       await PrinterFileService.purgeFiles();

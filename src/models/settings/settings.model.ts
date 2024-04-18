@@ -1,10 +1,6 @@
 import { ServerSettingsDto } from "./server-settings.dto";
 import { FileCleanSettings } from "./printer-file-clean-settings.model";
 
-export type FileCleanSubSetting = {
-  fileClean: FileCleanSettings;
-};
-
 export interface FrontendSettings {
   largeTiles: boolean;
   gridCols: number;
