@@ -4,7 +4,7 @@ The client UI for FDM Monster. Please see https://github.com/fdm-monster/fdm-mon
 
 ## Development setup
 
-Please refer to the [FDM Monster Developer documentation](https://docs.fdm-monster.net/development_setup/setup_client.html).
+Please refer to the [FDM Monster Developer documentation](https://docs.fdm-monster.net/docs/developer_setup/setup_client).
 
 ## Project setup
 ```
