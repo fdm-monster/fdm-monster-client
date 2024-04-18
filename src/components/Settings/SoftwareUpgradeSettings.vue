@@ -264,12 +264,6 @@ function isUpgradeOrAllowedDowngrade(release: IRelease, current?: IRelease) {
     return true;
   }
 
-  console.log(
-    release.tag_name,
-    minimum.value!.tag_name,
-    compare(release.tag_name, current.tag_name),
-    compare(release.tag_name, minimum.value!.tag_name)
-  );
   return (
     compare(release.tag_name, current.tag_name) !== -1 &&
     compare(release.tag_name, minimum.value!.tag_name) !== -1
