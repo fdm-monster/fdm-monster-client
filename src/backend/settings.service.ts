@@ -2,7 +2,6 @@ import { ServerApi } from "@/backend/server.api";
 import { BaseService } from "@/backend/base.service";
 import {
   FrontendSettings,
-  FileCleanSubSetting,
   SettingsDto,
   TimeoutSettings,
   SettingsSensitiveDto,
@@ -69,8 +68,6 @@ export class SettingsService extends BaseService {
   static async setFileCleanSettings(subSettings: FileCleanSettings) {
     const path = `${ServerApi.fileCleanSettingsRoute}`;
 
-    return (await this.putApi(path, {
-      fileClean: subSettings,
-    } as FileCleanSubSetting)) as SettingsDto;
+    return (await this.putApi(path, subSettings)) as SettingsDto;
   }
 }
