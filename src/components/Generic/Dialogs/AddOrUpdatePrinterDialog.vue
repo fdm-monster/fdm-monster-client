@@ -262,16 +262,22 @@ const submit = async () => {
     }
   } finally {
     validatingPrinter.value = false;
+    forceSavePrinter.value = false;
   }
 };
 
 const duplicatePrinter = () => {
   formData.value.name = newRandomNamePair();
   printersStore.updateDialogPrinter = undefined;
+  printerValidationError.value = null;
+  forceSavePrinter.value = false;
+  printerValidationError.value = null;
 };
 
 const closeDialog = () => {
   dialog.closeDialog();
+  forceSavePrinter.value = false;
+  printerValidationError.value = null;
   showChecksPanel.value = false;
   testPrinterStore.clearEvents();
   resetForm();
