@@ -84,6 +84,14 @@
               <v-btn @click="showChecksPanel = false">Hide checks</v-btn>
             </PrinterChecksPanel>
           </v-row>
+          <v-alert color="primary" class="my-3" v-if="printerValidationError?.length">
+            {{ printerValidationError }}
+            <v-checkbox color="warning" v-model="forceSavePrinter" label="Force save" />
+          </v-alert>
+          <v-alert class="my-3" v-if="validatingPrinter">
+            Validating printer
+            <v-progress-circular indeterminate />
+          </v-alert>
         </v-card-text>
         <v-card-actions>
           <em class="red--text">* indicates required field</em>
@@ -112,7 +120,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineComponent, inject, onMounted, ref, watch } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
@@ -123,11 +131,11 @@ import { useTestPrinterStore } from "@/store/test-printer.store";
 import {
   CreatePrinter,
   getDefaultCreatePrinter,
-  PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import { AxiosError } from "axios";
 
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();
@@ -135,6 +143,9 @@ const testPrinterStore = useTestPrinterStore();
 const appConstants = inject<AppConstants>("appConstants");
 const snackbar = useSnackbar();
 
+const printerValidationError = ref<null | string>(null);
+const validatingPrinter = ref(false);
+const forceSavePrinter = ref(false);
 const showChecksPanel = ref(false);
 const copyPasteConnectionString = ref("");
 const formData = ref(getDefaultCreatePrinter());
@@ -156,7 +167,9 @@ watch(printerId, (val) => {
 const storedPrinter = computed(() => printersStore.updateDialogPrinter);
 const validationObserver = ref(null);
 const isUpdating = computed(() => !!storedPrinter.value);
-const submitButtonText = computed(() => (isUpdating.value ? "Save" : "Create"));
+const submitButtonText = computed(
+  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
+);
 
 const avatarInitials = computed(() => {
   if (formData.value) {
@@ -201,18 +214,24 @@ const isValid = async () => {
 
 const createPrinter = async (newPrinterData) => {
   await printersStore.createPrinter(newPrinterData);
-  snackbar.openInfoMessage({
-    title: `Printer ${newPrinterData.name} created`,
-  });
+  snackbar.openInfoMessage(
+    {
+      title: `Printer ${newPrinterData.name} created`,
+    },
+    forceSavePrinter.value
+  );
 };
 
 const updatePrinter = async (updatedPrinter) => {
   const printerId = updatedPrinter.id;
 
-  await printersStore.updatePrinter({
-    printerId: printerId as string,
-    updatedPrinter,
-  });
+  await printersStore.updatePrinter(
+    {
+      printerId: printerId as string,
+      updatedPrinter,
+    },
+    forceSavePrinter.value
+  );
 
   snackbar.openInfoMessage({
     title: `Printer ${updatedPrinter.name} updated`,
@@ -220,8 +239,10 @@ const updatePrinter = async (updatedPrinter) => {
 };
 
 const submit = async () => {
-  if (!(await isValid())) return;
-  if (!formData.value) return;
+  if (!formData.value || !(await isValid())) return;
+
+  printerValidationError.value = null;
+  validatingPrinter.value = true;
   const createdPrinter = formData.value;
 
   try {
@@ -232,8 +253,15 @@ const submit = async () => {
     }
     closeDialog();
   } catch (error) {
-    // handle error
-    snackbar.error("Error", error.message);
+    if (error instanceof AxiosError) {
+      printerValidationError.value = error.response?.data?.error || error.message;
+      snackbar.error("Validation Failed", (error as Error).message);
+    } else {
+      printerValidationError.value = (error as Error).message;
+      snackbar.error("Error", (error as Error).message);
+    }
+  } finally {
+    validatingPrinter.value = false;
   }
 };
 
