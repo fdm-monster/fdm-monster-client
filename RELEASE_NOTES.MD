@@ -1,5 +1,10 @@
 # Client develop
 
+# Client 18/04/2024 1.5.14
+
+Fixes;
+- fix: ZIP download would be corrupt sometimes. Ensure file downloaded as ArrayBuffer (instead of blob) and written as text/plain instead of text.
+
 # Client 18/04/2024 1.5.13
 
 Features:
