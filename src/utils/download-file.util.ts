@@ -4,7 +4,7 @@ export function downloadFileByBlob(data: ArrayBuffer, fileName: string) {
   if (!data) {
     throw new Error("No data to download");
   }
-  const blob = new Blob([data], { type: "text" });
+  const blob = new Blob([data], { type: "text/plain" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = fileName;

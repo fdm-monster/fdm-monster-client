@@ -17,9 +17,9 @@ export class ServerPrivateService extends BaseService {
       method: "POST",
       url: `api/server/export-printers-floors-yaml`,
       data: input,
-      responseType: "blob",
+      responseType: "arraybuffer",
     });
-    downloadFileByBlob((response as any).data as any, "export-fdm-monster-" + Date.now() + ".yaml");
+    downloadFileByBlob(response.data as ArrayBuffer, "export-fdm-monster-" + Date.now() + ".yaml");
   }
 
   public static async uploadAndImportYaml(file: File) {
@@ -33,9 +33,9 @@ export class ServerPrivateService extends BaseService {
     const response = await client.request<any>({
       method: "POST",
       url: `api/server/dump-fdm-monster-logs`,
-      responseType: "blob",
+      responseType: "arraybuffer",
     });
-    downloadFileByBlob((response as any).data, "logs-fdm-monster-" + Date.now() + ".zip");
+    downloadFileByBlob(response.data as ArrayBuffer, "logs-fdm-monster-" + Date.now() + ".zip");
   }
 
   public static async clearLogFilesOlderThanWeek() {
