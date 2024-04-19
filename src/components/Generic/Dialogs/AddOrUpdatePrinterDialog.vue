@@ -149,6 +149,7 @@ const forceSavePrinter = ref(false);
 const showChecksPanel = ref(false);
 const copyPasteConnectionString = ref("");
 const formData = ref(getDefaultCreatePrinter());
+
 const printerId = computed(() => printersStore.updateDialogPrinter?.id);
 
 onMounted(() => {
@@ -204,7 +205,9 @@ const testPrinter = async () => {
   testPrinterStore.clearEvents();
   openTestPanel();
 
-  const { correlationToken } = await testPrinterStore.createTestPrinter(formData.value);
+  const { correlationToken } = await testPrinterStore.createTestPrinter(
+    formData.value as CreatePrinter
+  );
   testPrinterStore.currentCorrelationToken = correlationToken;
 };
 
@@ -212,17 +215,14 @@ const isValid = async () => {
   return await validationObserver.value?.validate();
 };
 
-const createPrinter = async (newPrinterData) => {
-  await printersStore.createPrinter(newPrinterData);
-  snackbar.openInfoMessage(
-    {
-      title: `Printer ${newPrinterData.name} created`,
-    },
-    forceSavePrinter.value
-  );
+const createPrinter = async (newPrinterData: CreatePrinter) => {
+  await printersStore.createPrinter(newPrinterData, forceSavePrinter.value);
+  snackbar.openInfoMessage({
+    title: `Printer ${newPrinterData.name} created`,
+  });
 };
 
-const updatePrinter = async (updatedPrinter) => {
+const updatePrinter = async (updatedPrinter: CreatePrinter) => {
   const printerId = updatedPrinter.id;
 
   await printersStore.updatePrinter(
