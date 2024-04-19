@@ -59,8 +59,8 @@ export const usePrinterStore = defineStore("Printers", {
     },
   },
   actions: {
-    async createPrinter(newPrinter: CreatePrinter) {
-      const data = await PrintersService.createPrinter(newPrinter);
+    async createPrinter(newPrinter: CreatePrinter, forceSave: boolean) {
+      const data = await PrintersService.createPrinter(newPrinter, forceSave);
       this.printers.push(data);
       this.printers.sort((a: PrinterDto, b: PrinterDto) =>
         a.name?.toLowerCase()?.localeCompare(b?.name?.toLowerCase()) ? 1 : -1
@@ -90,14 +90,17 @@ export const usePrinterStore = defineStore("Printers", {
     setMaintenanceDialogPrinter(printer?: PrinterDto) {
       this.maintenanceDialogPrinter = printer;
     },
-    async updatePrinter({
-      printerId,
-      updatedPrinter,
-    }: {
-      printerId: IdType;
-      updatedPrinter: CreatePrinter;
-    }) {
-      const data = await PrintersService.updatePrinter(printerId, updatedPrinter);
+    async updatePrinter(
+      {
+        printerId,
+        updatedPrinter,
+      }: {
+        printerId: IdType;
+        updatedPrinter: CreatePrinter;
+      },
+      forceSave: boolean
+    ) {
+      const data = await PrintersService.updatePrinter(printerId, updatedPrinter, forceSave);
       this._replacePrinter({ printerId, printer: data });
       return data;
     },

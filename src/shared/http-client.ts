@@ -62,6 +62,11 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
         });
       }
 
+      // Special code
+      if (response.status === HttpStatusCode.FailedDependency) {
+        return Promise.reject(error);
+      }
+
       if (![HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden].includes(response.status)) {
         // Timeout issues etc?
         console.error("Error in axios response interceptor which is not 401 or 403", error);

@@ -81,8 +81,7 @@
               :disabled="isDisabledRelease(release)"
               :label="calculateLabelDisabledReason(release)"
               :value="release.tag_name"
-            >
-            </v-radio>
+            />
           </v-radio-group>
           <div>
             <v-alert v-if="showPrereleases" color="primary" max-width="500px">

@@ -1,5 +1,11 @@
 # Client develop
 
+# Client 18/04/2024 1.5.13
+
+Features:
+
+- Printer Create/Update: add URL and apiKey validation with feedback. When wanted force save can be used in case of failures.
+
 # Client 18/04/2024 1.5.12
 
 Fixes:

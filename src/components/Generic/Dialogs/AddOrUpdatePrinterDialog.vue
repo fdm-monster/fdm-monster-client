@@ -4,7 +4,7 @@
     :max-width="showChecksPanel ? '900px' : '700px'"
     @escape="closeDialog()"
   >
-    <validation-observer ref="validationObserver" v-slot="{ invalid }">
+    <ValidationObserver ref="validationObserver" v-slot="{ invalid }">
       <v-card class="pa-4">
         <v-card-title>
           <span class="text-h5">
@@ -20,7 +20,7 @@
             <v-col :cols="showChecksPanel ? 8 : 12">
               <v-row v-if="formData">
                 <v-col>
-                  <validation-provider v-slot="{ errors }" :rules="printerNameRules" name="Name">
+                  <ValidationProvider v-slot="{ errors }" :rules="printerNameRules" name="Name">
                     <v-text-field
                       v-model="formData.name"
                       :counter="printerNameRules.max"
@@ -30,10 +30,10 @@
                       label="Printer name*"
                       required
                     />
-                  </validation-provider>
+                  </ValidationProvider>
                 </v-col>
                 <v-col>
-                  <validation-provider v-slot="{ errors }" name="Enabled">
+                  <ValidationProvider v-slot="{ errors }" name="Enabled">
                     <v-checkbox
                       v-model="formData.enabled"
                       :error-messages="errors"
@@ -42,11 +42,11 @@
                       persistent-hint
                       required
                     ></v-checkbox>
-                  </validation-provider>
+                  </ValidationProvider>
                 </v-col>
               </v-row>
 
-              <validation-provider
+              <ValidationProvider
                 v-slot="{ errors }"
                 name="Printer URL"
                 persistent-hint
@@ -59,9 +59,9 @@
                   hint="F.e. 'octopi.local' or 'https://my.printer.com'"
                   label="Printer URL*"
                 ></v-text-field>
-              </validation-provider>
+              </ValidationProvider>
 
-              <validation-provider
+              <ValidationProvider
                 v-slot="{ errors }"
                 :rules="apiKeyRules"
                 name="ApiKey"
@@ -77,13 +77,21 @@
                   persistent-hint
                   required
                 ></v-text-field>
-              </validation-provider>
+              </ValidationProvider>
             </v-col>
 
             <PrinterChecksPanel v-if="showChecksPanel" :cols="4">
               <v-btn @click="showChecksPanel = false">Hide checks</v-btn>
             </PrinterChecksPanel>
           </v-row>
+          <v-alert color="primary" class="my-3" v-if="printerValidationError?.length">
+            {{ printerValidationError }}
+            <v-checkbox color="warning" v-model="forceSavePrinter" label="Force save" />
+          </v-alert>
+          <v-alert class="my-3" v-if="validatingPrinter">
+            Validating printer
+            <v-progress-circular indeterminate />
+          </v-alert>
         </v-card-text>
         <v-card-actions>
           <em class="red--text">* indicates required field</em>
@@ -107,12 +115,12 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </validation-observer>
+    </ValidationObserver>
   </BaseDialog>
 </template>
 
-<script lang="ts">
-import { defineComponent, inject } from "vue";
+<script lang="ts" setup>
+import { computed, inject, onMounted, ref, watch } from "vue";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
@@ -123,195 +131,157 @@ import { useTestPrinterStore } from "@/store/test-printer.store";
 import {
   CreatePrinter,
   getDefaultCreatePrinter,
-  PreCreatePrinter,
 } from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
+import { AxiosError } from "axios";
 
-const watchedId = "printerId";
+const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
+const printersStore = usePrinterStore();
+const testPrinterStore = useTestPrinterStore();
+const appConstants = inject<AppConstants>("appConstants");
+const snackbar = useSnackbar();
 
-interface Data {
-  showChecksPanel: boolean;
-  copyPasteConnectionString: string;
-  formData: PreCreatePrinter;
-}
+const printerValidationError = ref<null | string>(null);
+const validatingPrinter = ref(false);
+const forceSavePrinter = ref(false);
+const showChecksPanel = ref(false);
+const copyPasteConnectionString = ref("");
+const formData = ref(getDefaultCreatePrinter());
 
-export default defineComponent({
-  name: "AddOrUpdatePrinterDialog",
-  components: {
-    ValidationProvider,
-    ValidationObserver,
-    PrinterChecksPanel,
-  },
-  setup: () => {
-    const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
-    return {
-      printersStore: usePrinterStore(),
-      testPrinterStore: useTestPrinterStore(),
-      dialog,
-      appConstants: inject("appConstants") as AppConstants,
-      snackbar: useSnackbar(),
-    };
-  },
-  async created() {
-    if (this.printerId) {
-      const crudeData = this.printersStore.printer(this.printerId) as CreatePrinter;
-      this.formData = PrintersService.convertPrinterToCreateForm(crudeData);
-    }
-  },
-  async mounted() {},
-  props: {},
-  data: (): Data => ({
-    showChecksPanel: false,
-    copyPasteConnectionString: "",
-    formData: getDefaultCreatePrinter(),
-  }),
-  computed: {
-    printerId() {
-      return this.printersStore.updateDialogPrinter?.id;
-    },
-    storedPrinter() {
-      return this.printersStore.updateDialogPrinter;
-    },
-    validationObserver() {
-      return this.$refs.validationObserver as InstanceType<typeof ValidationObserver>;
-    },
-    isUpdating() {
-      return !!this.storedPrinter;
-    },
-    submitButtonText() {
-      return this.isUpdating ? "Save" : "Create";
-    },
-    isPasteDisabled() {
-      if (!this.isClipboardApiAvailable) {
-        return !this.copyPasteConnectionString?.length;
-      }
-      return false;
-    },
-    isClipboardApiAvailable() {
-      return navigator.clipboard;
-    },
-    avatarInitials() {
-      if (this.formData) {
-        return generateInitials(this.formData?.name);
-      }
-      return "?";
-    },
-    printerNameRules() {
-      return { required: true, max: this.appConstants.maxPrinterNameLength };
-    },
-    apiKeyRules() {
-      return {
-        required: true,
-        length: this.appConstants.apiKeyLength,
-        alpha_num: true,
-      };
-    },
-  },
-  methods: {
-    resetForm() {
-      this.formData = getDefaultCreatePrinter();
-    },
-    async quickCopyConnectionString() {
-      const printer = this.storedPrinter;
-      if (!printer) return;
-      const loginDetails = await PrintersService.getPrinterLoginDetails(printer.id);
-      const connectionString = `{"printerURL": "${loginDetails.printerURL}", "apiKey": "${loginDetails.apiKey}", "name": "${printer.name}"}`;
+const printerId = computed(() => printersStore.updateDialogPrinter?.id);
 
-      if (!this.isClipboardApiAvailable) {
-        this.copyPasteConnectionString = connectionString;
-        return;
-      }
-
-      // Likely happens in Firefox
-      if (!navigator.clipboard) {
-        throw new Error(
-          `Clipboard API is not available. Secure context: ${window.isSecureContext}`
-        );
-      }
-      await navigator.clipboard.writeText(connectionString);
-    },
-    openTestPanel() {
-      this.showChecksPanel = true;
-    },
-    async testPrinter() {
-      if (!(await this.isValid())) return;
-      if (!this.formData) return;
-
-      this.testPrinterStore.clearEvents();
-      this.openTestPanel();
-
-      const { correlationToken } = await this.testPrinterStore.createTestPrinter(
-        this.formData as CreatePrinter
-      );
-      this.testPrinterStore.currentCorrelationToken = correlationToken;
-    },
-    async pasteFromClipboardOrField() {
-      if (!this.formData) return;
-
-      if (!this.isClipboardApiAvailable && !this.copyPasteConnectionString?.length) {
-        return;
-      }
-
-      const jsonData = this.isClipboardApiAvailable
-        ? await navigator.clipboard.readText()
-        : this.copyPasteConnectionString;
-      const printerObject = JSON.parse(jsonData);
-
-      PrintersService.applyLoginDetailsPatchForm(printerObject, this.formData);
-    },
-    async isValid() {
-      return await this.validationObserver.validate();
-    },
-    async createPrinter(newPrinterData: CreatePrinter) {
-      await this.printersStore.createPrinter(newPrinterData);
-      this.snackbar.openInfoMessage({
-        title: `Printer ${newPrinterData.name} created`,
-      });
-    },
-    async updatePrinter(updatedPrinter: CreatePrinter) {
-      const printerId = updatedPrinter.id;
-
-      await this.printersStore.updatePrinter({
-        printerId: printerId as string,
-        updatedPrinter,
-      });
-
-      this.snackbar.openInfoMessage({
-        title: `Printer ${updatedPrinter.name} updated`,
-      });
-    },
-    async submit() {
-      if (!(await this.isValid())) return;
-      if (!this.formData) return;
-      const createPrinter = this.formData as CreatePrinter;
-      if (this.isUpdating) {
-        await this.updatePrinter(createPrinter);
-      } else {
-        await this.createPrinter(createPrinter);
-      }
-      this.closeDialog();
-    },
-    async duplicatePrinter() {
-      this.formData.name = newRandomNamePair();
-      this.printersStore.updateDialogPrinter = undefined;
-    },
-    closeDialog() {
-      this.dialog.closeDialog();
-      this.showChecksPanel = false;
-      this.testPrinterStore.clearEvents();
-      this.resetForm();
-      this.printersStore.updateDialogPrinter = undefined;
-      this.copyPasteConnectionString = "";
-    },
-  },
-  watch: {
-    [watchedId](val?: string) {
-      if (!val) return;
-      const printer = this.printersStore.printer(val) as CreatePrinter;
-      this.formData = PrintersService.convertPrinterToCreateForm(printer);
-    },
-  },
+onMounted(() => {
+  if (printerId.value) {
+    const crudeData = printersStore.printer(printerId.value) as CreatePrinter;
+    formData.value = PrintersService.convertPrinterToCreateForm(crudeData);
+  }
 });
+
+watch(printerId, (val) => {
+  if (!val) return;
+  const printer = printersStore.printer(val) as CreatePrinter;
+  formData.value = PrintersService.convertPrinterToCreateForm(printer);
+});
+
+const storedPrinter = computed(() => printersStore.updateDialogPrinter);
+const validationObserver = ref(null);
+const isUpdating = computed(() => !!storedPrinter.value);
+const submitButtonText = computed(
+  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
+);
+
+const avatarInitials = computed(() => {
+  if (formData.value) {
+    return generateInitials(formData.value?.name);
+  }
+  return "?";
+});
+
+const printerNameRules = computed(() => ({
+  required: true,
+  max: appConstants!.maxPrinterNameLength,
+}));
+
+const apiKeyRules = computed(() => ({
+  required: true,
+  length: appConstants!.apiKeyLength,
+  alpha_num: true,
+}));
+
+const resetForm = () => {
+  formData.value = getDefaultCreatePrinter();
+};
+
+const openTestPanel = () => {
+  showChecksPanel.value = true;
+};
+
+const testPrinter = async () => {
+  if (!(await isValid())) return;
+  if (!formData.value) return;
+
+  testPrinterStore.clearEvents();
+  openTestPanel();
+
+  const { correlationToken } = await testPrinterStore.createTestPrinter(
+    formData.value as CreatePrinter
+  );
+  testPrinterStore.currentCorrelationToken = correlationToken;
+};
+
+const isValid = async () => {
+  return await validationObserver.value?.validate();
+};
+
+const createPrinter = async (newPrinterData: CreatePrinter) => {
+  await printersStore.createPrinter(newPrinterData, forceSavePrinter.value);
+  snackbar.openInfoMessage({
+    title: `Printer ${newPrinterData.name} created`,
+  });
+};
+
+const updatePrinter = async (updatedPrinter: CreatePrinter) => {
+  const printerId = updatedPrinter.id;
+
+  await printersStore.updatePrinter(
+    {
+      printerId: printerId as string,
+      updatedPrinter,
+    },
+    forceSavePrinter.value
+  );
+
+  snackbar.openInfoMessage({
+    title: `Printer ${updatedPrinter.name} updated`,
+  });
+};
+
+const submit = async () => {
+  if (!formData.value || !(await isValid())) return;
+
+  printerValidationError.value = null;
+  validatingPrinter.value = true;
+  const createdPrinter = formData.value;
+
+  try {
+    if (isUpdating.value) {
+      await updatePrinter(createdPrinter);
+    } else {
+      await createPrinter(createdPrinter);
+    }
+    closeDialog();
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      printerValidationError.value = error.response?.data?.error || error.message;
+      snackbar.error("Validation Failed", (error as Error).message);
+    } else {
+      printerValidationError.value = (error as Error).message;
+      snackbar.error("Error", (error as Error).message);
+    }
+  } finally {
+    validatingPrinter.value = false;
+    forceSavePrinter.value = false;
+  }
+};
+
+const duplicatePrinter = () => {
+  formData.value.name = newRandomNamePair();
+  printersStore.updateDialogPrinter = undefined;
+  printerValidationError.value = null;
+  forceSavePrinter.value = false;
+  printerValidationError.value = null;
+};
+
+const closeDialog = () => {
+  dialog.closeDialog();
+  forceSavePrinter.value = false;
+  printerValidationError.value = null;
+  showChecksPanel.value = false;
+  testPrinterStore.clearEvents();
+  resetForm();
+  printersStore.updateDialogPrinter = undefined;
+  copyPasteConnectionString.value = "";
+};
 </script>

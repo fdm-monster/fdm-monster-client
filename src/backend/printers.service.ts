@@ -85,8 +85,8 @@ export class PrintersService extends BaseService {
     return await this.postApi(path, axes);
   }
 
-  static async createPrinter(printer: CreatePrinter) {
-    const path = ServerApi.printerRoute;
+  static async createPrinter(printer: CreatePrinter, forceSave: boolean) {
+    const path = `${ServerApi.printerRoute}?forceSave=${forceSave}`;
 
     return (await this.postApi(path, printer)) as PrinterDto;
   }
@@ -103,10 +103,10 @@ export class PrintersService extends BaseService {
     return await this.deleteApi(path);
   }
 
-  static async updatePrinter(printerId: IdType, printer: CreatePrinter) {
+  static async updatePrinter(printerId: IdType, printer: CreatePrinter, forceSave: boolean) {
     const path = ServerApi.getPrinterRoute(printerId);
-
-    return (await this.patchApi(path, printer)) as PrinterDto;
+    const fullPath = `${path}?forceSave=${forceSave}`;
+    return (await this.patchApi(fullPath, printer)) as PrinterDto;
   }
 
   static async updatePrinterMaintenance(printerId: IdType, disabledReason: string | null = null) {
