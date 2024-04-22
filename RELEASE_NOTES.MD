@@ -1,5 +1,11 @@
 # Client develop
 
+# Client 22/04/2024 1.5.15
+
+Fixes
+- fix: current MonsterPi version would be hidden on the Software Upgrade page.
+
+
 # Client 18/04/2024 1.5.14
 
 Fixes
