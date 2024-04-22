@@ -11,16 +11,11 @@
               Your server's version is: {{ serverVersion }}
             </v-list-item-subtitle>
             <v-list-item-subtitle> Your client's version is: {{ version }} </v-list-item-subtitle>
-            <v-list-item-subtitle>
-              <div v-if="monsterPiVersion">
-                MonsterPi:
-                <div>Your MonsterPi version is:</div>
-                {{ monsterPiVersion }}<br />
-              </div>
-              <div v-else>
-                MonsterPi:
-                <div>No MonsterPi distro was detected.</div>
-              </div>
+            <v-list-item-subtitle v-if="monsterPiVersion">
+              <div>Your MonsterPi version is: {{ monsterPiVersion }}</div>
+            </v-list-item-subtitle>
+            <v-list-item-subtitle v-else>
+              <div>No MonsterPi distro was detected.</div>
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -140,7 +135,7 @@ const loading = ref(true);
 const rateLimitExceeded = ref(false);
 const allowDowngrade = ref(false);
 const serverVersion = ref("");
-const monsterPiVersion = ref<string | null>("");
+const monsterPiVersion = ref<string>("");
 const version = ref(packageJsonVersion);
 const current = ref<IRelease>();
 const minimum = ref<IRelease>();
@@ -154,7 +149,7 @@ onMounted(async () => {
 
   const versionSpec = await AppService.getVersion();
   serverVersion.value = versionSpec.version;
-  monsterPiVersion.value = versionSpec.monsterPi;
+  monsterPiVersion.value = versionSpec.monsterPi?.trim() || "";
 });
 
 async function loadReleases() {
