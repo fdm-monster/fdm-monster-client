@@ -17,7 +17,7 @@
 
       <v-card-text>
         <h4>Printer type</h4>
-        <v-item-group v-model="formData.printerType">
+        <v-item-group v-model="formData.printerType" mandatory>
           <v-container>
             <v-row>
               <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="4">
