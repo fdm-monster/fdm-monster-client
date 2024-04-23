@@ -7,6 +7,7 @@ export interface LoginDetails {
 
 export interface PrinterDto {
   id: IdType;
+  printerType: number;
   correlationToken?: string;
   enabled: boolean;
   dateAdded: number;

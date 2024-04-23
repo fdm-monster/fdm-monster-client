@@ -14,7 +14,33 @@
           <span v-else> New Printer </span>
         </span>
       </v-card-title>
+
       <v-card-text>
+        <h4>Printer type</h4>
+        <v-item-group v-model="formData.printerType">
+          <v-container>
+            <v-row>
+              <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="4">
+                <v-item v-slot="{ active, toggle }">
+                  <v-card
+                    :color="active ? 'primary' : 'blue-grey darken-4'"
+                    class="d-flex align-center justify-center elevation-8"
+                    height="100px"
+                    @click="toggle"
+                  >
+                    <v-img :src="item.logo" :height="item.height" max-width="150px" width="150px" />
+                    <v-scroll-y-transition>
+                      <h3 class="ml-3 align-center">{{ item.name }}</h3>
+                    </v-scroll-y-transition>
+                  </v-card>
+                </v-item>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-item-group>
+
+        {{ selectedService }}
+
         <v-row>
           <v-col :cols="showChecksPanel ? 8 : 12">
             <v-row v-if="formData">
@@ -111,6 +137,8 @@ import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
+import klipperLogoSvg from "@/assets/klipper-logo.svg";
+import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();
@@ -124,6 +152,20 @@ const forceSavePrinter = ref(false);
 const showChecksPanel = ref(false);
 const copyPasteConnectionString = ref("");
 const formData = ref(getDefaultCreatePrinter());
+
+const serviceTypes = ref([
+  {
+    name: "OctoPrint",
+    logo: octoPrintTentacleSvg,
+    height: "100px",
+  },
+  {
+    name: "Klipper",
+    logo: klipperLogoSvg,
+    height: "100px",
+  },
+]);
+const selectedService = ref();
 
 const printerId = computed(() => printersStore.updateDialogPrinter?.id);
 
