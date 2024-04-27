@@ -96,7 +96,7 @@
             @click.prevent.stop="openPrinterURL()"
           >
             <v-list-item-avatar class="ml-3 mr-6 ma-5" size="20px">
-              <v-img src="/img/octoprint-tentacle.svg"></v-img>
+              <v-img :src="octoPrintIcon"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
               <span>Open OctoPrint</span>
@@ -416,6 +416,7 @@ import { usePrinterStateStore } from "@/store/printer-state.store";
 import { interpretStates } from "@/shared/printer-state.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFeatureStore } from "@/store/features.store";
+import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
 
 const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
