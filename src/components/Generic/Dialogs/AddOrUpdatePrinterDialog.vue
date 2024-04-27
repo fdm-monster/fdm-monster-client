@@ -1,7 +1,7 @@
 <template>
   <BaseDialog
     :id="dialog.dialogId"
-    :max-width="showChecksPanel ? '900px' : '700px'"
+    :max-width="showChecksPanel ? '900px' : '800px'"
     @escape="closeDialog()"
   >
     <v-card class="pa-4">
@@ -20,15 +20,16 @@
         <v-item-group v-model="formData.printerType" mandatory>
           <v-container>
             <v-row>
-              <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="4">
+              <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="6">
                 <v-item v-slot="{ active, toggle }">
                   <v-card
                     :color="active ? 'primary' : 'blue-grey darken-4'"
                     class="d-flex align-center justify-center elevation-8"
-                    height="100px"
+                    height="75px"
+                    width="225px"
                     @click="toggle"
                   >
-                    <v-img :src="item.logo" :height="item.height" max-width="150px" width="150px" />
+                    <v-img :src="item.logo" :height="item.height" max-width="125px" width="125px" />
                     <v-scroll-y-transition>
                       <h3 class="ml-3 align-center">{{ item.name }}</h3>
                     </v-scroll-y-transition>
@@ -38,8 +39,6 @@
             </v-row>
           </v-container>
         </v-item-group>
-
-        {{ selectedService }}
 
         <v-row>
           <v-col :cols="showChecksPanel ? 8 : 12">
@@ -157,12 +156,12 @@ const serviceTypes = ref([
   {
     name: "OctoPrint",
     logo: octoPrintTentacleSvg,
-    height: "100px",
+    height: "75px",
   },
   {
     name: "Klipper",
     logo: klipperLogoSvg,
-    height: "100px",
+    height: "75px",
   },
 ]);
 const selectedService = ref();
