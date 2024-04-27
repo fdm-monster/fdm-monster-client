@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import { PrinterDto } from "@/models/printers/printer.model";
-import { ClearedFilesResult, PrinterFileDto } from "@/models/printers/printer-file.model";
+import {
+  ClearedFilesResult,
+  MoonrakerFileDto,
+  OctoPrintFileDto,
+} from "@/models/printers/printer-file.model";
 import { PrinterFileService, PrintersService } from "@/backend";
 import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
 import { PrinterJobService } from "@/backend/printer-job.service";
@@ -14,7 +18,7 @@ import {
 
 interface State {
   printers: PrinterDto[];
-  printerFileCache: Record<IdType, PrinterFileDto[]>;
+  printerFileCache: Record<IdType, (OctoPrintFileDto | MoonrakerFileDto)[]>;
 
   sideNavPrinter?: PrinterDto;
   updateDialogPrinter?: PrinterDto;
@@ -162,7 +166,9 @@ export const usePrinterStore = defineStore("Printers", {
       const files = await PrinterFileService.getFiles(printerId, recursive);
 
       files.sort((f1, f2) => {
-        return f1.date < f2.date ? 1 : -1;
+        if ((f1 as MoonrakerFileDto).modified)
+          return (f1 as MoonrakerFileDto).modified < (f2 as MoonrakerFileDto).modified ? 1 : -1;
+        return (f1 as OctoPrintFileDto).date < (f2 as OctoPrintFileDto).date ? 1 : -1;
       });
 
       this.printerFileCache[printerId] = files;

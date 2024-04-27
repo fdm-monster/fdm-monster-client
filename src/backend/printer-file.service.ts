@@ -1,7 +1,11 @@
 import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { FileUploadCommands } from "@/models/printers/file-upload-commands.model";
-import { ClearedFilesResult, PrinterFileDto } from "@/models/printers/printer-file.model";
+import {
+  ClearedFilesResult,
+  MoonrakerFileDto,
+  OctoPrintFileDto,
+} from "@/models/printers/printer-file.model";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { IdType } from "@/utils/id.type";
@@ -10,7 +14,7 @@ export class PrinterFileService extends BaseService {
   static async getFiles(printerId: IdType, recursive = false) {
     const path = `${ServerApi.printerFilesRoute}/${printerId}/?recursive=${recursive}`;
 
-    return (await this.getApi(path)) as PrinterFileDto[];
+    return (await this.getApi(path)) as (OctoPrintFileDto | MoonrakerFileDto)[];
   }
 
   /**
@@ -20,7 +24,7 @@ export class PrinterFileService extends BaseService {
   static async getFileCache(printerId: IdType) {
     const path = `${ServerApi.printerFilesCacheRoute(printerId)}`;
 
-    return (await this.getApi(path)) as PrinterFileDto[];
+    return (await this.getApi(path)) as (OctoPrintFileDto | MoonrakerFileDto)[];
   }
 
   static async selectAndPrintFile(printerId: IdType, filePath: string, print = true) {
@@ -78,7 +82,7 @@ export class PrinterFileService extends BaseService {
     return this.deleteApi(urlPath);
   }
 
-  static downloadFile(file: PrinterFileDto) {
+  static downloadFile(file: OctoPrintFileDto) {
     window.location.href = file.refs.download;
   }
 }

@@ -377,11 +377,11 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                {{ file.name }}
+                {{ file.path }}
               </span>
             </template>
             <span>
-              File: {{ file.name }} <br />
+              File: {{ file.path }} <br />
               Size: {{ formatBytes(file.size) }} <br />
               <strong>{{ isFileBeingPrinted(file) ? "Printing" : "Unused" }}</strong>
             </span>
@@ -413,7 +413,7 @@
 import { computed, ref, watch } from "vue";
 import { generateInitials } from "@/shared/noun-adjectives.data";
 import { PrinterFileService, PrintersService } from "@/backend";
-import { PrinterFileDto } from "@/models/printers/printer-file.model";
+import { MoonrakerFileDto, OctoPrintFileDto } from "@/models/printers/printer-file.model";
 import { formatBytes } from "@/utils/file-size.util";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
@@ -431,7 +431,7 @@ const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
 
 const fileSearch = ref<string | undefined>(undefined);
-const shownFileCache = ref<PrinterFileDto[] | undefined>(undefined);
+const shownFileCache = ref<(OctoPrintFileDto | MoonrakerFileDto)[] | undefined>(undefined);
 const drawerOpened = ref(false);
 const loading = ref(true);
 
@@ -460,9 +460,7 @@ const filesListed = computed(() => {
   if (!shownFileCache.value?.length) return [];
   return (
     shownFileCache.value.filter((f) =>
-      fileSearch.value?.length
-        ? `${f.name}${f.path}`.toLowerCase().includes(fileSearch.value)
-        : true
+      fileSearch.value?.length ? `${f.path}`.toLowerCase().includes(fileSearch.value) : true
     ) || []
   );
 });
@@ -521,16 +519,18 @@ const refreshFiles = async () => {
   loading.value = true;
   const currentPrinterId = storedSideNavPrinter.value?.id;
   if (!currentPrinterId) return;
-
-  if (printerStateStore.isApiResponding(currentPrinterId)) {
-    shownFileCache.value = await printersStore.loadPrinterFiles(currentPrinterId, false);
-  } else {
-    shownFileCache.value = await PrinterFileService.getFileCache(currentPrinterId);
+  try {
+    if (printerStateStore.isApiResponding(currentPrinterId)) {
+      shownFileCache.value = await printersStore.loadPrinterFiles(currentPrinterId, false);
+    } else {
+      shownFileCache.value = await PrinterFileService.getFileCache(currentPrinterId);
+    }
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 };
 
-const deleteFile = async (file: PrinterFileDto) => {
+const deleteFile = async (file: OctoPrintFileDto) => {
   if (!printerId.value) return;
   await printersStore.deletePrinterFile(printerId.value, file.path);
 };
@@ -560,13 +560,16 @@ function truncateProgress(progress?: number) {
   return progress?.toFixed(1);
 }
 
-function isFileBeingPrinted(file: PrinterFileDto) {
+function isFileBeingPrinted(file: OctoPrintFileDto | MoonrakerFileDto) {
   if (!printerId.value) {
     return false;
   }
 
+  // TODO moonraker support
+  if ((file as MoonrakerFileDto).modified) return false;
+
   const jobFilePath = printerStateStore.printingFilePathsByPrinterId[printerId.value];
-  return jobFilePath === file.name;
+  return jobFilePath === (file as OctoPrintFileDto).name;
 }
 
 function avatarInitials() {
@@ -619,6 +622,7 @@ async function toggleMaintenance() {
 }
 
 async function refreshSocketState() {
+  if (!printerId.value) return;
   await PrintersService.refreshSocket(printerId.value);
 }
 
@@ -656,7 +660,7 @@ function clickSettings() {
   closeDrawer();
 }
 
-async function clickPrintFile(file: PrinterFileDto) {
+async function clickPrintFile(file: OctoPrintFileDto | MoonrakerFileDto) {
   if (!printerId.value) return;
   await printerStateStore.selectAndPrintFile({
     printerId: printerId.value,
@@ -664,7 +668,8 @@ async function clickPrintFile(file: PrinterFileDto) {
   });
 }
 
-function clickDownloadFile(file: PrinterFileDto) {
+function clickDownloadFile(file: OctoPrintFileDto | MoonrakerFileDto) {
+  console.log(file);
   PrinterFileService.downloadFile(file);
 }
 

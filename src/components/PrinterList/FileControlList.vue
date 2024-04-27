@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { PrinterFileDto } from "@/models/printers/printer-file.model";
+import { OctoPrintFileDto } from "@/models/printers/printer-file.model";
 import { usePrinterStore } from "@/store/printer.store";
 
 export default defineComponent({
@@ -31,12 +31,12 @@ export default defineComponent({
   async created() {},
   async mounted() {},
   props: {
-    fileList: Object as PropType<PrinterFileDto[]>,
+    fileList: Object as PropType<OctoPrintFileDto[]>,
     printerId: String,
   },
   computed: {},
   methods: {
-    async deleteFile(file: PrinterFileDto) {
+    async deleteFile(file: OctoPrintFileDto) {
       if (!this.fileList || !this.printerId) return;
 
       await this.printersStore.deletePrinterFile(this.printerId, file.path);

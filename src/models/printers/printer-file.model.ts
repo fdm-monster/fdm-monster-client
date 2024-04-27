@@ -26,7 +26,7 @@ export interface OctoPrintStatisticsDto {
   };
 }
 
-export interface PrinterFileDto {
+export interface OctoPrintFileDto {
   date: number;
   display: string;
   gcodeAnalysis: GcodeAnalysisDto;
@@ -42,7 +42,14 @@ export interface PrinterFileDto {
   typePath: string[]; // machinecode gcode
 }
 
+export interface MoonrakerFileDto {
+  path: string;
+  modified: number;
+  size: number;
+  permissions: "r" | "rw" | string;
+}
+
 export interface ClearedFilesResult {
-  failedFiles: PrinterFileDto[];
-  succeededFiles: PrinterFileDto[];
+  failedFiles: OctoPrintFileDto[];
+  succeededFiles: OctoPrintFileDto[];
 }
