@@ -96,14 +96,21 @@
             @click.prevent.stop="openPrinterURL()"
           >
             <v-list-item-avatar class="ml-3 mr-6 ma-5" size="20px">
-              <v-img :src="octoPrintIcon"></v-img>
+              <v-img v-if="storedSideNavPrinter?.printerType === 0" :src="octoPrintIcon"></v-img>
+              <span v-else>M</span>
             </v-list-item-avatar>
             <v-list-item-content>
-              <span>Open OctoPrint</span>
+              <span v-if="storedSideNavPrinter?.printerType === 0">Open OctoPrint</span>
+              <span v-if="storedSideNavPrinter?.printerType === 1">Open Moonraker</span>
             </v-list-item-content>
           </v-list-item>
         </template>
-        <span>Visit the OctoPrint associated to this printer</span>
+        <span v-if="storedSideNavPrinter?.printerType === 0"
+          >Visit the OctoPrint associated to this printer</span
+        >
+        <span v-if="storedSideNavPrinter?.printerType === 1"
+          >Visit the Moonraker API associated to this printer</span
+        >
       </v-tooltip>
 
       <v-tooltip left>
