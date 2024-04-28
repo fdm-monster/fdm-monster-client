@@ -1,6 +1,7 @@
 import { PrinterStateDto, SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSettingsStore } from "@/store/settings.store";
+import { isOctoPrintType } from "@/utils/printer-type.utils";
 
 const COLOR = {
   danger: "danger",
@@ -39,6 +40,7 @@ export function interpretStates(
   const debugPrinterInterpretState =
     settingsStore.frontendDebugSettings.showInterpretedPrinterState;
   const state = {};
+  const printerType = printer.printerType;
 
   // Disabled/maintenance printers
   if (!printer.enabled) {
@@ -71,18 +73,7 @@ export function interpretStates(
     };
   }
 
-  // First level: API
-  // Backend has concluded that things are not retryable
-  if (!responding) {
-    return {
-      ...state,
-      color: COLOR.danger,
-      rgb: RGB.Red,
-      text: authFail ? "API key wrong" : "No API connection",
-    };
-  }
-
-  // Second level: socket state
+  // Socket state and USB connected
   const socketAuthenticated = socketState.socket === "authenticated";
   const socketAuthing = socketState.socket === "authenticating";
   const currentState = printerState?.current?.payload?.state;
@@ -93,7 +84,7 @@ export function interpretStates(
   // }
 
   const flags = currentState?.flags;
-  if (!socketAuthenticated || !flags) {
+  if (!socketAuthenticated || (!flags && isOctoPrintType(printerType))) {
     const s = socketAuthenticated ? 1 : 0;
     const sa = socketAuthing ? 1 : 0;
     const p = printerState ? 1 : 0;

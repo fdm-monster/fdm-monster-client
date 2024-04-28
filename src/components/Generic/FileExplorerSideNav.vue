@@ -421,6 +421,7 @@ import { interpretStates } from "@/shared/printer-state.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFeatureStore } from "@/store/features.store";
 import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
+import { isMoonrakerType, isOctoPrintType, getServiceName } from "@/utils/printer-type.utils";
 
 const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
@@ -440,16 +441,14 @@ const isOnline = computed(() =>
 );
 
 const isOctoPrint = computed(() => {
-  return storedSideNavPrinter.value?.printerType === 0;
+  return isOctoPrintType(storedSideNavPrinter.value?.printerType);
 });
 
 const isMoonraker = computed(() => {
-  return storedSideNavPrinter.value?.printerType === 1;
+  return isMoonrakerType(storedSideNavPrinter.value?.printerType);
 });
 
-const serviceName = computed(() =>
-  isOctoPrint.value ? "OctoPrint" : isMoonraker.value ? "Moonraker" : "Unknown"
-);
+const serviceName = computed(() => getServiceName(storedSideNavPrinter.value?.printerType));
 
 const isOperational = computed(() =>
   printerId.value ? printerStateStore.isPrinterOperational(printerId.value) : false
