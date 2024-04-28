@@ -23,7 +23,7 @@
               {{ avatarInitials() }}
             </v-btn>
           </template>
-          <span>Visit the OctoPrint associated to this printer</span>
+          <span>Visit the {{ serviceName }} associated to this printer</span>
         </v-tooltip>
       </v-list-item-avatar>
       <v-list-item-content v-if="storedSideNavPrinter">
@@ -66,9 +66,12 @@
       </v-list-item-content>
     </v-list-item>
     <v-alert v-if="!isEnabled || !isOnline" color="primary">
-      <span v-if="!isEnabled"> Disabled OctoPrint, enable it first to get live updates </span>
+      <span v-if="!isEnabled">
+        Disabled {{ serviceName }}, enable it first to get live updates
+      </span>
       <span v-else>
-        This OctoPrint seems unreachable... Will keep trying for you <v-icon>hourglass_top</v-icon>
+        This {{ serviceName }} seems unreachable... Will keep trying for you
+        <v-icon>hourglass_top</v-icon>
       </span>
     </v-alert>
     <v-alert
@@ -78,7 +81,7 @@
       This OctoPrint was disabled without reason.
     </v-alert>
     <v-alert v-if="storedSideNavPrinter?.disabledReason" color="black">
-      This OctoPrint was disabled for maintenance: <br />
+      This {{ serviceName }} was disabled for maintenance: <br />
       <small>&nbsp;&nbsp;{{ storedSideNavPrinter?.disabledReason }} </small>
     </v-alert>
     <v-divider></v-divider>
@@ -96,21 +99,16 @@
             @click.prevent.stop="openPrinterURL()"
           >
             <v-list-item-avatar class="ml-3 mr-6 ma-5" size="20px">
-              <v-img v-if="storedSideNavPrinter?.printerType === 0" :src="octoPrintIcon"></v-img>
+              <v-img v-if="isOctoPrint" :src="octoPrintIcon"></v-img>
               <span v-else>M</span>
             </v-list-item-avatar>
             <v-list-item-content>
-              <span v-if="storedSideNavPrinter?.printerType === 0">Open OctoPrint</span>
-              <span v-if="storedSideNavPrinter?.printerType === 1">Open Moonraker</span>
+              <span v-if="isOctoPrint">Open OctoPrint</span>
+              <span v-if="isMoonraker">Open Moonraker</span>
             </v-list-item-content>
           </v-list-item>
         </template>
-        <span v-if="storedSideNavPrinter?.printerType === 0"
-          >Visit the OctoPrint associated to this printer</span
-        >
-        <span v-if="storedSideNavPrinter?.printerType === 1"
-          >Visit the Moonraker API associated to this printer</span
-        >
+        <span>Visit the {{ serviceName }} associated to this printer</span>
       </v-tooltip>
 
       <v-tooltip left>
@@ -180,10 +178,9 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-        <span
-          >Let FDM Monster know you are experiencing inconsistencies, reset all volatile
-          states</span
-        >
+        <span>
+          Let FDM Monster know you are experiencing inconsistencies, reset all volatile states
+        </span>
       </v-tooltip>
 
       <v-divider></v-divider>
@@ -270,7 +267,7 @@
             <v-list-item-content> Delete files</v-list-item-content>
           </v-list-item>
         </template>
-        <span>Clear all files present on OctoPrint (local)</span>
+        <span>Clear all files present on {{ serviceName }} (local)</span>
       </v-tooltip>
 
       <v-tooltip left>
@@ -288,7 +285,7 @@
             <v-list-item-content>Refresh files</v-list-item-content>
           </v-list-item>
         </template>
-        <span>Rebuild the file list on OctoPrint (local)</span>
+        <span>Rebuild the file list on {{ serviceName }} (local)</span>
       </v-tooltip>
 
       <v-tooltip left>
@@ -437,9 +434,23 @@ const loading = ref(true);
 
 const storedSideNavPrinter = computed(() => printersStore.sideNavPrinter);
 const printerId = computed(() => storedSideNavPrinter.value?.id);
+
 const isOnline = computed(() =>
   printerId.value ? printerStateStore.isApiResponding(printerId.value) : false
 );
+
+const isOctoPrint = computed(() => {
+  return storedSideNavPrinter.value?.printerType === 0;
+});
+
+const isMoonraker = computed(() => {
+  return storedSideNavPrinter.value?.printerType === 1;
+});
+
+const serviceName = computed(() =>
+  isOctoPrint.value ? "OctoPrint" : isMoonraker.value ? "Moonraker" : "Unknown"
+);
+
 const isOperational = computed(() =>
   printerId.value ? printerStateStore.isPrinterOperational(printerId.value) : false
 );
@@ -669,7 +680,6 @@ async function clickPrintFile(file: OctoPrintFileDto | MoonrakerFileDto) {
 }
 
 function clickDownloadFile(file: OctoPrintFileDto | MoonrakerFileDto) {
-  console.log(file);
   PrinterFileService.downloadFile(file);
 }
 
