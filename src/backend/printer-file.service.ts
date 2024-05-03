@@ -9,6 +9,7 @@ import {
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { IdType } from "@/utils/id.type";
+import { getHttpClient } from "@/shared/http-client";
 
 export class PrinterFileService extends BaseService {
   static async getFiles(printerId: IdType, recursive = false) {
@@ -78,11 +79,20 @@ export class PrinterFileService extends BaseService {
 
   static async deleteFileOrFolder(printerId: IdType, path: string) {
     const urlPath = `${ServerApi.printerFilesRoute}/${printerId}/?path=${path}`;
-
     return this.deleteApi(urlPath);
   }
 
+  static downloadFileDirectly(file: OctoPrintFileDto) {
+    window.location.href = file.refs.download;
+  }
+
   static downloadFile(file: OctoPrintFileDto) {
+    const client = await getHttpClient();
+    const response = await client.request<any>({
+      method: "POST",
+      url: `api/server/dump-fdm-monster-logs`,
+      responseType: "arraybuffer",
+    });
     window.location.href = file.refs.download;
   }
 }
