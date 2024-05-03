@@ -410,7 +410,7 @@
 import { computed, ref, watch } from "vue";
 import { generateInitials } from "@/shared/noun-adjectives.data";
 import { PrinterFileService, PrintersService } from "@/backend";
-import { MoonrakerFileDto, OctoPrintFileDto } from "@/models/printers/printer-file.model";
+import { FileDto, MoonrakerFileDto, OctoPrintFileDto } from "@/models/printers/printer-file.model";
 import { formatBytes } from "@/utils/file-size.util";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
@@ -570,16 +570,13 @@ function truncateProgress(progress?: number) {
   return progress?.toFixed(1);
 }
 
-function isFileBeingPrinted(file: OctoPrintFileDto | MoonrakerFileDto) {
+function isFileBeingPrinted(file: FileDto) {
   if (!printerId.value) {
     return false;
   }
 
-  // TODO moonraker support
-  if ((file as MoonrakerFileDto).modified) return false;
-
   const jobFilePath = printerStateStore.printingFilePathsByPrinterId[printerId.value];
-  return jobFilePath === (file as OctoPrintFileDto).name;
+  return jobFilePath === file.path;
 }
 
 function avatarInitials() {
