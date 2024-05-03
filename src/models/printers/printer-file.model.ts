@@ -26,6 +26,12 @@ export interface OctoPrintStatisticsDto {
   };
 }
 
+export interface FileDto {
+  path: string;
+  date: number;
+  size: number;
+}
+
 export interface OctoPrintFileDto {
   date: number;
   display: string;

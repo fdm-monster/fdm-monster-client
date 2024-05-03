@@ -3,6 +3,7 @@ import { ServerApi } from "@/backend/server.api";
 import { FileUploadCommands } from "@/models/printers/file-upload-commands.model";
 import {
   ClearedFilesResult,
+  FileDto,
   MoonrakerFileDto,
   OctoPrintFileDto,
 } from "@/models/printers/printer-file.model";
@@ -12,10 +13,10 @@ import { IdType } from "@/utils/id.type";
 import { getHttpClient } from "@/shared/http-client";
 
 export class PrinterFileService extends BaseService {
-  static async getFiles(printerId: IdType, recursive = false) {
-    const path = `${ServerApi.printerFilesRoute}/${printerId}/?recursive=${recursive}`;
+  static async getFiles(printerId: IdType) {
+    const path = `${ServerApi.printerFilesRoute}/${printerId}`;
 
-    return (await this.getApi(path)) as (OctoPrintFileDto | MoonrakerFileDto)[];
+    return (await this.getApi(path)) as FileDto[];
   }
 
   /**
@@ -25,7 +26,7 @@ export class PrinterFileService extends BaseService {
   static async getFileCache(printerId: IdType) {
     const path = `${ServerApi.printerFilesCacheRoute(printerId)}`;
 
-    return (await this.getApi(path)) as (OctoPrintFileDto | MoonrakerFileDto)[];
+    return (await this.getApi(path)) as FileDto[];
   }
 
   static async selectAndPrintFile(printerId: IdType, filePath: string, print = true) {
@@ -86,13 +87,13 @@ export class PrinterFileService extends BaseService {
     window.location.href = file.refs.download;
   }
 
-  static downloadFile(file: OctoPrintFileDto) {
-    const client = await getHttpClient();
-    const response = await client.request<any>({
-      method: "POST",
-      url: `api/server/dump-fdm-monster-logs`,
-      responseType: "arraybuffer",
-    });
+  static async downloadFile(file: OctoPrintFileDto) {
+    // const client = await getHttpClient();
+    // const response = await client.request<any>({
+    //   method: "POST",
+    //   url: `api/server/dump-fdm-monster-logs`,
+    //   responseType: "arraybuffer",
+    // });
     window.location.href = file.refs.download;
   }
 }
