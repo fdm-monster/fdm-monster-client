@@ -84,7 +84,8 @@ export function interpretStates(
   // }
 
   const flags = currentState?.flags;
-  if (!socketAuthenticated || (!flags && isOctoPrintType(printerType))) {
+  // && isOctoPrintType(printerType)
+  if (!socketAuthenticated || !flags) {
     const s = socketAuthenticated ? 1 : 0;
     const sa = socketAuthing ? 1 : 0;
     const p = printerState ? 1 : 0;
