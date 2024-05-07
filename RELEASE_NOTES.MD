@@ -1,14 +1,19 @@
 # Client develop
 
+Fixes
+
+- Bugfix: could not resume print job after pausing.
+
 # Client 22/04/2024 1.5.15
 
 Fixes
-- fix: current MonsterPi version would be hidden on the Software Upgrade page.
 
+- fix: current MonsterPi version would be hidden on the Software Upgrade page.
 
 # Client 18/04/2024 1.5.14
 
 Fixes
+
 - fix: ZIP download would be corrupt sometimes. Ensure file downloaded as ArrayBuffer (instead of blob) and written as text/plain instead of text.
 
 # Client 18/04/2024 1.5.13
@@ -23,13 +28,11 @@ Fixes:
 
 - Settings: software upgrade page for client upgrades would not calculate ability to upgrade correctly (again). Now fixed.
 
-
 # Client 18/04/2024 1.5.11
 
 Fixes:
 
 - Settings: pre-upload file cleaning settings could not be saved and no message was shown. Now both those things are fixed.
-
 
 # Client 16/04/2024 1.5.10
 
