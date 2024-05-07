@@ -3,6 +3,7 @@
 Fixes
 
 - Bugfix: could not resume print job after pausing.
+- Bugfix: printer control dialog was empty after opening the second time, now it will load again.
 
 # Client 22/04/2024 1.5.15
 

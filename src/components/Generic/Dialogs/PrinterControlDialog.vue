@@ -1,5 +1,10 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog()">
+  <BaseDialog
+    :id="dialog.dialogId"
+    :max-width="'700px'"
+    @opened="onDialogOpened"
+    @escape="closeDialog()"
+  >
     <v-card>
       <v-card-title> Printer Controls</v-card-title>
       <v-card-text>
@@ -74,6 +79,7 @@
             </v-col>
           </v-row>
         </v-container>
+        <v-container v-else>No printer provided to control</v-container>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -95,10 +101,14 @@ import { PrintersService } from "@/backend";
 const dialog = useDialog<{ printerId: IdType }>(DialogName.PrinterControlDialog);
 const printerStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
-const printerId = computed(() => dialog.context()?.printerId);
+const printerId = ref();
+
+async function onDialogOpened(input: { printerId: IdType }) {
+  printerId.value = input.printerId;
+}
+
 const printer = computed(() => {
   if (!printerId.value) return;
-
   return printerStore.printer(printerId.value);
 });
 
@@ -128,6 +138,7 @@ const homeAxes = async (axes: string[]) => {
 };
 
 const closeDialog = () => {
+  printerId.value = null;
   dialog.closeDialog();
 };
 </script>
