@@ -1,5 +1,7 @@
 # Client develop
 
+# Client 07/05/2024 1.5.16
+
 Fixes
 
 - Bugfix: could not resume print job after pausing.
