@@ -208,7 +208,7 @@
       <v-tooltip v-if="featureStore.hasFeature('pauseResumePrinterCommand')" left>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item
-            :disabled="!isOnline || !isPrinting"
+            :disabled="!isOnline || (!isPaused && !isPrinting)"
             class="extra-dense-list-item"
             link
             v-bind="attrs"
