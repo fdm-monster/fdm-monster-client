@@ -227,7 +227,7 @@ import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useDialog } from "@/shared/dialog.composable";
 import { useFeatureStore } from "@/store/features.store";
-import { getServiceName } from "../../utils/printer-type.utils";
+import { getServiceName } from "@/utils/printer-type.utils";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
