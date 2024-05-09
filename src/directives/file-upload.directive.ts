@@ -1,6 +1,9 @@
 import Vue from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
-import { convertMultiPrinterFileToQueue } from "@/utils/uploads-state.utils";
+import {
+  convertMultiPrinterFileToQueue,
+  convertPrinterMultiFileToQueue,
+} from "@/utils/uploads-state.utils";
 import { usePrinterStore } from "@/store/printer.store";
 import { useUploadsStore } from "@/store/uploads.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
@@ -23,21 +26,21 @@ const bindDropConditionally = (el: HTMLElement, printers: PrinterDto[], context?
       const clonedFiles = [...Array.from(filesArray)];
       let convertedUploads = [];
       if (isSinglePrinter) {
-        throw new Error("Multi-file upload temporarily not supported");
+        const firstPrinter = printers[0];
+        if (clonedFiles.length > 1) {
+          throw "Cannot upload multiple files to a printer";
+        }
+        // throw new Error("Multi-file upload temporarily not supported");
         // const printedFilename = clonedFiles.length === 1 ? clonedFiles[0].name : null;
-        // console.debug(
-        //   "Single printer upload mode",
-        //   printers.length,
-        //   clonedFiles.length,
-        //   printedFilename
-        // );
-        //
-        // // Convert the file and bound printer to a file upload
-        // convertedUploads = convertPrinterMultiFileToQueue(
-        //   firstPrinter,
-        //   clonedFiles,
-        //   printedFilename
-        // );
+        console.debug(
+          "Single printer upload mode",
+          printers.length,
+          clonedFiles.length
+          // printedFilename
+        );
+
+        // Convert the file and bound printer to a file upload
+        convertedUploads = convertPrinterMultiFileToQueue(firstPrinter, clonedFiles);
       } else {
         if (clonedFiles.length > 1) {
           throw "Cannot upload multiple files to multiple printers";
