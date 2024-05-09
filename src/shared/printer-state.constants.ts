@@ -95,10 +95,9 @@ export function interpretStates(
 
     return {
       ...state,
-      color: COLOR.danger,
+      color: !printerState ? COLOR.danger : COLOR.dark,
       rgb: RGB.Red,
-      // TODO this should not result in S/SA/P label, but in a more descriptive label
-      text: !printerState ? "No USB" : `Auth${s} AuthBusy${sa} | Printer${p}`,
+      text: !printerState ? "No USB" : "Awaiting",
     };
   }
 
