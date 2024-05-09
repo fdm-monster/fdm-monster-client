@@ -484,6 +484,7 @@ const isPaused = computed(() => {
   if (!storedSideNavPrinter.value || !printerId.value) return false;
   return printerStateStore.isPrinterPaused(printerId.value);
 });
+
 const canBeCleared = computed(() => {
   if (!printerId.value) {
     return false;
