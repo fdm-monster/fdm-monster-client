@@ -40,7 +40,6 @@ export function interpretStates(
   const debugPrinterInterpretState =
     settingsStore.frontendDebugSettings.showInterpretedPrinterState;
   const state = {};
-  const printerType = printer.printerType;
 
   // Disabled/maintenance printers
   if (!printer.enabled) {
@@ -84,7 +83,6 @@ export function interpretStates(
   // }
 
   const flags = currentState?.flags;
-  // && isOctoPrintType(printerType)
   if (!socketAuthenticated || !flags) {
     const s = socketAuthenticated ? 1 : 0;
     const sa = socketAuthing ? 1 : 0;
@@ -94,12 +92,13 @@ export function interpretStates(
         `Socket opened ${s}, socketAuthing ${sa} printerState ${p}, 
       currentState: ${currentState}, FLAGS ${flags}`
       );
+
     return {
       ...state,
       color: COLOR.danger,
       rgb: RGB.Red,
       // TODO this should not result in S/SA/P label, but in a more descriptive label
-      text: !printerState ? "No USB" : `S${s} SA${sa} | P${p}`,
+      text: !printerState ? "No USB" : `Auth${s} AuthBusy${sa} | Printer${p}`,
     };
   }
 
@@ -108,7 +107,7 @@ export function interpretStates(
     return;
   }
 
-  if (flags.error || flags.closedOrError) {
+  if (!flags.operational || flags.error || flags.closedOrError) {
     return {
       ...state,
       color: COLOR.danger,
