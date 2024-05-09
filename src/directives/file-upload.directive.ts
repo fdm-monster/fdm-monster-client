@@ -30,7 +30,6 @@ const bindDropConditionally = (el: HTMLElement, printers: PrinterDto[], context?
         if (clonedFiles.length > 1) {
           throw "Cannot upload multiple files to a printer";
         }
-        // throw new Error("Multi-file upload temporarily not supported");
         // const printedFilename = clonedFiles.length === 1 ? clonedFiles[0].name : null;
         console.debug(
           "Single printer upload mode",
