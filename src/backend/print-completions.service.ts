@@ -6,6 +6,6 @@ export class PrintCompletionsService extends BaseService {
   static async getCompletions() {
     const path = `${ServerApi.printCompletionRoute}`;
 
-    return (await this.getApi(path)) as PrintCompletionsModel;
+    return (await this.get(path)) as PrintCompletionsModel;
   }
 }

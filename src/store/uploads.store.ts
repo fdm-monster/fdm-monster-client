@@ -40,18 +40,17 @@ export const useUploadsStore = defineStore("Uploads", {
       // Dont upload when queue empty
       if (!this.queuedUploads?.length) return;
       this.uploadingNow = true;
-      const { file, printer, commands } = this.nextUpload;
+      const { file, printer } = this.nextUpload;
       // We'd rather fail fast and avoid the same upload failing many times
       this.queuedUploads.splice(0, 1);
 
       try {
-        await PrinterFileService.uploadFile(printer, file, commands);
+        await PrinterFileService.uploadFile(printer, file);
       } catch (e: any) {
         if (e.isAxiosError) {
           const failedUpload: FailedQueuedUpload = {
             file,
             printer,
-            commands,
             error: e,
           };
           this.failedUploads.push(failedUpload);

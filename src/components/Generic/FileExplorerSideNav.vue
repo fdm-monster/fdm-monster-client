@@ -341,7 +341,7 @@
         <v-list-item-avatar>
           <v-tooltip left>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" @click="clickDownloadFile(file)" v-on="on">
+              <v-btn icon v-bind="attrs" @click="clickDownloadFile(file.path)" v-on="on">
                 <v-icon>download</v-icon>
               </v-btn>
             </template>
@@ -410,7 +410,7 @@
 import { computed, ref, watch } from "vue";
 import { generateInitials } from "@/shared/noun-adjectives.data";
 import { PrinterFileService, PrintersService } from "@/backend";
-import { FileDto, MoonrakerFileDto, OctoPrintFileDto } from "@/models/printers/printer-file.model";
+import { FileDto } from "@/models/printers/printer-file.model";
 import { formatBytes } from "@/utils/file-size.util";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
@@ -428,8 +428,8 @@ const printerStateStore = usePrinterStateStore();
 const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
 
-const fileSearch = ref<string | undefined>(undefined);
-const shownFileCache = ref<(OctoPrintFileDto | MoonrakerFileDto)[] | undefined>(undefined);
+const fileSearch = ref<string>();
+const shownFileCache = ref<FileDto[]>([]);
 const drawerOpened = ref(false);
 const loading = ref(true);
 
@@ -466,7 +466,7 @@ const isPrinting = computed(() => {
   return printerId.value ? printerStateStore.isPrinterPrinting(printerId.value) : false;
 });
 
-const filesListed = computed(() => {
+const filesListed = computed<FileDto[]>(() => {
   if (!shownFileCache.value?.length) return [];
   return (
     shownFileCache.value.filter((f) =>
@@ -675,8 +675,8 @@ async function clickPrintFile(file: OctoPrintFileDto | MoonrakerFileDto) {
   });
 }
 
-function clickDownloadFile(file: OctoPrintFileDto | MoonrakerFileDto) {
-  PrinterFileService.downloadFile(file);
+function clickDownloadFile(path: string) {
+  PrinterFileService.downloadFile(printerId.value, path);
 }
 
 function closeDrawer() {

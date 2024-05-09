@@ -128,16 +128,13 @@ import { PrintersService } from "@/backend";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useTestPrinterStore } from "@/store/test-printer.store";
-import {
-  CreatePrinter,
-  getDefaultCreatePrinter,
-} from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
+import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();

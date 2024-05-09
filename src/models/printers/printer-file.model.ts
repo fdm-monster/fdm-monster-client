@@ -1,61 +1,10 @@
-import { GcodeAnalysisDto } from "@/models/printers/gcode/gcode-analysis.model";
-
-export interface LastPrintMoment {
-  date: number;
-  printTime: number;
-  success: boolean;
-}
-
-export interface Prints {
-  failure: number;
-  last: LastPrintMoment;
-  success: boolean;
-}
-
-export interface Refs {
-  download: string;
-  resource: string;
-}
-
-export interface OctoPrintStatisticsDto {
-  averagePrintTime: {
-    [k: string]: number; //profile name like _default
-  };
-  lastPrintTime: {
-    [k: string]: number; //profile name like _default
-  };
-}
-
 export interface FileDto {
   path: string;
+  size: number;
   date: number;
-  size: number;
-}
-
-export interface OctoPrintFileDto {
-  date: number;
-  display: string;
-  gcodeAnalysis: GcodeAnalysisDto;
-  hash: string;
-  name: string;
-  origin: string;
-  path: string;
-  prints: Prints;
-  refs: Refs;
-  size: number;
-  statistics: OctoPrintStatisticsDto;
-  type: string;
-  typePath: string[]; // machinecode gcode
-}
-
-export interface MoonrakerFileDto {
-  path: string;
-  modified: number;
-  size: number;
-  permissions: "r" | "rw" | string;
 }
 
 export interface ClearedFilesResult {
-  failedFiles: OctoPrintFileDto[];
-  succeededFiles: OctoPrintFileDto[];
+  failedFiles: FileDto[];
+  succeededFiles: FileDto[];
 }

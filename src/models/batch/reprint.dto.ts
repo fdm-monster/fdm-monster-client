@@ -1,9 +1,8 @@
 import { IdType } from "@/utils/id.type";
-import { OctoPrintStatisticsDto, Prints, Refs } from "@/models/printers/printer-file.model";
-import { GcodeAnalysisDto } from "@/models/printers/gcode/gcode-analysis.model";
+import { FileDto } from "@/models/printers/printer-file.model";
 
 export interface ReprintFileDto {
-  file?: CreateOrUpdatePrinterFileDto;
+  file?: FileDto;
   reprintState: ReprintState;
   connectionState: ConnectionState | null;
   printerId: IdType;
@@ -35,41 +34,3 @@ export type ConnectionState =
   | "Opening serial connection"
   | "Detecting serial connection"
   | "Unknown State";
-
-export class CreateOrUpdatePrinterFileDto {
-  id?: IdType;
-  printerId?: IdType;
-
-  name: string;
-  date: number;
-  display: string;
-  gcodeAnalysis?: GcodeAnalysisDto;
-
-  hash: string;
-  origin: string;
-  path: string;
-  prints: Prints;
-  refs: Refs;
-  size: number;
-  statistics: OctoPrintStatisticsDto;
-  type: string;
-  typePath: string[]; // machinecode gcode
-
-  customData?: OctoPrintCustomDto;
-}
-
-export interface OctoPrintCustomDto {
-  // Custom metadata that is updated on hash changes only
-  userdata?: any;
-
-  // Optional parts due to plugins and such
-  displayLayerProgress?: DisplayLayerProgressDto;
-  thumbnail?: string;
-  thumbnail_src?: string;
-  [k: string]: any;
-}
-
-export interface DisplayLayerProgressDto {
-  // numberstring
-  totalLayerCountWithoutOffset: string;
-}
