@@ -1546,7 +1546,7 @@ __metadata:
     "@tanstack/vue-query": "npm:5.35.5"
     "@types/jest": "npm:29.5.12"
     "@types/luxon": "npm:3.4.2"
-    "@types/validator": "npm:13.11.9"
+    "@types/validator": "npm:13.11.10"
     "@typescript-eslint/eslint-plugin": "npm:7.8.0"
     "@typescript-eslint/parser": "npm:7.8.0"
     "@vue/cli-plugin-babel": "npm:5.0.8"
@@ -2997,10 +2997,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:13.11.9":
-  version: 13.11.9
-  resolution: "@types/validator@npm:13.11.9"
-  checksum: 10c0/856ebfcfe25d6c91a90235e0eb27302a737832530898195bbfb265da52ae7fe6d68f684942574f8818d3c262cae7a1de99f145dac73fc57217933af1bfc199cb
+"@types/validator@npm:13.11.10":
+  version: 13.11.10
+  resolution: "@types/validator@npm:13.11.10"
+  checksum: 10c0/fe63a20fa90d3e8c661d0ac5b5af162cdd387b9e8fd67f5a0a00ca308e4e2d7602467cc32ef3e2c979b737629fa9e2ff593d3946ee4f8667bbb80af0494b9c66
   languageName: node
   linkType: hard
 
