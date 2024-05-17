@@ -5053,9 +5053,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001587, caniuse-lite@npm:^1.0.30001599":
-  version: 1.0.30001618
-  resolution: "caniuse-lite@npm:1.0.30001618"
-  checksum: 10c0/2e33e5e854fb6365566e2ff5ba866c877cd08ca278a2c06b9bc3346a884fc1336a0674c2a0003e7ee7a1a64e90f167ec4ad08ea14d12da5926017c92c99f82a5
+  version: 1.0.30001620
+  resolution: "caniuse-lite@npm:1.0.30001620"
+  checksum: 10c0/3783117143fbdc98c1b91a579d0f2a7bcee7008f322ba7a2bf56a6c3d105400772c7ed8026840b4ea909ec7bf254bcc36532f2ce1b1a1240b00d0335da39b7ec
   languageName: node
   linkType: hard
 
@@ -6489,9 +6489,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.772
-  resolution: "electron-to-chromium@npm:1.4.772"
-  checksum: 10c0/79ea8f4d41b64e092677e801fd88affe0089e4e76dbbecf78fe2831a66d4b4ef6d0da6ad59be8079eb7b7f03c72d1667e81d13a803e343b8bd4ade3e3f1f7b49
+  version: 1.4.773
+  resolution: "electron-to-chromium@npm:1.4.773"
+  checksum: 10c0/eef684e2d64848418080715a76bc4147373d75ade07f65e64a97a3efd52d8c83dd8dd0daadba0d5ca891e3738144f8e97e1b7fe4545de3d15e71cd70ff14b2f1
   languageName: node
   linkType: hard
 
@@ -14696,9 +14696,9 @@ __metadata:
   linkType: hard
 
 "vue-component-type-helpers@npm:^2.0.0":
-  version: 2.0.18
-  resolution: "vue-component-type-helpers@npm:2.0.18"
-  checksum: 10c0/421d80326a0f8fb30fe2654e7bd2d63f862c19406f75124493ef28891f2574cea7b57008b5cc9e204e6f685cb8974c5c931b6437479d4a6804da0f73b03d513f
+  version: 2.0.19
+  resolution: "vue-component-type-helpers@npm:2.0.19"
+  checksum: 10c0/588f4e19066a13d1e63d4959c6e3d77f92a483f3a5f0116789206f87133456e1267bcfbb3e39b5d4478d181a0e78df191e16e7102629787064e82db8f4f97c5f
   languageName: node
   linkType: hard
 
