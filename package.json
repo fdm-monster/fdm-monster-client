@@ -24,7 +24,7 @@
     "@vue/composition-api": "1.7.2",
     "@vueuse/core": "10.9.0",
     "@vueuse/integrations": "10.9.0",
-    "axios": "1.7.0",
+    "axios": "1.7.1",
     "chart.js": "4.4.3",
     "core-js": "3.37.1",
     "jwt-decode": "3.1.2",
