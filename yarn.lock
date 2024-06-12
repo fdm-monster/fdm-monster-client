@@ -1569,7 +1569,7 @@ __metadata:
     "@vue/test-utils": "npm:2.4.6"
     "@vue/vue2-jest": "npm:29.2.6"
     "@vueuse/core": "npm:10.11.0"
-    "@vueuse/integrations": "npm:10.10.1"
+    "@vueuse/integrations": "npm:10.11.0"
     axios: "npm:1.7.2"
     babel-jest: "npm:29.7.0"
     chart.js: "npm:4.4.3"
@@ -3846,18 +3846,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/core@npm:10.10.1":
-  version: 10.10.1
-  resolution: "@vueuse/core@npm:10.10.1"
-  dependencies:
-    "@types/web-bluetooth": "npm:^0.0.20"
-    "@vueuse/metadata": "npm:10.10.1"
-    "@vueuse/shared": "npm:10.10.1"
-    vue-demi: "npm:>=0.14.8"
-  checksum: 10c0/611f2fd5486b895fb73de298f5679d9d492803b04c7d64b8cbccc33ac989a272dad9139263e2bac61504092b09263a7f7d3dc259b16362502915c5d87255e821
-  languageName: node
-  linkType: hard
-
 "@vueuse/core@npm:10.11.0":
   version: 10.11.0
   resolution: "@vueuse/core@npm:10.11.0"
@@ -3870,26 +3858,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vueuse/integrations@npm:10.10.1":
-  version: 10.10.1
-  resolution: "@vueuse/integrations@npm:10.10.1"
+"@vueuse/integrations@npm:10.11.0":
+  version: 10.11.0
+  resolution: "@vueuse/integrations@npm:10.11.0"
   dependencies:
-    "@vueuse/core": "npm:10.10.1"
-    "@vueuse/shared": "npm:10.10.1"
+    "@vueuse/core": "npm:10.11.0"
+    "@vueuse/shared": "npm:10.11.0"
     vue-demi: "npm:>=0.14.8"
   peerDependencies:
-    async-validator: "*"
-    axios: "*"
-    change-case: "*"
-    drauu: "*"
-    focus-trap: "*"
-    fuse.js: "*"
-    idb-keyval: "*"
-    jwt-decode: "*"
-    nprogress: "*"
-    qrcode: "*"
-    sortablejs: "*"
-    universal-cookie: "*"
+    async-validator: ^4
+    axios: ^1
+    change-case: ^4
+    drauu: ^0.3
+    focus-trap: ^7
+    fuse.js: ^6
+    idb-keyval: ^6
+    jwt-decode: ^3
+    nprogress: ^0.2
+    qrcode: ^1.5
+    sortablejs: ^1
+    universal-cookie: ^6
   peerDependenciesMeta:
     async-validator:
       optional: true
@@ -3915,14 +3903,7 @@ __metadata:
       optional: true
     universal-cookie:
       optional: true
-  checksum: 10c0/9ede179cf2d9c57660c989fc5875f9a39ff34470ee7ebfeb62def41e1ad9eca66931c4985a5ad60e76e69cc4f9c0c503584db3fd65a65c60460a920b25bf002a
-  languageName: node
-  linkType: hard
-
-"@vueuse/metadata@npm:10.10.1":
-  version: 10.10.1
-  resolution: "@vueuse/metadata@npm:10.10.1"
-  checksum: 10c0/66d0ecd7044f247c1caa282b25cbb0f7a09ec6f97390a4398aa8e77c9e66e4421b09de03244b81f94812bd7e6852119eec725a8d563670c6bbd5b11234a2e02e
+  checksum: 10c0/5f85d077dbd9c8a5946fe2370e5fa1b11179c2c51b3d26e7ea76554a8299c7eaca0d373c9d90c9036200d468b53bb0e5bcf8f9f016d156de5e7a64a4b4f093db
   languageName: node
   linkType: hard
 
@@ -3930,15 +3911,6 @@ __metadata:
   version: 10.11.0
   resolution: "@vueuse/metadata@npm:10.11.0"
   checksum: 10c0/5a252d6da6ecaa2ac125a722f4635edea99c09d22ef656f7d4516e34ea4a603f2635c89e011352f81beff01e0f114d37fa512d90f5beb1a7af324b724cb568d5
-  languageName: node
-  linkType: hard
-
-"@vueuse/shared@npm:10.10.1":
-  version: 10.10.1
-  resolution: "@vueuse/shared@npm:10.10.1"
-  dependencies:
-    vue-demi: "npm:>=0.14.8"
-  checksum: 10c0/94d388262b279fbb5cfcf0f8dc485869c6c0393a0e8a7351d8ad8f2c6986af818a779bfc5d2de61d10a2216cd404dfccdbd955bcf196da57f59df2b4a7ed6ddb
   languageName: node
   linkType: hard
 
