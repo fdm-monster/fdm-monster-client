@@ -22,7 +22,7 @@
     "@sentry/vue": "8.9.2",
     "@tanstack/vue-query": "5.44.0",
     "@vue/composition-api": "1.7.2",
-    "@vueuse/core": "10.10.1",
+    "@vueuse/core": "10.11.0",
     "@vueuse/integrations": "10.10.1",
     "axios": "1.7.2",
     "chart.js": "4.4.3",
