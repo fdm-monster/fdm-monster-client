@@ -1568,7 +1568,7 @@ __metadata:
     "@vue/eslint-config-typescript": "npm:13.0.0"
     "@vue/test-utils": "npm:2.4.6"
     "@vue/vue2-jest": "npm:29.2.6"
-    "@vueuse/core": "npm:10.10.1"
+    "@vueuse/core": "npm:10.11.0"
     "@vueuse/integrations": "npm:10.10.1"
     axios: "npm:1.7.2"
     babel-jest: "npm:29.7.0"
@@ -3858,6 +3858,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:10.11.0":
+  version: 10.11.0
+  resolution: "@vueuse/core@npm:10.11.0"
+  dependencies:
+    "@types/web-bluetooth": "npm:^0.0.20"
+    "@vueuse/metadata": "npm:10.11.0"
+    "@vueuse/shared": "npm:10.11.0"
+    vue-demi: "npm:>=0.14.8"
+  checksum: 10c0/5cb0f8858123237d2dff12e7175c80f8752d6b5ed52217cef294f1ca287c0ee4fef45dbb4b0895c541266a2a85b280fd4c7c56ca95c9410918fa4c1ea61f77a4
+  languageName: node
+  linkType: hard
+
 "@vueuse/integrations@npm:10.10.1":
   version: 10.10.1
   resolution: "@vueuse/integrations@npm:10.10.1"
@@ -3914,12 +3926,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/metadata@npm:10.11.0":
+  version: 10.11.0
+  resolution: "@vueuse/metadata@npm:10.11.0"
+  checksum: 10c0/5a252d6da6ecaa2ac125a722f4635edea99c09d22ef656f7d4516e34ea4a603f2635c89e011352f81beff01e0f114d37fa512d90f5beb1a7af324b724cb568d5
+  languageName: node
+  linkType: hard
+
 "@vueuse/shared@npm:10.10.1":
   version: 10.10.1
   resolution: "@vueuse/shared@npm:10.10.1"
   dependencies:
     vue-demi: "npm:>=0.14.8"
   checksum: 10c0/94d388262b279fbb5cfcf0f8dc485869c6c0393a0e8a7351d8ad8f2c6986af818a779bfc5d2de61d10a2216cd404dfccdbd955bcf196da57f59df2b4a7ed6ddb
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:10.11.0":
+  version: 10.11.0
+  resolution: "@vueuse/shared@npm:10.11.0"
+  dependencies:
+    vue-demi: "npm:>=0.14.8"
+  checksum: 10c0/9ea0bf86d316ff0e4dcf8dd1c1cbdc07a5b26437fd404ebbb91ff9b1d4d5a718c5db602a2fbd4627be3377e2f763b5b5c1b0aec0169fdb3bf93ce143201de34a
   languageName: node
   linkType: hard
 
