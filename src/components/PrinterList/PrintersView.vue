@@ -33,6 +33,7 @@
         :search="search"
         :single-expand="true"
         class="elevation-1"
+        @current-items="itemsChanged"
         item-key="id"
         show-expand
         @click:row="clickRow"
@@ -51,6 +52,9 @@
         </template>
         <template v-slot:top>
           <v-toolbar flat>
+            <v-toolbar-title>
+              Showing {{ currentPrintersShownCount }} of {{ printers.length || 0 }} printers
+            </v-toolbar-title>
             <v-btn class="ml-3" outlined type="button" @click="openImportJsonPrintersDialog()">
               <v-icon>publish</v-icon>
               Import OctoFarm Printers
@@ -226,7 +230,6 @@ import { useFeatureStore } from "@/store/features.store";
 import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { GroupWithPrintersDto, PrinterGroupService } from "@/backend/printer-group.service";
-import { AppService } from "@/backend/app.service";
 import { useDialog } from "@/shared/dialog.composable";
 
 const snackbar = useSnackbar();
@@ -241,6 +244,7 @@ const filteredGroupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
 const newGroupName = ref("");
 const updatedGroupName = ref("");
 const selectedGroup = ref<number>();
+const currentPrintersShownCount = ref<number>(0);
 
 const search = ref("");
 const expanded = ref([]);
@@ -257,12 +261,16 @@ const tableHeaders = computed(() => [
   { text: "", value: "data-table-expand" },
 ]);
 
+function itemsChanged(currentItems: PrinterDto[]) {
+  currentPrintersShownCount.value = currentItems.length;
+}
+
 async function loadData() {
   loading.value = true;
+  currentPrintersShownCount.value = 0;
   await featureStore.loadFeatures();
   if (featureStore.hasFeature("printerGroupsApi")) {
-    const response = await PrinterGroupService.getGroupsWithPrinters();
-    groupsWithPrinters.value = response;
+    groupsWithPrinters.value = await PrinterGroupService.getGroupsWithPrinters();
   }
   loading.value = false;
   return groupsWithPrinters;
