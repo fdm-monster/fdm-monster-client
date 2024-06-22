@@ -1,6 +1,7 @@
 import { PrinterStateDto, SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSettingsStore } from "@/store/settings.store";
+import { isOctoPrintType } from "@/utils/printer-type.utils";
 
 const COLOR = {
   danger: "danger",
@@ -71,18 +72,7 @@ export function interpretStates(
     };
   }
 
-  // First level: API
-  // Backend has concluded that things are not retryable
-  if (!responding) {
-    return {
-      ...state,
-      color: COLOR.danger,
-      rgb: RGB.Red,
-      text: authFail ? "API key wrong" : "No API connection",
-    };
-  }
-
-  // Second level: socket state
+  // Socket state and USB connected
   const socketAuthenticated = socketState.socket === "authenticated";
   const socketAuthing = socketState.socket === "authenticating";
   const currentState = printerState?.current?.payload?.state;
@@ -102,12 +92,12 @@ export function interpretStates(
         `Socket opened ${s}, socketAuthing ${sa} printerState ${p}, 
       currentState: ${currentState}, FLAGS ${flags}`
       );
+
     return {
       ...state,
-      color: COLOR.danger,
+      color: !printerState ? COLOR.danger : COLOR.dark,
       rgb: RGB.Red,
-      // TODO this should not result in S/SA/P label, but in a more descriptive label
-      text: !printerState ? "No USB" : `S${s} SA${sa} | P${p}`,
+      text: !printerState ? "No USB" : "Awaiting",
     };
   }
 
@@ -116,7 +106,7 @@ export function interpretStates(
     return;
   }
 
-  if (flags.error || flags.closedOrError) {
+  if (!flags.operational || flags.error || flags.closedOrError) {
     return {
       ...state,
       color: COLOR.danger,

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
+import { CreatePrinter } from "@/models/printers/create-printer.model";
 import { PrintersService } from "@/backend";
 
 export interface TestEvent {

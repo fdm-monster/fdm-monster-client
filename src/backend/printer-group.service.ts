@@ -23,17 +23,17 @@ export class PrinterGroupService extends BaseService {
     const body = {
       name,
     };
-    return (await this.postApi(path, body)) as void;
+    return (await this.post(path, body)) as void;
   }
 
   static async deleteGroup(groupId: IdType) {
     const path = `${ServerApi.deleteGroupRoute(groupId)}`;
-    return (await this.deleteApi(path)) as GroupWithPrintersDto<IdType>[];
+    return (await this.delete(path)) as GroupWithPrintersDto<IdType>[];
   }
 
   static async getGroupsWithPrinters() {
     const path = `${ServerApi.printerGroupRoute}`;
-    return (await this.getApi(path)) as GroupWithPrintersDto<IdType>[];
+    return (await this.get(path)) as GroupWithPrintersDto<IdType>[];
   }
 
   static async addPrinterToGroup(groupId: IdType, printerId: IdType) {
@@ -41,7 +41,7 @@ export class PrinterGroupService extends BaseService {
     const body = {
       printerId,
     };
-    return (await this.postApi(path, body)) as GroupWithPrintersDto<IdType>[];
+    return (await this.post(path, body)) as GroupWithPrintersDto<IdType>[];
   }
 
   static async deletePrinterFromGroup(groupId: IdType, printerId: IdType) {
@@ -49,7 +49,7 @@ export class PrinterGroupService extends BaseService {
     const body = {
       printerId,
     };
-    return (await this.deleteApi(path, body)) as GroupWithPrintersDto<IdType>[];
+    return (await this.delete(path, body)) as GroupWithPrintersDto<IdType>[];
   }
 
   static async updateGroupName(groupId: IdType, name: string) {

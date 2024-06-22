@@ -34,13 +34,13 @@ export class FloorService extends BaseService {
   static async getFloors() {
     const path = `${ServerApi.floorRoute}/`;
 
-    return (await this.getApi<FloorDto[]>(path)) as FloorDto[];
+    return (await this.get<FloorDto[]>(path)) as FloorDto[];
   }
 
   static async createFloor(floor: FloorDto) {
     const path = `${ServerApi.floorRoute}/`;
 
-    return (await this.postApi(path, floor)) as FloorDto;
+    return (await this.post(path, floor)) as FloorDto;
   }
 
   static async updateFloorName(floorId: IdType, name: string) {
@@ -58,7 +58,7 @@ export class FloorService extends BaseService {
   static async deleteFloor(floorId: IdType) {
     const path = `${ServerApi.getFloorRoute(floorId)}/`;
 
-    return await this.deleteApi(path);
+    return await this.delete(path);
   }
 
   static async addPrinterToFloor(
@@ -67,12 +67,12 @@ export class FloorService extends BaseService {
   ) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
-    return (await this.postApi(path, body)) as FloorDto;
+    return (await this.post(path, body)) as FloorDto;
   }
 
   static async deletePrinterFromFloor(floorId: IdType, printerId: IdType) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
-    return (await this.deleteApi(path, { printerId })) as FloorDto;
+    return (await this.delete(path, { printerId })) as FloorDto;
   }
 }

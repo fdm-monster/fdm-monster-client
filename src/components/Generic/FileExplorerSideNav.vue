@@ -23,7 +23,7 @@
               {{ avatarInitials() }}
             </v-btn>
           </template>
-          <span>Visit the OctoPrint associated to this printer</span>
+          <span>Visit the {{ serviceName }} associated to this printer</span>
         </v-tooltip>
       </v-list-item-avatar>
       <v-list-item-content v-if="storedSideNavPrinter">
@@ -66,9 +66,12 @@
       </v-list-item-content>
     </v-list-item>
     <v-alert v-if="!isEnabled || !isOnline" color="primary">
-      <span v-if="!isEnabled"> Disabled OctoPrint, enable it first to get live updates </span>
+      <span v-if="!isEnabled">
+        Disabled {{ serviceName }}, enable it first to get live updates
+      </span>
       <span v-else>
-        This OctoPrint seems unreachable... Will keep trying for you <v-icon>hourglass_top</v-icon>
+        This {{ serviceName }} seems unreachable... Will keep trying for you
+        <v-icon>hourglass_top</v-icon>
       </span>
     </v-alert>
     <v-alert
@@ -78,7 +81,7 @@
       This OctoPrint was disabled without reason.
     </v-alert>
     <v-alert v-if="storedSideNavPrinter?.disabledReason" color="black">
-      This OctoPrint was disabled for maintenance: <br />
+      This {{ serviceName }} was disabled for maintenance: <br />
       <small>&nbsp;&nbsp;{{ storedSideNavPrinter?.disabledReason }} </small>
     </v-alert>
     <v-divider></v-divider>
@@ -96,14 +99,16 @@
             @click.prevent.stop="openPrinterURL()"
           >
             <v-list-item-avatar class="ml-3 mr-6 ma-5" size="20px">
-              <v-img src="/img/octoprint-tentacle.svg"></v-img>
+              <v-img v-if="isOctoPrint" :src="octoPrintIcon"></v-img>
+              <span v-else>M</span>
             </v-list-item-avatar>
             <v-list-item-content>
-              <span>Open OctoPrint</span>
+              <span v-if="isOctoPrint">Open OctoPrint</span>
+              <span v-if="isMoonraker">Open Moonraker</span>
             </v-list-item-content>
           </v-list-item>
         </template>
-        <span>Visit the OctoPrint associated to this printer</span>
+        <span>Visit the {{ serviceName }} associated to this printer</span>
       </v-tooltip>
 
       <v-tooltip left>
@@ -173,10 +178,9 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-        <span
-          >Let FDM Monster know you are experiencing inconsistencies, reset all volatile
-          states</span
-        >
+        <span>
+          Let FDM Monster know you are experiencing inconsistencies, reset all volatile states
+        </span>
       </v-tooltip>
 
       <v-divider></v-divider>
@@ -263,7 +267,7 @@
             <v-list-item-content> Delete files</v-list-item-content>
           </v-list-item>
         </template>
-        <span>Clear all files present on OctoPrint (local)</span>
+        <span>Clear all files present on {{ serviceName }} (local)</span>
       </v-tooltip>
 
       <v-tooltip left>
@@ -281,7 +285,7 @@
             <v-list-item-content>Refresh files</v-list-item-content>
           </v-list-item>
         </template>
-        <span>Rebuild the file list on OctoPrint (local)</span>
+        <span>Rebuild the file list on {{ serviceName }} (local)</span>
       </v-tooltip>
 
       <v-tooltip left>
@@ -337,7 +341,7 @@
         <v-list-item-avatar>
           <v-tooltip left>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" @click="clickDownloadFile(file)" v-on="on">
+              <v-btn icon v-bind="attrs" @click="clickDownloadFile(file.path)" v-on="on">
                 <v-icon>download</v-icon>
               </v-btn>
             </template>
@@ -370,11 +374,11 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                {{ file.name }}
+                {{ file.path }}
               </span>
             </template>
             <span>
-              File: {{ file.name }} <br />
+              File: {{ file.path }} <br />
               Size: {{ formatBytes(file.size) }} <br />
               <strong>{{ isFileBeingPrinted(file) ? "Printing" : "Unused" }}</strong>
             </span>
@@ -406,7 +410,7 @@
 import { computed, ref, watch } from "vue";
 import { generateInitials } from "@/shared/noun-adjectives.data";
 import { PrinterFileService, PrintersService } from "@/backend";
-import { PrinterFileDto } from "@/models/printers/printer-file.model";
+import { FileDto } from "@/models/printers/printer-file.model";
 import { formatBytes } from "@/utils/file-size.util";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
@@ -416,22 +420,36 @@ import { usePrinterStateStore } from "@/store/printer-state.store";
 import { interpretStates } from "@/shared/printer-state.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFeatureStore } from "@/store/features.store";
+import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
+import { isMoonrakerType, isOctoPrintType, getServiceName } from "@/utils/printer-type.utils";
 
 const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
 const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
 
-const fileSearch = ref<string | undefined>(undefined);
-const shownFileCache = ref<PrinterFileDto[] | undefined>(undefined);
+const fileSearch = ref<string>();
+const shownFileCache = ref<FileDto[]>([]);
 const drawerOpened = ref(false);
 const loading = ref(true);
 
 const storedSideNavPrinter = computed(() => printersStore.sideNavPrinter);
 const printerId = computed(() => storedSideNavPrinter.value?.id);
+
 const isOnline = computed(() =>
   printerId.value ? printerStateStore.isApiResponding(printerId.value) : false
 );
+
+const isOctoPrint = computed(() => {
+  return isOctoPrintType(storedSideNavPrinter.value?.printerType);
+});
+
+const isMoonraker = computed(() => {
+  return isMoonrakerType(storedSideNavPrinter.value?.printerType);
+});
+
+const serviceName = computed(() => getServiceName(storedSideNavPrinter.value?.printerType));
+
 const isOperational = computed(() =>
   printerId.value ? printerStateStore.isPrinterOperational(printerId.value) : false
 );
@@ -448,13 +466,11 @@ const isPrinting = computed(() => {
   return printerId.value ? printerStateStore.isPrinterPrinting(printerId.value) : false;
 });
 
-const filesListed = computed(() => {
+const filesListed = computed<FileDto[]>(() => {
   if (!shownFileCache.value?.length) return [];
   return (
     shownFileCache.value.filter((f) =>
-      fileSearch.value?.length
-        ? `${f.name}${f.path}`.toLowerCase().includes(fileSearch.value)
-        : true
+      fileSearch.value?.length ? `${f.path}`.toLowerCase().includes(fileSearch.value) : true
     ) || []
   );
 });
@@ -468,6 +484,7 @@ const isPaused = computed(() => {
   if (!storedSideNavPrinter.value || !printerId.value) return false;
   return printerStateStore.isPrinterPaused(printerId.value);
 });
+
 const canBeCleared = computed(() => {
   if (!printerId.value) {
     return false;
@@ -513,16 +530,18 @@ const refreshFiles = async () => {
   loading.value = true;
   const currentPrinterId = storedSideNavPrinter.value?.id;
   if (!currentPrinterId) return;
-
-  if (printerStateStore.isApiResponding(currentPrinterId)) {
-    shownFileCache.value = await printersStore.loadPrinterFiles(currentPrinterId, false);
-  } else {
-    shownFileCache.value = await PrinterFileService.getFileCache(currentPrinterId);
+  try {
+    if (printerStateStore.isApiResponding(currentPrinterId)) {
+      shownFileCache.value = await printersStore.loadPrinterFiles(currentPrinterId, false);
+    } else {
+      shownFileCache.value = await PrinterFileService.getFileCache(currentPrinterId);
+    }
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 };
 
-const deleteFile = async (file: PrinterFileDto) => {
+const deleteFile = async (file: OctoPrintFileDto) => {
   if (!printerId.value) return;
   await printersStore.deletePrinterFile(printerId.value, file.path);
 };
@@ -552,13 +571,13 @@ function truncateProgress(progress?: number) {
   return progress?.toFixed(1);
 }
 
-function isFileBeingPrinted(file: PrinterFileDto) {
+function isFileBeingPrinted(file: FileDto) {
   if (!printerId.value) {
     return false;
   }
 
   const jobFilePath = printerStateStore.printingFilePathsByPrinterId[printerId.value];
-  return jobFilePath === file.name;
+  return jobFilePath === file.path;
 }
 
 function avatarInitials() {
@@ -611,6 +630,7 @@ async function toggleMaintenance() {
 }
 
 async function refreshSocketState() {
+  if (!printerId.value) return;
   await PrintersService.refreshSocket(printerId.value);
 }
 
@@ -648,7 +668,7 @@ function clickSettings() {
   closeDrawer();
 }
 
-async function clickPrintFile(file: PrinterFileDto) {
+async function clickPrintFile(file: OctoPrintFileDto | MoonrakerFileDto) {
   if (!printerId.value) return;
   await printerStateStore.selectAndPrintFile({
     printerId: printerId.value,
@@ -656,8 +676,8 @@ async function clickPrintFile(file: PrinterFileDto) {
   });
 }
 
-function clickDownloadFile(file: PrinterFileDto) {
-  PrinterFileService.downloadFile(file);
+function clickDownloadFile(path: string) {
+  PrinterFileService.downloadFile(printerId.value, path);
 }
 
 function closeDrawer() {

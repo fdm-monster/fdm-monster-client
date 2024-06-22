@@ -5,7 +5,7 @@ import {
   CreatePrinter,
   getDefaultCreatePrinter,
   PreCreatePrinter,
-} from "@/models/printers/crud/create-printer.model";
+} from "@/models/printers/create-printer.model";
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { IdType } from "@/utils/id.type";
 
@@ -24,6 +24,7 @@ export class PrintersService extends BaseService {
 
     newFormData.id = printer.id;
     newFormData.printerURL = printer.printerURL;
+    newFormData.printerType = printer.printerType;
     newFormData.name = printer.name || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
     newFormData.enabled = printer.enabled;
@@ -39,35 +40,35 @@ export class PrintersService extends BaseService {
   static async getPrinters() {
     const path = ServerApi.printerRoute;
 
-    return (await this.getApi<PrinterDto[]>(path)) as PrinterDto[];
+    return (await this.get<PrinterDto[]>(path)) as PrinterDto[];
   }
 
   static async getPrinterLoginDetails(printerId: IdType) {
     const path = ServerApi.getPrinterLoginDetailsRoute(printerId);
 
-    return (await this.getApi<LoginDetails>(path)) as LoginDetails;
+    return (await this.get<LoginDetails>(path)) as LoginDetails;
   }
 
   static async restartOctoPrint(printerId: IdType) {
     const path = `${ServerApi.restartOctoPrintRoute(printerId)}`;
-    return (await this.postApi(path)) as any;
+    return (await this.post(path)) as any;
   }
 
   static async refreshSocket(printerId: IdType) {
     const path = `${ServerApi.refreshSocketRoute(printerId)}`;
-    return (await this.postApi(path)) as any;
+    return (await this.post(path)) as any;
   }
 
   static async sendPrinterConnectCommand(printerId: IdType) {
     const path = ServerApi.printerSerialConnectRoute(printerId);
 
-    return await this.postApi(path);
+    return await this.post(path);
   }
 
   static async sendPrinterDisconnectCommand(printerId: IdType) {
     const path = ServerApi.printerSerialDisconnectRoute(printerId);
 
-    return await this.postApi(path);
+    return await this.post(path);
   }
 
   static async sendPrinterJogCommand(
@@ -76,31 +77,31 @@ export class PrintersService extends BaseService {
   ) {
     const path = ServerApi.printerJogCommandRoute(printerId);
 
-    return await this.postApi(path, amounts);
+    return await this.post(path, amounts);
   }
 
   static async sendPrinterHomeCommand(printerId: IdType, axes: string[]) {
     const path = ServerApi.printerHomeCommandRoute(printerId);
 
-    return await this.postApi(path, axes);
+    return await this.post(path, axes);
   }
 
   static async createPrinter(printer: CreatePrinter, forceSave: boolean) {
     const path = `${ServerApi.printerRoute}?forceSave=${forceSave}`;
 
-    return (await this.postApi(path, printer)) as PrinterDto;
+    return (await this.post(path, printer)) as PrinterDto;
   }
 
   static async batchImportPrinters(printers: CreatePrinter[]) {
     const path = ServerApi.printerBatchRoute;
 
-    return (await this.postApi(path, printers)) as PrinterDto[];
+    return (await this.post(path, printers)) as PrinterDto[];
   }
 
   static async deletePrinter(printerId: IdType) {
     const path = ServerApi.getPrinterRoute(printerId);
 
-    return await this.deleteApi(path);
+    return await this.delete(path);
   }
 
   static async updatePrinter(printerId: IdType, printer: CreatePrinter, forceSave: boolean) {
@@ -118,7 +119,7 @@ export class PrintersService extends BaseService {
   static async testConnection(printer: CreatePrinter) {
     const path = ServerApi.printerTestConnectionRoute;
 
-    return (await this.postApi(path, printer)) as PrinterDto;
+    return (await this.post(path, printer)) as PrinterDto;
   }
 
   static async toggleEnabled(printerId: IdType, enabled: boolean) {

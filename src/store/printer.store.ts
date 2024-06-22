@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { PrinterDto } from "@/models/printers/printer.model";
-import { ClearedFilesResult, PrinterFileDto } from "@/models/printers/printer-file.model";
+import { ClearedFilesResult, FileDto } from "@/models/printers/printer-file.model";
 import { PrinterFileService, PrintersService } from "@/backend";
-import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
+import { CreatePrinter } from "@/models/printers/create-printer.model";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { usePrinterStateStore } from "./printer-state.store";
 import { IdType } from "@/utils/id.type";
@@ -14,7 +14,7 @@ import {
 
 interface State {
   printers: PrinterDto[];
-  printerFileCache: Record<IdType, PrinterFileDto[]>;
+  printerFileCache: Record<IdType, FileDto[]>;
 
   sideNavPrinter?: PrinterDto;
   updateDialogPrinter?: PrinterDto;
@@ -158,12 +158,10 @@ export const usePrinterStore = defineStore("Printers", {
         this.printerFileCache[printerId] = result.failedFiles;
       }
     },
-    async loadPrinterFiles(printerId: IdType, recursive: boolean) {
-      const files = await PrinterFileService.getFiles(printerId, recursive);
+    async loadPrinterFiles(printerId: IdType) {
+      const files = await PrinterFileService.getFiles(printerId);
 
-      files.sort((f1, f2) => {
-        return f1.date < f2.date ? 1 : -1;
-      });
+      files.sort((f1, f2) => (f1.date < f2.date ? 1 : -1));
 
       this.printerFileCache[printerId] = files;
       return files;

@@ -15,7 +15,6 @@ const bindDropConditionally = (el: HTMLElement, printers: PrinterDto[], context?
 
   if (printers?.length) {
     const isSinglePrinter = printers.length === 1;
-    const firstPrinter = printers[0];
 
     el.ondrop = async (e) => {
       e.preventDefault();
@@ -27,30 +26,27 @@ const bindDropConditionally = (el: HTMLElement, printers: PrinterDto[], context?
       const clonedFiles = [...Array.from(filesArray)];
       let convertedUploads = [];
       if (isSinglePrinter) {
-        const printedFilename = clonedFiles.length === 1 ? clonedFiles[0].name : null;
+        const firstPrinter = printers[0];
+        if (clonedFiles.length > 1) {
+          throw "Cannot upload multiple files to a printer";
+        }
+        // const printedFilename = clonedFiles.length === 1 ? clonedFiles[0].name : null;
         console.debug(
           "Single printer upload mode",
           printers.length,
-          clonedFiles.length,
-          printedFilename
+          clonedFiles.length
+          // printedFilename
         );
 
         // Convert the file and bound printer to a file upload
-        convertedUploads = convertPrinterMultiFileToQueue(
-          firstPrinter,
-          clonedFiles,
-          printedFilename
-        );
+        convertedUploads = convertPrinterMultiFileToQueue(firstPrinter, clonedFiles);
       } else {
         if (clonedFiles.length > 1) {
           throw "Cannot upload multiple files to multiple printers";
         }
         console.debug("Multi printer upload mode", printers.length, clonedFiles.length);
         const clonedFile = clonedFiles[0];
-        convertedUploads = convertMultiPrinterFileToQueue(printers, clonedFile, {
-          select: true,
-          print: true,
-        });
+        convertedUploads = convertMultiPrinterFileToQueue(printers, clonedFile);
       }
 
       uploadsStore.queueUploads(convertedUploads);

@@ -187,7 +187,7 @@ import { useDialog } from "@/shared/dialog.composable";
 import { ref } from "vue";
 import { PrintersService } from "@/backend";
 import gif from "@/assets/octofarm-printer-export.gif";
-import { CreatePrinter } from "@/models/printers/crud/create-printer.model";
+import { CreatePrinter } from "@/models/printers/create-printer.model";
 
 const stepProgress = ref();
 const validationStatus = ref(false);
