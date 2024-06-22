@@ -65,9 +65,9 @@
               <v-icon>settings</v-icon>
               &nbsp;Edit Printer
             </v-list-item>
-            <v-list-item :close-on-click="true" @click="clickEmergencyStop()">
+            <v-list-item :close-on-click="true" @click="clickQuickStop()">
               <v-icon>stop</v-icon>
-              &nbsp;Emergency stop
+              &nbsp;Quick Stop
             </v-list-item>
           </v-list>
         </v-menu>
@@ -84,7 +84,7 @@
             <v-icon>usb</v-icon>
           </v-btn>
 
-          <!-- Emergency stop button -->
+          <!-- Printer control button -->
           <v-tooltip
             v-if="hasPrinterControlFeature && printerStateStore.isPrinterOperational(printer?.id)"
             bottom
@@ -106,7 +106,7 @@
             </template>
           </v-tooltip>
 
-          <!-- Emergency stop button -->
+          <!-- Quick stop button -->
           <v-tooltip v-if="printerStateStore.isPrinterOperational(printer?.id)" bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -115,13 +115,13 @@
                 size="36"
                 v-bind="attrs"
                 v-on="on"
-                @click.prevent.stop="clickEmergencyStop()"
+                @click.prevent.stop="clickQuickStop()"
               >
                 <v-icon>dangerous</v-icon>
               </v-btn>
             </template>
             <template v-slot:default>
-              <span>Send an emergency stop, causing USB to be disconnected.</span>
+              <span>Send a quick stop GCode, causing the printer to cease immediately.</span>
             </template>
           </v-tooltip>
 
@@ -325,12 +325,10 @@ export default defineComponent({
       await controlDialog.openDialog({ printerId });
     };
 
-    const clickEmergencyStop = async () => {
+    const clickQuickStop = async () => {
       if (!printerId.value) return;
-      if (
-        confirm("Are you sure to abort the print in Emergency Stop mode? Please reconnect after.")
-      ) {
-        await CustomGcodeService.postEmergencyM112Command(printerId.value);
+      if (confirm("Are you sure to abort the print in Quick Stop mode? Please reconnect after.")) {
+        await CustomGcodeService.postQuickStopM112Command(printerId.value);
       }
     };
 
@@ -366,7 +364,7 @@ export default defineComponent({
       clickOpenPrinterControlDialog,
       clickOpenPrinterURL,
       clickOpenSettings,
-      clickEmergencyStop,
+      clickQuickStop,
       clickConnectUsb,
       selectOrUnplacePrinter,
     };

@@ -28,7 +28,7 @@ export default defineComponent({
   methods: {
     async clickEmergencyStop() {
       if (confirm("Are you sure to abort the print? Please reconnect after.")) {
-        await CustomGcodeService.postEmergencyM112Command(this.printer!.id);
+        await CustomGcodeService.postQuickStopM112Command(this.printer!.id);
       }
     },
   },

@@ -74,7 +74,7 @@ export class ServerApi {
     `${ServerApi.floorRoute}/selected-floor/${floorId}`;
   static addOrRemovePrinterFromFloorRoute = (id: IdType) =>
     `${ServerApi.getFloorRoute(id)}/printer`;
-  static sendEmergencyM112Route = (id: IdType) =>
+  static sendQuickStopM112Route = (id: IdType) =>
     `${ServerApi.customGCodeRoute}/send-emergency-m112/${id}`;
   static installFirmwareUpdatePluginRoute = (id: IdType) =>
     `${ServerApi.pluginFirmwareUpdateRoute}/${id}/install-firmware-update-plugin`;
