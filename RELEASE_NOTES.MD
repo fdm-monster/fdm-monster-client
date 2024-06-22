@@ -5,6 +5,7 @@
 Fixes:
 
 - Fix: Printer dialog reset validation error before pressing test connection
+- Fix: Printer list - show current printer count presented vs total present
 
 ## Client 07/05/2024 1.5.17
 
