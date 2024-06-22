@@ -1,43 +1,51 @@
-# Client develop
+# Release notes
 
-# Client 07/05/2024 1.5.16
+## Client develop
+
+## Client 07/05/2024 1.5.17
+
+Fixes
+
+- Fix: replaced "Emergency Stop" terminology with "Quick Stop"
+
+## Client 07/05/2024 1.5.16
 
 Fixes
 
 - Bugfix: could not resume print job after pausing.
 - Bugfix: printer control dialog was empty after opening the second time, now it will load again.
 
-# Client 22/04/2024 1.5.15
+## Client 22/04/2024 1.5.15
 
 Fixes
 
 - fix: current MonsterPi version would be hidden on the Software Upgrade page.
 
-# Client 18/04/2024 1.5.14
+## Client 18/04/2024 1.5.14
 
 Fixes
 
 - fix: ZIP download would be corrupt sometimes. Ensure file downloaded as ArrayBuffer (instead of blob) and written as text/plain instead of text.
 
-# Client 18/04/2024 1.5.13
+## Client 18/04/2024 1.5.13
 
 Features:
 
 - Printer Create/Update: add URL and apiKey validation with feedback. When wanted force save can be used in case of failures.
 
-# Client 18/04/2024 1.5.12
+## Client 18/04/2024 1.5.12
 
 Fixes:
 
 - Settings: software upgrade page for client upgrades would not calculate ability to upgrade correctly (again). Now fixed.
 
-# Client 18/04/2024 1.5.11
+## Client 18/04/2024 1.5.11
 
 Fixes:
 
 - Settings: pre-upload file cleaning settings could not be saved and no message was shown. Now both those things are fixed.
 
-# Client 16/04/2024 1.5.10
+## Client 16/04/2024 1.5.10
 
 Features:
 
@@ -49,7 +57,7 @@ Changes:
 - Settings: The settings toolbars have been refactored: consistent icon, simpler titles and dark color
 - Settings: The settings navigation has been re-ordered and given separations
 
-# Client 13/04/2024 1.5.9
+## Client 13/04/2024 1.5.9
 
 Features:
 
