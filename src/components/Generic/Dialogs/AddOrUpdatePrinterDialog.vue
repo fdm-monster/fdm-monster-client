@@ -202,6 +202,8 @@ const testPrinter = async () => {
   if (!(await isValid())) return;
   if (!formData.value) return;
 
+  printerValidationError.value = null;
+  validatingPrinter.value = false;
   testPrinterStore.clearEvents();
   openTestPanel();
 

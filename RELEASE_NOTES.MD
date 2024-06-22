@@ -2,28 +2,32 @@
 
 ## Client develop
 
+Fixes:
+
+- Fix: Printer dialog reset validation error before pressing test connection
+
 ## Client 07/05/2024 1.5.17
 
-Fixes
+Fixes:
 
 - Fix: replaced "Emergency Stop" terminology with "Quick Stop"
 
 ## Client 07/05/2024 1.5.16
 
-Fixes
+Fixes:
 
 - Bugfix: could not resume print job after pausing.
 - Bugfix: printer control dialog was empty after opening the second time, now it will load again.
 
 ## Client 22/04/2024 1.5.15
 
-Fixes
+Fixes:
 
 - fix: current MonsterPi version would be hidden on the Software Upgrade page.
 
 ## Client 18/04/2024 1.5.14
 
-Fixes
+Fixes:
 
 - fix: ZIP download would be corrupt sometimes. Ensure file downloaded as ArrayBuffer (instead of blob) and written as text/plain instead of text.
 

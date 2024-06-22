@@ -47,7 +47,6 @@ export class SocketIoService {
     appSocketIO?.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
     appSocketIO?.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);
-      console.log(data);
     });
   }
 
