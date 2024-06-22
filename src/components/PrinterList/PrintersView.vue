@@ -51,7 +51,6 @@
         </template>
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>Showing {{ printers.length || 0 }} printers</v-toolbar-title>
             <v-btn class="ml-3" outlined type="button" @click="openImportJsonPrintersDialog()">
               <v-icon>publish</v-icon>
               Import OctoFarm Printers
