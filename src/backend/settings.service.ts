@@ -12,12 +12,12 @@ import { WhitelistSettings } from "@/models/settings/server-settings.dto";
 export class SettingsService extends BaseService {
   static async getSettings() {
     const path = ServerApi.settingsRoute;
-    return (await this.getApi(path)) as SettingsDto;
+    return (await this.get(path)) as SettingsDto;
   }
 
   static async getSettingsSensitive() {
     const path = ServerApi.settingsSensitiveRoute;
-    return (await this.getApi(path)) as SettingsSensitiveDto;
+    return (await this.get(path)) as SettingsSensitiveDto;
   }
 
   static async updateLoginRequiredSettings(loginRequired: boolean) {

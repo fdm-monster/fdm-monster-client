@@ -59,7 +59,7 @@
             </v-list-item>
             <v-list-item :close-on-click="true" @click="clickOpenPrinterURL()">
               <v-icon>directions</v-icon>
-              &nbsp;Visit OctoPrint
+              &nbsp;Visit {{ getServiceName(printer.printerType) }}
             </v-list-item>
             <v-list-item :close-on-click="true" @click="clickOpenSettings()">
               <v-icon>settings</v-icon>
@@ -227,11 +227,13 @@ import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useDialog } from "@/shared/dialog.composable";
 import { useFeatureStore } from "@/store/features.store";
+import { getServiceName } from "@/utils/printer-type.utils";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
 export default defineComponent({
   name: "PrinterGridTile",
+  methods: { getServiceName },
   props: {
     printer: { type: Object as PropType<PrinterDto | undefined>, required: true },
     x: { type: Number, required: true },

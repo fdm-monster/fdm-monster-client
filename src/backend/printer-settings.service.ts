@@ -6,7 +6,7 @@ export class PrinterSettingsService extends BaseService {
   static async getSettings(printerId: IdType) {
     const path = `${ServerApi.getPrinterSettingsRoute(printerId)}`;
 
-    return await this.getApi(path);
+    return await this.get(path);
   }
 
   /**
@@ -17,12 +17,12 @@ export class PrinterSettingsService extends BaseService {
   static async setGCodeAnalysis(printerId: IdType, enabled = false) {
     const path = `${ServerApi.setPrinterSettingsGCodeAnalysisRoute(printerId)}`;
 
-    return await this.postApi(path, { enabled });
+    return await this.post(path, { enabled });
   }
 
   static async syncPrinterName(printerId: IdType) {
     const path = `${ServerApi.syncPrinterNameSettingRoute(printerId)}`;
 
-    return await this.postApi(path);
+    return await this.post(path);
   }
 }

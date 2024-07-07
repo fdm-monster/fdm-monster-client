@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useTestPrinterStore } from "../../../store/test-printer.store";
+import { useTestPrinterStore } from "@/store/test-printer.store";
 
 interface Data {
   cols: 4;
