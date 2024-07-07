@@ -155,11 +155,11 @@ const serviceTypes = ref([
     logo: octoPrintTentacleSvg,
     height: "75px",
   },
-  {
-    name: "Klipper",
-    logo: klipperLogoSvg,
-    height: "75px",
-  },
+  // {
+  //   name: "Klipper",
+  //   logo: klipperLogoSvg,
+  //   height: "75px",
+  // },
 ]);
 const selectedService = ref();
 
