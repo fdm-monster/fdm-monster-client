@@ -12,6 +12,6 @@ export class FirstTimeSetupService extends BaseService {
   static async postFirstTimeSetup(data: FirstTimeSetupData) {
     const path = ServerApi.completeFirstTimeSetupRoute;
 
-    return await this.postApi(path, data);
+    return await this.post(path, data);
   }
 }

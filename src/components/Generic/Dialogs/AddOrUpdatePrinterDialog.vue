@@ -1,141 +1,140 @@
 <template>
   <BaseDialog
     :id="dialog.dialogId"
-    :max-width="showChecksPanel ? '900px' : '700px'"
+    :max-width="showChecksPanel ? '900px' : '800px'"
     @escape="closeDialog()"
   >
-    <ValidationObserver ref="validationObserver" v-slot="{ invalid }">
-      <v-card class="pa-4">
-        <v-card-title>
-          <span class="text-h5">
-            <v-avatar color="primary" size="56">
-              {{ avatarInitials }}
-            </v-avatar>
-            <span v-if="isUpdating"> Updating Printer </span>
-            <span v-else> New Printer </span>
-          </span>
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col :cols="showChecksPanel ? 8 : 12">
-              <v-row v-if="formData">
-                <v-col>
-                  <ValidationProvider v-slot="{ errors }" :rules="printerNameRules" name="Name">
-                    <v-text-field
-                      v-model="formData.name"
-                      :counter="printerNameRules.max"
-                      :error-messages="errors"
-                      autofocus
-                      class="ma-1"
-                      label="Printer name*"
-                      required
-                    />
-                  </ValidationProvider>
-                </v-col>
-                <v-col>
-                  <ValidationProvider v-slot="{ errors }" name="Enabled">
-                    <v-checkbox
-                      v-model="formData.enabled"
-                      :error-messages="errors"
-                      hint="Disabling makes the printer passive"
-                      label="Enabled*"
-                      persistent-hint
-                      required
-                    ></v-checkbox>
-                  </ValidationProvider>
-                </v-col>
-              </v-row>
+    <v-card class="pa-4">
+      <v-card-title>
+        <span class="text-h5">
+          <v-avatar color="primary" size="56">
+            {{ avatarInitials }}
+          </v-avatar>
+          <span v-if="isUpdating"> Updating Printer </span>
+          <span v-else> New Printer </span>
+        </span>
+      </v-card-title>
 
-              <ValidationProvider
-                v-slot="{ errors }"
-                name="Printer URL"
-                persistent-hint
-                rules="required|url"
-              >
-                <v-text-field
-                  v-model="formData.printerURL"
-                  :error-messages="errors"
-                  class="ma-1"
-                  hint="F.e. 'octopi.local' or 'https://my.printer.com'"
-                  label="Printer URL*"
-                ></v-text-field>
-              </ValidationProvider>
+      <v-card-text>
+        <h4>Printer type</h4>
+        <v-item-group v-model="formData.printerType" mandatory>
+          <v-container>
+            <v-row>
+              <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="6">
+                <v-item v-slot="{ active, toggle }">
+                  <v-card
+                    :color="active ? 'primary' : 'blue-grey darken-4'"
+                    class="d-flex align-center justify-center elevation-8"
+                    height="75px"
+                    width="225px"
+                    @click="toggle"
+                  >
+                    <v-img :src="item.logo" :height="item.height" max-width="125px" width="125px" />
+                    <v-scroll-y-transition>
+                      <h3 class="ml-3 align-center">{{ item.name }}</h3>
+                    </v-scroll-y-transition>
+                  </v-card>
+                </v-item>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-item-group>
 
-              <ValidationProvider
-                v-slot="{ errors }"
-                :rules="apiKeyRules"
-                name="ApiKey"
-                style="width: 100%"
-              >
+        <v-row>
+          <v-col :cols="showChecksPanel ? 8 : 12">
+            <v-row v-if="formData">
+              <v-col>
                 <v-text-field
-                  v-model="formData.apiKey"
-                  :counter="apiKeyRules.length"
-                  :error-messages="errors"
+                  v-model="formData.name"
+                  :counter="printerNameRules.max"
+                  autofocus
                   class="ma-1"
-                  hint="User or Application Key only (Global API key fails)"
-                  label="API Key*"
+                  label="Printer name*"
+                  required
+                />
+              </v-col>
+              <v-col>
+                <v-checkbox
+                  v-model="formData.enabled"
+                  hint="Disabling makes the printer passive"
+                  label="Enabled*"
                   persistent-hint
                   required
-                ></v-text-field>
-              </ValidationProvider>
-            </v-col>
+                />
+              </v-col>
+            </v-row>
 
-            <PrinterChecksPanel v-if="showChecksPanel" :cols="4">
-              <v-btn @click="showChecksPanel = false">Hide checks</v-btn>
-            </PrinterChecksPanel>
-          </v-row>
-          <v-alert color="primary" class="my-3" v-if="printerValidationError?.length">
-            {{ printerValidationError }}
-            <v-checkbox color="warning" v-model="forceSavePrinter" label="Force save" />
-          </v-alert>
-          <v-alert class="my-3" v-if="validatingPrinter">
-            Validating printer
-            <v-progress-circular indeterminate />
-          </v-alert>
-        </v-card-text>
-        <v-card-actions>
-          <em class="red--text">* indicates required field</em>
-          <v-spacer></v-spacer>
-          <v-btn text @click="closeDialog()">Close</v-btn>
-          <v-btn
-            v-if="isUpdating"
-            :disabled="invalid"
-            color="gray"
-            text
-            @click="duplicatePrinter()"
-          >
-            Duplicate
-          </v-btn>
-          <v-btn :disabled="invalid" color="warning" text @click="testPrinter()">
-            Test connection
-          </v-btn>
+            <v-text-field
+              v-model="formData.printerURL"
+              class="ma-1"
+              hint="F.e. 'octopi.local' or 'https://my.printer.com'"
+              label="Printer URL*"
+            />
 
-          <v-btn :disabled="invalid" color="blue darken-1" text @click="submit()">
-            {{ submitButtonText }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </ValidationObserver>
+            <v-text-field
+              v-model="formData.apiKey"
+              :counter="apiKeyRules.length"
+              class="ma-1"
+              hint="User or Application Key only (Global API key fails)"
+              label="API Key*"
+              persistent-hint
+              required
+            />
+          </v-col>
+
+          <PrinterChecksPanel v-if="showChecksPanel" :cols="4">
+            <v-btn @click="showChecksPanel = false">Hide checks</v-btn>
+          </PrinterChecksPanel>
+        </v-row>
+        <v-alert color="primary" class="my-3" v-if="printerValidationError?.length">
+          {{ printerValidationError }}
+          <v-checkbox color="warning" v-model="forceSavePrinter" label="Force save" />
+        </v-alert>
+        <v-alert class="my-3" v-if="validatingPrinter">
+          Validating printer
+          <v-progress-circular indeterminate />
+        </v-alert>
+      </v-card-text>
+      <v-card-actions>
+        <em class="red--text">* indicates required field</em>
+        <v-spacer />
+        <v-btn text @click="closeDialog()">Close</v-btn>
+        <v-btn
+          :disabled="!isValid()"
+          v-if="isUpdating"
+          color="gray"
+          text
+          @click="duplicatePrinter()"
+        >
+          Duplicate
+        </v-btn>
+        <v-btn :disabled="!isValid()" color="warning" text @click="testPrinter()">
+          Test connection
+        </v-btn>
+
+        <v-btn :disabled="!isValid()" color="blue darken-1" text @click="submit()">
+          {{ submitButtonText }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </BaseDialog>
 </template>
 
 <script lang="ts" setup>
 import { computed, inject, onMounted, ref, watch } from "vue";
-import { ValidationObserver, ValidationProvider } from "vee-validate";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
 import PrinterChecksPanel from "@/components/Generic/Dialogs/PrinterChecksPanel.vue";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useTestPrinterStore } from "@/store/test-printer.store";
-import {
-  CreatePrinter,
-  getDefaultCreatePrinter,
-} from "@/models/printers/crud/create-printer.model";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
+import klipperLogoSvg from "@/assets/klipper-logo.svg";
+import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
+import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();
@@ -149,6 +148,20 @@ const forceSavePrinter = ref(false);
 const showChecksPanel = ref(false);
 const copyPasteConnectionString = ref("");
 const formData = ref(getDefaultCreatePrinter());
+
+const serviceTypes = ref([
+  {
+    name: "OctoPrint",
+    logo: octoPrintTentacleSvg,
+    height: "75px",
+  },
+  // {
+  //   name: "Klipper",
+  //   logo: klipperLogoSvg,
+  //   height: "75px",
+  // },
+]);
+const selectedService = ref();
 
 const printerId = computed(() => printersStore.updateDialogPrinter?.id);
 
@@ -166,7 +179,6 @@ watch(printerId, (val) => {
 });
 
 const storedPrinter = computed(() => printersStore.updateDialogPrinter);
-const validationObserver = ref(null);
 const isUpdating = computed(() => !!storedPrinter.value);
 const submitButtonText = computed(
   () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
@@ -199,8 +211,7 @@ const openTestPanel = () => {
 };
 
 const testPrinter = async () => {
-  if (!(await isValid())) return;
-  if (!formData.value) return;
+  if (!isValid()) return;
 
   printerValidationError.value = null;
   validatingPrinter.value = false;
@@ -213,8 +224,10 @@ const testPrinter = async () => {
   testPrinterStore.currentCorrelationToken = correlationToken;
 };
 
-const isValid = async () => {
-  return await validationObserver.value?.validate();
+const isValid = () => {
+  const form = formData.value;
+  if (!form) return false;
+  return form.printerURL?.length && form.name?.length && form.apiKey?.length;
 };
 
 const createPrinter = async (newPrinterData: CreatePrinter) => {
@@ -241,7 +254,7 @@ const updatePrinter = async (updatedPrinter: CreatePrinter) => {
 };
 
 const submit = async () => {
-  if (!formData.value || !(await isValid())) return;
+  if (!isValid()) return;
 
   printerValidationError.value = null;
   validatingPrinter.value = true;

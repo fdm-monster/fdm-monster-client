@@ -35,7 +35,7 @@ export default defineComponent({
     async getFiles() {
       if (!this.printer) return;
 
-      await this.printersStore.loadPrinterFiles(this.printer.id, false);
+      await this.printersStore.loadPrinterFiles(this.printer.id);
     },
   },
   watch: {},
