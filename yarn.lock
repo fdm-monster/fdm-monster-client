@@ -1549,7 +1549,7 @@ __metadata:
     "@vue/eslint-config-typescript": "npm:13.0.0"
     "@vue/test-utils": "npm:2.4.6"
     "@vue/vue2-jest": "npm:29.2.6"
-    "@vueuse/core": "npm:10.11.1"
+    "@vueuse/core": "npm:11.0.1"
     "@vueuse/integrations": "npm:10.11.1"
     axios: "npm:1.7.5"
     babel-jest: "npm:29.7.0"
@@ -3829,6 +3829,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/core@npm:11.0.1":
+  version: 11.0.1
+  resolution: "@vueuse/core@npm:11.0.1"
+  dependencies:
+    "@types/web-bluetooth": "npm:^0.0.20"
+    "@vueuse/metadata": "npm:11.0.1"
+    "@vueuse/shared": "npm:11.0.1"
+    vue-demi: "npm:>=0.14.10"
+  checksum: 10c0/8bfc02a240a9b11fe63253f54d4d78869280fdf1d2d6562aa56d4b39c7faf374eebc2b766232f1cfac085c0a5d0b2367bfd085ccebfb804a88c622c709368421
+  languageName: node
+  linkType: hard
+
 "@vueuse/integrations@npm:10.11.1":
   version: 10.11.1
   resolution: "@vueuse/integrations@npm:10.11.1"
@@ -3885,12 +3897,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vueuse/metadata@npm:11.0.1":
+  version: 11.0.1
+  resolution: "@vueuse/metadata@npm:11.0.1"
+  checksum: 10c0/85ca84dc8d7687925e49161dac14edefb7361816aec48525d0d31e5ec9c9fce74a3e50e383ec39f3d093eb508aa6e2d7bfcd03c71c3cef3d8e30e696292258e3
+  languageName: node
+  linkType: hard
+
 "@vueuse/shared@npm:10.11.1":
   version: 10.11.1
   resolution: "@vueuse/shared@npm:10.11.1"
   dependencies:
     vue-demi: "npm:>=0.14.8"
   checksum: 10c0/22c4f04be8fdb5e95535cf20f13956fc1f3707540f3730282905e6f9b24f314ada28292e82f4401d88b2c1fcf7fc7203011260958f517abc2b756779243147e3
+  languageName: node
+  linkType: hard
+
+"@vueuse/shared@npm:11.0.1":
+  version: 11.0.1
+  resolution: "@vueuse/shared@npm:11.0.1"
+  dependencies:
+    vue-demi: "npm:>=0.14.10"
+  checksum: 10c0/9255432a7d1581f4cfcc5c5fa1eb2320a0ced084933c2068a9162abf3fd8b581192d532727632f52e88a730f3def24fec1bf87f19e08bb65039573af770a6a78
   languageName: node
   linkType: hard
 
@@ -14790,7 +14818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-demi@npm:>=0.14.8, vue-demi@npm:^0.14.10":
+"vue-demi@npm:>=0.14.10, vue-demi@npm:>=0.14.8, vue-demi@npm:^0.14.10":
   version: 0.14.10
   resolution: "vue-demi@npm:0.14.10"
   peerDependencies:
