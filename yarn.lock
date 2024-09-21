@@ -3604,26 +3604,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/compiler-core@npm:3.5.6":
-  version: 3.5.6
-  resolution: "@vue/compiler-core@npm:3.5.6"
+"@vue/compiler-core@npm:3.5.7":
+  version: 3.5.7
+  resolution: "@vue/compiler-core@npm:3.5.7"
   dependencies:
     "@babel/parser": "npm:^7.25.3"
-    "@vue/shared": "npm:3.5.6"
+    "@vue/shared": "npm:3.5.7"
     entities: "npm:^4.5.0"
     estree-walker: "npm:^2.0.2"
     source-map-js: "npm:^1.2.0"
-  checksum: 10c0/ebc53b473ae10ee9bce79d5f5349656a824de3fc683b9fcc08a6dc6a6776f312508c61db81b225eaea814da9c12a2a62474e66762d25d33f3971492968fad71d
+  checksum: 10c0/4b183488f64261b23f92ea6558533c014a6052c35135db5687d183b2bfe8131cb77dfad644f18e0bc46d3eac4a7e2f24c2f7c5f57fc9cee36ae4d774d670e85e
   languageName: node
   linkType: hard
 
-"@vue/compiler-dom@npm:3.5.6":
-  version: 3.5.6
-  resolution: "@vue/compiler-dom@npm:3.5.6"
+"@vue/compiler-dom@npm:3.5.7":
+  version: 3.5.7
+  resolution: "@vue/compiler-dom@npm:3.5.7"
   dependencies:
-    "@vue/compiler-core": "npm:3.5.6"
-    "@vue/shared": "npm:3.5.6"
-  checksum: 10c0/8c55a8c7a9cdb7f2c24667365855425884292c787d47c12d2ef52279ffcf92041105c9b3feb3d45fec7480e7c14939009033753e12d5298904c12eb6025551f9
+    "@vue/compiler-core": "npm:3.5.7"
+    "@vue/shared": "npm:3.5.7"
+  checksum: 10c0/c8a54782dd6e8745cc4b779318a8f75a9fbd6228306b6814c9df3e63f939c0d92fff0d2de305c9c76777c3f006fa913c4a09851d2b0c69f87fa065ea05d590a4
   languageName: node
   linkType: hard
 
@@ -3643,29 +3643,29 @@ __metadata:
   linkType: hard
 
 "@vue/compiler-sfc@npm:^3.5.3":
-  version: 3.5.6
-  resolution: "@vue/compiler-sfc@npm:3.5.6"
+  version: 3.5.7
+  resolution: "@vue/compiler-sfc@npm:3.5.7"
   dependencies:
     "@babel/parser": "npm:^7.25.3"
-    "@vue/compiler-core": "npm:3.5.6"
-    "@vue/compiler-dom": "npm:3.5.6"
-    "@vue/compiler-ssr": "npm:3.5.6"
-    "@vue/shared": "npm:3.5.6"
+    "@vue/compiler-core": "npm:3.5.7"
+    "@vue/compiler-dom": "npm:3.5.7"
+    "@vue/compiler-ssr": "npm:3.5.7"
+    "@vue/shared": "npm:3.5.7"
     estree-walker: "npm:^2.0.2"
     magic-string: "npm:^0.30.11"
     postcss: "npm:^8.4.47"
     source-map-js: "npm:^1.2.0"
-  checksum: 10c0/a1cc87c5b0e83d2142343d7cbabcf8190915cd2c7ccf46fa74364127a2a043c27e584d74489e175026efb4214ff373e68315a315780c81383be847c45879b1e1
+  checksum: 10c0/dac3136eb0bef4a6c9952baf64bcf88f987c363f2bee58dcf05cfe6ca70dfcfc48880a0b81330c555da3dae2de1ca41eff6892c0631a11a066d9cf2353711f2c
   languageName: node
   linkType: hard
 
-"@vue/compiler-ssr@npm:3.5.6":
-  version: 3.5.6
-  resolution: "@vue/compiler-ssr@npm:3.5.6"
+"@vue/compiler-ssr@npm:3.5.7":
+  version: 3.5.7
+  resolution: "@vue/compiler-ssr@npm:3.5.7"
   dependencies:
-    "@vue/compiler-dom": "npm:3.5.6"
-    "@vue/shared": "npm:3.5.6"
-  checksum: 10c0/59566a01665e744044dce11cbdee30fe515fc7d2e759a783dbc648473a30a02255d9028d300fab33c0968d82301ff6dd14b2cec680b3cd0c504c61f7b1398365
+    "@vue/compiler-dom": "npm:3.5.7"
+    "@vue/shared": "npm:3.5.7"
+  checksum: 10c0/cf1cea40abdb505584b9c6720f931f636d51cbb27ef7faadca22bf77a46778cbb44d7eda47e792d7e58ddbc21c1e52eb8a0205d1d4040e9738a509401633ffb2
   languageName: node
   linkType: hard
 
@@ -3736,10 +3736,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/shared@npm:3.5.6":
-  version: 3.5.6
-  resolution: "@vue/shared@npm:3.5.6"
-  checksum: 10c0/5dedd25000b748fb394fff8b9e501a422436a3c03fc38f6ee2078a80d4c787d17b727a991e3ac585ee14bbdf60f9165784b2de0f20046fcca902643c5becfb9b
+"@vue/shared@npm:3.5.7":
+  version: 3.5.7
+  resolution: "@vue/shared@npm:3.5.7"
+  checksum: 10c0/e4b50b9e2916b0cbe86965539494c4b3928b0f2f519707992ab61c5e586a9d459300a276b7cbb814b7f8bdea12504edf582b57e18023b048429478758f8a78c8
   languageName: node
   linkType: hard
 
@@ -6499,9 +6499,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.4":
-  version: 1.5.25
-  resolution: "electron-to-chromium@npm:1.5.25"
-  checksum: 10c0/2ea818d22592754b902df70d48b82c5d9e3cc2a221d3d0c39d7a7967780601a5cebd5fa10628c6d0ba918582c268a20392279e8bee93edba2e499681056ae143
+  version: 1.5.27
+  resolution: "electron-to-chromium@npm:1.5.27"
+  checksum: 10c0/4a057f469a01829884f2a51f3fc60af7e6a718b15009e4875df122fcdf13babea475ba029af1652a6875b4acfca730c48b13caac5d477d648e622699d3b662bf
   languageName: node
   linkType: hard
 
