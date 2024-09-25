@@ -2845,11 +2845,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.6.2
-  resolution: "@types/node@npm:22.6.2"
+  version: 22.7.0
+  resolution: "@types/node@npm:22.7.0"
   dependencies:
     undici-types: "npm:~6.19.2"
-  checksum: 10c0/595682222cced0c482a38a62540496ef4fe79b185c55c224c4c2eb8140705a7ff7683004df5c7aae35f565de921d438b73e2a3866fbaf617e77a8657c77fed57
+  checksum: 10c0/127b1ac3eebe8c2b09e3d2de277ee906710c4908b4573cde23b9c7cec1cb1aaf1af8bdabbccdac08d005f820b770e7447b22c8eb56ca63344f4d2e26bcdc29fb
   languageName: node
   linkType: hard
 
