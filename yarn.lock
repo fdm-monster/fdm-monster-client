@@ -6621,9 +6621,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.28":
-  version: 1.5.40
-  resolution: "electron-to-chromium@npm:1.5.40"
-  checksum: 10c0/3f97360627cf179b344a7d45b3d12fd3f18f1287529d9835a8e802c7a3b99f09e326b4ed3097be1b135e45a33e8497e758b0c101e38e5bb405eaa6aa887eca82
+  version: 1.5.41
+  resolution: "electron-to-chromium@npm:1.5.41"
+  checksum: 10c0/97b82383963029e6ed0bd7a71eb527f640c8cf658c9e43c776b0257b3c65e366590ac54135683a21e4474a156b8be78717d6e94d3c1def84b69f92bf48f2390f
   languageName: node
   linkType: hard
 
@@ -8315,8 +8315,8 @@ __metadata:
   linkType: hard
 
 "html-webpack-plugin@npm:^5.1.0":
-  version: 5.6.0
-  resolution: "html-webpack-plugin@npm:5.6.0"
+  version: 5.6.2
+  resolution: "html-webpack-plugin@npm:5.6.2"
   dependencies:
     "@types/html-minifier-terser": "npm:^6.0.0"
     html-minifier-terser: "npm:^6.0.2"
@@ -8331,7 +8331,7 @@ __metadata:
       optional: true
     webpack:
       optional: true
-  checksum: 10c0/50d1a0f90d512463ea8d798985d91a7ccc9d5e461713dedb240125b2ff0671f58135dd9355f7969af341ff4725e73b2defbc0984cfdce930887a48506d970002
+  checksum: 10c0/4a6e8367d47e9265aaebd30cd83076bb4a1006eda526b7273f06328f68d1ad2d088da29bd10b41e5016352e8dc1f2b63707a36dde26bed438a01c23cd3799844
   languageName: node
   linkType: hard
 
