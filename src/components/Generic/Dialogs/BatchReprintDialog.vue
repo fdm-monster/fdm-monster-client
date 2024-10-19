@@ -112,7 +112,7 @@ async function onDialogOpened(printerIds: IdType[]) {
       (r) => r.connectionState === "Operational" && r.reprintState == ReprintState.LastPrintReady
     );
   } catch (e: any) {
-    errorLoading.value = e.code.toString() ?? "";
+    errorLoading.value = e.code?.toString() ?? "";
   }
 
   loading.value = false;
