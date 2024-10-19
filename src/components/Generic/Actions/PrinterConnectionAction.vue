@@ -26,8 +26,8 @@
 import { defineComponent, PropType } from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
-import { usePrinterStore } from "../../../store/printer.store";
-import { usePrinterStateStore } from "../../../store/printer-state.store";
+import { usePrinterStore } from "@/store/printer.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 export default defineComponent({
   name: "PrinterConnectionAction",

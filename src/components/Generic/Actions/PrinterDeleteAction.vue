@@ -7,7 +7,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
-import { usePrinterStore } from "../../../store/printer.store";
+import { usePrinterStore } from "@/store/printer.store";
 
 export default defineComponent({
   name: "PrinterDeleteAction",
