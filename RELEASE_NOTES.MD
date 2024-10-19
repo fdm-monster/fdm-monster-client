@@ -2,6 +2,10 @@
 
 ## Client develop
 
+Fixes:
+- Fix: error handling in reprint dialog was throwing an error
+- Fix: add helpful button with tooltip about what is happening in the reprint dialog
+
 ## Client 22/06/2024 1.5.18
 
 Fixes:

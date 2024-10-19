@@ -121,7 +121,6 @@ const batchReprintFiles = async () => {
     printersStore.selectedPrinters?.map((p) => p.id)
   );
   console.log("[PrinterGridView] Dialog completed", output);
-  // await printersStore.batchReprintFiles();
 };
 
 const uploadFile = () => {

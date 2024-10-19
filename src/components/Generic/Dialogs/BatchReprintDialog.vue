@@ -8,7 +8,19 @@
   >
     <v-card class="pa-4">
       <v-card-title>
-        <span class="text-h5"> Batch - Submit Reprint Jobs </span>
+        <span class="text-h5">
+          Batch - Submit Reprint Jobs
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" class="ma-2" fab x-small>
+                <v-icon>question_mark</v-icon>
+              </v-btn>
+            </template>
+            <template v-slot:default>
+              Reprint the files currently selected on each printer
+            </template>
+          </v-tooltip>
+        </span>
       </v-card-title>
       <v-card-text>
         <v-alert v-if="errorLoading?.length" color="error">
@@ -112,7 +124,7 @@ async function onDialogOpened(printerIds: IdType[]) {
       (r) => r.connectionState === "Operational" && r.reprintState == ReprintState.LastPrintReady
     );
   } catch (e: any) {
-    errorLoading.value = e.code.toString() ?? "";
+    errorLoading.value = e.code?.toString() ?? "";
   }
 
   loading.value = false;
