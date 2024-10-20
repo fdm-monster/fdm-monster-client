@@ -21,7 +21,7 @@
 import { defineComponent, PropType } from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
-import { useSnackbar } from "../../../shared/snackbar.composable";
+import { useSnackbar } from "@/shared/snackbar.composable";
 
 export default defineComponent({
   name: "SyncPrinterNameAction",

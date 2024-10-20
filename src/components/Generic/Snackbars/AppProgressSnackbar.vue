@@ -47,13 +47,10 @@
   </v-snackbar>
 </template>
 <script lang="ts" setup>
-import { ProgressMessage, useSnackbar } from "../../../shared/snackbar.composable";
+import { ProgressMessage, useSnackbar } from "@/shared/snackbar.composable";
 import { onMounted, ref } from "vue";
-import {
-  TrackedUpload,
-  UploadStates,
-} from "../../../models/socketio-messages/socketio-message.model";
-import { eventTypeToMessage, InfoEventType } from "../../../shared/alert.events";
+import { TrackedUpload, UploadStates } from "@/models/socketio-messages/socketio-message.model";
+import { eventTypeToMessage, InfoEventType } from "@/shared/alert.events";
 
 const snackbar = useSnackbar();
 const snackbarOpened = ref(false);
