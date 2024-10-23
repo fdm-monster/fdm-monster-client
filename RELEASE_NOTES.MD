@@ -1,10 +1,26 @@
 # Release notes
 
-## Client develop
+## Client 23/10/2024 1.6.1
 
 Fixes:
+
+- Fix: print jobs menu printTime is unavailable because progress is unset
 - Fix: error handling in reprint dialog was throwing an error
 - Fix: add helpful button with tooltip about what is happening in the reprint dialog
+
+## Client 23/10/2024 1.6.0
+
+Chore: 
+
+- Cleanup API caller services
+
+Changes:
+
+- Printing a file will not send select/print parameters anymore. This is assumed always true.
+
+Features:
+
+- Add support for two printer service types Moonraker & OctoPrint in the frontend
 
 ## Client 22/06/2024 1.5.18
 
@@ -14,6 +30,7 @@ Fixes:
 - Fix: Printer list - show current printer count presented vs total present
 
 ## Client 22/06/2024 1.5.17
+
 
 Fixes:
 
