@@ -58,6 +58,12 @@ jobs:
         run: |
           cat package.json
 
+      # Publish to NPM
+      - uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: package.json
+          
       # Create GitHub release
       - name: Create release
         uses: actions/create-release@v1
@@ -86,8 +92,3 @@ jobs:
           asset_name: dist-client-${{ env.CLIENT_VERSION }}.zip
           asset_content_type: application/zip
 
-      # Publish to NPM
-      - uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: package.json
