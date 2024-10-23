@@ -2,6 +2,12 @@
 
 ## Client develop
 
+## Client 23/10/2024 1.5.19 - Hotfix release
+
+Hotfixes:
+
+- Hotfix: fix printTime nullref error causes continuous errors
+
 ## Client 22/06/2024 1.5.18
 
 Fixes:
