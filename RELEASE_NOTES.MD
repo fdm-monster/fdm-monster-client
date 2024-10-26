@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 23/10/2024 1.6.2
+
+Fixes:
+
+- Improve the layout of navigation and content. Now it wont wrap and its vertically stretched.
+
 ## Client 23/10/2024 1.6.1
 
 Fixes:
