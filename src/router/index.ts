@@ -21,6 +21,7 @@ import { RouteNames } from "@/router/route-names";
 import FirstTimeSetupView from "@/components/FirstTimeSetup/FirstTimeSetupView.vue";
 import RegistrationView from "@/components/Login/RegistrationView.vue";
 import ServerProtectionSettings from "@/components/Settings/ServerProtectionSettings.vue";
+import ExperimentalSettings from "@/components/Settings/ExperimentalSettings.vue";
 
 const NeedsAuth = {
   requiresAuth: true,
@@ -119,6 +120,11 @@ const routes: Array<RouteConfig> = [
         path: "diagnostics",
         meta: NeedsAuth,
         component: DiagnosticsSettings,
+      },
+      {
+        path: "experimental",
+        meta: NeedsAuth,
+        component: ExperimentalSettings,
       },
     ],
   },
