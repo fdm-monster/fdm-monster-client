@@ -4,7 +4,7 @@
 
 Fixes:
 
-- Improve the layout of navigation and content. Now it wont wrap and its vertically stretched.
+- Settings page: Improve the layout of navigation and content. Now it wont wrap and its vertically stretched.
 
 ## Client 23/10/2024 1.6.1
 
