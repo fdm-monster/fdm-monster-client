@@ -18,5 +18,5 @@ export interface ServerSettingsDto extends WhitelistSettings {
   registration: boolean;
   experimentalMoonrakerSupport: boolean;
   experimentalTypeormSupport: boolean;
-  experimentalClientNextSupport: boolean;
+  experimentalClientSupport: boolean;
 }

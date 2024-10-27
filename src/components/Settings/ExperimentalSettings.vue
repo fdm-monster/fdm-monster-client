@@ -84,10 +84,10 @@
                 </v-card-title>
                 <v-card-text>
                   <v-checkbox
-                    v-model="experimentalClientNextSupport"
+                    v-model="experimentalClientSupport"
                     label="Enable Next Client Version (Experimental)"
                     hide-details
-                    @change="onExperimentalClientNextSupportChange"
+                    @change="onExperimentalClientSupportChange"
                   >
                     <template v-slot:label>
                       <span>Enable Next Client Version (Experimental)</span>
@@ -114,13 +114,13 @@ import { SettingsService } from "@/backend";
 
 const experimentalMoonrakerSupport = ref(false);
 const experimentalTypeORMSupport = ref(false);
-const experimentalClientNextSupport = ref(false);
+const experimentalClientSupport = ref(false);
 
 async function loadSettings() {
   const settings = await SettingsService.getSettings();
   experimentalMoonrakerSupport.value = settings.server.experimentalMoonrakerSupport;
   experimentalTypeORMSupport.value = settings.server.experimentalTypeormSupport;
-  experimentalClientNextSupport.value = settings.server.experimentalClientNextSupport;
+  experimentalClientSupport.value = settings.server.experimentalClientSupport;
 }
 
 onMounted(async () => {
@@ -129,18 +129,18 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   await SettingsService.updateExperimentalMoonrakerSupport(experimentalMoonrakerSupport.value);
-  await SettingsService.updateExperimentalClientNextSupport(experimentalClientNextSupport.value);
+  await SettingsService.updateExperimentalClientSupport(experimentalClientSupport.value);
   await loadSettings();
 };
 
 const resetSettings = async () => {
   await SettingsService.updateExperimentalMoonrakerSupport(false);
-  await SettingsService.updateExperimentalClientNextSupport(false);
+  await SettingsService.updateExperimentalClientSupport(false);
   await loadSettings();
 };
 
-const onExperimentalClientNextSupportChange = async () => {
-  await SettingsService.updateExperimentalClientNextSupport(experimentalClientNextSupport.value);
-  window.location.reload(); // Reload the page when enabled
+const onExperimentalClientSupportChange = async () => {
+  await SettingsService.updateExperimentalClientSupport(experimentalClientSupport.value);
+  window.location.reload();
 };
 </script>
