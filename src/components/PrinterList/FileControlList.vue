@@ -15,33 +15,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script lang="ts" setup>
 import { usePrinterStore } from "@/store/printer.store";
 import { FileDto } from "@/models/printers/printer-file.model";
 
-export default defineComponent({
-  name: "FileControlList",
-  components: {},
-  setup: () => {
-    return {
-      printersStore: usePrinterStore(),
-    };
-  },
-  async created() {},
-  async mounted() {},
-  props: {
-    fileList: Object as PropType<FileDto[]>,
-    printerId: String,
-  },
-  computed: {},
-  methods: {
-    async deleteFile(file: FileDto) {
-      if (!this.fileList || !this.printerId) return;
+interface Props {
+  fileList: FileDto[];
+  printerId: string;
+}
 
-      await this.printersStore.deletePrinterFile(this.printerId, file.path);
-    },
-  },
-  watch: {},
-});
+const props = defineProps<Props>();
+
+const printersStore = usePrinterStore();
+
+const deleteFile = async (file: FileDto) => {
+  if (!props.fileList || !props.printerId) return;
+  await printersStore.deletePrinterFile(props.printerId, file.path);
+};
 </script>
