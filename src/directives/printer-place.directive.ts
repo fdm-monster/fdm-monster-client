@@ -57,7 +57,10 @@ const bindDropConditionally = (el: HTMLElement, bindingValue: PrinterBindingValu
       return;
     }
 
-    if (ev.dataTransfer && [...ev!.dataTransfer.items].filter((i) => i.kind === "file").length) {
+    if (
+      ev.dataTransfer &&
+      Array.from(ev!.dataTransfer.items).filter((i) => i.kind === "file").length
+    ) {
       return;
     }
     el.style.border = hoverBorder;

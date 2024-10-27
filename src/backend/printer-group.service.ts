@@ -57,6 +57,6 @@ export class PrinterGroupService extends BaseService {
     const body = {
       name,
     };
-    return (await this.patchApi(path, body)) as GroupWithPrintersDto<IdType>[];
+    return (await this.patch(path, body)) as GroupWithPrintersDto<IdType>[];
   }
 }

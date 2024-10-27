@@ -18,7 +18,7 @@ export class CameraStreamService extends BaseService {
     cameraStreamId: string | number,
     cameraStreamDto: CreateCameraStreamDto
   ) {
-    return await this.putApi<CameraStream>(`api/camera-stream/${cameraStreamId}`, cameraStreamDto);
+    return await this.put<CameraStream>(`api/camera-stream/${cameraStreamId}`, cameraStreamDto);
   }
 
   static async deleteCameraStream(cameraStreamId: string | number) {

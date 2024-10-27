@@ -46,13 +46,13 @@ export class FloorService extends BaseService {
   static async updateFloorName(floorId: IdType, name: string) {
     const path = `${ServerApi.updatePrinterFloorNameRoute(floorId)}/`;
 
-    return (await this.patchApi(path, { name })) as FloorDto;
+    return (await this.patch(path, { name })) as FloorDto;
   }
 
   static async updateFloorNumber(floorId: IdType, floor: number) {
     const path = `${ServerApi.updatePrinterFloorNumberRoute(floorId)}/`;
 
-    return (await this.patchApi(path, { floor })) as FloorDto;
+    return (await this.patch(path, { floor })) as FloorDto;
   }
 
   static async deleteFloor(floorId: IdType) {

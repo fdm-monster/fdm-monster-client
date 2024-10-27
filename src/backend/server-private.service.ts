@@ -25,7 +25,7 @@ export class ServerPrivateService extends BaseService {
   public static async uploadAndImportYaml(file: File) {
     const formData = new FormData();
     formData.append("file", file);
-    return await this.postUploadApi("api/server/import-printers-floors-yaml", formData, {});
+    return await this.postUpload("api/server/import-printers-floors-yaml", formData, {});
   }
 
   public static async downloadLogDump() {

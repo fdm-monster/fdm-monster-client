@@ -34,7 +34,7 @@ export class PrinterFileService extends BaseService {
     const formData = new FormData();
     formData.append("files[0]", file);
 
-    return this.postUploadApi(path, formData, {
+    return this.postUpload(path, formData, {
       onUploadProgress: (progress) => {
         const snackbar = useSnackbar();
         snackbar.openProgressMessage(
