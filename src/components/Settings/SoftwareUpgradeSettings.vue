@@ -181,7 +181,7 @@ async function loadReleases() {
     current.value = clientReleases.current;
     minimum.value = clientReleases.minimum;
     loadedClientReleases.value = clientReleases.releases;
-  } catch (e) {
+  } catch (e: any) {
     errorMessage.value = "An error occurred loading the releases: " + e.message;
   } finally {
     loading.value = false;

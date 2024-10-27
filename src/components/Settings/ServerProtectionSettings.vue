@@ -203,7 +203,7 @@ const refreshTokenExpiry = ref<number>(14);
 
 const ipAddressRule = (val: string) => (isValidIPOrMask(val) ? true : "Not a valid IP Address");
 
-onMounted(async () => {
+async function loadSettings() {
   const settings = await SettingsService.getSettings();
   loginRequired.value = settings.server.loginRequired;
   registrationEnabled.value = settings.server.registration;
@@ -217,6 +217,10 @@ onMounted(async () => {
   refreshTokenAttemptsEnabled.value = sensitiveSettings.credentials.refreshTokenAttempts !== -1;
   refreshTokenAttempts.value = sensitiveSettings.credentials.refreshTokenAttempts;
   refreshTokenExpiry.value = sensitiveSettings.credentials.refreshTokenExpiry / 24 / 3600;
+}
+
+onMounted(async () => {
+  await loadSettings();
 });
 
 function onRefreshTokenEnabledChange() {
@@ -244,15 +248,15 @@ async function resetWhitelistSettingsToDefault() {
 }
 
 async function setWhitelistSettings(showSuccess = true) {
-  const settingsDto = await SettingsService.setWhitelistSettings({
+  await SettingsService.setWhitelistSettings({
     whitelistedIpAddresses: whitelistedIpAddresses.value,
     whitelistEnabled: whitelistEnabled.value,
   });
-  whitelistedIpAddresses.value = settingsDto.server?.whitelistedIpAddresses;
-  whitelistEnabled.value = settingsDto.server?.whitelistEnabled;
+
   if (showSuccess) {
     snackbar.info("Whitelist settings updated");
   }
+  await loadSettings();
 }
 
 async function setLoginRequired() {
