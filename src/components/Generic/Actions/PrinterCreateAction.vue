@@ -10,24 +10,13 @@
   </v-btn>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { useDialogsStore } from "../../../store/dialog.store";
+<script lang="ts" setup>
+import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "../Dialogs/dialog.constants";
 
-export default defineComponent({
-  name: "PrinterCreateAction",
-  props: {},
-  setup: () => {
-    return {
-      dialogsStore: useDialogsStore(),
-    };
-  },
-  computed: {},
-  methods: {
-    openCreatePrinterDialog() {
-      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
-    },
-  },
-});
+const dialogsStore = useDialogsStore();
+
+function openCreatePrinterDialog() {
+  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
+}
 </script>

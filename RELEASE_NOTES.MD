@@ -7,6 +7,8 @@ Chore:
 - Update types of print statistics and completions
 - Fix type issues PrintersView
 - Refactor FileControlList component with setup
+- Remove validation observer from AddOrUpdateFloorDialog
+- Revamp all action FAB-style buttons to setup style
 
 Features:
 

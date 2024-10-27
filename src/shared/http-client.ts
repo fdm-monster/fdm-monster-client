@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useAuthStore } from "@/store/auth.store";
 import { useEventBus } from "@vueuse/core";
-import { convertAuthErrorReason } from "@/shared/auth.constants";
+import { convertAuthErrorReason, PermissionDeniedEvent } from "@/shared/auth.constants";
 import { captureException } from "@sentry/vue";
 
 /**
@@ -84,7 +84,7 @@ export async function getHttpClient(withAuth: boolean = true, autoHandle401: boo
           permissions?: string[];
         };
         console.error("[HttpClient] 403 Forbidden", data);
-        useEventBus("auth:permission-denied").emit({
+        useEventBus<PermissionDeniedEvent>("auth:permission-denied").emit({
           roles: data?.roles,
           permissions: data?.permissions,
           error: data?.error,
