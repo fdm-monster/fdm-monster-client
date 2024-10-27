@@ -13,6 +13,7 @@ Chore:
 Features:
 
 - Settings: load and set experiment moonraker support setting
+- Switch to "next" UI support (beta)
 
 Fixes:
 

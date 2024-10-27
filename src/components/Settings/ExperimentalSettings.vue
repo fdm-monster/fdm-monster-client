@@ -67,6 +67,35 @@
                 </v-card-text>
               </v-card>
             </v-col>
+            <v-col cols="12" md="6">
+              <v-card>
+                <v-card-title>
+                  <h3>
+                    Experimental Features
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon class="help-icon" v-bind="attrs" v-on="on">help_outline</v-icon>
+                      </template>
+                      <span class="tooltip-content">
+                        Enables the next version of the FDM Monster UI (experimental).
+                      </span>
+                    </v-tooltip>
+                  </h3>
+                </v-card-title>
+                <v-card-text>
+                  <v-checkbox
+                    v-model="experimentalClientNextSupport"
+                    label="Enable Next Client Version (Experimental)"
+                    hide-details
+                    @change="onExperimentalClientNextSupportChange"
+                  >
+                    <template v-slot:label>
+                      <span>Enable Next Client Version (Experimental)</span>
+                    </template>
+                  </v-checkbox>
+                </v-card-text>
+              </v-card>
+            </v-col>
           </v-row>
         </v-card-text>
         <v-card-actions>
@@ -85,25 +114,33 @@ import { SettingsService } from "@/backend";
 
 const experimentalMoonrakerSupport = ref(false);
 const experimentalTypeORMSupport = ref(false);
+const experimentalClientNextSupport = ref(false);
 
 async function loadSettings() {
   const settings = await SettingsService.getSettings();
   experimentalMoonrakerSupport.value = settings.server.experimentalMoonrakerSupport;
   experimentalTypeORMSupport.value = settings.server.experimentalTypeormSupport;
+  experimentalClientNextSupport.value = settings.server.experimentalClientNextSupport;
 }
+
 onMounted(async () => {
   await loadSettings();
 });
 
 const saveSettings = async () => {
   await SettingsService.updateExperimentalMoonrakerSupport(experimentalMoonrakerSupport.value);
+  await SettingsService.updateExperimentalClientNextSupport(experimentalClientNextSupport.value);
   await loadSettings();
 };
 
 const resetSettings = async () => {
   await SettingsService.updateExperimentalMoonrakerSupport(false);
+  await SettingsService.updateExperimentalClientNextSupport(false);
   await loadSettings();
 };
-</script>
 
-<style scoped></style>
+const onExperimentalClientNextSupportChange = async () => {
+  await SettingsService.updateExperimentalClientNextSupport(experimentalClientNextSupport.value);
+  window.location.reload(); // Reload the page when enabled
+};
+</script>

@@ -75,4 +75,9 @@ export class SettingsService extends BaseService {
     const path = ServerApi.updateExperimentalMoonrakerSupportRoute;
     return (await this.put(path, { enabled })) as SettingsDto; // Assuming it returns SettingsDto
   }
+
+  static async updateExperimentalClientNextSupport(enabled: boolean) {
+    const path = ServerApi.updateExperimentalClientNextSupportRoute;
+    return (await this.put(path, { enabled })) as SettingsDto; // Assuming it returns SettingsDto
+  }
 }
