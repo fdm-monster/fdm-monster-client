@@ -5133,9 +5133,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001646, caniuse-lite@npm:^1.0.30001669":
-  version: 1.0.30001671
-  resolution: "caniuse-lite@npm:1.0.30001671"
-  checksum: 10c0/9bb81be7be641fdcdf4d3722b661d4204cc203a489c16080503a72b1605bd5c1061f8ae2452cc6c15d6957c818182824eb34e6569521051795f42cd14e844f99
+  version: 1.0.30001672
+  resolution: "caniuse-lite@npm:1.0.30001672"
+  checksum: 10c0/0ba63451bbb972987146ffadba8724fcf67ff89168f330e6bdcb0c3b73ef5e2ddbcd75089b59bd3f87ada61670ec7a1180f239169203132b7d4efd241d6e5d91
   languageName: node
   linkType: hard
 
@@ -14911,9 +14911,9 @@ __metadata:
   linkType: hard
 
 "vue-component-type-helpers@npm:^2.0.0":
-  version: 2.1.6
-  resolution: "vue-component-type-helpers@npm:2.1.6"
-  checksum: 10c0/88f2b4d5bacf27fec16abac80ade2e599bc6f8805b1ba9164b3c9451495871fdf1d1da7260274de610fa27e5454ff0519f41c45ee6b37348fb1fa4b5e125c851
+  version: 2.1.8
+  resolution: "vue-component-type-helpers@npm:2.1.8"
+  checksum: 10c0/fa19b9c69d76a3579e5164dfb8da981bd8bb7980dc42e2f31dbb1058cf5812694b22cf611189fd297f5e76c6a7090cf2853f16d4701cdb0b4f5438d622010cb0
   languageName: node
   linkType: hard
 
