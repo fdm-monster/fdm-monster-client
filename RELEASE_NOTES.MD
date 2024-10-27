@@ -8,7 +8,7 @@ Chore:
 - Fix type issues PrintersView
 - Refactor FileControlList component with setup
 - Remove validation observer from AddOrUpdateFloorDialog
-- Setup style for SyncPrinterNameAction
+- Revamp all action FAB-style buttons to setup style
 
 Features:
 

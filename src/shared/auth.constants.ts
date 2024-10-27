@@ -1,3 +1,10 @@
+export interface PermissionDeniedEvent {
+  roles?: string[];
+  permissions?: string[];
+  error?: string;
+  url?: string;
+}
+
 export const AUTH_ERROR_REASON = {
   IncorrectCredentials: "IncorrectCredentials",
   InvalidOrExpiredRefreshToken: "InvalidOrExpiredRefreshToken",

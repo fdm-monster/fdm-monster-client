@@ -74,7 +74,7 @@ import { sleep } from "@/utils/time.utils";
 import { RouteNames } from "@/router/route-names";
 import { AppService } from "@/backend/app.service";
 import { AxiosError } from "axios";
-import { AUTH_ERROR_REASON } from "@/shared/auth.constants";
+import { AUTH_ERROR_REASON, PermissionDeniedEvent } from "@/shared/auth.constants";
 import { captureException } from "@sentry/vue";
 import { SocketIoService } from "@/shared/socketio.service";
 
@@ -86,9 +86,9 @@ const overlay = ref(false);
 const router = useRouter();
 const overlayMessage = ref("");
 const loading = ref(true);
-const errorCaught = ref(null);
-const errorUrl = ref(null);
-const errorResponse = ref(null);
+const errorCaught = ref();
+const errorUrl = ref();
+const errorResponse = ref();
 const snackbar = useSnackbar();
 const socketIoClient: SocketIoService = new SocketIoService();
 
@@ -109,9 +109,9 @@ function setOverlay(overlayEnabled: boolean, message: string = "") {
     overlayMessage.value = "";
   } else {
     overlayMessage.value = message;
-    errorCaught.value = null;
-    errorUrl.value = null;
-    errorResponse.value = null;
+    errorCaught.value = "";
+    errorUrl.value = "";
+    errorResponse.value = "";
   }
   overlay.value = overlayEnabled;
 }
@@ -143,7 +143,7 @@ async function loadAppWithAuthenticationReady() {
 }
 
 // In use (shared/http-client.ts)
-const authPermissionDeniedKey = useEventBus("auth:permission-denied");
+const authPermissionDeniedKey = useEventBus<PermissionDeniedEvent>("auth:permission-denied");
 authPermissionDeniedKey.on(async (event) => {
   console.log("[AppLoader] Permission denied, going to permission denied page");
   setOverlay(true, "Permission denied");

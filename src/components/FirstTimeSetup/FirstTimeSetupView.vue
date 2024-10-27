@@ -41,7 +41,7 @@
           <h4><v-icon class="mr-2">settings</v-icon> Login</h4>
 
           <v-form v-model="formValid">
-            <v-switch v-model="formStep1.loginRequired" :hint="true" class="mt-5" persistent-hint>
+            <v-switch v-model="formStep1.loginRequired" class="mt-5">
               <template v-slot:message>
                 <span class="d-flex flex-row align-center">
                   <v-icon
@@ -74,12 +74,7 @@
               <strong>Enable Login</strong> option.
             </v-alert>
 
-            <v-switch
-              v-model="formStep1.registration"
-              :hint="true"
-              class="mt-10 mb-10"
-              persistent-hint
-            >
+            <v-switch v-model="formStep1.registration" class="mt-10 mb-10">
               <template v-slot:message>
                 <span class="d-flex flex-row align-center">
                   <v-icon

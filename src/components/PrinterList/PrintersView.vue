@@ -131,7 +131,7 @@
         <template v-slot:item.actions="{ item }">
           <PrinterUrlAction :printer="item" />
           <PrinterConnectionAction :printer="item" />
-          <PrinterEmergencyStopAction :printer="item" />
+          <PrinterQuickStopAction :printer="item" />
           <SyncPrinterNameAction :printer="item" />
           <PrinterDeleteAction :printer="item" />
           <PrinterSettingsAction :printer="item" v-on:update:show="openEditDialog(item)" />
@@ -214,7 +214,7 @@ import PrinterDetails from "@/components/PrinterList/PrinterDetails.vue";
 import PrinterUrlAction from "@/components/Generic/Actions/PrinterUrlAction.vue";
 import PrinterSettingsAction from "@/components/Generic/Actions/PrinterSettingsAction.vue";
 import PrinterConnectionAction from "@/components/Generic/Actions/PrinterConnectionAction.vue";
-import PrinterEmergencyStopAction from "@/components/Generic/Actions/PrinterEmergencyStopAction.vue";
+import PrinterQuickStopAction from "@/components/Generic/Actions/PrinterQuickStopAction.vue";
 import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameAction.vue";
 
 import { usePrinterStore } from "@/store/printer.store";
