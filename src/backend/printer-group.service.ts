@@ -2,7 +2,7 @@ import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { IdType } from "@/utils/id.type";
 
-export class PrinterGroupDto<KeyType = number> {
+export interface PrinterGroupDto<KeyType = number> {
   printerId: KeyType;
   groupId: KeyType;
 }
