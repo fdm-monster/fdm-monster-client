@@ -4,6 +4,7 @@ Chore:
 
 - Workflows: upgrade github actions to node 20
 - Removes unnecessary -api suffix from methods across all methods.
+- Update types of print statistics and completions
 
 Features:
 
