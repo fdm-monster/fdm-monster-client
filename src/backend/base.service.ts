@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from "axios";
 import { getHttpClient } from "@/shared/http-client";
-import { downloadFileByBlob } from "@/utils/download-file.util";
 
 export class BaseService {
   protected static async get<R>(path: string) {
@@ -9,7 +8,7 @@ export class BaseService {
     return response.data;
   }
 
-  protected static async putApi<T>(path: string, body?: any) {
+  protected static async put<T>(path: string, body?: any) {
     const httpClient = await getHttpClient(true);
     const response = await httpClient.put<T>(path, body);
     return response.data;
@@ -21,7 +20,7 @@ export class BaseService {
     return response.data;
   }
 
-  protected static async postUploadApi<FormData>(
+  protected static async postUpload<FormData>(
     path: string,
     formData: FormData,
     config: AxiosRequestConfig
@@ -50,7 +49,7 @@ export class BaseService {
     return response.data;
   }
 
-  protected static async patchApi<T>(path: string, body: any) {
+  protected static async patch<T>(path: string, body: any) {
     const httpClient = await getHttpClient(true);
     const response = await httpClient.patch<T>(path, body);
     return response.data;

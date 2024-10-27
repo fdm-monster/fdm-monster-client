@@ -107,13 +107,13 @@ export class PrintersService extends BaseService {
   static async updatePrinter(printerId: IdType, printer: CreatePrinter, forceSave: boolean) {
     const path = ServerApi.getPrinterRoute(printerId);
     const fullPath = `${path}?forceSave=${forceSave}`;
-    return (await this.patchApi(fullPath, printer)) as PrinterDto;
+    return (await this.patch(fullPath, printer)) as PrinterDto;
   }
 
   static async updatePrinterMaintenance(printerId: IdType, disabledReason: string | null = null) {
     const path = ServerApi.postPrinterDisabledReasonRoute(printerId);
 
-    return (await this.patchApi(path, { disabledReason })) as PrinterDto;
+    return (await this.patch(path, { disabledReason })) as PrinterDto;
   }
 
   static async testConnection(printer: CreatePrinter) {
@@ -125,6 +125,6 @@ export class PrintersService extends BaseService {
   static async toggleEnabled(printerId: IdType, enabled: boolean) {
     const path = ServerApi.printerEnabledRoute(printerId);
 
-    return await this.patchApi(path, { enabled });
+    return await this.patch(path, { enabled });
   }
 }

@@ -23,13 +23,13 @@ export class SettingsService extends BaseService {
   static async updateLoginRequiredSettings(loginRequired: boolean) {
     const path = `${ServerApi.updateLoginRequiredRoute}`;
 
-    return (await this.putApi(path, { loginRequired })) as SettingsDto;
+    return (await this.put(path, { loginRequired })) as SettingsDto;
   }
 
   static async updateRegistrationEnabledSettings(registrationEnabled: boolean) {
     const path = `${ServerApi.updateRegistrationEnabledRoute}`;
 
-    return (await this.putApi(path, { registrationEnabled })) as SettingsDto;
+    return (await this.put(path, { registrationEnabled })) as SettingsDto;
   }
 
   static async updateCredentialSettings(
@@ -39,40 +39,40 @@ export class SettingsService extends BaseService {
   ) {
     const path = `${ServerApi.updateCredentialSettings}`;
 
-    return await this.putApi(path, { jwtExpiresIn, refreshTokenAttempts, refreshTokenExpiry });
+    return await this.put(path, { jwtExpiresIn, refreshTokenAttempts, refreshTokenExpiry });
   }
 
   static async updateFrontendSettings(frontendSettings: FrontendSettings) {
     const path = `${ServerApi.updateFrontendSettingsRoute}`;
 
-    return (await this.putApi(path, frontendSettings as FrontendSettings)) as SettingsDto;
+    return (await this.put(path, frontendSettings as FrontendSettings)) as SettingsDto;
   }
 
   static async setSentryDiagnosticsSettings(enabled: boolean) {
     const path = `${ServerApi.serverSentryDiagnosticsSettingRoute}`;
-    return await this.patchApi(path, { enabled });
+    return await this.patch(path, { enabled });
   }
 
   static async setWhitelistSettings(subSettings: WhitelistSettings) {
     const path = `${ServerApi.updateServerWhitelistSettingRoute}`;
 
-    await this.putApi(path, subSettings as WhitelistSettings);
+    await this.put(path, subSettings as WhitelistSettings);
   }
 
   static async updateTimeoutSettings(subSettings: TimeoutSettings) {
     const path = `${ServerApi.updateTimeoutSettingRoute}`;
 
-    return (await this.putApi(path, subSettings as TimeoutSettings)) as SettingsDto;
+    return (await this.put(path, subSettings as TimeoutSettings)) as SettingsDto;
   }
 
   static async setFileCleanSettings(subSettings: FileCleanSettings) {
     const path = `${ServerApi.fileCleanSettingsRoute}`;
 
-    return (await this.putApi(path, subSettings)) as SettingsDto;
+    return (await this.put(path, subSettings)) as SettingsDto;
   }
 
   static async updateExperimentalMoonrakerSupport(enabled: boolean) {
     const path = ServerApi.updateExperimentalMoonrakerSupportRoute;
-    return (await this.putApi(path, { enabled })) as SettingsDto; // Assuming it returns SettingsDto
+    return (await this.put(path, { enabled })) as SettingsDto; // Assuming it returns SettingsDto
   }
 }
