@@ -247,7 +247,7 @@ const selectedGroup = ref<number>();
 const currentPrintersShownCount = ref<number>(0);
 
 const search = ref("");
-const expanded = ref([]);
+const expanded = ref<PrinterDto[]>([]);
 const hasPrinterGroupFeature = computed(() => featureStore.hasFeature("printerGroupsApi"));
 const tableHeaders = computed(() => [
   { text: "Enabled", value: "enabled" },
@@ -359,7 +359,7 @@ const selectGroupForUpdatingName = () => {
   updatedGroupName.value = selectedGroupObject.value?.name;
 };
 
-const updateGroupName = async (group?: GroupWithPrintersDto) => {
+const updateGroupName = async (group?: GroupWithPrintersDto<IdType>) => {
   if (!group?.id) {
     throw new Error("Group id was not defined");
   }

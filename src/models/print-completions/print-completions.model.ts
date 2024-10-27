@@ -1,7 +1,6 @@
 import { IdType } from "@/utils/id.type";
 
 export interface ShortEvent {
-  printerId: string;
   status: string;
   fileName: string;
   createdAt: number;
@@ -31,20 +30,20 @@ export interface PrinterCompletions {
   printerId: IdType;
   printCount: number;
   eventCount: number;
-  successCount: number;
   failureCount: number;
-  lastSuccess: ContextEvent;
   lastFailure: ContextEvent;
-  failuresLastWeek: number;
-  failuresLast48H: number;
-  failuresLast24H: number;
-  successesLastWeek: number;
-  successesLast48H: number;
-  successesLast24H: number;
+  failureEventsLastWeek: number;
+  failureEventsLast48H: number;
+  failureEventsLast24H: number;
+  successCount: number;
+  lastSuccess: ContextEvent;
+  successEventsLastWeek: number;
+  successEventsLast48H: number;
+  successEventsLast24H: number;
 
   printJobs: PrintJobEvents[];
 
-  correlationIds: string[];
+  correlationIds: IdType[];
 }
 
 export type PrintCompletionsModel = PrinterCompletions[];
