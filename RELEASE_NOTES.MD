@@ -1,5 +1,13 @@
 # Release notes
 
+## Client 27/10/2024 1.6.4
+
+Fix:
+
+- Setting: adapt to new naming experiment client support
+
+## Client 27/10/2024 1.6.3
+
 Chore:
 
 - Workflows: upgrade github actions to node 20
