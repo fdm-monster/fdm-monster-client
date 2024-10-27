@@ -1,5 +1,9 @@
 # Release notes
 
+Chore:
+
+- Workflows: upgrade github actions to node 20
+
 Features:
 
 - Settings: load and set experiment moonraker support setting
