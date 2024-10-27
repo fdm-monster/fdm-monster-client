@@ -8,7 +8,7 @@
         color="primary"
         fab
         small
-        @click.c.capture.native.stop="syncPrinterName(printer)"
+        @click.c.capture.native.stop="syncPrinterName()"
       >
         <v-icon>badge</v-icon>
       </v-btn>
@@ -17,34 +17,21 @@
   </v-tooltip>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script lang="ts" setup>
 import { PrinterDto } from "@/models/printers/printer.model";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
 
-export default defineComponent({
-  name: "SyncPrinterNameAction",
-  props: {
-    printer: Object as PropType<PrinterDto>,
-  },
-  setup() {
-    return {
-      snackbar: useSnackbar(),
-    };
-  },
-  computed: {
-    printerId() {
-      return this.printer!.id;
-    },
-  },
-  methods: {
-    async syncPrinterName(printer: PrinterDto) {
-      await PrinterSettingsService.syncPrinterName(printer.id);
-      this.snackbar.openInfoMessage({
-        title: "Synced printer name to OctoPrint",
-      });
-    },
-  },
-});
+const props = defineProps<{
+  printer: PrinterDto;
+}>();
+
+const snackbar = useSnackbar();
+
+async function syncPrinterName() {
+  await PrinterSettingsService.syncPrinterName(props.printer.id);
+  snackbar.openInfoMessage({
+    title: "Synced printer name to OctoPrint",
+  });
+}
 </script>
