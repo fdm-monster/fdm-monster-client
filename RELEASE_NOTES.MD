@@ -1,5 +1,13 @@
 # Release notes
 
+Features:
+
+- Settings: load and set experiment moonraker support setting
+
+Fixes:
+
+- Settings for OctoPrint page icon wrong compared to settings nav
+
 ## Client 23/10/2024 1.6.2
 
 Fixes:
@@ -16,7 +24,7 @@ Fixes:
 
 ## Client 23/10/2024 1.6.0
 
-Chore: 
+Chore:
 
 - Cleanup API caller services
 
@@ -36,7 +44,6 @@ Fixes:
 - Fix: Printer list - show current printer count presented vs total present
 
 ## Client 22/06/2024 1.5.17
-
 
 Fixes:
 

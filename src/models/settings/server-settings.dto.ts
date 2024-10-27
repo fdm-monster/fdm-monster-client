@@ -16,4 +16,6 @@ export interface ServerSettingsDto extends WhitelistSettings {
   sentryDiagnosticsEnabled: boolean;
   loginRequired: boolean;
   registration: boolean;
+  experimentalMoonrakerSupport: boolean;
+  experimentalTypeormSupport: boolean;
 }

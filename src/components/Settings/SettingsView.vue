@@ -72,13 +72,13 @@ const items = ref([
     title: "Account",
     icon: "account_circle",
     path: "/settings/account",
-    divider: true,
+    divider: false,
   },
   {
     title: "Server Protection",
     icon: "security",
     path: "/settings/server-protection",
-    divider: false,
+    divider: true,
   },
   {
     title: "Software Upgrade",
@@ -87,5 +87,11 @@ const items = ref([
     divider: false,
   },
   { title: "Diagnostics", icon: "bug_report", path: "/settings/diagnostics", divider: false },
+  {
+    title: "Experimental",
+    icon: "settings_applications",
+    path: "/settings/experimental",
+    divider: false,
+  },
 ]);
 </script>

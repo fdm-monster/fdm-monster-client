@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="bug_report" title="OctoPrint" />
+    <SettingsToolbar icon="image" title="OctoPrint" />
 
     <v-list subheader three-line>
       <v-list-item>

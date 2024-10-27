@@ -70,4 +70,9 @@ export class SettingsService extends BaseService {
 
     return (await this.putApi(path, subSettings)) as SettingsDto;
   }
+
+  static async updateExperimentalMoonrakerSupport(enabled: boolean) {
+    const path = ServerApi.updateExperimentalMoonrakerSupportRoute;
+    return (await this.putApi(path, { enabled })) as SettingsDto; // Assuming it returns SettingsDto
+  }
 }
