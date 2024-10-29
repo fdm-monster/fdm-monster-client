@@ -92,16 +92,12 @@ interface Data {
 
 export default defineComponent({
   name: "PrintJobsMenu",
-  components: {},
   setup: () => {
     return {
       printersStore: usePrinterStore(),
       printerStateStore: usePrinterStateStore(),
     };
   },
-  async created() {},
-  async mounted() {},
-  props: {},
   data: (): Data => ({
     menu: false,
     search: "",
