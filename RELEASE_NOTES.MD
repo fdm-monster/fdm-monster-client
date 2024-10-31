@@ -1,5 +1,9 @@
 # Release notes
 
+Feature:
+
+- Support klipper in printer create/update dialog, if backend is able to provide said feature (feature flags).
+
 ## Client 27/10/2024 1.6.4
 
 Fix:
