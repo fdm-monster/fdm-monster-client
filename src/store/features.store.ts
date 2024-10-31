@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 import { TFeatureFlags, FeaturesModel, IFeatureFlag } from "@/models/server/features.model";
 import { AppService } from "@/backend/app.service";
 
-interface State {
-  features: FeaturesModel | undefined;
+interface State<T = any> {
+  features: FeaturesModel<T> | undefined;
 }
 
 export const useFeatureStore = defineStore("Feature", {
@@ -14,6 +14,16 @@ export const useFeatureStore = defineStore("Feature", {
     getFeatures(): FeaturesModel | undefined {
       return this.features;
     },
+    getFeature:
+      (state) =>
+      <T>(feature: TFeatureFlags): IFeatureFlag<T> | undefined => {
+        if (!state.features) {
+          console.debug("Feature store not loaded");
+          return;
+        }
+
+        return state.features[feature] as IFeatureFlag<T> | undefined;
+      },
     hasFeature:
       (state) =>
       (feature: TFeatureFlags): boolean => {

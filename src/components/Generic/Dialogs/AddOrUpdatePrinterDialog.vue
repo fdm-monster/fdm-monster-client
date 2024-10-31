@@ -135,6 +135,8 @@ import { AxiosError } from "axios";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
+import { useSettingsStore } from "@/store/settings.store";
+import { useFeatureStore } from "@/store/features.store";
 
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();
@@ -149,27 +151,45 @@ const showChecksPanel = ref(false);
 const copyPasteConnectionString = ref("");
 const formData = ref(getDefaultCreatePrinter());
 
-const serviceTypes = ref([
-  {
-    name: "OctoPrint",
-    logo: octoPrintTentacleSvg,
-    height: "75px",
-  },
-  // {
-  //   name: "Klipper",
-  //   logo: klipperLogoSvg,
-  //   height: "75px",
-  // },
-]);
-const selectedService = ref();
+const serviceTypes = computed(() => {
+  if (featureStore.hasFeature("multiplePrinterServices")) {
+    const feature = featureStore.getFeature<{ types: string[] }>("multiplePrinterServices");
+    const hasKlipperSupport = feature?.subFeatures?.types?.includes("klipper");
+    if (hasKlipperSupport) {
+      return [
+        {
+          name: "OctoPrint",
+          logo: octoPrintTentacleSvg,
+          height: "75px",
+        },
+        {
+          name: "Klipper",
+          logo: klipperLogoSvg,
+          height: "75px",
+        },
+      ];
+    }
+  }
+
+  return [
+    {
+      name: "OctoPrint",
+      logo: octoPrintTentacleSvg,
+      height: "75px",
+    },
+  ];
+});
 
 const printerId = computed(() => printersStore.updateDialogPrinter?.id);
+const featureStore = useFeatureStore();
 
-onMounted(() => {
+onMounted(async () => {
   if (printerId.value) {
     const crudeData = printersStore.printer(printerId.value) as CreatePrinter;
     formData.value = PrintersService.convertPrinterToCreateForm(crudeData);
   }
+
+  await featureStore.loadFeatures();
 });
 
 watch(printerId, (val) => {
