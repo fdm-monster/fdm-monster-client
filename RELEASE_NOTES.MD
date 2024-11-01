@@ -1,8 +1,13 @@
 # Release notes
 
+## Client 27/10/2024 1.6.5
+
 Feature:
 
 - Support klipper in printer create/update dialog, if backend is able to provide said feature (feature flags).
+- Show klipper/octoprint on tile
+- Add moonraker/mainsail redirects in side panel
+- Show klipper/octoprint in printer list
 
 ## Client 27/10/2024 1.6.4
 
