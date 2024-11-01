@@ -81,6 +81,9 @@
             {{ item.enabled }}
           </v-switch>
         </template>
+        <template v-slot:item.printerType="{ item }">
+          {{ item.printerType === 0 ? "OctoPrint" : "Klipper" }}
+        </template>
         <template v-slot:item.name="{ item }">
           <v-chip color="primary" dark>
             {{ item.name || item.printerURL }}
@@ -251,6 +254,7 @@ const expanded = ref<PrinterDto[]>([]);
 const hasPrinterGroupFeature = computed(() => featureStore.hasFeature("printerGroupsApi"));
 const tableHeaders = computed(() => [
   { text: "Enabled", value: "enabled" },
+  { text: "Type", value: "printerType" },
   { text: "Printer Name", align: "start", sortable: true, value: "name" },
   { text: "Floor", value: "floor", sortable: false },
   ...(featureStore.hasFeature("printerGroupsApi")
