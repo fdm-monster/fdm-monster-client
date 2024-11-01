@@ -82,7 +82,13 @@
           </v-switch>
         </template>
         <template v-slot:item.printerType="{ item }">
-          {{ item.printerType === 0 ? "OctoPrint" : "Klipper" }}
+          {{
+            item.printerType === 0
+              ? "OctoPrint"
+              : isSupportedPrinterType
+              ? "Klipper"
+              : "Klipper (feature disabled)"
+          }}
         </template>
         <template v-slot:item.name="{ item }">
           <v-chip color="primary" dark>
@@ -299,6 +305,12 @@ const selectedGroupObject = computed(() => {
   if (!selectedGroup.value && selectedGroup.value !== 0) return;
 
   return groupsWithPrinters.value[selectedGroup.value];
+});
+
+const isSupportedPrinterType = computed(() => {
+  return featureStore
+    .getFeature<{ types: string[] }>("multiplePrinterServices")
+    ?.subFeatures?.types?.includes("klipper");
 });
 
 const diffSeconds = (timestamp: number) => {
