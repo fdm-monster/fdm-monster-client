@@ -100,7 +100,7 @@
           >
             <v-list-item-avatar class="ml-3 mr-6 ma-5" size="20px">
               <v-img v-if="isOctoPrint" :src="octoPrintIcon"></v-img>
-              <span v-else>M</span>
+              <span v-else>MO</span>
             </v-list-item-avatar>
             <v-list-item-content>
               <span v-if="isOctoPrint">Open OctoPrint</span>
@@ -109,6 +109,26 @@
           </v-list-item>
         </template>
         <span>Visit the {{ serviceName }} associated to this printer</span>
+      </v-tooltip>
+
+      <v-tooltip left v-if="isMoonraker">
+        <template v-slot:activator="{ on, attrs }">
+          <v-list-item
+            class="extra-dense-list-item"
+            link
+            v-bind="attrs"
+            v-on="on"
+            @click.prevent.stop="openPrinterMainsail()"
+          >
+            <v-list-item-avatar class="ml-3 mr-6 ma-5" size="20px">
+              <span>MA</span>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <span>Open Mainsail</span>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <span>Visit Mainsail for this printer</span>
       </v-tooltip>
 
       <v-tooltip left>
@@ -590,6 +610,15 @@ function avatarInitials() {
 function openPrinterURL() {
   if (!storedSideNavPrinter.value) return;
   PrintersService.openPrinterURL(storedSideNavPrinter.value.printerURL);
+  closeDrawer();
+}
+
+function openPrinterMainsail() {
+  if (!storedSideNavPrinter.value) return;
+
+  const url = new URL(storedSideNavPrinter.value.printerURL);
+  url.port = "8080";
+  PrintersService.openPrinterURL(url.toString());
   closeDrawer();
 }
 

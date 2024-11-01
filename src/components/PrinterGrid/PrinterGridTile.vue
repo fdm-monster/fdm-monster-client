@@ -18,6 +18,14 @@
       tile
       @click="selectOrUnplacePrinter()"
     >
+      <div
+        v-if="printer?.printerType !== undefined"
+        class="printer-type-indicator"
+        style="position: absolute; top: 5%; right: 5%; font-size: 14px; font-weight: bold"
+      >
+        {{ printer.printerType === 1 ? "KL" : "OP" }}
+      </div>
+
       <v-icon
         v-if="printerState?.text.includes('API')"
         color="primary"

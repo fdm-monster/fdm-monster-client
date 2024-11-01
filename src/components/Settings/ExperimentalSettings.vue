@@ -32,6 +32,12 @@
                       <span>Enable Experimental Moonraker Support</span>
                     </template>
                   </v-checkbox>
+
+                  <!-- Warning message -->
+                  <v-alert v-if="experimentalMoonrakerSupport" type="warning" class="mt-2" outlined>
+                    Disabling Moonraker support will disable all printers of type Moonraker. You
+                    need to re-enable them after re-enabling this feature.
+                  </v-alert>
                 </v-card-text>
               </v-card>
             </v-col>
