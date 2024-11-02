@@ -141,7 +141,7 @@
           <PrinterUrlAction :printer="item" />
           <PrinterConnectionAction :printer="item" />
           <PrinterQuickStopAction :printer="item" />
-          <SyncPrinterNameAction :printer="item" />
+          <SyncPrinterNameAction :printer="item" v-if="item.printerType === 0" />
           <PrinterDeleteAction :printer="item" />
           <PrinterSettingsAction :printer="item" v-on:update:show="openEditDialog(item)" />
         </template>

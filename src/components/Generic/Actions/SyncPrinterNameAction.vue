@@ -6,6 +6,7 @@
         v-on="on"
         class="ma-2"
         color="primary"
+        :disabled="props.printer.printerType === 1"
         fab
         small
         @click.c.capture.native.stop="syncPrinterName()"
