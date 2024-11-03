@@ -1514,7 +1514,7 @@ __metadata:
     lint-staged: "npm:15.2.10"
     luxon: "npm:3.5.0"
     material-design-icons-iconfont: "npm:6.7.0"
-    pinia: "npm:2.2.5"
+    pinia: "npm:2.2.6"
     prettier: "npm:2.8.8"
     register-service-worker: "npm:1.7.2"
     rimraf: "npm:6.0.1"
@@ -12011,9 +12011,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pinia@npm:2.2.5":
-  version: 2.2.5
-  resolution: "pinia@npm:2.2.5"
+"pinia@npm:2.2.6":
+  version: 2.2.6
+  resolution: "pinia@npm:2.2.6"
   dependencies:
     "@vue/devtools-api": "npm:^6.6.3"
     vue-demi: "npm:^0.14.10"
@@ -12026,7 +12026,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/57356934b8ce799b7a718edcd4743f87d3c34d5dc41d33a04b1b2ec130d4b020c7c9fe437222aab42b249665cd1a866e3dafd2d9130606adc781b70b09c00c2d
+  checksum: 10c0/2158513467ca95a93114bbc5f446445ec89c4ee8955632abbc8d9be0bdf62e622af82d051b1027b66bf919434c01228f70f0811d7ce30dbeb205c879ce405355
   languageName: node
   linkType: hard
 
