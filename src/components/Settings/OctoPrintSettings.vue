@@ -2,83 +2,150 @@
   <v-card>
     <SettingsToolbar icon="image" title="OctoPrint" />
 
-    <v-list subheader three-line>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Pre-upload file cleanup</v-list-item-title>
-          <v-list-item-subtitle>
-            Automatically cleanup old files to ensure the SD card has enough space.
-            <br />
-            <v-checkbox
-              v-model="fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
-              label="Remove old file before upload"
-            ></v-checkbox>
-            <v-text-field
-              v-model="fileHandlingSettings.autoRemoveOldFilesCriteriumDays"
-              :disabled="!fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
-              label="Amount of days to keep files"
-              min="0"
-              outlined
-              type="number"
-            />
-            <v-checkbox
-              v-model="fileHandlingSettings.autoRemoveOldFilesAtBoot"
-              label="Remove old files when (re)booting the server"
-            ></v-checkbox>
-            <v-btn color="primary" @click="setFileCleanSettings()">save file clean settings</v-btn>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Connection Timeout</v-list-item-title>
-          <v-list-item-subtitle v-if="settingsStore.settings?.timeout">
-            The connection timeout is the amount of time in milliseconds that the server will wait
-            for OctoPrint to respond before giving up
-            <v-text-field
-              v-model="settingsStore.settings.timeout.apiTimeout"
-              label="Connection Timeout"
-              min="0"
-              outlined
-              type="number"
-            />
-            <v-btn color="primary" @click="updateTimeoutSettings()">save connection timeout</v-btn>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Clean file references</v-list-item-title>
-          <v-list-item-subtitle>
-            Clear out the file references for all printers - this does not remove them from
-            OctoPrint!
-            <br />
-            <v-btn color="primary" @click="purgeFiles()">Purge file references</v-btn>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Disable inefficient GCode analysis</v-list-item-title>
-          <v-list-item-subtitle>
-            Disable GCode analysis on all printers at once, preventing CPU intensive and inaccurate
-            time/size estimates.
-            <br />
-            <v-btn color="primary" @click="bulkDisableGCodeAnalysis()">
-              Bulk disable GCode Analysis
+    <v-container>
+      <v-row class="mb-6">
+        <v-col>
+          <v-divider />
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Pre-upload File Cleanup</v-list-item-title>
+              <v-list-item-subtitle>
+                Automatically cleanup old files to ensure the SD card has enough space.
+                <v-checkbox
+                  v-model="fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
+                  label="Remove old file before upload"
+                ></v-checkbox>
+                <v-text-field
+                  v-model="fileHandlingSettings.autoRemoveOldFilesCriteriumDays"
+                  :disabled="!fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
+                  label="Amount of days to keep files"
+                  min="0"
+                  outlined
+                  type="number"
+                />
+                <v-checkbox
+                  v-model="fileHandlingSettings.autoRemoveOldFilesAtBoot"
+                  label="Remove old files when (re)booting the server"
+                ></v-checkbox>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-btn
+              :disabled="loading.fileCleanSettings"
+              color="primary"
+              @click="setFileCleanSettings()"
+            >
+              Save File Clean Settings
             </v-btn>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
+            <v-progress-circular
+              v-if="loading.fileCleanSettings"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
+          </v-list-item>
+        </v-col>
+      </v-row>
+
+      <v-row class="mb-6">
+        <v-col>
+          <v-divider />
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Connection Timeout</v-list-item-title>
+              <v-list-item-subtitle v-if="settingsStore.settings?.timeout">
+                Set the server connection timeout in milliseconds.
+                <v-text-field
+                  v-model="settingsStore.settings.timeout.apiTimeout"
+                  label="Connection Timeout"
+                  min="0"
+                  outlined
+                  type="number"
+                />
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-btn
+              :disabled="loading.timeoutSettings"
+              color="primary"
+              @click="updateTimeoutSettings()"
+            >
+              Save Connection Timeout
+            </v-btn>
+            <v-progress-circular
+              v-if="loading.timeoutSettings"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
+          </v-list-item>
+        </v-col>
+      </v-row>
+
+      <v-row class="mb-6">
+        <v-col>
+          <v-divider />
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Clean File References</v-list-item-title>
+              <v-list-item-subtitle>
+                Clear out file references without removing them from OctoPrint.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-btn
+              :disabled="noPrintersOrAllDisabled || loading.purgeFiles"
+              color="primary"
+              @click="purgeFiles()"
+            >
+              Purge File References
+            </v-btn>
+            <v-progress-circular
+              v-if="loading.purgeFiles"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
+            <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
+          </v-list-item>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-divider />
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Disable Inefficient GCode Analysis</v-list-item-title>
+              <v-list-item-subtitle>
+                Prevent CPU-intensive GCode analysis on all printers at once.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-btn
+              :disabled="noPrintersOrAllDisabled || loading.bulkDisableGCodeAnalysis"
+              color="primary"
+              @click="bulkDisableGCodeAnalysis()"
+            >
+              Bulk Disable GCode Analysis
+            </v-btn>
+            <v-progress-circular
+              v-if="loading.bulkDisableGCodeAnalysis"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
+
+            <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
+          </v-list-item>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-card>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { PrinterFileService, SettingsService } from "@/backend";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
 import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
@@ -90,33 +157,52 @@ import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 
 interface Data {
   fileHandlingSettings: FileCleanSettings;
+  loading: {
+    fileCleanSettings: boolean;
+    timeoutSettings: boolean;
+    purgeFiles: boolean;
+    bulkDisableGCodeAnalysis: boolean;
+  };
 }
 
 export default defineComponent({
   name: "FdmSettings",
   components: { SettingsToolbar },
-  setup: () => {
+  setup() {
+    const printerStore = usePrinterStore();
+    const noPrintersOrAllDisabled = computed(() => {
+      return (
+        printerStore.printers.length === 0 ||
+        printerStore.printers.every((printer) => !printer.enabled)
+      );
+    });
     return {
       settingsStore: useSettingsStore(),
-      printersStore: usePrinterStore(),
+      printerStore,
       snackbar: useSnackbar(),
       printerStateStore: usePrinterStateStore(),
+      noPrintersOrAllDisabled,
     };
   },
-  props: {},
-  data: (): Data => ({
-    fileHandlingSettings: {
-      autoRemoveOldFilesBeforeUpload: false,
-      autoRemoveOldFilesAtBoot: false,
-      autoRemoveOldFilesCriteriumDays: 7,
-    },
-  }),
+  data(): Data {
+    return {
+      fileHandlingSettings: {
+        autoRemoveOldFilesBeforeUpload: false,
+        autoRemoveOldFilesAtBoot: false,
+        autoRemoveOldFilesCriteriumDays: 7,
+      },
+      loading: {
+        fileCleanSettings: false,
+        timeoutSettings: false,
+        purgeFiles: false,
+        bulkDisableGCodeAnalysis: false,
+      },
+    };
+  },
   async created() {
     const settings = await SettingsService.getSettings();
     this.fileHandlingSettings = settings.printerFileClean;
   },
-  mounted() {},
-  computed: {},
   methods: {
     async updateTimeoutSettings() {
       if (!this.settingsStore.settings?.timeout?.apiTimeout) {
@@ -126,38 +212,54 @@ export default defineComponent({
       if (this.settingsStore.settings.timeout.apiTimeout < 1000) {
         this.snackbar.error("Timeout is too low - please set it to at least 1000 milliseconds");
       } else {
-        await this.settingsStore.updateTimeoutSettings(this.settingsStore.settings?.timeout);
-        this.snackbar.info("Timeout settings updated");
+        this.loading.timeoutSettings = true;
+        try {
+          await this.settingsStore.updateTimeoutSettings(this.settingsStore.settings.timeout);
+          this.snackbar.info("Timeout settings updated");
+        } finally {
+          this.loading.timeoutSettings = false;
+        }
       }
     },
     async setFileCleanSettings() {
-      const serverSettings = await SettingsService.setFileCleanSettings(this.fileHandlingSettings);
-      this.fileHandlingSettings = serverSettings.printerFileClean;
-
-      this.snackbar.openInfoMessage({
-        title: `Successfully saved file cleanup settings`,
-      });
+      this.loading.fileCleanSettings = true;
+      try {
+        const serverSettings = await SettingsService.setFileCleanSettings(
+          this.fileHandlingSettings
+        );
+        this.fileHandlingSettings = serverSettings.printerFileClean;
+        this.snackbar.openInfoMessage({
+          title: `Successfully saved file cleanup settings`,
+        });
+      } finally {
+        this.loading.fileCleanSettings = false;
+      }
     },
     async purgeFiles() {
-      await PrinterFileService.purgeFiles();
-
-      this.snackbar.openInfoMessage({
-        title: `Successfully purged all references to printer files!`,
-      });
+      this.loading.purgeFiles = true;
+      try {
+        await PrinterFileService.purgeFiles();
+        this.snackbar.openInfoMessage({
+          title: `Successfully purged all references to printer files!`,
+        });
+      } finally {
+        this.loading.purgeFiles = false;
+      }
     },
     async bulkDisableGCodeAnalysis() {
-      const printers = this.printerStateStore.onlinePrinters;
-      this.snackbar.openInfoMessage({
-        title: `Trying to disable gcode analysis for ${printers.length} online printers.`,
-      });
-      for (const printer of Object.values(printers)) {
-        await PrinterSettingsService.setGCodeAnalysis(printer.id, false);
+      this.loading.bulkDisableGCodeAnalysis = true;
+      try {
+        const printers = this.printerStateStore.onlinePrinters;
+        for (const printer of Object.values(printers)) {
+          await PrinterSettingsService.setGCodeAnalysis(printer.id, false);
+        }
+        this.snackbar.openInfoMessage({
+          title: `Finished disabling GCode analysis for ${printers.length} online printers.`,
+        });
+      } finally {
+        this.loading.bulkDisableGCodeAnalysis = false;
       }
-      this.snackbar.openInfoMessage({
-        title: `Finished disabling gcode analysis for ${printers.length} online printers.`,
-      });
     },
   },
-  watch: {},
 });
 </script>
