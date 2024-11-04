@@ -4,7 +4,7 @@ Fixes:
 
 - Printer state: Sometimes empty flags can be passed (regressions backend...) prevent errors
 - Settings page: improve UI / UX for emergency commands settings page, prevent action when no active printers are available.
-
+- Settings page: OctoPrint settings improve UI / UX - better layout and btn disabled loading props + spinner usage
 ## Client 04/11/2024 1.6.6
 
 Fixes:

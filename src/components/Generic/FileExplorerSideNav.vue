@@ -703,6 +703,7 @@ async function clickPrintFile(file: FileDto) {
 }
 
 function clickDownloadFile(path: string) {
+  if (!printerId.value) return;
   PrinterFileService.downloadFile(printerId.value, path);
 }
 

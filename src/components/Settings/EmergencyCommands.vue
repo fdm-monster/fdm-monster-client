@@ -36,13 +36,7 @@
           Batch disable
         </v-btn>
         <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-        <v-icon
-          v-if="noPrintersOrAllDisabled"
-          color="warning"
-          class="ml-2"
-          v-tooltip.bottom="'No printers available'"
-          >warning</v-icon
-        >
+        <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
       </v-list-item>
 
       <!-- Batch Enabling -->

@@ -27,15 +27,22 @@
                   v-model="fileHandlingSettings.autoRemoveOldFilesAtBoot"
                   label="Remove old files when (re)booting the server"
                 ></v-checkbox>
-                <v-btn
-                  :loading="loading.fileCleanSettings"
-                  color="primary"
-                  @click="setFileCleanSettings()"
-                >
-                  Save File Clean Settings
-                </v-btn>
               </v-list-item-subtitle>
             </v-list-item-content>
+            <v-btn
+              :disabled="loading.fileCleanSettings"
+              color="primary"
+              @click="setFileCleanSettings()"
+            >
+              Save File Clean Settings
+            </v-btn>
+            <v-progress-circular
+              v-if="loading.fileCleanSettings"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
           </v-list-item>
         </v-col>
       </v-row>
@@ -55,15 +62,22 @@
                   outlined
                   type="number"
                 />
-                <v-btn
-                  :loading="loading.timeoutSettings"
-                  color="primary"
-                  @click="updateTimeoutSettings()"
-                >
-                  Save Connection Timeout
-                </v-btn>
               </v-list-item-subtitle>
             </v-list-item-content>
+            <v-btn
+              :disabled="loading.timeoutSettings"
+              color="primary"
+              @click="updateTimeoutSettings()"
+            >
+              Save Connection Timeout
+            </v-btn>
+            <v-progress-circular
+              v-if="loading.timeoutSettings"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
           </v-list-item>
         </v-col>
       </v-row>
@@ -76,11 +90,23 @@
               <v-list-item-title>Clean File References</v-list-item-title>
               <v-list-item-subtitle>
                 Clear out file references without removing them from OctoPrint.
-                <v-btn :loading="loading.purgeFiles" color="primary" @click="purgeFiles()">
-                  Purge File References
-                </v-btn>
               </v-list-item-subtitle>
             </v-list-item-content>
+            <v-btn
+              :disabled="noPrintersOrAllDisabled || loading.purgeFiles"
+              color="primary"
+              @click="purgeFiles()"
+            >
+              Purge File References
+            </v-btn>
+            <v-progress-circular
+              v-if="loading.purgeFiles"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
+            <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
           </v-list-item>
         </v-col>
       </v-row>
@@ -93,15 +119,24 @@
               <v-list-item-title>Disable Inefficient GCode Analysis</v-list-item-title>
               <v-list-item-subtitle>
                 Prevent CPU-intensive GCode analysis on all printers at once.
-                <v-btn
-                  :loading="loading.bulkDisableGCodeAnalysis"
-                  color="primary"
-                  @click="bulkDisableGCodeAnalysis()"
-                >
-                  Bulk Disable GCode Analysis
-                </v-btn>
               </v-list-item-subtitle>
             </v-list-item-content>
+            <v-btn
+              :disabled="noPrintersOrAllDisabled || loading.bulkDisableGCodeAnalysis"
+              color="primary"
+              @click="bulkDisableGCodeAnalysis()"
+            >
+              Bulk Disable GCode Analysis
+            </v-btn>
+            <v-progress-circular
+              v-if="loading.bulkDisableGCodeAnalysis"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2"
+            />
+
+            <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
           </v-list-item>
         </v-col>
       </v-row>
@@ -110,7 +145,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { PrinterFileService, SettingsService } from "@/backend";
 import { PrinterSettingsService } from "@/backend/printer-settings.service";
 import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
@@ -134,11 +169,19 @@ export default defineComponent({
   name: "FdmSettings",
   components: { SettingsToolbar },
   setup() {
+    const printerStore = usePrinterStore();
+    const noPrintersOrAllDisabled = computed(() => {
+      return (
+        printerStore.printers.length === 0 ||
+        printerStore.printers.every((printer) => !printer.enabled)
+      );
+    });
     return {
       settingsStore: useSettingsStore(),
-      printersStore: usePrinterStore(),
+      printerStore,
       snackbar: useSnackbar(),
       printerStateStore: usePrinterStateStore(),
+      noPrintersOrAllDisabled,
     };
   },
   data(): Data {
