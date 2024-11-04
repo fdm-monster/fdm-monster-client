@@ -103,8 +103,7 @@
               <span v-else>MO</span>
             </v-list-item-avatar>
             <v-list-item-content>
-              <span v-if="isOctoPrint">Open OctoPrint</span>
-              <span v-if="isMoonraker">Open Moonraker</span>
+              <span>Open {{ serviceName }}</span>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -552,7 +551,7 @@ const refreshFiles = async () => {
   if (!currentPrinterId) return;
   try {
     if (printerStateStore.isApiResponding(currentPrinterId)) {
-      shownFileCache.value = await printersStore.loadPrinterFiles(currentPrinterId, false);
+      shownFileCache.value = await printersStore.loadPrinterFiles(currentPrinterId);
     } else {
       shownFileCache.value = await PrinterFileService.getFileCache(currentPrinterId);
     }
@@ -561,12 +560,10 @@ const refreshFiles = async () => {
   }
 };
 
-const deleteFile = async (file: OctoPrintFileDto) => {
+const deleteFile = async (file: FileDto) => {
   if (!printerId.value) return;
   await printersStore.deletePrinterFile(printerId.value, file.path);
 };
-
-// ... (continue with other methods)
 
 watch(storedSideNavPrinter, async (viewedPrinter, oldVal) => {
   drawerOpened.value = !!viewedPrinter;
@@ -697,7 +694,7 @@ function clickSettings() {
   closeDrawer();
 }
 
-async function clickPrintFile(file: OctoPrintFileDto | MoonrakerFileDto) {
+async function clickPrintFile(file: FileDto) {
   if (!printerId.value) return;
   await printerStateStore.selectAndPrintFile({
     printerId: printerId.value,
