@@ -2,12 +2,18 @@
 
 Fixes:
 
+- Printer state: Sometimes empty flags can be passed (regressions backend...) prevent errors
+- Settings page: improve UI / UX for emergency commands settings page, prevent action when no active printers are available.
+
+## Client 04/11/2024 1.6.6
+
+Fixes:
+
 - Hide octoprint Sync Name button for moonraker type printer
 - Printer dialog: do not require api key for moonraker type and send empty one on moonraker printer submission
 - Printer dialog: adapt form label based on requirement of api key (octoprint: yes, moonraker: no)
 - Batch reprint dialog mentions OctoPrint, should be type dependent
 - Settings page: experimental settings - improve visual confirmation by introducing save spinners and checkboxes
-- Sometimes empty flags can be passed (regressions backend...) prevent errors
 
 ## Client 27/10/2024 1.6.5
 
