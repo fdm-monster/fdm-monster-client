@@ -1,5 +1,9 @@
 # Release notes
 
+- Hide octoprint Sync Name button for moonraker type printer
+- Printer dialog: do not require api key for moonraker type and send empty one on moonraker printer submission
+- Printer dialog: adapt form label based on requirement of api key (octoprint: yes, moonraker: no)
+
 ## Client 27/10/2024 1.6.5
 
 Feature:
