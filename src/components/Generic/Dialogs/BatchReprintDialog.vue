@@ -57,7 +57,9 @@
                   <v-list-item-title v-else-if="item.reprintState == ReprintState.NoLastPrint">
                     No file is present to print again
                   </v-list-item-title>
-                  <v-list-item-title v-else> OctoPrint cant be reached </v-list-item-title>
+                  <v-list-item-title v-else>
+                    {{ getPrintServiceName(item.printerId) }} cant be reached
+                  </v-list-item-title>
                   <v-list-item-subtitle>
                     Printer '{{ printerStore.printer(item.printerId)?.name ?? "Unknown printer" }}'
                   </v-list-item-subtitle>
@@ -113,6 +115,17 @@ const snackbar = useSnackbar();
 
 function onBeforeDialogOpened(_: IdType[]) {
   loading.value = true;
+}
+
+function getPrintServiceName(printerId: IdType) {
+  const printerType = printerStore.printer(printerId)?.printerType;
+  if (printerType === 0) {
+    return "OctoPrint";
+  } else if (printerType === 1) {
+    return "Moonraker";
+  } else {
+    return "?";
+  }
 }
 
 async function onDialogOpened(printerIds: IdType[]) {

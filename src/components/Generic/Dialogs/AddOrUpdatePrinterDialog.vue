@@ -75,8 +75,8 @@
               v-model="formData.apiKey"
               :counter="apiKeyRules.length"
               class="ma-1"
-              hint="User or Application Key only (Global API key fails)"
-              label="API Key*"
+              hint="User or Application Key only (Global API key will fail)"
+              :label="formData.printerType === 1 ? 'API Key (optional)' : 'API Key (required)*'"
               persistent-hint
               required
             />
@@ -135,8 +135,8 @@ import { AxiosError } from "axios";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
-import { useSettingsStore } from "@/store/settings.store";
 import { useFeatureStore } from "@/store/features.store";
+import { isMoonrakerType } from "@/utils/printer-type.utils";
 
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();
@@ -247,6 +247,9 @@ const testPrinter = async () => {
 const isValid = () => {
   const form = formData.value;
   if (!form) return false;
+  if (isMoonrakerType(form.printerType)) {
+    return form.printerURL?.length && form.name?.length;
+  }
   return form.printerURL?.length && form.name?.length && form.apiKey?.length;
 };
 
@@ -279,6 +282,10 @@ const submit = async () => {
   printerValidationError.value = null;
   validatingPrinter.value = true;
   const createdPrinter = formData.value;
+
+  if (isMoonrakerType(createdPrinter.printerType)) {
+    createdPrinter.apiKey = "";
+  }
 
   try {
     if (isUpdating.value) {
