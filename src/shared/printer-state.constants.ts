@@ -142,7 +142,7 @@ export function interpretStates(
 const toCurrentState = (printerState: PrinterStateDto) => printerState?.current?.payload?.state;
 
 export const isPrinterPrinting = (printerState: PrinterStateDto) =>
-  toCurrentState(printerState)?.flags.printing;
+  toCurrentState(printerState)?.flags?.printing;
 
 export const isPrinterPaused = (printerState: PrinterStateDto) =>
   toCurrentState(printerState)?.flags?.paused || toCurrentState(printerState)?.flags?.pausing;
@@ -150,9 +150,9 @@ export const isPrinterPaused = (printerState: PrinterStateDto) =>
 export const isPrinterDisconnected = (printer: PrinterDto, printerState: PrinterStateDto) =>
   (!isPrinterInMaintenance(printer) &&
     printer?.enabled &&
-    !toCurrentState(printerState)?.flags.operational) ||
-  toCurrentState(printerState)?.flags.error ||
-  toCurrentState(printerState)?.flags.closedOrError;
+    !toCurrentState(printerState)?.flags?.operational) ||
+  toCurrentState(printerState)?.flags?.error ||
+  toCurrentState(printerState)?.flags?.closedOrError;
 
 export const isPrinterDisabled = (printer: PrinterDto) =>
   !isPrinterInMaintenance(printer) && !printer?.enabled;
@@ -162,7 +162,7 @@ export const isPrinterInMaintenance = (printer?: PrinterDto) =>
 
 export const isPrinterIdling = (printer: PrinterDto, printerState: PrinterStateDto) =>
   toCurrentState(printerState)?.flags &&
-  !toCurrentState(printerState)?.flags.printing &&
-  toCurrentState(printerState)?.flags.operational &&
+  !toCurrentState(printerState)?.flags?.printing &&
+  toCurrentState(printerState)?.flags?.operational &&
   !isPrinterDisabled(printer) &&
   !isPrinterInMaintenance(printer);

@@ -7,6 +7,7 @@ Fixes:
 - Printer dialog: adapt form label based on requirement of api key (octoprint: yes, moonraker: no)
 - Batch reprint dialog mentions OctoPrint, should be type dependent
 - Settings page: experimental settings - improve visual confirmation by introducing save spinners and checkboxes
+- Sometimes empty flags can be passed (regressions backend...) prevent errors
 
 ## Client 27/10/2024 1.6.5
 
