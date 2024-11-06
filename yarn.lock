@@ -3031,9 +3031,9 @@ __metadata:
   linkType: hard
 
 "@types/qs@npm:*":
-  version: 6.9.16
-  resolution: "@types/qs@npm:6.9.16"
-  checksum: 10c0/a4e871b80fff623755e356fd1f225aea45ff7a29da30f99fddee1a05f4f5f33485b314ab5758145144ed45708f97e44595aa9a8368e9bbc083932f931b12dbb6
+  version: 6.9.17
+  resolution: "@types/qs@npm:6.9.17"
+  checksum: 10c0/a183fa0b3464267f8f421e2d66d960815080e8aab12b9aadab60479ba84183b1cdba8f4eff3c06f76675a8e42fe6a3b1313ea76c74f2885c3e25d32499c17d1b
   languageName: node
   linkType: hard
 
@@ -6628,9 +6628,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.41":
-  version: 1.5.51
-  resolution: "electron-to-chromium@npm:1.5.51"
-  checksum: 10c0/1903552a918bfc0568a3af568b14c9ac35bcf1ec8cba33a1c50304d93195c825aaa9b82ae463fcb19805600add4c302e7d2db4d762c36e5ae6547f72ad21afdd
+  version: 1.5.52
+  resolution: "electron-to-chromium@npm:1.5.52"
+  checksum: 10c0/1c85a5710ad21758780b8e067d5f63ed00416dbe93f64bd8937dbfb4ed98cf93d80c471a30daed439cb91a00ff4942ea2628e00a69d56639cc7070e9e8ab2694
   languageName: node
   linkType: hard
 
