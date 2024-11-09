@@ -70,10 +70,10 @@
                 :append-icon="showPassword2 ? 'visibility' : 'visibility_off'"
                 :type="showPassword2 ? 'text' : 'password'"
                 :rules="[
-                  (v) => !!v || 'Repeated password is required',
+                  (v) => !!v || 'Repeat password is required',
                   (v) => v === password || 'Passwords are not equal',
                 ]"
-                label="Repeated Password"
+                label="Repeat Password"
                 name="password"
                 password
                 prepend-icon="lock"

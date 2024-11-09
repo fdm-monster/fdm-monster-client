@@ -137,11 +137,11 @@
               type="password"
               prepend-icon="lock"
               :rules="[
-                (v) => !!v || 'Repeated password is required',
+                (v) => !!v || 'Repeat password is required',
                 (v) => v === formStep2.rootPassword || 'Passwords are not equal',
               ]"
               class="mt-5"
-              label="Repeated Password"
+              label="Repeat Password"
             >
               <template v-slot:prepend>
                 <v-icon>password</v-icon>
