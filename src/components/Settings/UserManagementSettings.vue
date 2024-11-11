@@ -61,8 +61,9 @@
           >
             <v-icon class="mr-2">shield</v-icon>
             <span v-if="!user.isVerified">Verify account</span>
-            <span v-if="user.isVerified">Unverify account</span>
+            <span v-if="user.isVerified">Un-verify account</span>
           </v-btn>
+
           <v-btn
             :color="user.isRootUser ? 'error darken-4' : 'success'"
             :disabled="isCurrentAccount(user) || !profile?.isRootUser"
@@ -73,6 +74,18 @@
             <span v-if="user.isRootUser">Remove owner</span>
             <span v-if="!user.isRootUser">Set owner</span>
           </v-btn>
+
+          <v-select
+            v-if="profile?.isRootUser"
+            :items="roles.map((r) => ({ text: r.name, value: r.id }))"
+            v-model="user.roles"
+            multiple
+            label="Select roles"
+            @change="updateUserRoles(user)"
+            class="pt-6"
+            style="width: 15rem"
+          />
+
           <v-btn
             :disabled="isCurrentAccount(user) || user.isRootUser"
             class="mt-2"
@@ -211,5 +224,23 @@ async function setRootUser(user: User, isRootUser: boolean = true) {
   snackbar.info(
     isRootUser ? `User ${user.username} set to owner` : `User ${user.username} is no longer owner`
   );
+}
+
+// Define the new function to update user roles
+async function updateUserRoles(user: User) {
+  try {
+    loading.value = true;
+    console.log(user.roles);
+    console.log(user.roles.map((v) => typeof v));
+    await UserService.setUserRoles(user.id, user.roles);
+    await userQuery.refetch();
+    snackbar.info(`Roles updated for ${user.username}`);
+  } catch (e) {
+    loading.value = false;
+    console.error(e);
+    snackbar.error(`Failed to update roles for ${user.username}`);
+    throw e;
+  }
+  loading.value = false;
 }
 </script>
