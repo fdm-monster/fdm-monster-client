@@ -110,4 +110,5 @@ export class ServerApi {
   static userDeleteRoute = (id: IdType) => `${ServerApi.userRoute}/${id}`;
   static userSetVerifiedRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-verified`;
   static userSetRootUserRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-root-user`;
+  static userSetUserRolesRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-user-roles`;
 }

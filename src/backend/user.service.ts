@@ -1,6 +1,7 @@
 import { ServerApi } from "@/backend/server.api";
 import { BaseService } from "@/backend/base.service";
 import { Role, User } from "@/models/user.model";
+import { IdType } from "@/utils/id.type";
 
 export class UserService extends BaseService {
   static async listUsers() {
@@ -43,5 +44,10 @@ export class UserService extends BaseService {
   static async setRootUser(id: string, isRootUser: boolean) {
     const path = ServerApi.userSetRootUserRoute(id);
     return await this.post(path, { isRootUser });
+  }
+
+  static async setUserRoles(id: string, roleIds: IdType[]) {
+    const path = ServerApi.userSetUserRolesRoute(id);
+    return await this.post(path, { roleIds });
   }
 }
