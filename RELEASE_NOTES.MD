@@ -1,5 +1,9 @@
 # Release notes
 
+Features:
+
+- User settings: add user roles dropdown to change verified users from GUEST role to OPERATOR or ADMIN. 
+
 ## Client 11/11/2024 1.6.8
 
 Fixes: 
@@ -7,6 +11,7 @@ Fixes:
 - Printer dialog: api key of 43 length should be allowed since OctoPrint 1.10.3
 
 ## Client 04/11/2024 1.6.7
+
 Fixes:
 
 - Printer state: Sometimes empty flags can be passed (regressions backend...) prevent errors
@@ -25,7 +30,7 @@ Fixes:
 
 ## Client 27/10/2024 1.6.5
 
-Feature:
+Features:
 
 - Support klipper in printer create/update dialog, if backend is able to provide said feature (feature flags).
 - Show klipper/octoprint on tile
