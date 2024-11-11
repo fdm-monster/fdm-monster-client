@@ -2,10 +2,10 @@
   <v-card>
     <SettingsToolbar icon="account_circle" title="Account" />
 
-    <v-list subheader three-line>
+    <v-list subheader three-line v-if="!loginEnabled">
       <v-list-item-content>
         <v-list-item>
-          <v-list-item-content v-if="!loginEnabled">
+          <v-list-item-content>
             <v-alert color="primary">
               Login is currently disabled. To adjust your username and password, please enable that
               setting at the Server Protection settings page. Then log in and visit this page.
@@ -113,16 +113,15 @@ const formData = ref<{
 
 onMounted(async () => {
   await settingsStore.loadSettings();
-  if (!settingsStore.settings?.server.loginRequired) {
-    loginEnabled.value = settingsStore.settings?.server.loginRequired;
-  }
+  loginEnabled.value = settingsStore.settings?.server.loginRequired;
+
   await profileStore.getProfile();
   formData.value.username = profileStore.username as string;
   userId.value = profileStore.userId as string;
 });
 
 async function changeUsername() {
-  if (!userId.value?.length) {
+  if (!userId.value?.toString()?.length) {
     snackbar.openErrorMessage({ title: "User not loaded" });
     return;
   }
@@ -134,7 +133,7 @@ async function changeUsername() {
 }
 
 async function changePassword() {
-  if (!userId.value?.length) {
+  if (!userId.value?.toString()?.length) {
     snackbar.openErrorMessage({ title: "User not loaded" });
     return;
   }
