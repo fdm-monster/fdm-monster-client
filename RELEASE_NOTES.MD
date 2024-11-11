@@ -1,5 +1,13 @@
 # Release notes
 
+## Client 11/11/2024 1.6.10
+
+Fixes:
+
+- Account settings - cant change password
+
+## Client 11/11/2024 1.6.9
+
 Features:
 
 - User settings: add user roles dropdown to change verified users from GUEST role to OPERATOR or ADMIN. 
