@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 11/11/2024 1.6.8
+
+Fixes: 
+
+- Printer dialog: api key of 43 length should be allowed since OctoPrint 1.10.3
+
 ## Client 04/11/2024 1.6.7
 Fixes:
 
