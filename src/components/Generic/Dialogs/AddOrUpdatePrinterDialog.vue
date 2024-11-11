@@ -75,7 +75,7 @@
               v-model="formData.apiKey"
               :counter="apiKeyRules.length"
               class="ma-1"
-              hint="User or Application Key only (Global API key will fail)"
+              hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
               :label="formData.printerType === 1 ? 'API Key (optional)' : 'API Key (required)*'"
               persistent-hint
               required

@@ -13,7 +13,7 @@ export interface AppConstants {
 
 export const generateAppConstants = (): Readonly<AppConstants> =>
   Object.freeze({
-    apiKeyLength: 32,
+    apiKeyLength: 43,
     maxPort: 65535,
     maxPrinterNameLength: 25,
     maxPrinterGroupNameLength: 30, // Doesn't exist on backend
