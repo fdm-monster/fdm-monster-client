@@ -10,7 +10,14 @@
     />
 
     <v-list subheader three-line>
-      <v-subheader>Showing all users</v-subheader>
+      <v-subheader
+        >Showing all users
+
+        <v-btn :disabled="!profile?.isRootUser" class="mt-2" @click="openCreateUserDialog()">
+          <v-icon class="mr-2">key</v-icon>
+          <span>Create pre-registered user</span>
+        </v-btn>
+      </v-subheader>
 
       <v-list-item
         v-for="(user, index) in users"
@@ -110,6 +117,8 @@ import GridLoader from "@/components/Generic/Loaders/GridLoader.vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { useDialog } from "@/shared/dialog.composable";
+import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 
 const snackbar = useSnackbar();
 const loading = ref<boolean>(false);
@@ -242,5 +251,9 @@ async function updateUserRoles(user: User) {
     throw e;
   }
   loading.value = false;
+}
+
+async function openCreateUserDialog() {
+  await useDialog(DialogName.CreateUserDialog).openDialog();
 }
 </script>

@@ -3,7 +3,18 @@ import { BaseService } from "@/backend/base.service";
 import { Role, User } from "@/models/user.model";
 import { IdType } from "@/utils/id.type";
 
+export interface ICreateUser {
+  username: string;
+  password: string;
+  roleIds: IdType[];
+}
+
 export class UserService extends BaseService {
+  static async createUser(data: ICreateUser) {
+    const path = ServerApi.userRoute;
+
+    return await this.post(path, data);
+  }
   static async listUsers() {
     const path = ServerApi.userRoute;
 

@@ -16,4 +16,6 @@ export enum DialogName {
   AddOrUpdateCameraDialog = "AddOrUpdateCameraDialog",
   // Dialog for moving print head, homing, or retracting/extruding filament
   PrinterControlDialog = "PrinterControlDialog",
+  // Dialog for creating a user which is pre-registered (no verification needed)
+  CreateUserDialog = "CreateUserDialog",
 }
