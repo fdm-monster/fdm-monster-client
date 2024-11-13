@@ -281,6 +281,15 @@ const submit = async () => {
 
   printerValidationError.value = null;
   validatingPrinter.value = true;
+
+  if (
+    formData.value.printerURL?.length &&
+    !formData.value.printerURL?.startsWith("http://") &&
+    !formData.value.printerURL?.startsWith("https://")
+  ) {
+    formData.value.printerURL = "https://" + formData.value.printerURL;
+  }
+
   const createdPrinter = formData.value;
 
   if (isMoonrakerType(createdPrinter.printerType)) {
