@@ -1,5 +1,7 @@
 # Release notes
 
+## Client 13/11/2024 1.6.11
+
 Fixes
 
 - PrinterStore: when deleting a printer, an error is often presented that the PrinterStore contains no printer with such id
