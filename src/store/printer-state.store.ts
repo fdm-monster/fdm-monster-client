@@ -170,7 +170,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
             });
           } else {
             console.debug(
-              `PrinterStore[printersWithJob contains no printer with id ${id} but events are known`
+              `PrinterStore[printersWithJob] contains no printer with id ${id} but events are known`
             );
           }
         }
