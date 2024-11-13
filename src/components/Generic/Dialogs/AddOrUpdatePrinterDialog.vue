@@ -141,6 +141,7 @@ import { isMoonrakerType } from "@/utils/printer-type.utils";
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();
 const testPrinterStore = useTestPrinterStore();
+const featureStore = useFeatureStore();
 const appConstants = inject<AppConstants>("appConstants");
 const snackbar = useSnackbar();
 
@@ -181,7 +182,6 @@ const serviceTypes = computed(() => {
 });
 
 const printerId = computed(() => printersStore.updateDialogPrinter?.id);
-const featureStore = useFeatureStore();
 
 onMounted(async () => {
   if (printerId.value) {

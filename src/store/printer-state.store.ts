@@ -31,7 +31,9 @@ export const usePrinterStateStore = defineStore("PrinterState", {
           if (printer) {
             printersById[id] = printer;
           } else {
-            throw new Error(`PrinterStore contains no printer with id ${id} but events are known`);
+            console.debug(
+              `PrinterStore[operationalPrintersById] contains no printer with id ${id} but events are known`
+            );
           }
         }
       });
@@ -91,8 +93,8 @@ export const usePrinterStateStore = defineStore("PrinterState", {
           if (printer) {
             onlinePrinters[id] = printer;
           } else {
-            throw new Error(
-              `PrinterStore contains no printer with id ${id} but socket state is opened`
+            console.debug(
+              `PrinterStore[onlinePrinters] contains no printer with id ${id} but socket state is opened`
             );
           }
         }
@@ -140,7 +142,9 @@ export const usePrinterStateStore = defineStore("PrinterState", {
           if (printer) {
             printersWithJobById[printer.id] = printerEvents?.current?.payload;
           } else {
-            throw new Error(`PrinterStore contains no printer with id ${id} but events are known`);
+            console.debug(
+              `PrinterStore[printerJobsById] contains no printer with id ${id} but events are known`
+            );
           }
         }
       });
@@ -165,7 +169,9 @@ export const usePrinterStateStore = defineStore("PrinterState", {
               job: printerEvents?.current?.payload,
             });
           } else {
-            throw new Error(`PrinterStore contains no printer with id ${id} but events are known`);
+            console.debug(
+              `PrinterStore[printersWithJob contains no printer with id ${id} but events are known`
+            );
           }
         }
       });
