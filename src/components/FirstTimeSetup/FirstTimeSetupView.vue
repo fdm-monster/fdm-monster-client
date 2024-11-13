@@ -24,7 +24,7 @@
           <div class="align-content-center align-center text-center">
             <img class="rounded-pill ma-4" src="/img/OIG.jpg" style="opacity: 0.7" width="400" />
             <h1>FDM Monster</h1>
-            <small>This server is still unconfigured.</small>
+            <small>This server is not yet configured.</small>
           </div>
           <v-btn class="mt-14 mb-14" color="primary" @click="stepper = 2">Start Setup</v-btn>
 
@@ -122,7 +122,7 @@
               prepend-icon="lock"
               :rules="[
                 (v) => !!v || 'Password is required',
-                (v) => (!!v && v?.length >= 8) || 'Password must be of length 8 or greater',
+                (v) => (!!v && v?.length >= 8) || 'Password must be at least 8 characters',
               ]"
               class="mt-5"
               label="Password"
@@ -138,7 +138,7 @@
               prepend-icon="lock"
               :rules="[
                 (v) => !!v || 'Repeat password is required',
-                (v) => v === formStep2.rootPassword || 'Passwords are not equal',
+                (v) => v === formStep2.rootPassword || 'Passwords must match',
               ]"
               class="mt-5"
               label="Repeat Password"
@@ -252,7 +252,6 @@ async function continueNext() {
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: 0.15em solid orange; /* The typwriter cursor */
   white-space: nowrap; /* Keeps the content on a single line */
-  //margin: 0 auto; /* Gives that scrolling effect as the typing happens */ letter-spacing: 0.15em; /* Adjust as needed */
   animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 

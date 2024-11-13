@@ -1,5 +1,7 @@
 # Release notes
 
+- User settings: create user dialog for an admin to conveniently share a new verified account with roles. 
+
 ## Client 11/11/2024 1.6.10
 
 Fixes:

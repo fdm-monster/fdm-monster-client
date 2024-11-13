@@ -1,10 +1,24 @@
 <template>
   <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog">
-    <v-card>
+    <v-card class="pa-4">
       <v-card-title>
         <span class="text-h5">
           <v-avatar color="primary" size="56">{{ avatarInitials }}</v-avatar>
-          New User
+          <span class="pl-5"
+            >New verified User
+
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn class="ma-2" fab v-bind="attrs" x-small v-on="on">
+                  <v-icon>question_mark</v-icon>
+                </v-btn>
+              </template>
+              <template v-slot:default>
+                The user will be set to verified and assigned roles. Please share the username and
+                password with them manually.
+              </template>
+            </v-tooltip>
+          </span>
         </span>
       </v-card-title>
       <v-card-text>
@@ -15,32 +29,36 @@
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="formData.username"
+                    :rules="[rules.required, rules.minLength]"
                     autofocus
                     label="Username*"
+                    prepend-icon="person"
                     required
-                    :rules="[rules.required, rules.minLength]"
                   />
                   <v-text-field
                     v-model="formData.password"
+                    :rules="[rules.required, rules.password]"
                     label="Password*"
+                    prepend-icon="lock"
                     required
                     type="password"
-                    :rules="[rules.required, rules.password]"
                   />
                   <v-text-field
                     v-model="passwordConfirm"
+                    :rules="[rules.required, rules.passwordMatch]"
                     label="Confirm Password*"
+                    prepend-icon="lock"
                     required
                     type="password"
-                    :rules="[rules.required, rules.passwordMatch]"
                   />
                   <v-select
                     v-model="formData.roleIds"
-                    multiple
                     :items="roles.map((r) => ({ text: r.name, value: r.id }))"
-                    label="Role*"
-                    required
                     :rules="[rules.required]"
+                    label="Roles*"
+                    multiple
+                    prepend-icon="shield"
+                    required
                   />
                 </v-col>
               </v-row>
@@ -59,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, computed, onMounted } from "vue";
+import { computed, inject, onMounted, ref } from "vue";
 import { generateInitials } from "@/shared/noun-adjectives.data";
 import { UserService } from "@/backend/user.service";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
@@ -89,7 +107,7 @@ const passwordConfirm = ref("");
 const roles = ref<Role[]>([]);
 
 const avatarInitials = computed(() => {
-  return formData.value ? generateInitials(formData.value.username) : "";
+  return formData.value?.username?.length ? generateInitials(formData.value.username) : "??";
 });
 
 const rules = {
@@ -99,14 +117,8 @@ const rules = {
     `Minimum ${appConstants.minUsernameLength} characters`,
   password: (value: string) => {
     const hasMinLength = value.length >= 8;
-    const hasUpperCase = /[A-Z]/.test(value);
-    const hasLowerCase = /[a-z]/.test(value);
-    const hasNumber = /[0-9]/.test(value);
 
     if (!hasMinLength) return "Password must be at least 8 characters";
-    if (!hasUpperCase) return "Password must contain an uppercase letter";
-    if (!hasLowerCase) return "Password must contain a lowercase letter";
-    if (!hasNumber) return "Password must contain a number";
 
     return true;
   },

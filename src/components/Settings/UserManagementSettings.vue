@@ -1,6 +1,17 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="group" title="Users" />
+    <SettingsToolbar icon="group" title="Users" style="width: 100%">
+      <v-spacer />
+      <v-btn
+        :disabled="!profile?.isRootUser"
+        class="mt-2"
+        color="primary"
+        @click="openCreateUserDialog()"
+      >
+        <v-icon class="mr-2">verified_user</v-icon>
+        <span>Create verified user</span>
+      </v-btn>
+    </SettingsToolbar>
 
     <GridLoader
       v-if="loading"
@@ -10,14 +21,7 @@
     />
 
     <v-list subheader three-line>
-      <v-subheader
-        >Showing all users
-
-        <v-btn :disabled="!profile?.isRootUser" class="mt-2" @click="openCreateUserDialog()">
-          <v-icon class="mr-2">key</v-icon>
-          <span>Create pre-registered user</span>
-        </v-btn>
-      </v-subheader>
+      <v-subheader> Showing all users </v-subheader>
 
       <v-list-item
         v-for="(user, index) in users"
