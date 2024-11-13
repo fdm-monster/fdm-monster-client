@@ -1,6 +1,17 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="group" title="Users" />
+    <SettingsToolbar icon="group" title="Users" style="width: 100%">
+      <v-spacer />
+      <v-btn
+        :disabled="!profile?.isRootUser"
+        class="mt-2"
+        color="primary"
+        @click="openCreateUserDialog()"
+      >
+        <v-icon class="mr-2">verified_user</v-icon>
+        <span>Create verified user</span>
+      </v-btn>
+    </SettingsToolbar>
 
     <GridLoader
       v-if="loading"
@@ -10,7 +21,7 @@
     />
 
     <v-list subheader three-line>
-      <v-subheader>Showing all users</v-subheader>
+      <v-subheader> Showing all users </v-subheader>
 
       <v-list-item
         v-for="(user, index) in users"
@@ -110,6 +121,8 @@ import GridLoader from "@/components/Generic/Loaders/GridLoader.vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { useDialog } from "@/shared/dialog.composable";
+import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 
 const snackbar = useSnackbar();
 const loading = ref<boolean>(false);
@@ -242,5 +255,9 @@ async function updateUserRoles(user: User) {
     throw e;
   }
   loading.value = false;
+}
+
+async function openCreateUserDialog() {
+  await useDialog(DialogName.CreateUserDialog).openDialog();
 }
 </script>
