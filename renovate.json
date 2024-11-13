@@ -1,23 +1,32 @@
 {
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
   "assignees": [],
   "labels": ["renovate"],
-  "lockFileMaintenance": {"enabled": true, "extends": ["schedule:daily"]},
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": ["schedule:daily"]
+  },
   "packageRules": [
     {
-      "paths": ["package.json"],
+      "matchFileNames": ["package.json"],
       "matchPackageNames": ["vue", "vue-template-compiler"],
       "matchUpdateTypes": ["minor", "patch", "lockFileMaintenance"],
       "groupName": "vue",
       "automerge": true
     },
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest", "lockFileMaintenance"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest",
+        "lockFileMaintenance"
+      ],
       "enabled": true,
       "automerge": true
     },
     {
-      "paths": ["package.json"],
+      "matchFileNames": ["package.json"],
       "matchPackageNames": ["vue", "vue-router", "vee-validate", "vuetify"],
       "matchUpdateTypes": ["major"],
       "enabled": false
