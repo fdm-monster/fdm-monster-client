@@ -8,15 +8,21 @@
 import { defineProps } from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "@/store/printer.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 const props = defineProps<{
   printer: PrinterDto;
 }>();
 
 const printersStore = usePrinterStore();
+const printerStateStore = usePrinterStateStore();
 
 async function deletePrinter() {
   if (!confirm("Are you sure to delete this printer?")) return;
+
   await printersStore.deletePrinter(props.printer.id);
+
+  // This is a best-effort, the socket-io updates will decide eventually
+  printerStateStore.deletePrinterEvents(props.printer.id);
 }
 </script>
