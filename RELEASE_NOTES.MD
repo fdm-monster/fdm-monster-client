@@ -3,10 +3,11 @@
 Fixes
 
 - PrinterStore: when deleting a printer, an error is often presented that the PrinterStore contains no printer with such id
- 
+- AddOrUpdatePrinterDialog: auto-append https if this is missing in URL before submitting
+
 Features
 
-- User settings: create user dialog for an admin to conveniently share a new verified account with roles. 
+- User settings: create user dialog for an admin to conveniently share a new verified account with roles.
 
 ## Client 11/11/2024 1.6.10
 
@@ -19,11 +20,11 @@ Fixes:
 
 Features:
 
-- User settings: add user roles dropdown to change verified users from GUEST role to OPERATOR or ADMIN. 
+- User settings: add user roles dropdown to change verified users from GUEST role to OPERATOR or ADMIN.
 
 ## Client 11/11/2024 1.6.8
 
-Fixes: 
+Fixes:
 
 - Printer dialog: api key of 43 length should be allowed since OctoPrint 1.10.3
 
