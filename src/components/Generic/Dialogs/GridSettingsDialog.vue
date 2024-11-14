@@ -1,11 +1,5 @@
 <template>
-  <BaseDialog
-    :id="dialog.dialogId"
-    max-width="1000px"
-    @beforeOpened="onBeforeDialogOpened"
-    @escape="closeDialog()"
-    @opened="onDialogOpened"
-  >
+  <BaseDialog :id="dialog.dialogId" max-width="1000px" @escape="closeDialog()">
     <v-card class="pa-4">
       <v-card-title>
         <span class="text-h5">
