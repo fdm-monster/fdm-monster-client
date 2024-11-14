@@ -1,5 +1,9 @@
 # Release notes
 
+Features
+
+- Remove whitelist settings from UI
+
 ## Client 13/11/2024 1.6.11
 
 Fixes
