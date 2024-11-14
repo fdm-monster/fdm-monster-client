@@ -9,7 +9,6 @@ export interface FrontendSettings {
 
 export interface ConnectionInfo {
   clientIp: string;
-  ip: string;
   version: string;
 }
 
