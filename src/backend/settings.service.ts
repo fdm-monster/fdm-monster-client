@@ -7,7 +7,6 @@ import {
   SettingsSensitiveDto,
 } from "@/models/settings/settings.model";
 import { FileCleanSettings } from "@/models/settings/printer-file-clean-settings.model";
-import { WhitelistSettings } from "@/models/settings/server-settings.dto";
 
 export class SettingsService extends BaseService {
   static async getSettings() {
@@ -51,12 +50,6 @@ export class SettingsService extends BaseService {
   static async setSentryDiagnosticsSettings(enabled: boolean) {
     const path = `${ServerApi.serverSentryDiagnosticsSettingRoute}`;
     return await this.patch(path, { enabled });
-  }
-
-  static async setWhitelistSettings(subSettings: WhitelistSettings) {
-    const path = `${ServerApi.updateServerWhitelistSettingRoute}`;
-
-    await this.put(path, subSettings as WhitelistSettings);
   }
 
   static async updateTimeoutSettings(subSettings: TimeoutSettings) {

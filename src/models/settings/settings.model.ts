@@ -47,8 +47,6 @@ export interface ServerSettingsSensitiveDto {
     debugSocketMessages: boolean;
     debugSocketIoBandwidth: boolean;
   };
-  whitelistEnabled: boolean;
-  whitelistedIpAddresses: string[];
 }
 
 export interface SettingsSensitiveDto {
