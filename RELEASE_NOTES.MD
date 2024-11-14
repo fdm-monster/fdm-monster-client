@@ -1,5 +1,7 @@
 # Release notes
 
+## Client 14/11/2024 1.7.0
+
 Features
 
 - Remove whitelist settings from UI
