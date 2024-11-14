@@ -1,8 +1,3 @@
-export interface WhitelistSettings {
-  whitelistedIpAddresses: string[];
-  whitelistEnabled: boolean;
-}
-
 export interface DebugSettings {
   debugSocketIoEvents: boolean;
   debugSocketReconnect: boolean;
@@ -12,7 +7,7 @@ export interface DebugSettings {
   debugSocketIoBandwidth: boolean;
 }
 
-export interface ServerSettingsDto extends WhitelistSettings {
+export interface ServerSettingsDto {
   sentryDiagnosticsEnabled: boolean;
   loginRequired: boolean;
   registration: boolean;

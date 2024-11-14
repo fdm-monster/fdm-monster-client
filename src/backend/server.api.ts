@@ -44,7 +44,6 @@ export class ServerApi {
   static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
   static fileCleanSettingsRoute = `${ServerApi.settingsRoute}/file-clean`;
   static updateFrontendSettingsRoute = `${ServerApi.settingsRoute}/frontend`;
-  static updateServerWhitelistSettingRoute = `${ServerApi.settingsRoute}/whitelist`;
   static updateTimeoutSettingRoute = `${ServerApi.settingsRoute}/timeout`;
   static serverSentryDiagnosticsSettingRoute = `${ServerApi.settingsRoute}/sentry-diagnostics`;
   static updateExperimentalMoonrakerSupportRoute = `${ServerApi.settingsRoute}/experimental-moonraker-support`;

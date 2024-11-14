@@ -9,7 +9,6 @@ export interface FrontendSettings {
 
 export interface ConnectionInfo {
   clientIp: string;
-  ip: string;
   version: string;
 }
 
@@ -47,8 +46,6 @@ export interface ServerSettingsSensitiveDto {
     debugSocketMessages: boolean;
     debugSocketIoBandwidth: boolean;
   };
-  whitelistEnabled: boolean;
-  whitelistedIpAddresses: string[];
 }
 
 export interface SettingsSensitiveDto {
