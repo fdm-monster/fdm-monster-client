@@ -7,21 +7,20 @@
       <v-list-item>
         <v-list-item-content>
           <v-row v-if="settingsStore.settings?.frontend">
-            <v-col cols="2">
+            <v-col cols="3">
               <v-select
                 v-model="settingsStore.settings.frontend.gridRows"
-                :items="rowOptions()"
+                :items="rowOptions"
                 label="Set the grid rows"
-              ></v-select>
+              />
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-select
                 v-model="settingsStore.settings.frontend.gridCols"
-                :items="colOptions()"
+                :items="colOptions"
                 label="Set the grid columns"
-              ></v-select>
+              />
             </v-col>
-            <v-col cols="1"></v-col>
             <v-col>
               <v-btn color="primary" @click="updateGridSettings()">Save tile settings</v-btn>
             </v-col>
@@ -51,53 +50,25 @@
     </v-list>
   </v-card>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
-import { useSettingsStore } from "../../store/settings.store";
-import { colOptions, rowOptions } from "../../shared/printer-grid.constants";
+
+<script setup lang="ts">
+import { useSettingsStore } from "@/store/settings.store";
+import { colOptions, rowOptions } from "@/shared/printer-grid.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { computed } from "vue";
 
-interface Data {
-  property: number;
+const settingsStore = useSettingsStore();
+const snackbar = useSnackbar();
+
+const largeTilesSettings = computed(() => settingsStore.largeTiles);
+
+async function updateGridSettings() {
+  await settingsStore.updateFrontendSettings({
+    gridCols: parseInt(settingsStore.gridCols),
+    gridRows: parseInt(settingsStore.gridRows),
+    largeTiles: largeTilesSettings.value,
+  });
+  snackbar.info("Grid settings updated");
 }
-
-export default defineComponent({
-  name: "GridSettings",
-  components: { SettingsToolbar },
-  setup: () => {
-    return {
-      settingsStore: useSettingsStore(),
-      snackbar: useSnackbar(),
-    };
-  },
-  async created() {},
-  async mounted() {},
-  props: {},
-  data: (): Data => ({
-    property: 0,
-  }),
-  computed: {
-    largeTilesSettings() {
-      return this.settingsStore.largeTiles;
-    },
-  },
-  methods: {
-    rowOptions() {
-      return rowOptions;
-    },
-    colOptions() {
-      return colOptions;
-    },
-    async updateGridSettings() {
-      await this.settingsStore.updateFrontendSettings({
-        gridCols: this.settingsStore.gridCols,
-        gridRows: this.settingsStore.gridRows,
-        largeTiles: this.largeTilesSettings,
-      });
-      this.snackbar.info("Grid settings updated");
-    },
-  },
-  watch: {},
-});
 </script>

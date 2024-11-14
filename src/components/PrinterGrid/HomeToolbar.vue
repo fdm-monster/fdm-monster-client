@@ -103,20 +103,21 @@ function changeFloorIndex(index: any) {
   selectedFloorToggleIndex.value = index;
 }
 
-async function updateGridRows(newRows: number) {
-  return updateGridSettings(newRows, columns.value);
+async function updateGridRows(newRows: string) {
+  return updateGridSettings(newRows, String(columns.value));
 }
 
-async function updateGridColumns(newColumns: number) {
-  return updateGridSettings(rows.value, newColumns);
+async function updateGridColumns(newColumns: string) {
+  return updateGridSettings(String(rows.value), newColumns);
 }
 
-async function updateGridSettings(rows: number, columns: number) {
+async function updateGridSettings(rows: string, columns: string) {
+  // TODO Vuetify 2 does not have a number type. Therefore, we must parse strings. This will not be necessary for Vuetify 3.
   try {
     loading.value = true;
     await settingsStore.updateFrontendSettings({
-      gridRows: rows,
-      gridCols: columns,
+      gridRows: parseInt(rows),
+      gridCols: parseInt(columns),
       largeTiles: settingsStore.largeTiles,
     });
   } catch (e) {
