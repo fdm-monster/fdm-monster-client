@@ -52,7 +52,6 @@
 import { useSettingsStore } from "@/store/settings.store";
 import { colOptions, rowOptions } from "@/shared/printer-grid.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
-import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { computed } from "vue";
 
 const settingsStore = useSettingsStore();
@@ -60,12 +59,12 @@ const snackbar = useSnackbar();
 
 const largeTilesSettings = computed(() => settingsStore.largeTiles);
 
-async function updateGridColumns(newRows: string) {
-  return updateGridSettings(parseInt(newRows), settingsStore.gridRows);
+async function updateGridColumns(newColumns: string) {
+  return updateGridSettings(parseInt(newColumns), settingsStore.gridRows);
 }
 
-async function updateGridRows(newColumns: string) {
-  return updateGridSettings(settingsStore.gridRows, parseInt(newColumns));
+async function updateGridRows(newRows: string) {
+  return updateGridSettings(settingsStore.gridCols, parseInt(newRows));
 }
 
 async function updateGridSettings(columns: number, rows: number) {

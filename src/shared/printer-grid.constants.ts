@@ -1,2 +1,2 @@
-export const rowOptions = [1, 2, 3, 4, 5, 6, 7, 8];
-export const colOptions = [1, 2, 3, 4, 5, 6, 7, 8];
+export const rowOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+export const colOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
