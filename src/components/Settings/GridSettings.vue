@@ -9,6 +9,7 @@
           <v-row v-if="settingsStore.settings?.frontend">
             <v-col cols="3">
               <v-select
+                @change="updateGridSettings"
                 v-model="settingsStore.settings.frontend.gridRows"
                 :items="rowOptions"
                 label="Set the grid rows"
@@ -16,13 +17,11 @@
             </v-col>
             <v-col cols="3">
               <v-select
+                @change="updateGridSettings"
                 v-model="settingsStore.settings.frontend.gridCols"
                 :items="colOptions"
                 label="Set the grid columns"
               />
-            </v-col>
-            <v-col>
-              <v-btn color="primary" @click="updateGridSettings()">Save tile settings</v-btn>
             </v-col>
           </v-row>
         </v-list-item-content>
@@ -37,9 +36,10 @@
           <v-row v-if="settingsStore.settings?.frontend">
             <v-col cols="5">
               <v-checkbox
+                @change="updateGridSettings"
                 v-model="settingsStore.settings.frontend.largeTiles"
                 label="Large tiles"
-              ></v-checkbox>
+              />
             </v-col>
             <v-col cols="1">
               <v-btn color="primary" @click="updateGridSettings()">Save tile settings</v-btn>
