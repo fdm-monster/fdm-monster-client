@@ -21,6 +21,7 @@
     <AddOrUpdateCameraStreamDialog />
     <AddOrUpdateFloorDialog />
     <CreateUserDialog />
+    <GridSettingsDialog />
     <PrinterMaintenanceDialog />
     <OctoFarmImportDialog />
     <YamlImportExportDialog />
@@ -51,6 +52,7 @@ import AppProgressSnackbar from "@/components/Generic/Snackbars/AppProgressSnack
 import AppErrorSnackbar from "@/components/Generic/Snackbars/AppErrorSnackbar.vue";
 import AppInfoSnackbar from "@/components/Generic/Snackbars/AppInfoSnackbar.vue";
 import CreateUserDialog from "@/components/Generic/Dialogs/CreateUserDialog.vue";
+import GridSettingsDialog from "@/components/Generic/Dialogs/GridSettingsDialog.vue";
 
 const uploadsStore = useUploadsStore();
 const authStore = useAuthStore();
