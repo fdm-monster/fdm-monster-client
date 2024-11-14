@@ -31,42 +31,23 @@
         </v-col>
       </v-row>
     </v-banner>
-    <v-row v-for="y in rows" :key="y" class="ma-1" no-gutters>
-      <v-col v-for="x in columns" :key="x" :cols="columnWidth" :sm="columnWidth">
-        <v-row class="test-top" no-gutters>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1), 2 * (y - 1))"
-              :x="2 * (x - 1)"
-              :y="2 * (y - 1)"
-            />
-          </v-col>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1) + 1, 2 * (y - 1))"
-              :x="2 * (x - 1) + 1"
-              :y="2 * (y - 1)"
-            />
-          </v-col>
-        </v-row>
-        <v-row class="test-bottom" no-gutters>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1), 2 * (y - 1) + 1)"
-              :x="2 * (x - 1)"
-              :y="2 * (y - 1) + 1"
-            />
-          </v-col>
-          <v-col cols="6">
-            <PrinterGridTile
-              :printer="getPrinter(2 * (x - 1) + 1, 2 * (y - 1) + 1)"
-              :x="2 * (x - 1) + 1"
-              :y="2 * (y - 1) + 1"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
+
+    <div class="printer-grid-container">
+      <div class="printer-grid" :style="gridStyle">
+        <div
+          v-for="index in totalCells"
+          :key="`printer-${getX(index - 1)}-${getY(index - 1)}`"
+          class="printer-cell"
+        >
+          <PrinterGridTile
+            :printer="getPrinter(getX(index - 1), getY(index - 1))"
+            :x="getX(index - 1)"
+            :y="getY(index - 1)"
+          />
+        </div>
+      </div>
+    </div>
+
     <img
       alt="FDM Monster Background"
       class="grid-bg-img align-content-center"
@@ -79,15 +60,12 @@
 <script lang="ts" setup>
 import { computed, onMounted } from "vue";
 import PrinterGridTile from "@/components/PrinterGrid/PrinterGridTile.vue";
-import { totalVuetifyColumnCount } from "@/shared/printer-grid.constants";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useGridStore } from "@/store/grid.store";
 import { dragAppId, INTENT, PrinterPlace } from "@/shared/drag.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFloorStore } from "@/store/floor.store";
-
-console.debug("Setup grid");
 
 const printerStore = usePrinterStore();
 const floorStore = useFloorStore();
@@ -99,10 +77,26 @@ onMounted(async () => {
   await floorStore.loadFloors();
 });
 
+const props = defineProps({
+  gap: {
+    type: String,
+    default: "4px",
+  },
+});
+
 const printerMatrix = computed(() => floorStore.gridSortedPrinters);
-const columns = computed(() => settingsStore.gridCols / 2);
-const columnWidth = computed(() => totalVuetifyColumnCount / columns.value);
-const rows = computed(() => settingsStore.gridRows / 2);
+const columns = computed(() => settingsStore.gridCols);
+const rows = computed(() => settingsStore.gridRows);
+
+const totalCells = computed(() => rows.value * columns.value);
+const gridStyle = computed(() => ({
+  display: "grid",
+  gridTemplateColumns: `repeat(${columns.value}, 1fr)`,
+  gap: props.gap,
+}));
+
+const getX = (index: number) => index % columns.value;
+const getY = (index: number) => Math.floor(index / columns.value);
 
 function onDragStart(printer: PrinterDto, ev: DragEvent) {
   if (!ev.dataTransfer) return;
@@ -126,7 +120,19 @@ function getPrinter(col: number, row: number) {
 }
 </script>
 
-<style>
+<style scoped>
+.printer-grid-container {
+  width: 100%;
+}
+
+.printer-grid {
+  width: 100%;
+}
+
+.printer-cell {
+  padding: 8px;
+}
+
 .grid-bg-img {
   position: fixed;
   height: 100vh;
@@ -134,15 +140,5 @@ function getPrinter(col: number, row: number) {
   width: 600%;
   left: -250%;
   filter: grayscale(100%);
-}
-
-.test-bottom {
-  border: 1px solid transparent;
-  margin: 0 20px 10px 20px !important;
-}
-
-.test-top {
-  border: 1px solid transparent;
-  margin: 0 20px 0 20px !important;
 }
 </style>

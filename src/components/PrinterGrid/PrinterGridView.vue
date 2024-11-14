@@ -117,10 +117,9 @@ const clearSelectedPrinters = () => {
 };
 
 const batchReprintFiles = async () => {
-  const output = await useDialog(DialogName.BatchReprintDialog).handleAsync(
+  await useDialog(DialogName.BatchReprintDialog).handleAsync(
     printersStore.selectedPrinters?.map((p) => p.id)
   );
-  console.log("[PrinterGridView] Dialog completed", output);
 };
 
 const uploadFile = () => {

@@ -13,7 +13,7 @@
         'background-color':
           !gridStore.gridEditMode || !printer ? printerStateColor : 'rgba(1,1,1,0)',
       }"
-      class="tile fill-height"
+      class="tile"
       outlined
       tile
       @click="selectOrUnplacePrinter()"
@@ -419,15 +419,5 @@ export default defineComponent({
 
 .xsmall-resized-font {
   font-size: clamp(8px, 1vw, 10px);
-}
-
-.filament-abs-border {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 14px;
-  height: 100%;
-  /*background: repeating-linear-gradient(-30deg, #222, #555 5px, #444 5px, #555 6px);*/
-  border: 2px solid rgba(255, 250, 250, 0.5);
 }
 </style>

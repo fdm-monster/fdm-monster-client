@@ -3,6 +3,8 @@
 Features
 
 - Remove whitelist settings from UI
+- Introduce new grid layout
+- Introduce grid settings dialog on home page
 
 ## Client 13/11/2024 1.6.11
 

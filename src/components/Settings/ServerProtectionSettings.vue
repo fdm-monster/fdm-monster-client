@@ -116,7 +116,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { isValidIPOrMask } from "@/utils/validation.utils";
 import { SettingsService } from "@/backend";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useAuthStore } from "@/store/auth.store";

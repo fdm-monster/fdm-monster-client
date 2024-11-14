@@ -95,7 +95,7 @@
 <script lang="ts" setup>
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialog } from "@/shared/dialog.composable";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { ref } from "vue";
 import { BatchService } from "@/backend/batch.service";
 import { IdType } from "@/utils/id.type";
 import { ReprintFileDto, ReprintState } from "@/models/batch/reprint.dto";
