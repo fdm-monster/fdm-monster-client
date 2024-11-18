@@ -6,6 +6,7 @@
       src="/img/logo.svg"
       style="opacity: 0.08"
     />
+
     <v-stepper v-model="stepper" class="grey darken-4">
       <v-stepper-header>
         <v-stepper-step :complete="stepper > 1" step="1"> Introduction</v-stepper-step>
@@ -274,5 +275,14 @@ async function continueNext() {
   50% {
     border-color: orange;
   }
+}
+
+.grid-bg-img {
+  position: fixed !important;
+  height: 100vh;
+  top: 50vh;
+  width: 600%;
+  left: -250%;
+  filter: grayscale(100%);
 }
 </style>
