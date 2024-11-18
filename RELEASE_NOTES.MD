@@ -1,5 +1,9 @@
 # Release notes
 
+Fixes
+
+- First-time setup: background was appearing above first-time-setup, not fixed and below
+
 ## Client 14/11/2024 1.7.0
 
 Features
