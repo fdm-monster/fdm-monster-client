@@ -14,11 +14,15 @@ export function newRandomNamePair() {
 }
 
 export function generateInitials(name: string) {
-  if (name === null) return "?";
+  if (!name?.trim().length) return "?";
+
   const initials = name
+    ?.trim()
     ?.replace(/[^a-zA-Z ]/g, "")
     ?.split(" ")
+    .map((v) => (!v.length ? "" : v))
     .slice(0, 3)
     .reduce((acc, subname) => acc + subname[0], "");
+
   return initials?.replace("undefined", "");
 }

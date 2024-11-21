@@ -3,6 +3,8 @@
 Fixes
 
 - First-time setup: background was appearing above first-time-setup, not fixed and below
+- Dialog avatar: undefined would sometimes appear in avatar (once or twice)
+- File sidenav: avatar had awkward offset
 
 ## Client 14/11/2024 1.7.0
 
