@@ -14,14 +14,14 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               color="primary"
+              width="40"
               fab
               v-bind="attrs"
               @click="openPrinterURL()"
               v-on="on"
               @click.middle="openPrinterURL()"
+              >{{ avatarInitials() }}</v-btn
             >
-              {{ avatarInitials() }}
-            </v-btn>
           </template>
           <span>Visit the {{ serviceName }} associated to this printer</span>
         </v-tooltip>
