@@ -2,9 +2,10 @@ import { ServerSettingsDto } from "./server-settings.dto";
 import { FileCleanSettings } from "./printer-file-clean-settings.model";
 
 export interface FrontendSettings {
-  largeTiles: boolean;
   gridCols: number;
   gridRows: number;
+  largeTiles: boolean;
+  tilePreferCancelOverQuickStop: boolean;
 }
 
 export interface ConnectionInfo {

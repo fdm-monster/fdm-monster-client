@@ -45,6 +45,12 @@ export const useSettingsStore = defineStore({
     serverSettings(): ServerSettingsDto | undefined {
       return this.settings?.server;
     },
+    frontendSettings(): FrontendSettings | undefined {
+      return this.settings?.frontend;
+    },
+    preferCancelOverQuickStop(): boolean {
+      return this.settings?.frontend?.tilePreferCancelOverQuickStop || false;
+    },
     largeTiles(): boolean {
       return this.settings?.frontend?.largeTiles || false;
     },
