@@ -22,6 +22,7 @@
                     </v-tooltip>
                   </h3>
                 </v-card-title>
+
                 <v-card-text>
                   <div class="d-flex align-center">
                     <v-checkbox

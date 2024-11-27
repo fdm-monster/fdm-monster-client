@@ -121,15 +121,21 @@
                 elevation="4"
                 icon
                 size="36"
+                :disabled="
+                  !preferCancelOverQuickStop ||
+                  (!printerStateStore.isPrinterPrinting(printer?.id) &&
+                    !printerStateStore.isPrinterPaused(printer?.id))
+                "
                 v-bind="attrs"
                 v-on="on"
-                @click.prevent.stop="clickQuickStop()"
+                @click.prevent.stop="preferCancelOverQuickStop ? clickCancel() : clickQuickStop()"
               >
-                <v-icon>dangerous</v-icon>
+                <v-icon>{{ preferCancelOverQuickStop ? "stop" : "dangerous" }} </v-icon>
               </v-btn>
             </template>
             <template v-slot:default>
-              <span>Send a quick stop GCode, causing the printer to cease immediately.</span>
+              <span v-if="preferCancelOverQuickStop"> Cancel print gracefully</span>
+              <span v-else>Send a quick stop GCode, causing the printer to cease immediately</span>
             </template>
           </v-tooltip>
 
@@ -229,19 +235,24 @@ import { useGridStore } from "@/store/grid.store";
 import { FloorService } from "@/backend/floor.service";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFloorStore } from "@/store/floor.store";
-import { interpretStates } from "@/shared/printer-state.constants";
+import {
+  interpretStates,
+  isPrinterPaused,
+  isPrinterPrinting,
+} from "@/shared/printer-state.constants";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useDialog } from "@/shared/dialog.composable";
 import { useFeatureStore } from "@/store/features.store";
 import { getServiceName } from "@/utils/printer-type.utils";
+import { PrinterJobService } from "@/backend/printer-job.service";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
 export default defineComponent({
   name: "PrinterGridTile",
-  methods: { getServiceName },
+  methods: { isPrinterPaused, isPrinterPrinting, getServiceName },
   props: {
     printer: { type: Object as PropType<PrinterDto | undefined>, required: true },
     x: { type: Number, required: true },
@@ -275,6 +286,10 @@ export default defineComponent({
 
     const largeTilesEnabled = computed(() => {
       return settingsStore.largeTiles;
+    });
+
+    const preferCancelOverQuickStop = computed(() => {
+      return settingsStore.preferCancelOverQuickStop;
     });
 
     const printerState = computed(() => {
@@ -342,6 +357,14 @@ export default defineComponent({
       }
     };
 
+    const clickCancel = async () => {
+      if (!printerId.value) return;
+
+      if (confirm("Are you sure to cancel the current print job?")) {
+        await PrinterJobService.stopPrintJob(printerId.value);
+      }
+    };
+
     const clickConnectUsb = async () => {
       if (!printerId.value) return;
       await PrintersService.sendPrinterConnectCommand(printerId.value);
@@ -362,6 +385,7 @@ export default defineComponent({
       selected,
       unselected,
       largeTilesEnabled,
+      preferCancelOverQuickStop,
       printerState,
       printerStateColor,
       currentJob,
@@ -375,6 +399,7 @@ export default defineComponent({
       clickOpenPrinterURL,
       clickOpenSettings,
       clickQuickStop,
+      clickCancel,
       clickConnectUsb,
       selectOrUnplacePrinter,
     };

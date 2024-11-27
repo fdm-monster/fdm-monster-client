@@ -1,5 +1,9 @@
 # Release notes
 
+Features
+
+- feat: add ability to swap out quick stop for cancel on printer tiles
+
 ## Client 23/11/2024 1.7.2
 
 Fixes
