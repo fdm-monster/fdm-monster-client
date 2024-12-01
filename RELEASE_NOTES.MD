@@ -1,8 +1,12 @@
 # Release notes
 
+Fixes
+
+- File delete/download: Deleting or downloading a file path is now encoded in url path
+
 Features
 
-- feat: add ability to swap out quick stop for cancel on printer tiles
+- Printer tile: Add ability to swap out quick stop for cancel on printer tiles
 
 ## Client 23/11/2024 1.7.2
 
