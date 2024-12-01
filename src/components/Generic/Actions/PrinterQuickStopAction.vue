@@ -10,7 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { CustomGcodeService } from "@/backend/custom-gcode.service";
 

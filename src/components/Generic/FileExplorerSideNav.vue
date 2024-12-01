@@ -441,7 +441,10 @@ import { useSettingsStore } from "@/store/settings.store";
 import { useFeatureStore } from "@/store/features.store";
 import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
 import { isMoonrakerType, isOctoPrintType, getServiceName } from "@/utils/printer-type.utils";
+import { useQueryClient } from "@tanstack/vue-query";
+import { thumbnailQueryKey } from "@/queries/thumbnail.query";
 
+const queryClient = useQueryClient();
 const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
 const dialogsStore = useDialogsStore();
@@ -699,6 +702,10 @@ async function clickPrintFile(file: FileDto) {
   await printerStateStore.selectAndPrintFile({
     printerId: printerId.value,
     fullPath: file.path,
+  });
+  await queryClient.invalidateQueries({
+    queryKey: [thumbnailQueryKey, printerId.value],
+    exact: true,
   });
 }
 

@@ -11,7 +11,7 @@
               <v-card>
                 <v-card-title>
                   <h3>
-                    Experimental Features
+                    Experimental Server Features
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-icon class="help-icon" v-bind="attrs" v-on="on">help_outline</v-icon>
@@ -52,6 +52,29 @@
                     Disabling Moonraker support will disable all printers of type Moonraker. You
                     need to re-enable them after re-enabling this feature.
                   </v-alert>
+
+                  <div class="d-flex align-center">
+                    <v-checkbox
+                      v-model="experimentalThumbnailSupport"
+                      :disabled="isThumbnailSupportLoading"
+                      @change="updateThumbnailSupport"
+                      hide-details
+                    >
+                      <template v-slot:label>
+                        <span>Enable Experimental Thumbnail Support</span>
+                      </template>
+                    </v-checkbox>
+                    <v-progress-circular
+                      v-if="isThumbnailSupportLoading"
+                      indeterminate
+                      size="30"
+                      width="4"
+                      class="ml-2 mt-4"
+                    />
+                    <v-icon v-if="showThumbnailSuccess" color="success" class="ml-2 mt-4">
+                      check_circle
+                    </v-icon>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -93,7 +116,7 @@
               <v-card>
                 <v-card-title>
                   <h3>
-                    Experimental Features
+                    Experimental UI Features
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-icon class="help-icon" v-bind="attrs" v-on="on">help_outline</v-icon>
@@ -142,16 +165,20 @@ import { onMounted, ref } from "vue";
 import { SettingsService } from "@/backend";
 
 const experimentalMoonrakerSupport = ref(false);
+const experimentalThumbnailSupport = ref(false);
 const experimentalTypeORMSupport = ref(false);
 const experimentalClientSupport = ref(false);
 const isMoonrakerSupportLoading = ref(false);
+const isThumbnailSupportLoading = ref(false);
 const isClientLoading = ref(false);
 const showMoonrakerSuccess = ref(false);
+const showThumbnailSuccess = ref(false);
 const showClientSuccess = ref(false);
 
 async function loadSettings() {
   const settings = await SettingsService.getSettings();
   experimentalMoonrakerSupport.value = settings.server.experimentalMoonrakerSupport;
+  experimentalThumbnailSupport.value = settings.server.experimentalThumbnailSupport;
   experimentalTypeORMSupport.value = settings.server.experimentalTypeormSupport;
   experimentalClientSupport.value = settings.server.experimentalClientSupport;
 }
@@ -179,6 +206,28 @@ const updateMoonrakerSupport = async () => {
     console.error("Failed to update Moonraker support:", error);
     experimentalMoonrakerSupport.value = !experimentalMoonrakerSupport.value;
     isMoonrakerSupportLoading.value = false;
+  }
+};
+
+const updateThumbnailSupport = async () => {
+  isThumbnailSupportLoading.value = true;
+  showThumbnailSuccess.value = false;
+
+  try {
+    await SettingsService.updateExperimentalThumbnailSupport(experimentalThumbnailSupport.value);
+    await loadSettings();
+    setTimeout(() => {
+      isThumbnailSupportLoading.value = false;
+      showThumbnailSuccess.value = true;
+    }, 250);
+
+    setTimeout(() => {
+      showThumbnailSuccess.value = false;
+    }, 3000);
+  } catch (error) {
+    console.error("Failed to update Thumbnail support:", error);
+    experimentalThumbnailSupport.value = !experimentalThumbnailSupport.value;
+    isThumbnailSupportLoading.value = false;
   }
 };
 

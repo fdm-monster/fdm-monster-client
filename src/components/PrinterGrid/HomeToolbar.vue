@@ -1,19 +1,5 @@
 <template>
   <v-toolbar flat>
-    <v-toolbar-title>Floors</v-toolbar-title>
-    <v-btn-toggle
-      :value="selectedFloorToggleIndex"
-      class="ml-7"
-      mandatory
-      rounded
-      @change="changeFloorIndex"
-    >
-      <v-btn v-for="f in floors" :key="f.id">
-        <v-icon>format_align_left</v-icon>
-        {{ f.name }}
-      </v-btn>
-    </v-btn-toggle>
-
     <v-btn v-if="!printerStore.printers?.length" class="mt-0 ml-6" color="primary" to="/printers">
       You have no printers. Click here to start!
     </v-btn>

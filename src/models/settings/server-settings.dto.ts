@@ -14,4 +14,5 @@ export interface ServerSettingsDto {
   experimentalMoonrakerSupport: boolean;
   experimentalTypeormSupport: boolean;
   experimentalClientSupport: boolean;
+  experimentalThumbnailSupport: boolean;
 }

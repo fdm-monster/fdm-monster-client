@@ -66,7 +66,7 @@ const bindDropConditionally = (el: HTMLElement, printers: PrinterDto[], context?
   }
 };
 
-const defaultBorder = "1px solid #2b2a27";
+const defaultBorder = "0 solid #2b2a27";
 const defaultTransition = "background-color 0.5s ease";
 const hoverBorder = "1px solid red";
 
