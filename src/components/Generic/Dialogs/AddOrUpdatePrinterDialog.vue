@@ -22,16 +22,16 @@
         <v-item-group v-model="formData.printerType" mandatory>
           <v-container>
             <v-row>
-              <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="6">
+              <v-col v-for="item of serviceTypes" :key="item.name" cols="4" md="4">
                 <v-item v-slot="{ active, toggle }">
                   <v-card
                     :color="active ? 'primary' : 'blue-grey darken-4'"
                     class="d-flex align-center justify-center elevation-8"
-                    height="75px"
+                    height="60px"
                     width="225px"
                     @click="toggle"
                   >
-                    <v-img :src="item.logo" :height="item.height" max-width="125px" width="125px" />
+                    <v-img :src="item.logo" :height="item.height" max-width="100px" width="125px" />
                     <v-scroll-y-transition>
                       <h3 class="ml-3 align-center">{{ item.name }}</h3>
                     </v-scroll-y-transition>
@@ -126,6 +126,7 @@
 import { computed, inject, ref } from "vue";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
+import bambuLogoSvg from "@/assets/bambu-logo.png";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -136,6 +137,7 @@ import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
+
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
 import { isMoonrakerType } from "@/utils/printer-type.utils";
@@ -165,12 +167,17 @@ const serviceTypes = computed(() => {
         {
           name: "OctoPrint",
           logo: octoPrintTentacleSvg,
-          height: "75px",
+          height: "60px",
         },
         {
           name: "Klipper",
           logo: klipperLogoSvg,
-          height: "75px",
+          height: "60px",
+        },
+        {
+          name: "BambuLabs",
+          logo: bambuLogoSvg,
+          height: "60px",
         },
       ];
     }
