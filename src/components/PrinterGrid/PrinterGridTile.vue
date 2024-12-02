@@ -1,5 +1,5 @@
 <template>
-  <div v-drop-printer-position="{ x, y, printerSet: printer }" @click="selectUnsetPrinter()">
+  <div v-drop-printer-position="{ x, y, printerSet: printer }">
     <v-card
       v-drop-upload="{ printers: [printer] }"
       elevation="5"
@@ -10,8 +10,11 @@
         'tile-unselected': unselected,
         'tile-no-printer': !printer,
       }"
+      @click="selectOrClearPrinterPosition()"
     >
-      <div class="printer-title" v-show="printer">{{ printer?.name ?? "&nbsp;" }}</div>
+      <div class="printer-title" v-show="printer">
+        {{ printer?.name ?? "&nbsp;" }}
+      </div>
 
       <div
         v-if="!printer || gridStore.gridEditMode"
@@ -41,9 +44,10 @@
       <div class="printer-file-or-stream-viewer" v-if="!!printer && isOnline">
         <v-img
           v-if="!thumbnail?.length"
-          style="opacity: 0.5; filter: grayscale(100%)"
+          style="opacity: 0.3; filter: grayscale(100%)"
           width="80px"
           :src="require('@/assets/logo.png')"
+          alt="No thumbnail was found in GCode"
         />
         <v-img v-else width="80" :src="'data:image/png;base64,' + (thumbnail ?? '')" />
       </div>
@@ -80,7 +84,8 @@
       <!-- Hover controls -->
       <div class="centered-controls" v-if="printer && !gridStore.gridEditMode">
         <v-btn
-          :disabled="!isOnline || isPrinting"
+          v-if="hasPrinterControlFeature"
+          :disabled="!isOnline || !isOperational"
           small
           color="darkgray"
           style="border-radius: 7px"
@@ -88,6 +93,18 @@
           @click.prevent.stop="clickOpenPrinterControlDialog()"
         >
           <v-icon>open_with</v-icon>
+        </v-btn>
+
+        <!-- Connect USB -->
+        <v-btn
+          v-if="!isOperational && isOnline"
+          small
+          color="darkgray"
+          style="border-radius: 7px"
+          elevation="0"
+          @click.prevent.stop="clickConnectUsb()"
+        >
+          <v-icon>usb</v-icon>
         </v-btn>
         <v-btn
           small
@@ -161,7 +178,15 @@
                   <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
                 </span>
                 <span v-else>
-                  <small>{{ printerState?.text?.toUpperCase() }}</small>
+                  <small
+                    :style="{
+                      'background-color': printerStateColor + '99',
+                      'border-left': '5px solid ' + printerStateColor + 'ff',
+                      padding: '5px',
+                    }"
+                  >
+                    {{ printerState?.text?.toUpperCase() }}
+                  </small>
                 </span>
               </small>
             </template>
@@ -185,11 +210,7 @@ import { useGridStore } from "@/store/grid.store";
 import { FloorService } from "@/backend/floor.service";
 import { useSettingsStore } from "@/store/settings.store";
 import { useFloorStore } from "@/store/floor.store";
-import {
-  interpretStates,
-  isPrinterPaused,
-  isPrinterPrinting,
-} from "@/shared/printer-state.constants";
+import { interpretStates } from "@/shared/printer-state.constants";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
@@ -223,6 +244,10 @@ const printerId = computed(() => props.printer?.id);
 
 const isOnline = computed(() =>
   printerId.value ? printerStateStore.isApiResponding(printerId.value) : false
+);
+
+const isOperational = computed(() =>
+  printerId.value ? printerStateStore.isPrinterOperational(printerId.value) : false
 );
 
 const isPrinting = computed(() => {
@@ -316,11 +341,6 @@ const clickRefreshSocket = async () => {
   });
 };
 
-const clickOpenPrinterURL = () => {
-  if (!props.printer) return;
-  PrintersService.openPrinterURL(props.printer.printerURL);
-};
-
 const clickOpenSettings = () => {
   printerStore.setUpdateDialogPrinter(props.printer);
   addOrUpdateDialog.openDialog();
@@ -347,14 +367,9 @@ const clickConnectUsb = async () => {
   await PrintersService.sendPrinterConnectCommand(printerId.value);
 };
 
-const selectUnsetPrinter = () => {
-  if (!props.printer || !printerId.value) {
-    gridStore.gridEditMode = true;
-    return;
-  }
-};
 const selectOrClearPrinterPosition = async () => {
   if (!props.printer || !printerId.value) {
+    gridStore.gridEditMode = true;
     return;
   }
 
@@ -386,7 +401,7 @@ const selectOrClearPrinterPosition = async () => {
 }
 
 .tile-selected {
-  outline: 2px solid rgb(248, 2, 2);
+  outline: 2px solid var(--v-primary-base);
   opacity: 1;
 }
 
