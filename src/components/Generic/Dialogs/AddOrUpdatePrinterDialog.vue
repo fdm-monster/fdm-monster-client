@@ -151,6 +151,7 @@ import { computed, inject, ref } from "vue";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 import prusaLinkLogoSvg from "@/assets/prusa-link-logo.svg";
+import bambuLogoSvg from "@/assets/bambu-logo.png";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -161,6 +162,7 @@ import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
+
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
 import {
@@ -170,6 +172,7 @@ import {
   MoonrakerType,
   OctoPrintType,
   PrusaLinkType,
+  BambuType
 } from "@/utils/printer-type.utils";
 import { useFloorStore } from "@/store/floor.store";
 import { captureException } from "@sentry/vue";
@@ -193,6 +196,7 @@ const serviceTypes = computed(() => {
     const feature = featureStore.getFeature<{ types: string[] }>("multiplePrinterServices");
     const hasKlipperSupport = feature?.subFeatures?.types?.includes("klipper");
     const hasPrusaLinkSupport = feature?.subFeatures?.types?.includes("prusaLink");
+    const hasBambuSupport = feature?.subFeatures?.types?.includes("bambu");
 
     return [
       {
@@ -217,6 +221,14 @@ const serviceTypes = computed(() => {
               height: "20px",
             },
           ]
+      ...(hasBambuSupport
+        ? [
+            {
+              name: getServiceName(BambuType),
+              logo: bambuLogoSvg,
+              height: "20px",
+            },
+          ]          
         : []),
     ];
   }
