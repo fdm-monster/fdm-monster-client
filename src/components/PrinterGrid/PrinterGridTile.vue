@@ -168,11 +168,7 @@
 
           <v-tooltip close-delay="100" color="danger" open-delay="0" top>
             <template v-slot:activator="{ on, attrs }">
-              <small
-                class="xsmall-resized-font text--secondary d-lg-inline d-none ml-sm-2"
-                v-bind="attrs"
-                v-on="on"
-              >
+              <span class="xsmall-resized-font text--secondary ml-sm-2" v-bind="attrs" v-on="on">
                 <span v-if="printer?.disabledReason">
                   <small> MAINTENANCE</small>
                   <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
@@ -188,7 +184,7 @@
                     {{ printerState?.text?.toUpperCase() }}
                   </small>
                 </span>
-              </small>
+              </span>
             </template>
 
             Maintenance description: <br />
