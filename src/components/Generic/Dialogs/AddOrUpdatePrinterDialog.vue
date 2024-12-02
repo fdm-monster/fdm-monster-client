@@ -169,6 +169,7 @@ import {
   getServiceName,
   isMoonrakerType,
   isPrusaLinkType,
+  isBambuType,
   MoonrakerType,
   OctoPrintType,
   PrusaLinkType,
@@ -303,7 +304,7 @@ const testPrinter = async () => {
 const isValid = () => {
   const form = formData.value;
   if (!form) return false;
-  if (isMoonrakerType(form.printerType)) {
+  if (isMoonrakerType(form.printerType) || isBambuType(form.printerType)) {
     return form.printerURL?.length && form.name?.length;
   }
   if (isPrusaLinkType(form.printerType)) {
