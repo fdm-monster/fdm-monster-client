@@ -20,31 +20,67 @@
             </v-chip>
           </v-chip-group>
         </v-col>
-        <v-col>
-          <div>
-            Clear printers by clicking on
-            <strong>
-              <v-icon>disabled_visible</v-icon>
-              Click to clear
-            </strong>
-          </div>
-        </v-col>
       </v-row>
     </v-banner>
 
-    <div class="printer-grid-container">
-      <div class="printer-grid" :style="gridStyle">
-        <div
-          v-for="index in totalCells"
-          :key="`printer-${getX(index - 1)}-${getY(index - 1)}`"
-          class="printer-cell"
-        >
-          <PrinterGridTile
-            :printer="getPrinter(getX(index - 1), getY(index - 1))"
-            :x="getX(index - 1)"
-            :y="getY(index - 1)"
-          />
+    <div class="printer-grid-container d-flex flex-row flex-wrap">
+      <div class="flex-fill">
+        <div class="printer-grid" :style="gridStyle">
+          <div
+            v-for="index in totalCells"
+            :key="`printer-${getX(index - 1)}-${getY(index - 1)}`"
+            class="printer-cell"
+          >
+            <PrinterGridTile
+              :printer="getPrinter(getX(index - 1), getY(index - 1))"
+              :x="getX(index - 1)"
+              :y="getY(index - 1)"
+            />
+          </div>
         </div>
+        <!-- Columns -->
+        <div
+          v-if="gridStore.gridEditMode"
+          class="d-flex flex-row justify-start"
+          style="gap: 10px; width: 100%"
+        >
+          Columns
+          <v-btn
+            x-small
+            rounded
+            :disabled="settingsStore.gridCols <= 1"
+            @click="decrementGridCols()"
+          >
+            <v-icon>remove</v-icon>
+          </v-btn>
+          <v-btn
+            x-small
+            rounded
+            :disabled="settingsStore.gridCols >= 12"
+            @click="incrementGridCols()"
+          >
+            <v-icon>add</v-icon>
+          </v-btn>
+        </div>
+      </div>
+      <!-- Rows -->
+      <div
+        v-if="gridStore.gridEditMode"
+        class="d-flex flex-column justify-start"
+        style="gap: 10px; margin-top: 10px"
+      >
+        Rows
+        <v-btn x-small rounded :disabled="settingsStore.gridRows <= 1" @click="decrementGridRows()">
+          <v-icon>remove</v-icon>
+        </v-btn>
+        <v-btn
+          x-small
+          rounded
+          :disabled="settingsStore.gridRows >= 16"
+          @click="incrementGridRows()"
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
       </div>
     </div>
 
@@ -118,14 +154,40 @@ function getPrinter(col: number, row: number) {
   if (!printerMatrix.value?.length || !printerMatrix.value[x]) return undefined;
   return printerMatrix.value[x][y];
 }
+
+async function incrementGridRows() {
+  if (!gridStore.gridEditMode || !settingsStore.frontendSettings) return;
+  if (settingsStore.frontendSettings.gridRows >= 16) return;
+
+  settingsStore.frontendSettings.gridRows++;
+  await settingsStore.saveFrontendSettings();
+}
+
+async function incrementGridCols() {
+  if (!gridStore.gridEditMode || !settingsStore.frontendSettings) return;
+  if (settingsStore.frontendSettings.gridCols >= 12) return;
+
+  settingsStore.frontendSettings.gridCols++;
+  await settingsStore.saveFrontendSettings();
+}
+
+async function decrementGridRows() {
+  if (!gridStore.gridEditMode || !settingsStore.frontendSettings) return;
+  if (settingsStore.frontendSettings.gridRows == 1) return;
+  settingsStore.frontendSettings.gridRows--;
+  await settingsStore.saveFrontendSettings();
+}
+
+async function decrementGridCols() {
+  if (!gridStore.gridEditMode || !settingsStore.frontendSettings) return;
+  if (settingsStore.frontendSettings.gridCols == 1) return;
+  settingsStore.frontendSettings.gridCols--;
+  await settingsStore.saveFrontendSettings();
+}
 </script>
 
 <style scoped>
 .printer-grid-container {
-  width: 100%;
-}
-
-.printer-grid {
   width: 100%;
 }
 

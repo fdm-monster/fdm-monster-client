@@ -10,7 +10,7 @@ interface PrinterBindingValue {
   y: number;
 }
 
-const defaultBorder = "1px solid #2b2a27";
+const defaultBorder = "0 solid #2b2a27";
 const hoverBorder = "1px solid gray";
 
 const bindDropConditionally = (el: HTMLElement, bindingValue: PrinterBindingValue) => {
@@ -26,6 +26,7 @@ const bindDropConditionally = (el: HTMLElement, bindingValue: PrinterBindingValu
   }
 
   el.style.border = defaultBorder;
+  el.style.borderRadius = "10px";
   el.ondrop = async (e) => {
     el.style.border = defaultBorder;
     e.preventDefault();

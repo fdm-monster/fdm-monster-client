@@ -441,7 +441,10 @@ import { useSettingsStore } from "@/store/settings.store";
 import { useFeatureStore } from "@/store/features.store";
 import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
 import { isMoonrakerType, isOctoPrintType, getServiceName } from "@/utils/printer-type.utils";
+import { useQueryClient } from "@tanstack/vue-query";
+import { thumbnailQueryKey } from "@/queries/thumbnail.query";
 
+const queryClient = useQueryClient();
 const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
 const dialogsStore = useDialogsStore();
@@ -700,6 +703,10 @@ async function clickPrintFile(file: FileDto) {
     printerId: printerId.value,
     fullPath: file.path,
   });
+  await queryClient.invalidateQueries({
+    queryKey: [thumbnailQueryKey, printerId.value],
+    exact: true,
+  });
 }
 
 function clickDownloadFile(path: string) {
@@ -718,33 +725,13 @@ function closeDrawer() {
 }
 
 .current-file-print {
-  color: red;
+  font-weight: bold;
 }
 
 .pulsating-red {
-  background: darkred;
   margin: 10px;
   border-radius: 15px;
 
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-  transform: scale(1);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
 }
 </style>

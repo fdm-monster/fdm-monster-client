@@ -13,6 +13,15 @@ export class PrinterFileService extends BaseService {
     return (await this.get(path)) as FileDto[];
   }
 
+  static async getThumbnail(printerId: IdType) {
+    const path = `${ServerApi.printerFilesRoute}/${printerId}/thumbnail`;
+
+    return (await this.get(path)) as {
+      id: string;
+      thumbnailBase64: string;
+    };
+  }
+
   /**
    * A nice alternative for offline or disabled printers
    * @param printerId

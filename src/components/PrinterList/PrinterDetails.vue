@@ -22,18 +22,15 @@
         <RefreshFilesAction :printer="printer" class="d-flex justify-end" />
       </v-col>
     </v-row>
-
-    <FileControlList :file-list="printer.fileList" :printer-id="printerId" />
   </v-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import FileControlList from "@/components/PrinterList/FileControlList.vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import RefreshFilesAction from "@/components/Generic/Actions/RefreshFilesAction.vue";
-import { usePrinterStore } from "../../store/printer.store";
-import { usePrinterStateStore } from "../../store/printer-state.store";
+import { usePrinterStore } from "@/store/printer.store";
+import { usePrinterStateStore } from "@/store/printer-state.store";
 
 interface Data {
   dragging: boolean;
@@ -42,7 +39,6 @@ interface Data {
 export default defineComponent({
   name: "PrinterDetails",
   components: {
-    FileControlList,
     RefreshFilesAction,
   },
   setup: () => {

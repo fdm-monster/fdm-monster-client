@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "@/store/printer.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";

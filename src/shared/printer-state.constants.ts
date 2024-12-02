@@ -1,7 +1,6 @@
 import { PrinterStateDto, SocketState } from "@/models/socketio-messages/socketio-message.model";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSettingsStore } from "@/store/settings.store";
-import { isOctoPrintType } from "@/utils/printer-type.utils";
 
 const COLOR = {
   danger: "danger",
@@ -13,10 +12,10 @@ const COLOR = {
 const RGB = {
   DarkBlue: "#050c2e",
   Black: "#000000",
-  DarkGray: "#262626",
-  LightBrown: "#583c0e",
+  DarkGray: "#59c500",
+  LightBrown: "#ffb819",
   Brown: "#580e47",
-  Red: "#2e0905",
+  Red: "#bd3322",
 } as const;
 
 const LABEL = {
@@ -87,17 +86,19 @@ export function interpretStates(
     const s = socketAuthenticated ? 1 : 0;
     const sa = socketAuthing ? 1 : 0;
     const p = printerState ? 1 : 0;
-    if (debugPrinterInterpretState)
+
+    if (debugPrinterInterpretState) {
       console.debug(
-        `Socket opened ${s}, socketAuthing ${sa} printerState ${p}, 
-      currentState: ${currentState}, FLAGS ${flags}`
+        `Id ${printer.id}, Socket opened ${s}, socketAuthing ${sa} printerState ${p}, 
+      currentState: ${currentState}, FLAGS ${JSON.stringify(flags, null, 2)}`
       );
+    }
 
     return {
       ...state,
       color: !printerState ? COLOR.danger : COLOR.dark,
       rgb: RGB.Red,
-      text: !printerState ? "No USB" : "Awaiting",
+      text: !printerState ? "No USB" : "Awaiting state",
     };
   }
 

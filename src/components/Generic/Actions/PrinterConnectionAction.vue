@@ -22,7 +22,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from "vue";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { PrintersService } from "@/backend";
 import { usePrinterStateStore } from "@/store/printer-state.store";
