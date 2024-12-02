@@ -78,7 +78,11 @@
               :counter="apiKeyRules.length"
               class="ma-1"
               hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
-              :label="formData.printerType === 1 ? 'API Key (optional)' : 'API Key (required)*'"
+              :label="
+                formData.printerType === 1 || formData.printerType === 2
+                  ? 'API Key (optional)'
+                  : 'API Key (required)*'
+              "
               persistent-hint
               required
             />
@@ -140,7 +144,7 @@ import { AxiosError } from "axios";
 
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
-import { isMoonrakerType } from "@/utils/printer-type.utils";
+import { isBambuType, isMoonrakerType } from "@/utils/printer-type.utils";
 import { useFloorStore } from "@/store/floor.store";
 import { captureException } from "@sentry/vue";
 
@@ -255,7 +259,7 @@ const testPrinter = async () => {
 const isValid = () => {
   const form = formData.value;
   if (!form) return false;
-  if (isMoonrakerType(form.printerType)) {
+  if (isMoonrakerType(form.printerType) || isBambuType(form.printerType)) {
     return form.printerURL?.length && form.name?.length;
   }
   return form.printerURL?.length && form.name?.length && form.apiKey?.length;
@@ -303,7 +307,7 @@ const submit = async () => {
 
   const createdPrinter = formData.value;
 
-  if (isMoonrakerType(createdPrinter.printerType)) {
+  if (isMoonrakerType(createdPrinter.printerType) || isBambuType(createdPrinter.printerType)) {
     createdPrinter.apiKey = "";
   }
 
