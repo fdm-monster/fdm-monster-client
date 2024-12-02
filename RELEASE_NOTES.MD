@@ -1,5 +1,7 @@
 # Release notes
 
+## Client 02/12/2024 1.8.0
+
 Fixes
 
 - File delete/download: Deleting or downloading a file path is now encoded in url path
@@ -7,10 +9,10 @@ Fixes
 Features
 
 - Printer tile: Add ability to swap out quick stop for cancel on printer tiles
-- Printer tile: redesign
+- Printer tile: redesign with thumbnail support
 - Theme: switch to light blue for primary colors
 - Printer grid: make toolbar smoother
-- UI: make navigation gray
+- UI: make navigation uncolored
 
 ## Client 23/11/2024 1.7.2
 
