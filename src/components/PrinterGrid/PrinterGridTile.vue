@@ -1,8 +1,7 @@
 <template>
-  <div v-drop-printer-position="{ x, y, printerSet: printer }">
+  <div v-drop-printer-position="{ x, y, printerSet: printer }" @click="selectUnsetPrinter()">
     <v-card
       v-drop-upload="{ printers: [printer] }"
-      :disabled="!printer"
       elevation="5"
       class="tile colored-tile rounded-lg"
       :class="{
@@ -11,9 +10,33 @@
         'tile-unselected': unselected,
         'tile-no-printer': !printer,
       }"
-      @click="selectOrClearPrinterPosition()"
     >
-      <div class="printer-title">{{ printer?.name ?? "&nbsp;" }}</div>
+      <div class="printer-title" v-show="printer">{{ printer?.name ?? "&nbsp;" }}</div>
+
+      <div
+        v-if="!printer || gridStore.gridEditMode"
+        style="position: absolute; height: calc(120px - 20px)"
+        class="plus-hover-icon"
+      >
+        <div class="d-flex flex flex-column justify-center" style="height: 100%">
+          <PrinterCreateAction
+            v-if="!printer"
+            :floor-id="floorStore.selectedFloor?.id"
+            :floor-x="x"
+            :floor-y="y"
+          />
+          <v-btn
+            v-if="printer"
+            color="error"
+            small
+            rounded
+            @click.c.capture.native.stop="selectOrClearPrinterPosition()"
+          >
+            <v-icon>clear</v-icon>
+            Clear position
+          </v-btn>
+        </div>
+      </div>
 
       <div class="printer-file-or-stream-viewer" v-if="!!printer && isOnline">
         <v-img
@@ -34,7 +57,7 @@
         </v-icon>
       </div>
 
-      <div class="printer-menu" v-if="printer">
+      <div class="printer-menu" v-if="printer && !gridStore.gridEditMode">
         <v-btn
           small
           color="darkgray"
@@ -46,12 +69,16 @@
         </v-btn>
       </div>
 
-      <div class="printer-controls" v-if="printer">
-        <small class="file-name">{{ currentPrintingFilePath ?? "&nbsp;" }}</small>
+      <div
+        class="printer-controls"
+        v-if="printer && !gridStore.gridEditMode"
+        style="overflow: clip"
+      >
+        <small class="file-name"> {{ currentPrintingFilePath ?? "&nbsp;" }}</small>
       </div>
 
       <!-- Hover controls -->
-      <div class="centered-controls" v-if="printer">
+      <div class="centered-controls" v-if="printer && !gridStore.gridEditMode">
         <v-btn
           :disabled="!isOnline || isPrinting"
           small
@@ -61,6 +88,15 @@
           @click.prevent.stop="clickOpenPrinterControlDialog()"
         >
           <v-icon>open_with</v-icon>
+        </v-btn>
+        <v-btn
+          small
+          color="darkgray"
+          style="border-radius: 7px"
+          elevation="0"
+          @click.prevent.stop="clickRefreshSocket()"
+        >
+          <v-icon>refresh</v-icon>
         </v-btn>
         <v-btn
           :disabled="!isOnline || (!isPaused && !isPrinting)"
@@ -75,7 +111,7 @@
         </v-btn>
         <v-btn
           small
-          :disabled="!isOnline || (preferCancelOverQuickStop && !isPrinting)"
+          :disabled="!isOnline || (preferCancelOverQuickStop && !isPrinting && !isPaused)"
           color="darkgray"
           style="border-radius: 7px"
           elevation="0"
@@ -96,7 +132,7 @@
 
       <!-- Progress Bar -->
       <v-progress-linear
-        v-if="printer"
+        v-if="printer && !gridStore.gridEditMode"
         :value="currentJob?.progress?.completion"
         background-color="dark-gray"
         height="14"
@@ -125,13 +161,12 @@
                   <v-icon class="d-none d-xl-inline" color="primary" small>info</v-icon>
                 </span>
                 <span v-else>
-                  <small>{{
-                    printerState?.text === "Operational" ? "" : printerState?.text?.toUpperCase()
-                  }}</small>
+                  <small>{{ printerState?.text?.toUpperCase() }}</small>
                 </span>
               </small>
             </template>
-            Maintenance reason: <br />
+
+            Maintenance description: <br />
             {{ printer?.disabledReason }}
           </v-tooltip>
         </template>
@@ -162,6 +197,7 @@ import { useDialog } from "@/shared/dialog.composable";
 import { useFeatureStore } from "@/store/features.store";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { useThumbnailQuery } from "@/queries/thumbnail.query";
+import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
@@ -311,8 +347,17 @@ const clickConnectUsb = async () => {
   await PrintersService.sendPrinterConnectCommand(printerId.value);
 };
 
+const selectUnsetPrinter = () => {
+  if (!props.printer || !printerId.value) {
+    gridStore.gridEditMode = true;
+    return;
+  }
+};
 const selectOrClearPrinterPosition = async () => {
-  if (!props.printer || !printerId.value) return;
+  if (!props.printer || !printerId.value) {
+    return;
+  }
+
   if (gridStore.gridEditMode) {
     const floorId = floorStore.selectedFloor?.id;
     if (!floorId) throw new Error("Cant clear printer, floor not selected");
@@ -331,7 +376,6 @@ const selectOrClearPrinterPosition = async () => {
 }
 
 .colored-tile {
-  /* background-color: #492d2d; */
   padding: 8px;
   color: #ffffff;
   position: relative;
@@ -347,10 +391,26 @@ const selectOrClearPrinterPosition = async () => {
 }
 
 .tile-no-printer {
-  background: none;
-  min-height: 120px;
-  border: none !important;
+  background-color: #171717;
+  height: 120px;
+  border: 2px #3a3a3a dashed !important;
   outline: none;
+}
+
+.tile-no-printer:hover {
+  background-color: #2a2a2a;
+}
+
+.plus-hover-icon {
+  display: none;
+}
+
+.tile-no-printer:hover .plus-hover-icon {
+  display: block;
+}
+
+.tile:hover .plus-hover-icon {
+  display: block;
 }
 
 .printer-title {
@@ -363,7 +423,7 @@ const selectOrClearPrinterPosition = async () => {
 .printer-file-or-stream-viewer {
   position: absolute;
   left: 16px;
-  height: calc(100% - 16px);
+  height: calc(100% - 36px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,12 +442,19 @@ const selectOrClearPrinterPosition = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 0;
+  margin-bottom: 8px;
 }
 
 .file-name {
   font-size: 14px;
   color: #bfbfbf;
+  max-width: 70%;
+  display: block;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .centered-controls {
@@ -395,7 +462,7 @@ const selectOrClearPrinterPosition = async () => {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 8px;
+  margin-bottom: 8px;
   transition: opacity 0.2s;
 }
 
@@ -409,17 +476,7 @@ const selectOrClearPrinterPosition = async () => {
 
 .progress-bar {
   width: 100%;
-  margin-top: 8px;
   background-color: #2c2c2c;
   border-radius: 7px !important;
-}
-
-.v-progress-linear__buffer,
-.v-progress-linear__background {
-  background-color: #333333 !important; /* Background color for progress bar */
-}
-
-.lime-green {
-  background-color: #8dff5b !important; /* Bright green progress color */
 }
 </style>

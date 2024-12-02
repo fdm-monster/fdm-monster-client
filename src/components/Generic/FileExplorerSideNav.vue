@@ -725,33 +725,13 @@ function closeDrawer() {
 }
 
 .current-file-print {
-  color: red;
+  font-weight: bold;
 }
 
 .pulsating-red {
-  background: darkred;
   margin: 10px;
   border-radius: 15px;
 
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-  transform: scale(1);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
 }
 </style>

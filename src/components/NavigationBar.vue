@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app mini-variant class="gradient-bg" dark :permanent="true">
+  <v-navigation-drawer mini-variant app :permanent="true">
     <v-list-item class="px-2">
       <v-list-item-content>
         <v-list-item-title class="text-h5">
@@ -9,7 +9,6 @@
               alt="FDM Monster Logo"
               class="shrink mr-1 pt-3 ml-1"
               contain
-              transition="scale-transition"
               width="40"
             />
           </div>
@@ -38,17 +37,16 @@ const items = [
   ["home", "Devices", "/"],
   ["printer", "Printers", "/printers"],
   ["camera_alt", "CameraGridView", "/cameras"],
-  ["settings", "Settings", "/settings"],
   ["timeline", "PrintStatistics", "/statistics"],
+  ["settings", "Settings", "/settings"],
   ["contact_support", "About", "/about"],
 ];
 </script>
 
 <style>
 .gradient-bg {
-  background: -moz-linear-gradient(45deg, rgba(46, 49, 146, 1), rgba(155, 5, 5, 1) 100%);
-  background: -webkit-linear-gradient(45deg, rgba(46, 49, 146, 1), rgba(155, 5, 5, 1) 100%);
-  background: linear-gradient(45deg, rgba(18, 18, 18, 1), rgba(155, 5, 5, 1) 100%);
-  /*margin-bottom: -100px !important;*/
+  background: -moz-linear-gradient(45deg, rgba(18, 18, 18, 1), rgba(155, 5, 5, 1) 100%);
+  background: -webkit-linear-gradient(45deg, rgba(18, 18, 18, 1), rgba(155, 5, 5, 1) 100%);
+  background: linear-gradient(45deg, rgba(18, 18, 18, 1), rgba(155, 5, 5, 0.1) 50%);
 }
 </style>

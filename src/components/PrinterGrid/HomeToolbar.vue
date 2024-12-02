@@ -44,7 +44,7 @@
     </v-btn>
 
     <div class="ma-4 pt-6">
-      <v-switch v-model="gridStore.gridEditMode" label="Printer Relocate Mode"></v-switch>
+      <v-switch v-model="gridStore.gridEditMode" label="Grid Edit Mode"></v-switch>
     </div>
   </v-toolbar>
 </template>

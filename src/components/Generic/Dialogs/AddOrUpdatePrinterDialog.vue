@@ -137,6 +137,8 @@ import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
 import { isMoonrakerType } from "@/utils/printer-type.utils";
+import { useFloorStore } from "@/store/floor.store";
+import { captureException } from "@sentry/vue";
 
 const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const printersStore = usePrinterStore();
@@ -254,16 +256,17 @@ const isValid = () => {
 };
 
 const createPrinter = async (newPrinterData: CreatePrinter) => {
-  await printersStore.createPrinter(newPrinterData, forceSavePrinter.value);
+  const printer = await printersStore.createPrinter(newPrinterData, forceSavePrinter.value);
   snackbar.openInfoMessage({
     title: `Printer ${newPrinterData.name} created`,
   });
+  return printer;
 };
 
 const updatePrinter = async (updatedPrinter: CreatePrinter) => {
   const printerId = updatedPrinter.id;
 
-  await printersStore.updatePrinter(
+  const printer = await printersStore.updatePrinter(
     {
       printerId: printerId as string,
       updatedPrinter,
@@ -274,6 +277,8 @@ const updatePrinter = async (updatedPrinter: CreatePrinter) => {
   snackbar.openInfoMessage({
     title: `Printer ${updatedPrinter.name} updated`,
   });
+
+  return printer;
 };
 
 const submit = async () => {
@@ -300,8 +305,24 @@ const submit = async () => {
     if (isUpdating.value) {
       await updatePrinter(createdPrinter);
     } else {
-      await createPrinter(createdPrinter);
+      const printer = await createPrinter(createdPrinter);
+
+      try {
+        const dialogContext = dialog.context();
+        if (dialogContext?.floorId && dialogContext?.floorX >= 0 && dialogContext?.floorY >= 0) {
+          await useFloorStore().addPrinterToFloor({
+            floorId: dialogContext?.floorId,
+            printerId: printer.id,
+            y: dialogContext.floorY,
+            x: dialogContext.floorX,
+          });
+        }
+      } catch (e) {
+        console.warn("Attempt to add printer to floor failed", e);
+        captureException(e);
+      }
     }
+
     closeDialog();
   } catch (error) {
     if (error instanceof AxiosError) {

@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app color="primary" dark>
+  <v-app-bar app elevation="0">
     <v-toolbar-title class="text-uppercase white--text">
       <span class="font-weight-light">FDM</span>
       <strong>Monster</strong>

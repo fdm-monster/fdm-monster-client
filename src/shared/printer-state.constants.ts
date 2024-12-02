@@ -87,17 +87,19 @@ export function interpretStates(
     const s = socketAuthenticated ? 1 : 0;
     const sa = socketAuthing ? 1 : 0;
     const p = printerState ? 1 : 0;
-    if (debugPrinterInterpretState)
+
+    if (debugPrinterInterpretState) {
       console.debug(
-        `Socket opened ${s}, socketAuthing ${sa} printerState ${p}, 
-      currentState: ${currentState}, FLAGS ${flags}`
+        `Id ${printer.id}, Socket opened ${s}, socketAuthing ${sa} printerState ${p}, 
+      currentState: ${currentState}, FLAGS ${JSON.stringify(flags, null, 2)}`
       );
+    }
 
     return {
       ...state,
       color: !printerState ? COLOR.danger : COLOR.dark,
       rgb: RGB.Red,
-      text: !printerState ? "No USB" : "Awaiting",
+      text: !printerState ? "No USB" : "Awaiting state",
     };
   }
 
