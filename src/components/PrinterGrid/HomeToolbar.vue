@@ -8,6 +8,13 @@
       {{ floorStore.floorlessPrinters.length }} unplaced printer(s)!
     </v-alert>
 
+    <v-btn-toggle :value="selectedFloorToggleIndex" mandatory @change="changeFloorIndex">
+      <v-btn v-for="f in floors" :key="f.id" small>
+        <v-icon>layers</v-icon>
+        {{ f.name }}
+      </v-btn>
+    </v-btn-toggle>
+
     <v-spacer></v-spacer>
     <span class="d-flex flex-wrap gap-2">
       <span class="pr-2">
