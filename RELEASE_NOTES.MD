@@ -7,6 +7,10 @@ Fixes
 Features
 
 - Printer tile: Add ability to swap out quick stop for cancel on printer tiles
+- Printer tile: redesign
+- Theme: switch to light blue for primary colors
+- Printer grid: make toolbar smoother
+- UI: make navigation gray
 
 ## Client 23/11/2024 1.7.2
 
