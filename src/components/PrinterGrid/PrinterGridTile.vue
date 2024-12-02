@@ -386,7 +386,6 @@ const selectOrClearPrinterPosition = async () => {
 <style scoped>
 .tile {
   min-height: 120px;
-  border: none !important;
   z-index: 1;
 }
 
