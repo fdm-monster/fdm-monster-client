@@ -62,7 +62,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
         const printerEvents = this.printerEventsById[printerId];
         if (!printerEvents) return false;
         const flags = printerEvents?.current?.payload?.state?.flags;
-        return flags?.printing || flags?.paused;
+        return flags?.printing || flags?.paused || flags?.pausing;
       };
     },
     isPrinterPaused(): (printerId: IdType) => boolean {
@@ -70,7 +70,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
         const printerEvents = this.printerEventsById[printerId];
         if (!printerEvents) return false;
         const flags = printerEvents?.current?.payload?.state?.flags;
-        return flags?.paused;
+        return flags?.paused || flags?.pausing;
       };
     },
     printerCurrentEventReceivedAtById() {
@@ -137,7 +137,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
       this.printerIds.forEach((id) => {
         const printerEvents = this.printerEventsById[id];
         const flags = printerEvents?.current?.payload?.state?.flags;
-        if (flags?.printing || flags?.paused) {
+        if (flags?.printing || flags?.paused || flags?.pausing) {
           const printer = printerStore.printer(id);
           if (printer) {
             printersWithJobById[printer.id] = printerEvents?.current?.payload;

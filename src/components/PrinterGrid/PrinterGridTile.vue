@@ -62,15 +62,22 @@
       </div>
 
       <div class="printer-menu" v-if="printer && !gridStore.gridEditMode">
-        <v-btn
-          small
-          color="darkgray"
-          style="border-radius: 7px"
-          elevation="0"
-          @click.prevent.stop="clickInfo()"
-        >
-          <v-icon dark>menu</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              small
+              color="darkgray"
+              style="border-radius: 7px"
+              elevation="0"
+              @click.prevent.stop="clickInfo()"
+            >
+              <v-icon dark>menu</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:default>Open printer details</template>
+        </v-tooltip>
       </div>
 
       <div
@@ -83,17 +90,24 @@
 
       <!-- Hover controls -->
       <div class="centered-controls" v-if="printer && !gridStore.gridEditMode">
-        <v-btn
-          v-if="hasPrinterControlFeature"
-          :disabled="!isOnline || !isOperational"
-          small
-          color="darkgray"
-          style="border-radius: 7px"
-          elevation="0"
-          @click.prevent.stop="clickOpenPrinterControlDialog()"
-        >
-          <v-icon>open_with</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              v-if="hasPrinterControlFeature"
+              :disabled="!isOnline || !isOperational"
+              small
+              color="darkgray"
+              style="border-radius: 7px"
+              elevation="0"
+              @click.prevent.stop="clickOpenPrinterControlDialog()"
+            >
+              <v-icon>open_with</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:default>Move and home printer</template>
+        </v-tooltip>
 
         <!-- Connect USB -->
         <v-tooltip top>
@@ -131,36 +145,65 @@
           <template v-slot:default>Reload printer websocket and refresh all states</template>
         </v-tooltip>
 
-        <v-btn
-          :disabled="!isOnline || (!isPaused && !isPrinting)"
-          small
-          color="darkgray"
-          style="border-radius: 7px"
-          elevation="0"
-          @click.prevent.stop="isPaused ? clickResumePrint() : clickPausePrint()"
-        >
-          <v-icon v-if="!isPaused">pause</v-icon>
-          <v-icon v-if="isPaused">play_arrow</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          :disabled="!isOnline || (preferCancelOverQuickStop && !isPrinting && !isPaused)"
-          color="darkgray"
-          style="border-radius: 7px"
-          elevation="0"
-          @click.prevent.stop="preferCancelOverQuickStop ? clickStop() : clickQuickStop()"
-        >
-          <v-icon>{{ preferCancelOverQuickStop ? "stop" : "dangerous" }} </v-icon>
-        </v-btn>
-        <v-btn
-          small
-          color="darkgray"
-          style="border-radius: 7px"
-          elevation="0"
-          @click.prevent.stop="clickOpenSettings()"
-        >
-          <v-icon>settings</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              :disabled="!isOnline || (!isPaused && !isPrinting)"
+              small
+              color="darkgray"
+              style="border-radius: 7px"
+              elevation="0"
+              @click.prevent.stop="isPaused ? clickResumePrint() : clickPausePrint()"
+            >
+              <v-icon v-if="!isPaused">pause</v-icon>
+              <v-icon v-if="isPaused">play_arrow</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:default>
+            {{ isPaused ? "Resume print" : "Pause print" }}
+          </template>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              small
+              :disabled="!isOnline || (preferCancelOverQuickStop && !isPrinting && !isPaused)"
+              color="darkgray"
+              style="border-radius: 7px"
+              elevation="0"
+              @click.prevent.stop="preferCancelOverQuickStop ? clickStop() : clickQuickStop()"
+            >
+              <v-icon>{{ preferCancelOverQuickStop ? "stop" : "dangerous" }} </v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:default>{{
+            preferCancelOverQuickStop
+              ? "Cancel current print gracefully"
+              : "Perform quick stop of printer"
+          }}</template>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              small
+              color="darkgray"
+              style="border-radius: 7px"
+              elevation="0"
+              @click.prevent.stop="clickOpenSettings()"
+            >
+              <v-icon>settings</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:default>Open printer settings</template>
+        </v-tooltip>
       </div>
 
       <!-- Progress Bar -->
