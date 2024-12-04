@@ -1,5 +1,11 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog">
+  <BaseDialog
+    :id="dialog.dialogId"
+    :max-width="'700px'"
+    @beforeOpened="onBeforeDialogOpened"
+    @escape="closeDialog()"
+    @opened="onDialogOpened"
+  >
     <v-card>
       <v-card-title>
         <span class="text-h5">
@@ -37,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, computed, watch, onMounted } from "vue";
+import { inject, ref, computed } from "vue";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { FloorService } from "@/backend/floor.service";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
@@ -59,6 +65,18 @@ const printerFloorId = computed(() => dialog.context()?.printerFloorId);
 const avatarInitials = computed(() => {
   return formData.value ? generateInitials(formData.value.name) : "";
 });
+
+function onBeforeDialogOpened() {}
+
+async function onDialogOpened() {
+  if (printerFloorId.value) {
+    const crudeData = floorStore.floor(printerFloorId.value);
+    formData.value = FloorService.convertPrinterFloorToCreateForm(crudeData);
+  } else if (floorStore.floors?.length) {
+    const maxIndex = Math.max(...floorStore.floors.map((pf) => pf.floor)) + 1;
+    formData.value.floor = maxIndex.toString();
+  }
+}
 
 const validateFormData = () => {
   if (!formData.value.name || formData.value.name.length < appConstants.minPrinterFloorNameLength) {
@@ -86,21 +104,4 @@ const submit = async () => {
 const closeDialog = () => {
   dialog.closeDialog();
 };
-
-watch(printerFloorId, (val) => {
-  if (val) {
-    const printerFloor = floorStore.floor(val);
-    formData.value = FloorService.convertPrinterFloorToCreateForm(printerFloor);
-  }
-});
-
-onMounted(() => {
-  if (printerFloorId.value) {
-    const crudeData = floorStore.floor(printerFloorId.value);
-    formData.value = FloorService.convertPrinterFloorToCreateForm(crudeData);
-  } else if (floorStore.floors?.length) {
-    const maxIndex = Math.max(...floorStore.floors.map((pf) => pf.floor)) + 1;
-    formData.value.floor = maxIndex.toString();
-  }
-});
 </script>

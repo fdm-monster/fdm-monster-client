@@ -18,7 +18,7 @@ export const useFeatureStore = defineStore("Feature", {
       (state) =>
       <T>(feature: TFeatureFlags): IFeatureFlag<T> | undefined => {
         if (!state.features) {
-          console.debug("Feature store not loaded");
+          console.warn("Feature[getFeature] store not loaded");
           return;
         }
 
@@ -28,7 +28,7 @@ export const useFeatureStore = defineStore("Feature", {
       (state) =>
       (feature: TFeatureFlags): boolean => {
         if (!state.features) {
-          console.debug("Feature store not loaded");
+          console.warn("Feature[hasFeature] store not loaded");
           return false;
         }
 

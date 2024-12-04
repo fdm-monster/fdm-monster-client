@@ -248,6 +248,9 @@ const printerStateStore = usePrinterStateStore();
 const floorStore = useFloorStore();
 const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
+
+const addOrUpdatePrinterDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
+
 const groupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
 const filteredGroupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
 const newGroupName = ref("");
@@ -333,11 +336,11 @@ const floorOfPrinter = (printerId: IdType) => {
 
 const openEditDialog = (printer: PrinterDto) => {
   printerStore.setUpdateDialogPrinter(printer);
-  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
+  addOrUpdatePrinterDialog.openDialog(printer);
 };
 
 const openCreatePrinterDialog = () => {
-  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
+  addOrUpdatePrinterDialog.openDialog();
 };
 
 const clickRow = (item: PrinterDto, event: any) => {
@@ -351,7 +354,7 @@ const clickRow = (item: PrinterDto, event: any) => {
 };
 
 const openImportJsonPrintersDialog = () => {
-  dialogsStore.openDialogWithContext(DialogName.BatchJsonCreate);
+  useDialog(DialogName.BatchJsonCreate).openDialog();
 };
 
 const openYamlImportExportDialog = () => {

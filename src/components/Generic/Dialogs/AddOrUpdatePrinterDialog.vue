@@ -2,7 +2,9 @@
   <BaseDialog
     :id="dialog.dialogId"
     :max-width="showChecksPanel ? '900px' : '800px'"
+    @beforeOpened="onBeforeDialogOpened()"
     @escape="closeDialog()"
+    @opened="onDialogOpened()"
   >
     <v-card class="pa-4">
       <v-card-title>
@@ -121,7 +123,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref, watch } from "vue";
+import { computed, inject, ref } from "vue";
+import klipperLogoSvg from "@/assets/klipper-logo.svg";
+import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -132,8 +136,6 @@ import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
-import klipperLogoSvg from "@/assets/klipper-logo.svg";
-import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
 import { isMoonrakerType } from "@/utils/printer-type.utils";
@@ -185,20 +187,17 @@ const serviceTypes = computed(() => {
 
 const printerId = computed(() => printersStore.updateDialogPrinter?.id);
 
-onMounted(async () => {
-  if (printerId.value) {
-    const crudeData = printersStore.printer(printerId.value) as CreatePrinter;
-    formData.value = PrintersService.convertPrinterToCreateForm(crudeData);
-  }
+function onBeforeDialogOpened() {}
 
+async function onDialogOpened() {
   await featureStore.loadFeatures();
-});
 
-watch(printerId, (val) => {
-  if (!val) return;
-  const printer = printersStore.printer(val) as CreatePrinter;
+  if (!printerId.value) {
+    return;
+  }
+  const printer = printersStore.printer(printerId.value) as CreatePrinter;
   formData.value = PrintersService.convertPrinterToCreateForm(printer);
-});
+}
 
 const storedPrinter = computed(() => printersStore.updateDialogPrinter);
 const isUpdating = computed(() => !!storedPrinter.value);

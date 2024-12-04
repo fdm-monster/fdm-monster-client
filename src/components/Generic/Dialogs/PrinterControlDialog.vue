@@ -2,8 +2,9 @@
   <BaseDialog
     :id="dialog.dialogId"
     :max-width="'700px'"
-    @opened="onDialogOpened"
+    @beforeOpened="onBeforeDialogOpened"
     @escape="closeDialog()"
+    @opened="onDialogOpened"
   >
     <v-card>
       <v-card-title> Printer Controls</v-card-title>
@@ -102,6 +103,8 @@ const dialog = useDialog<{ printerId: IdType }>(DialogName.PrinterControlDialog)
 const printerStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
 const printerId = ref();
+
+function onBeforeDialogOpened() {}
 
 async function onDialogOpened(input: { printerId: IdType }) {
   printerId.value = input.printerId;

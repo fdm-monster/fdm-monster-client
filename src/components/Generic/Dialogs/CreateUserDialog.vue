@@ -1,11 +1,17 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog">
+  <BaseDialog
+    :id="dialog.dialogId"
+    :max-width="'700px'"
+    @beforeOpened="onBeforeDialogOpened()"
+    @escape="closeDialog()"
+    @opened="onDialogOpened()"
+  >
     <v-card class="pa-4">
       <v-card-title>
         <span class="text-h5">
           <v-avatar color="primary" size="56">{{ avatarInitials }}</v-avatar>
-          <span class="pl-5"
-            >New verified User
+          <span class="pl-5">
+            New verified User
 
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -77,7 +83,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import { generateInitials } from "@/shared/noun-adjectives.data";
 import { UserService } from "@/backend/user.service";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
@@ -105,6 +111,19 @@ const formData = ref<CreateUserForm>({
 
 const passwordConfirm = ref("");
 const roles = ref<Role[]>([]);
+
+function onBeforeDialogOpened() {}
+
+async function onDialogOpened() {
+  try {
+    roles.value = await UserService.listRoles();
+  } catch (error) {
+    snackbar.openErrorMessage({
+      title: "Failed to load roles",
+      subtitle: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+}
 
 const avatarInitials = computed(() => {
   return formData.value?.username?.length ? generateInitials(formData.value.username) : "??";
@@ -170,15 +189,4 @@ const closeDialog = () => {
   passwordConfirm.value = "";
   dialog.closeDialog();
 };
-
-onMounted(async () => {
-  try {
-    roles.value = await UserService.listRoles();
-  } catch (error) {
-    snackbar.openErrorMessage({
-      title: "Failed to load roles",
-      subtitle: error instanceof Error ? error.message : "Unknown error",
-    });
-  }
-});
 </script>
