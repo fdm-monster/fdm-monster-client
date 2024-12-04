@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 04/12/2024 1.8.1
+
+Fixes
+
+- First-time setup has errors: dialogs would load at app start which can cause authentication or permission errors
+
 ## Client 02/12/2024 1.8.0
 
 Fixes
