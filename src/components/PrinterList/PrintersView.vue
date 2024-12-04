@@ -55,7 +55,7 @@
             <v-toolbar-title>
               Showing {{ currentPrintersShownCount }} of {{ printers.length || 0 }} printers
             </v-toolbar-title>
-            <v-btn class="ml-3" outlined type="button" @click="openImportJsonPrintersDialog()">
+            <v-btn class="ml-3" outlined type="button" @click="openImportOctoFarmPrintersDialog()">
               <v-icon>publish</v-icon>
               Import OctoFarm Printers
             </v-btn>
@@ -353,8 +353,8 @@ const clickRow = (item: PrinterDto, event: any) => {
   console.log(event);
 };
 
-const openImportJsonPrintersDialog = () => {
-  useDialog(DialogName.BatchJsonCreate).openDialog();
+const openImportOctoFarmPrintersDialog = () => {
+  useDialog(DialogName.ImportOctoFarmDialog).openDialog();
 };
 
 const openYamlImportExportDialog = () => {

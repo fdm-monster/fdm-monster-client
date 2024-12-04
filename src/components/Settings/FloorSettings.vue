@@ -123,12 +123,12 @@
 import { defineComponent } from "vue";
 import { FloorDto } from "@/models/floors/floor.model";
 import { usePrinterStore } from "@/store/printer.store";
-import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useFloorStore } from "@/store/floor.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { useDialog } from "@/shared/dialog.composable";
 
 interface Data {
   editedFloorName: string;
@@ -143,7 +143,7 @@ export default defineComponent({
     return {
       printersStore: usePrinterStore(),
       floorStore: useFloorStore(),
-      dialogsStore: useDialogsStore(),
+      addOrUpdateFloorDialog: useDialog(DialogName.AddOrUpdateFloorDialog),
       snackbar: useSnackbar(),
     };
   },
@@ -165,9 +165,6 @@ export default defineComponent({
     showAddedPrinters() {
       return this.selectedFloor.printers?.length + 1;
     },
-    unassignedPrinters() {
-      return this.floorStore.floorlessPrinters;
-    },
   },
   methods: {
     printerInFloor(floor: FloorDto, index: number): PrinterDto | undefined {
@@ -178,7 +175,7 @@ export default defineComponent({
       return this.printersStore.printer(floorPrinter.printerId);
     },
     async createFloor() {
-      this.dialogsStore.openDialogWithContext(DialogName.AddOrUpdateFloorDialog);
+      await this.addOrUpdateFloorDialog.openDialog();
     },
     setEditedPrinterFloorName() {
       this.editedFloorName = this.selectedFloor.name;

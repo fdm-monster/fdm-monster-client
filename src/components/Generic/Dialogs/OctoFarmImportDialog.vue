@@ -205,7 +205,7 @@ const numPrinters = ref(0);
 const committedPrinters = ref<CreatePrinter[]>([]);
 const selectedPrinters = ref<number[]>([]);
 const importCompletedSuccesfully = ref<boolean>(false);
-const dialog = useDialog(DialogName.BatchJsonCreate);
+const dialog = useDialog(DialogName.ImportOctoFarmDialog);
 
 function onBeforeDialogOpened() {}
 
