@@ -1,8 +1,11 @@
 # Release notes
 
 ## Client 04/12/2024 1.8.2
+
 Fixes
+
 - UI: printer list action buttons, fix alert grid toolbar, reduce dialog store usage and replace with useDialog composable where possible
+- Printer state / tile: pausing will now present as paused state instead of printing
 
 ## Client 04/12/2024 1.8.1
 
