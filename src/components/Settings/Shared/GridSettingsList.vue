@@ -11,7 +11,7 @@
                   @input="updateGridRows"
                   v-model="settingsStore.settings.frontend.gridRows"
                   :items="rowOptions"
-                  label="Set the grid rowss"
+                  label="Set the grid rows"
                 />
               </v-col>
               <v-col cols="3">

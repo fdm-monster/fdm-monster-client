@@ -59,44 +59,32 @@
               <v-icon>publish</v-icon>
               Import OctoFarm Printers
             </v-btn>
+            <v-btn class="ml-3" outlined type="button" @click="openYamlImportExportDialog()">
+              <v-icon>publish</v-icon>
+              Import/Export YAML
+            </v-btn>
             <v-btn class="ml-3" outlined type="button" @click="openCreatePrinterDialog()">
               <v-icon>add</v-icon>
               Create Printer
-            </v-btn>
-            <v-btn class="ml-3" color="primary" type="button" @click="openYamlImportExportDialog()">
-              <v-icon>publish</v-icon>
-              Import/Export YAML
             </v-btn>
             <v-spacer></v-spacer>
           </v-toolbar>
         </template>
         <template v-slot:item.enabled="{ item }">
-          <v-switch
-            v-model="item.enabled"
-            color="primary"
-            dark
-            inset
-            @click.native.capture.stop="toggleEnabled(item)"
-          >
+          <v-switch v-model="item.enabled" inset @click.native.capture.stop="toggleEnabled(item)">
             {{ item.enabled }}
           </v-switch>
         </template>
         <template v-slot:item.printerType="{ item }">
-          {{
-            item.printerType === 0
-              ? "OctoPrint"
-              : isSupportedPrinterType
-              ? "Klipper"
-              : "Klipper (feature disabled)"
-          }}
+          {{ getServiceName(item.printerType) }}
         </template>
         <template v-slot:item.name="{ item }">
-          <v-chip color="primary" dark>
+          <v-chip dark>
             {{ item.name || item.printerURL }}
           </v-chip>
         </template>
         <template v-slot:item.floor="{ item }">
-          <v-chip v-if="item.id" color="primary"> {{ floorOfPrinter(item.id)?.name }}</v-chip>
+          <v-chip v-if="item.id"> {{ floorOfPrinter(item.id)?.name }}</v-chip>
         </template>
         <template v-if="hasPrinterGroupFeature" v-slot:item.group="{ item }">
           <v-chip
@@ -239,6 +227,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { GroupWithPrintersDto, PrinterGroupService } from "@/backend/printer-group.service";
 import { useDialog } from "@/shared/dialog.composable";
+import { getServiceName } from "@/utils/printer-type.utils";
 
 const snackbar = useSnackbar();
 const printerStore = usePrinterStore();
