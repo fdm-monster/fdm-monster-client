@@ -1,45 +1,30 @@
 <template>
   <v-col :cols="cols">
     <strong>Checks:</strong>
-    <v-alert v-for="(item, index) of getEvents()" :key="index" :type="item.color" dense>
+    <v-alert v-for="(item, index) of printerChecksEvents" :key="index" :type="item.color" dense>
       <small>{{ item.label }} {{ item.text }}</small>
     </v-alert>
   </v-col>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
 import { useTestPrinterStore } from "@/store/test-printer.store";
+import { computed, ref } from "vue";
 
-interface Data {
-  cols: 4;
-}
+const cols = ref(4);
 
 const errorCol = "error";
 const successCol = "success";
 
-export default defineComponent({
-  name: "PrinterChecksPanel",
-  components: {},
-  setup: () => {
+const testPrinterStore = useTestPrinterStore();
+
+const printerChecksEvents = computed(() => {
+  return testPrinterStore.getEvents().map((e) => {
     return {
-      testPrinterStore: useTestPrinterStore(),
+      label: e.event,
+      text: e.payload,
+      color: e.failure ? errorCol : successCol,
     };
-  },
-  data: (): Data => ({
-    cols: 4,
-  }),
-  computed: {},
-  methods: {
-    getEvents() {
-      return this.testPrinterStore.getEvents().map((e) => {
-        return {
-          label: e.event,
-          text: e.payload,
-          color: e.failure ? errorCol : successCol,
-        };
-      });
-    },
-  },
+  });
 });
 </script>

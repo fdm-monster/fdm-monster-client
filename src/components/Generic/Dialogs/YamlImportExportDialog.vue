@@ -1,9 +1,10 @@
 <template>
   <BaseDialog
     :id="dialog.dialogId"
-    @beforeOpened="onBeforeDialogOpened"
     max-width="800px"
+    @beforeOpened="onBeforeDialogOpened"
     @escape="closeDialog()"
+    @opened="onDialogOpened"
   >
     <v-card class="pa-8">
       <v-card-title>
@@ -111,6 +112,8 @@ const onBeforeDialogOpened = async () => {
   await featureStore.loadFeatures();
   exportGroups.value = featureStore.hasFeature("printerGroupsApi");
 };
+
+const onDialogOpened = async () => {};
 
 const downloadExportYamlFile = async () => {
   if (exportFloorGrid.value) {

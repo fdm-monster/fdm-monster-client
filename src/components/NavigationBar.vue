@@ -42,11 +42,3 @@ const items = [
   ["contact_support", "About", "/about"],
 ];
 </script>
-
-<style>
-.gradient-bg {
-  background: -moz-linear-gradient(45deg, rgba(18, 18, 18, 1), rgba(155, 5, 5, 1) 100%);
-  background: -webkit-linear-gradient(45deg, rgba(18, 18, 18, 1), rgba(155, 5, 5, 1) 100%);
-  background: linear-gradient(45deg, rgba(18, 18, 18, 1), rgba(155, 5, 5, 0.1) 50%);
-}
-</style>

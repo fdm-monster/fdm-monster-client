@@ -1,5 +1,11 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" max-width="900px" @escape="closeDialog()">
+  <BaseDialog
+    :id="dialog.dialogId"
+    max-width="900px"
+    @beforeOpened="onBeforeDialogOpened()"
+    @escape="closeDialog()"
+    @opened="onDialogOpened()"
+  >
     <v-card class="pa-4">
       <v-card-title>
         <span class="text-h5"> Import OctoFarm Printers </span>
@@ -199,7 +205,11 @@ const numPrinters = ref(0);
 const committedPrinters = ref<CreatePrinter[]>([]);
 const selectedPrinters = ref<number[]>([]);
 const importCompletedSuccesfully = ref<boolean>(false);
-const dialog = useDialog(DialogName.BatchJsonCreate);
+const dialog = useDialog(DialogName.ImportOctoFarmDialog);
+
+function onBeforeDialogOpened() {}
+
+async function onDialogOpened() {}
 
 const parsedPrinters = async () => {
   if (!importFile.value) {

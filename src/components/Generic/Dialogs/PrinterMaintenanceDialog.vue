@@ -1,5 +1,11 @@
 <template>
-  <BaseDialog :id="dialog.dialogId" :max-width="'700px'" @escape="closeDialog()">
+  <BaseDialog
+    :id="dialog.dialogId"
+    :max-width="'700px'"
+    @beforeOpened="onBeforeDialogOpened()"
+    @escape="closeDialog()"
+    @opened="onDialogOpened()"
+  >
     <ValidationObserver ref="validationObserver" v-slot="{ invalid }">
       <v-card class="pa-4">
         <v-card-title>
@@ -55,6 +61,7 @@ import { PrintersService } from "@/backend";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialog } from "@/shared/dialog.composable";
+import { IdType } from "@/utils/id.type";
 
 const selectedQuickItems = ref([]);
 const quickItems = [
@@ -91,6 +98,10 @@ const dialog = useDialog(DialogName.PrinterMaintenanceDialog);
 
 const validationObserver = ref(null);
 const printer = computed(() => printersStore.maintenanceDialogPrinter);
+
+function onBeforeDialogOpened() {}
+
+async function onDialogOpened() {}
 
 const isValid = async () => {
   if (!validationObserver.value) return false;

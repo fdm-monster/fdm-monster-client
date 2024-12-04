@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "../Dialogs/dialog.constants";
 import { IdType } from "@/utils/id.type";
+import { useDialog } from "@/shared/dialog.composable";
 
 const props = defineProps<{
   floorId?: IdType;
@@ -22,9 +22,9 @@ const props = defineProps<{
   floorY?: number;
 }>();
 
-const dialogsStore = useDialogsStore();
+const dialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 
 function openCreatePrinterDialog() {
-  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog, props);
+  dialog.openDialog(props);
 }
 </script>

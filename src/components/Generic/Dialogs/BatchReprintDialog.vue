@@ -117,17 +117,6 @@ function onBeforeDialogOpened(_: IdType[]) {
   loading.value = true;
 }
 
-function getPrintServiceName(printerId: IdType) {
-  const printerType = printerStore.printer(printerId)?.printerType;
-  if (printerType === 0) {
-    return "OctoPrint";
-  } else if (printerType === 1) {
-    return "Moonraker";
-  } else {
-    return "?";
-  }
-}
-
 async function onDialogOpened(printerIds: IdType[]) {
   inputPrinterIds.value = printerIds;
   try {
@@ -141,6 +130,17 @@ async function onDialogOpened(printerIds: IdType[]) {
   }
 
   loading.value = false;
+}
+
+function getPrintServiceName(printerId: IdType) {
+  const printerType = printerStore.printer(printerId)?.printerType;
+  if (printerType === 0) {
+    return "OctoPrint";
+  } else if (printerType === 1) {
+    return "Moonraker";
+  } else {
+    return "?";
+  }
 }
 
 async function submitBatchReprints() {

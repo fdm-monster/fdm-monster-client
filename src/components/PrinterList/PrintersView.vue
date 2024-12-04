@@ -55,7 +55,7 @@
             <v-toolbar-title>
               Showing {{ currentPrintersShownCount }} of {{ printers.length || 0 }} printers
             </v-toolbar-title>
-            <v-btn class="ml-3" outlined type="button" @click="openImportJsonPrintersDialog()">
+            <v-btn class="ml-3" outlined type="button" @click="openImportOctoFarmPrintersDialog()">
               <v-icon>publish</v-icon>
               Import OctoFarm Printers
             </v-btn>
@@ -248,6 +248,9 @@ const printerStateStore = usePrinterStateStore();
 const floorStore = useFloorStore();
 const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
+
+const addOrUpdatePrinterDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
+
 const groupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
 const filteredGroupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
 const newGroupName = ref("");
@@ -333,11 +336,11 @@ const floorOfPrinter = (printerId: IdType) => {
 
 const openEditDialog = (printer: PrinterDto) => {
   printerStore.setUpdateDialogPrinter(printer);
-  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
+  addOrUpdatePrinterDialog.openDialog(printer);
 };
 
 const openCreatePrinterDialog = () => {
-  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
+  addOrUpdatePrinterDialog.openDialog();
 };
 
 const clickRow = (item: PrinterDto, event: any) => {
@@ -350,8 +353,8 @@ const clickRow = (item: PrinterDto, event: any) => {
   console.log(event);
 };
 
-const openImportJsonPrintersDialog = () => {
-  dialogsStore.openDialogWithContext(DialogName.BatchJsonCreate);
+const openImportOctoFarmPrintersDialog = () => {
+  useDialog(DialogName.ImportOctoFarmDialog).openDialog();
 };
 
 const openYamlImportExportDialog = () => {
