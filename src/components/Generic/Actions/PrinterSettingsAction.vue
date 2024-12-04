@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="ma-2" color="primary" fab small @click.c.capture.native.stop="openSettings()">
+  <v-btn fab small @click.c.capture.native.stop="openSettings()">
     <v-icon>settings</v-icon>
   </v-btn>
 </template>

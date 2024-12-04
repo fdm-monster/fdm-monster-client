@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="ma-2" color="primary" fab small @click.c.capture.native.stop="openPrinterURL()">
+  <v-btn class="ma-2" fab small @click.c.capture.native.stop="openPrinterURL()">
     <v-icon>directions</v-icon>
   </v-btn>
 </template>

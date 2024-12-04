@@ -227,7 +227,6 @@ import PrinterQuickStopAction from "@/components/Generic/Actions/PrinterQuickSto
 import SyncPrinterNameAction from "@/components/Generic/Actions/SyncPrinterNameAction.vue";
 
 import { usePrinterStore } from "@/store/printer.store";
-import { useDialogsStore } from "@/store/dialog.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
 import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
@@ -246,7 +245,6 @@ const printerStore = usePrinterStore();
 const loading = ref<boolean>(false);
 const printerStateStore = usePrinterStateStore();
 const floorStore = useFloorStore();
-const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
 
 const addOrUpdatePrinterDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);

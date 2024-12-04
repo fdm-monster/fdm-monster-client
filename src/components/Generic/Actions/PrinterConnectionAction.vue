@@ -1,11 +1,5 @@
 <template>
-  <v-badge
-    v-if="printer.enabled"
-    :color="isPrinterOperational() ? 'green' : 'red'"
-    bordered
-    class="ma-2"
-    overlap
-  >
+  <v-badge v-if="printer.enabled" :color="isPrinterOperational() ? 'green' : 'red'" overlap>
     <template v-slot:badge>
       <v-icon v-if="isPrinterOperational()">check</v-icon>
       <v-icon v-else>close</v-icon>
