@@ -96,25 +96,41 @@
         </v-btn>
 
         <!-- Connect USB -->
-        <v-btn
-          v-if="!isOperational && isOnline"
-          small
-          color="darkgray"
-          style="border-radius: 7px"
-          elevation="0"
-          @click.prevent.stop="clickConnectUsb()"
-        >
-          <v-icon>usb</v-icon>
-        </v-btn>
-        <v-btn
-          small
-          color="darkgray"
-          style="border-radius: 7px"
-          elevation="0"
-          @click.prevent.stop="clickRefreshSocket()"
-        >
-          <v-icon>refresh</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-if="!isOperational && isOnline"
+              v-bind="attrs"
+              v-on="on"
+              small
+              color="darkgray"
+              style="border-radius: 7px"
+              elevation="0"
+              @click.prevent.stop="clickConnectUsb()"
+            >
+              <v-icon>usb</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:default>Connect USB (only for OctoPrint)</template>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              small
+              color="darkgray"
+              style="border-radius: 7px"
+              elevation="0"
+              @click.prevent.stop="clickRefreshSocket()"
+            >
+              <v-icon>refresh</v-icon>
+            </v-btn>
+          </template>
+          <template v-slot:default>Reload printer websocket and refresh all states</template>
+        </v-tooltip>
+
         <v-btn
           :disabled="!isOnline || (!isPaused && !isPrinting)"
           small
