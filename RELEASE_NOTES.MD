@@ -1,5 +1,9 @@
 # Release notes
 
+## Client 04/12/2024 1.8.2
+Fixes
+- UI: printer list action buttons, fix alert grid toolbar, reduce dialog store usage and replace with useDialog composable where possible
+
 ## Client 04/12/2024 1.8.1
 
 Fixes

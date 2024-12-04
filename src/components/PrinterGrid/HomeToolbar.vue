@@ -3,10 +3,6 @@
     <v-btn v-if="!printerStore.printers?.length" class="mt-0 ml-6" color="primary" to="/printers">
       You have no printers. Click here to start!
     </v-btn>
-    <v-alert v-if="floorStore.floorlessPrinters.length" class="mt-4 ml-12" color="primary">
-      <v-icon>warning</v-icon>
-      {{ floorStore.floorlessPrinters.length }} unplaced printer(s)!
-    </v-alert>
 
     <v-btn-toggle :value="selectedFloorToggleIndex" mandatory @change="changeFloorIndex">
       <v-btn v-for="f in floors" :key="f.id" small>
@@ -14,6 +10,11 @@
         {{ f.name }}
       </v-btn>
     </v-btn-toggle>
+
+    <v-alert v-if="floorStore.floorlessPrinters.length" class="ml-4">
+      <v-icon>warning</v-icon>
+      {{ floorStore.floorlessPrinters.length }} unplaced printer(s)!
+    </v-alert>
 
     <v-spacer></v-spacer>
     <span class="d-flex flex-wrap gap-2">

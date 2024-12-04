@@ -433,7 +433,6 @@ import { FileDto } from "@/models/printers/printer-file.model";
 import { formatBytes } from "@/utils/file-size.util";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "./Dialogs/dialog.constants";
-import { useDialogsStore } from "@/store/dialog.store";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { interpretStates } from "@/shared/printer-state.constants";
@@ -443,11 +442,11 @@ import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
 import { isMoonrakerType, isOctoPrintType, getServiceName } from "@/utils/printer-type.utils";
 import { useQueryClient } from "@tanstack/vue-query";
 import { thumbnailQueryKey } from "@/queries/thumbnail.query";
+import { useDialog } from "@/shared/dialog.composable";
 
 const queryClient = useQueryClient();
 const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
-const dialogsStore = useDialogsStore();
 const featureStore = useFeatureStore();
 
 const fileSearch = ref<string>();
@@ -654,7 +653,7 @@ async function toggleMaintenance() {
   }
 
   printersStore.setMaintenanceDialogPrinter(storedSideNavPrinter.value);
-  dialogsStore.openDialogWithContext(DialogName.PrinterMaintenanceDialog);
+  await useDialog(DialogName.PrinterMaintenanceDialog).openDialog();
   closeDrawer();
 }
 
@@ -690,10 +689,10 @@ async function clickClearFiles() {
   shownFileCache.value = printersStore.printerFiles(printerId.value);
 }
 
-function clickSettings() {
+async function clickSettings() {
   if (!storedSideNavPrinter.value) return;
   printersStore.setUpdateDialogPrinter(storedSideNavPrinter.value);
-  dialogsStore.openDialogWithContext(DialogName.AddOrUpdatePrinterDialog);
+  await useDialog(DialogName.AddOrUpdatePrinterDialog).openDialog(storedSideNavPrinter.value);
   closeDrawer();
 }
 

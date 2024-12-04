@@ -1,10 +1,10 @@
 <template>
-  <v-badge v-if="printer.enabled" bordered class="ma-2" overlap>
+  <v-badge v-if="printer.enabled" class="ma-2" overlap>
     <template #badge>
       <v-icon>bolt</v-icon>
     </template>
     <v-btn fab small @click.stop="clickQuickStop">
-      <v-icon>stop</v-icon>
+      <v-icon>dangerous</v-icon>
     </v-btn>
   </v-badge>
 </template>

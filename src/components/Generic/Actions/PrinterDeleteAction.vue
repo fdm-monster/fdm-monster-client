@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="ma-2" color="primary" fab small @click.prevent.stop="deletePrinter">
+  <v-btn class="ma-2" fab small @click.prevent.stop="deletePrinter">
     <v-icon>delete</v-icon>
   </v-btn>
 </template>

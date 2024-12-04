@@ -1,15 +1,7 @@
 <template>
   <v-tooltip top>
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        v-bind="attrs"
-        v-on="on"
-        class="ma-2"
-        color="primary"
-        fab
-        small
-        @click.c.capture.native.stop="syncPrinterName()"
-      >
+      <v-btn v-bind="attrs" v-on="on" fab small @click.c.capture.native.stop="syncPrinterName()">
         <v-icon>badge</v-icon>
       </v-btn>
     </template>
