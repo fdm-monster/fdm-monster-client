@@ -293,9 +293,9 @@ const controlDialog = useDialog(DialogName.PrinterControlDialog);
 const addOrUpdateDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const snackbar = useSnackbar();
 
-const { data: thumbnail } = useThumbnailQuery(props.printer?.id, settingsStore.thumbnailsEnabled);
-
 const printerId = computed(() => props.printer?.id);
+
+const { data: thumbnail } = useThumbnailQuery(printerId, settingsStore.thumbnailsEnabled);
 
 const isOnline = computed(() =>
   printerId.value ? printerStateStore.isApiResponding(printerId.value) : false
