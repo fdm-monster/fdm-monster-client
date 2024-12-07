@@ -3,6 +3,7 @@
 Fixes
 
 - Print grid: floor toggle would de-synchronize with store
+- Print grid: thumbnails query was disabled on page load, enabled value will now cause re-evaluation
 
 ## Client 04/12/2024 1.8.2
 
