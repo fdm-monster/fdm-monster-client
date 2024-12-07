@@ -8,15 +8,21 @@ import { IdType } from "@/utils/id.type";
 
 export interface State {
   floors: FloorDto[];
-  selectedFloor: FloorDto | null;
+  selectedFloorIndex: number;
 }
 
 export const useFloorStore = defineStore("Floors", {
   state: (): State => ({
     floors: [],
-    selectedFloor: null,
+    selectedFloorIndex: 0,
   }),
   getters: {
+    selectedFloor(state): FloorDto | null {
+      if (state.floors.length <= state.selectedFloorIndex) {
+        return null;
+      }
+      return state.floors[state.selectedFloorIndex];
+    },
     sortedFloors(state) {
       return state.floors.sort((f, f2) => f.floor - f2.floor);
     },
@@ -82,8 +88,8 @@ export const useFloorStore = defineStore("Floors", {
       if (!floors?.length) return;
       this.floors = floors.sort((f, f2) => f.floor - f2.floor);
       const floorId = this.selectedFloor?.id;
-      const foundFloor = this.floors.find((f) => f.id === floorId);
-      this.selectedFloor = !foundFloor ? this.floors[0] : foundFloor;
+      const foundFloorIndex = this.floors.findIndex((f) => f.id === floorId);
+      this.selectedFloorIndex = foundFloorIndex === -1 ? 0 : foundFloorIndex;
     },
     async deleteFloor(floorId: IdType) {
       await FloorService.deleteFloor(floorId);
@@ -119,13 +125,21 @@ export const useFloorStore = defineStore("Floors", {
     },
     async changeSelectedFloorByIndex(selectedPrinterFloorIndex: number) {
       if (!this.floors?.length) return;
-      if (this.floors.length <= selectedPrinterFloorIndex) return;
+      if (this.floors.length <= selectedPrinterFloorIndex) {
+        console.warn("Selected floor index exceeds floors array");
+        this.selectedFloorIndex = 0;
+        return;
+      }
 
       const newFloor = this.floors[selectedPrinterFloorIndex];
       // TODO throw warning?
-      if (!newFloor) return;
-      this.selectedFloor = newFloor;
-      return newFloor;
+      if (!newFloor) {
+        console.warn("Selected floor index did not exist in floors array");
+        this.selectedFloorIndex = 0;
+        return;
+      }
+
+      this.selectedFloorIndex = selectedPrinterFloorIndex;
     },
     async deletePrinterFromFloor({ floorId, printerId }: { floorId: IdType; printerId: IdType }) {
       const result = await FloorService.deletePrinterFromFloor(floorId, printerId);

@@ -4,6 +4,7 @@
       You have no printers. Click here to start!
     </v-btn>
 
+    <!-- Floor selection toggle group -->
     <v-btn-toggle :value="selectedFloorToggleIndex" mandatory @change="changeFloorIndex">
       <v-btn v-for="f in floors" :key="f.id" small>
         <v-icon>layers</v-icon>
@@ -71,7 +72,7 @@ const printerStateStore = usePrinterStateStore();
 const floorStore = useFloorStore();
 const gridStore = useGridStore();
 
-const selectedFloorToggleIndex = ref<number>(0);
+const selectedFloorToggleIndex = computed(() => floorStore.selectedFloorIndex);
 
 const floors = computed(() => {
   return floorStore.floors;
@@ -79,6 +80,5 @@ const floors = computed(() => {
 
 function changeFloorIndex(index: any) {
   floorStore.changeSelectedFloorByIndex(index);
-  selectedFloorToggleIndex.value = index;
 }
 </script>

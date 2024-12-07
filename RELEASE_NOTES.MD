@@ -1,5 +1,9 @@
 # Release notes
 
+Fixes
+
+- Print grid: floor toggle would de-synchronize with store
+
 ## Client 04/12/2024 1.8.2
 
 Fixes
