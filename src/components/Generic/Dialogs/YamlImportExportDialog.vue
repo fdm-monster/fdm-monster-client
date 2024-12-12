@@ -150,7 +150,7 @@ const uploadAndImportYamlFile = async () => {
     });
     closeDialog();
   } catch (e) {
-    errorMessage.value = "An error occurred uring import";
+    errorMessage.value = "An error occurred during import";
     errorDetailedMessage.value = (e as Error).message.toString();
     importFile.value = undefined;
   }
