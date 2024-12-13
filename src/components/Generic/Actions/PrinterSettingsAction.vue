@@ -1,7 +1,12 @@
 <template>
-  <v-btn fab small @click.c.capture.native.stop="openSettings()">
-    <v-icon>settings</v-icon>
-  </v-btn>
+  <v-tooltip top>
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn fab small @click.c.capture.native.stop="openSettings()" v-bind="attrs" v-on="on">
+        <v-icon>settings</v-icon>
+      </v-btn>
+    </template>
+    <template v-slot:default>Update printer settings</template>
+  </v-tooltip>
 </template>
 
 <script lang="ts">

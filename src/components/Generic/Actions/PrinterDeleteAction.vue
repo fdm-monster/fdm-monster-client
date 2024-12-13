@@ -1,7 +1,12 @@
 <template>
-  <v-btn class="ma-2" fab small @click.prevent.stop="deletePrinter">
-    <v-icon>delete</v-icon>
-  </v-btn>
+  <v-tooltip top>
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn class="ma-2" fab small @click.prevent.stop="deletePrinter" v-bind="attrs" v-on="on">
+        <v-icon>delete</v-icon>
+      </v-btn>
+    </template>
+    <template v-slot:default>Delete printer</template>
+  </v-tooltip>
 </template>
 
 <script lang="ts" setup>

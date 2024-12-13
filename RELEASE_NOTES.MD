@@ -1,7 +1,14 @@
 # Release notes
 
+## Client 13/12/2024 1.8.4
+
+Features
+
+- Printer list: add tooltips to printer list actions
+
 Fixes
 
+- Printer list - quick stop action: quick stop showed delete in alert, typo fixed
 - YAML dialog wouldn't reset error after re-opening
 
 ## Client 07/12/2024 1.8.3
@@ -50,7 +57,7 @@ Fixes
 Fixes
 
 - First-time setup: background was appearing above first-time-setup, not fixed and below
- 
+
 ## Client 14/11/2024 1.7.0
 
 Features
