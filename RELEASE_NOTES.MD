@@ -1,5 +1,9 @@
 # Release notes
 
+Fixes
+
+- YAML dialog wouldn't reset error after re-opening
+
 ## Client 07/12/2024 1.8.3
 
 Fixes
