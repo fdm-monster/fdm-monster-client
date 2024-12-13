@@ -127,7 +127,7 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <PrinterUrlAction :printer="item" />
-          <PrinterConnectionAction :printer="item" />
+          <PrinterConnectionAction :printer="item" v-if="item.printerType === 0" />
           <PrinterQuickStopAction :printer="item" />
           <SyncPrinterNameAction :printer="item" v-if="item.printerType === 0" />
           <PrinterDeleteAction :printer="item" />

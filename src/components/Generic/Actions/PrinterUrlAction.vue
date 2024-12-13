@@ -1,7 +1,19 @@
 <template>
-  <v-btn class="ma-2" fab small @click.c.capture.native.stop="openPrinterURL()">
-    <v-icon>directions</v-icon>
-  </v-btn>
+  <v-tooltip top>
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn
+        class="ma-2"
+        v-bind="attrs"
+        v-on="on"
+        fab
+        small
+        @click.c.capture.native.stop="openPrinterURL()"
+      >
+        <v-icon>directions</v-icon>
+      </v-btn>
+    </template>
+    <template v-slot:default>Visit printer service</template>
+  </v-tooltip>
 </template>
 
 <script lang="ts" setup>
