@@ -113,7 +113,12 @@ const onBeforeDialogOpened = async () => {
   exportGroups.value = featureStore.hasFeature("printerGroupsApi");
 };
 
-const onDialogOpened = async () => {};
+const onDialogOpened = async () => {
+  importFile.value = undefined;
+  errorMessage.value = "";
+  errorDetailedMessage.value = "";
+  notes.value = "";
+};
 
 const downloadExportYamlFile = async () => {
   if (exportFloorGrid.value) {
@@ -158,6 +163,9 @@ const uploadAndImportYamlFile = async () => {
 
 const closeDialog = () => {
   importFile.value = undefined;
+  errorMessage.value = "";
+  errorDetailedMessage.value = "";
+  notes.value = "";
   dialog.closeDialog();
 };
 </script>
