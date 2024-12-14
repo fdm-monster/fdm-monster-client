@@ -30,6 +30,9 @@
             v-for="index in totalCells"
             :key="`printer-${getX(index - 1)}-${getY(index - 1)}`"
             class="printer-cell"
+            :class="{
+              'printer-cell-large': largeTileMode,
+            }"
           >
             <PrinterGridTile
               :printer="getPrinter(getX(index - 1), getY(index - 1))"
@@ -123,6 +126,7 @@ const props = defineProps({
 const printerMatrix = computed(() => floorStore.gridSortedPrinters);
 const columns = computed(() => settingsStore.gridCols);
 const rows = computed(() => settingsStore.gridRows);
+const largeTileMode = computed(() => settingsStore.largeTiles);
 
 const totalCells = computed(() => rows.value * columns.value);
 const gridStyle = computed(() => ({
@@ -192,6 +196,10 @@ async function decrementGridCols() {
 }
 
 .printer-cell {
+  padding: 4px;
+}
+
+.printer-cell-large {
   padding: 8px;
 }
 
