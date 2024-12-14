@@ -41,7 +41,7 @@
             />
           </div>
         </div>
-        <!-- Columns -->
+        <!-- Columns increment/decrement -->
         <div
           v-if="gridStore.gridEditMode"
           class="d-flex flex-row justify-start"
@@ -66,7 +66,7 @@
           </v-btn>
         </div>
       </div>
-      <!-- Rows -->
+      <!-- Rows increment/decrement -->
       <div
         v-if="gridStore.gridEditMode"
         class="d-flex flex-column justify-start"

@@ -245,13 +245,6 @@
         <template v-slot:default="{ value }">
           <strong>
             {{ value?.toFixed(1) + "%" }}
-            <!--            {{-->
-            <!--              largeTilesEnabled-->
-            <!--                ? value-->
-            <!--                  ? value?.toFixed(1) + "%"-->
-            <!--                  : "&nbsp;"-->
-            <!--                : currentPrintingFilePath-->
-            <!--            }}-->
           </strong>
 
           <v-tooltip
