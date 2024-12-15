@@ -1,5 +1,7 @@
 # Release notes
 
+## Client 15/12/2024 1.8.5
+
 Features
 
 - Printer tile: re-implement compact tile, the opposite of large tile mode
