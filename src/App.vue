@@ -76,4 +76,10 @@ html {
   overflow-y: auto;
   background-color: #121212;
 }
+
+.v-tooltip__content {
+  transition-duration: 75ms !important;
+  background-color: #232323;
+  border: 1px solid white;
+}
 </style>
