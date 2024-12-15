@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="bug_report" title="Diagnostics" />
+    <SettingsToolbar :icon="page.icon" :title="page.title" />
 
     <v-list subheader three-line>
       <v-subheader
@@ -70,13 +70,16 @@ import { ServerPrivateService } from "@/backend/server-private.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { captureException } from "@sentry/vue";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 
+const page = settingsPage["diagnostics"];
 const snackBar = useSnackbar();
 const settingsStore = useSettingsStore();
 const hasAnonymousDiagnosticsToggleFeature = ref(false);
 const hasLogDumpFeature = ref(false);
 const hasLogClearFeature = ref(false);
 const sentryDiagnosticsEnabled = ref(false);
+
 onMounted(async () => {
   const features = await AppService.getFeatures();
   hasAnonymousDiagnosticsToggleFeature.value =

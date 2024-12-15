@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="house_siding" title="Floors" />
+    <SettingsToolbar :icon="page.icon" :title="page.title" />
 
     <v-list subheader three-line>
       <v-subheader>Floors</v-subheader>
@@ -129,6 +129,7 @@ import { useFloorStore } from "@/store/floor.store";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { useDialog } from "@/shared/dialog.composable";
+import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 
 interface Data {
   editedFloorName: string;
@@ -141,20 +142,18 @@ export default defineComponent({
   components: { SettingsToolbar },
   setup: () => {
     return {
+      page: settingsPage["floors"],
       printersStore: usePrinterStore(),
       floorStore: useFloorStore(),
       addOrUpdateFloorDialog: useDialog(DialogName.AddOrUpdateFloorDialog),
       snackbar: useSnackbar(),
     };
   },
-  props: {},
   data: (): Data => ({
     selectedItem: 0,
     editedFloorName: "",
     editedFloorNumber: 0,
   }),
-  created() {},
-  mounted() {},
   computed: {
     floors() {
       return this.floorStore.floors;
@@ -220,6 +219,5 @@ export default defineComponent({
       this.snackbar.info("Printer removed from floor");
     },
   },
-  watch: {},
 });
 </script>

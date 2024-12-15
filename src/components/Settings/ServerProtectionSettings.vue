@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="security" title="Server Protection" />
+    <SettingsToolbar :icon="page.icon" :title="page.title" />
 
     <v-list subheader three-line>
       <v-list-item>
@@ -122,10 +122,13 @@ import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "vue-router/composables";
 import { RouteNames } from "@/router/route-names";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 
 const router = useRouter();
 const snackbar = useSnackbar();
 const authStore = useAuthStore();
+
+const page = settingsPage["serverProtection"];
 
 const ipAddress = ref<string>("");
 

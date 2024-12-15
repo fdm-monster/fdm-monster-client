@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="group" title="Users" style="width: 100%">
+    <SettingsToolbar :icon="page.icon" :title="page.title" style="width: 100%">
       <v-spacer />
       <v-btn
         :disabled="!profile?.isRootUser"
@@ -123,7 +123,9 @@ import { useSnackbar } from "@/shared/snackbar.composable";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { useDialog } from "@/shared/dialog.composable";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
+import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 
+const page = settingsPage["users"];
 const snackbar = useSnackbar();
 const loading = ref<boolean>(false);
 const profile = ref<User>();

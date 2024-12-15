@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="upgrade" title="Software Upgrade" />
+    <SettingsToolbar :icon="page.icon" :title="page.title" />
 
     <v-list subheader three-line>
       <v-list-item-content>
@@ -129,7 +129,9 @@ import { IRelease } from "@/models/server/client-releases.model";
 import { compare, minor } from "semver";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { useFeatureStore } from "@/store/features.store";
+import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 
+const page = settingsPage["softwareUpgrade"];
 const errorMessage = ref("");
 const loading = ref(true);
 const rateLimitExceeded = ref(false);

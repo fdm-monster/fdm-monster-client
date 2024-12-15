@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <SettingsToolbar icon="account_circle" title="Account" />
+    <SettingsToolbar :icon="page.icon" :title="page.title" />
 
     <v-list subheader three-line v-if="!loginEnabled">
       <v-list-item-content>
@@ -96,7 +96,9 @@ import { routeToLogin } from "@/router/utils";
 import { useRouter } from "vue-router/composables";
 import { useSettingsStore } from "@/store/settings.store";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
+import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 
+const page = settingsPage["account"];
 const settingsStore = useSettingsStore();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
