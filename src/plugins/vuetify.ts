@@ -14,10 +14,6 @@ VTooltip.mixin({
       type: Number,
       default: 0, // Set your global default here
     },
-    transition: {
-      type: String,
-      default: "",
-    },
   },
 });
 
