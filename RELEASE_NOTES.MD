@@ -1,5 +1,9 @@
 # Release notes
 
+Fixes
+
+- Tooltip: improve tooltip legibility
+
 ## Client 15/12/2024 1.8.5
 
 Features

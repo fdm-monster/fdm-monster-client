@@ -1,9 +1,25 @@
 import Vue from "vue";
-import Vuetify from "vuetify/lib/framework";
+import Vuetify from "vuetify/lib";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 import "@fontsource/roboto";
+import { VuetifyPreset } from "vuetify";
+import { VTooltip } from "vuetify/lib/components";
 
 Vue.use(Vuetify);
+
+VTooltip.mixin({
+  extends: VTooltip,
+  props: {
+    openDelay: {
+      type: Number,
+      default: 0, // Set your global default here
+    },
+    transition: {
+      type: String,
+      default: "",
+    },
+  },
+});
 
 export default new Vuetify({
   theme: {
@@ -36,4 +52,4 @@ export default new Vuetify({
     iconfont: "md",
     values: {},
   },
-});
+} as VuetifyPreset);
