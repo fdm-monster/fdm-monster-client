@@ -1,5 +1,9 @@
 # Release notes
 
+Features
+
+- Settings: redesign settings layout 
+
 Fixes
 
 - Tooltip: improve tooltip legibility
