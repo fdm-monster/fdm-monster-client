@@ -16,19 +16,27 @@
     </v-subheader>
     <v-list-item>
       <v-list-item-content>
-        <v-row>
-          <v-col cols="3">
+        <v-row v-if="usecols">
+          <v-col cols="4">
             <slot></slot>
           </v-col>
         </v-row>
+        <slot v-else></slot>
       </v-list-item-content>
     </v-list-item>
   </v-list>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  title: string;
-  tooltip?: string;
-}>();
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  tooltip: String,
+  usecols: {
+    type: Boolean,
+    default: true,
+  },
+});
 </script>

@@ -2,115 +2,82 @@
   <v-card>
     <SettingsToolbar :icon="page.icon" :title="page.title" />
 
-    <v-list subheader three-line>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Login Required</v-list-item-title>
+    <v-card-text>
+      <SettingSection title="Login and registration" :usecols="false">
+        <v-row>
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-checkbox v-model="loginRequired" label="Require Login" @change="setLoginRequired" />
+          </v-col>
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-checkbox
+              v-model="registrationEnabled"
+              label="Enable Registration"
+              @change="setRegistrationEnabled"
+            />
+          </v-col>
+        </v-row>
+      </SettingSection>
 
-          <v-list-item-subtitle>
-            <v-row>
-              <v-col cols="12" md="2">
-                <v-checkbox v-model="loginRequired" label="Require Login"></v-checkbox>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-btn color="primary" @click="setLoginRequired()">
-                  save login required setting
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
+      <v-divider />
 
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Registration Enabled</v-list-item-title>
-          <v-list-item-subtitle>
-            <v-row>
-              <v-col cols="12" md="2">
-                <v-checkbox v-model="registrationEnabled" label="Enable Registration"></v-checkbox>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-btn color="primary" @click="setRegistrationEnabled()">
-                  save registration enabled setting
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
+      <SettingSection title="Login expiry settings (advanced)" :usecols="false">
+        <v-alert color="secondary" class="mb-6">
+          <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong expiry could make you lose
+          access to the server!
+        </v-alert>
 
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Login Expiry Settings (advanced)</v-list-item-title>
-          <v-list-item-content>
-            <v-list-item-subtitle>
-              <v-row>
-                <v-col cols="12" md="2">
-                  <v-text-field
-                    v-model="jwtExpiresIn"
-                    :rules="[(val) => !!val && val >= 2 && val <= 120]"
-                    label="JWT Expiry (minutes)"
-                  >
-                  </v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12" md="2">
-                  <v-checkbox
-                    v-model="refreshTokenAttemptsEnabled"
-                    @change="onRefreshTokenEnabledChange()"
-                    label="Enable Refresh Token Attempts"
-                  ></v-checkbox>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12" md="2">
-                  <v-text-field
-                    type="number"
-                    v-model="refreshTokenAttempts"
-                    :disabled="!refreshTokenAttemptsEnabled"
-                    :rules="[(val) => !!val && val >= 50]"
-                    label="Refresh Token Attempts (disabled: -1)"
-                  >
-                  </v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12" md="2">
-                  <v-text-field
-                    v-model="refreshTokenExpiry"
-                    :rules="[(val) => !!val && val >= 1 && val <= 30]"
-                    label="Refresh Token Expiry (days)"
-                  >
-                  </v-text-field>
-                </v-col>
-              </v-row>
+        <v-row>
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-text-field
+              v-model="jwtExpiresIn"
+              :rules="[(val) => !!val && val >= 120 && val <= 120 * 60]"
+              label="JWT Expiry (seconds)"
+            />
+          </v-col>
+        </v-row>
 
-              <v-alert color="secondary">
-                <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong expiry could make you
-                lose access to the server or make your user experience highly degraded!
-              </v-alert>
+        <v-row>
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-checkbox
+              v-model="refreshTokenAttemptsEnabled"
+              @change="onRefreshTokenEnabledChange()"
+              label="Enable Refresh Token Attempts"
+            ></v-checkbox>
+          </v-col>
 
-              <v-row>
-                <v-col>
-                  <v-btn color="primary" @click="saveLoginExpirySettings()">
-                    save login expiry settings
-                  </v-btn>
-                  <v-btn color="default" @click="resetLoginExpirySettingsToDefault()"
-                    >reset to default</v-btn
-                  >
-                </v-col>
-              </v-row>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-text-field
+              type="number"
+              v-model="refreshTokenAttempts"
+              :disabled="!refreshTokenAttemptsEnabled"
+              :rules="[(val) => !!val && val >= 50]"
+              label="Refresh Token Attempts (disabled: -1)"
+            />
+          </v-col>
+
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-text-field
+              v-model="refreshTokenExpiry"
+              :rules="[(val) => !!val && val >= 1 && val <= 30]"
+              label="Refresh Token Expiry (days)"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-btn color="primary" @click="saveLoginExpirySettings()">
+              save login expiry settings
+            </v-btn>
+          </v-col>
+          <v-col cols="4" sm="12" lg="3" xl="2">
+            <v-btn color="default" @click="resetLoginExpirySettingsToDefault()">
+              Reset to default
+            </v-btn>
+          </v-col>
+        </v-row>
+      </SettingSection>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -123,6 +90,7 @@ import { useRouter } from "vue-router/composables";
 import { RouteNames } from "@/router/route-names";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { settingsPage } from "@/components/Settings/Shared/setting.constants";
+import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 
 const router = useRouter();
 const snackbar = useSnackbar();
@@ -130,12 +98,10 @@ const authStore = useAuthStore();
 
 const page = settingsPage["serverProtection"];
 
-const ipAddress = ref<string>("");
-
 const loginRequired = ref<boolean>(false);
 const registrationEnabled = ref<boolean>(false);
 
-const jwtExpiresIn = ref<number>(3200);
+const jwtExpiresIn = ref<number>();
 const refreshTokenAttemptsEnabled = ref<boolean>(false);
 const refreshTokenAttempts = ref<number>(-1);
 const refreshTokenExpiry = ref<number>(14);
@@ -145,10 +111,8 @@ async function loadSettings() {
   loginRequired.value = settings.server.loginRequired;
   registrationEnabled.value = settings.server.registration;
 
-  ipAddress.value = settings.connection?.clientIp ?? "127.0.0.1";
-
   const sensitiveSettings = await SettingsService.getSettingsSensitive();
-  jwtExpiresIn.value = sensitiveSettings.credentials.jwtExpiresIn / 60;
+  jwtExpiresIn.value = sensitiveSettings.credentials.jwtExpiresIn;
   refreshTokenAttemptsEnabled.value = sensitiveSettings.credentials.refreshTokenAttempts !== -1;
   refreshTokenAttempts.value = sensitiveSettings.credentials.refreshTokenAttempts;
   refreshTokenExpiry.value = sensitiveSettings.credentials.refreshTokenExpiry / 24 / 3600;
@@ -167,6 +131,8 @@ function onRefreshTokenEnabledChange() {
 async function setLoginRequired() {
   const loginRequiredVal = loginRequired.value;
   if (!loginRequiredVal && !confirm("Disabling login will expose your server. Continue?")) {
+    return;
+  } else if (!confirm("You will be redirected to login when enabling login. Continue?")) {
     return;
   }
 
@@ -190,7 +156,7 @@ async function setRegistrationEnabled() {
 }
 
 async function resetLoginExpirySettingsToDefault() {
-  jwtExpiresIn.value = 120;
+  jwtExpiresIn.value = 60 * 60;
   refreshTokenAttemptsEnabled.value = false;
   refreshTokenAttempts.value = -1;
   refreshTokenExpiry.value = 14;
@@ -198,8 +164,8 @@ async function resetLoginExpirySettingsToDefault() {
   snackbar.info("Login expiry settings reset to default");
 }
 
-async function saveLoginExpirySettings(showSnackbar = true) {
-  if (jwtExpiresIn.value < 2 || jwtExpiresIn.value > 120) {
+async function saveLoginExpirySettings() {
+  if (!jwtExpiresIn.value || jwtExpiresIn.value < 120 || jwtExpiresIn.value > 120 * 60) {
     throw new Error("JWT Expiry must be between 2 and 120 minutes");
   }
   if (
@@ -213,7 +179,7 @@ async function saveLoginExpirySettings(showSnackbar = true) {
   }
 
   await SettingsService.updateCredentialSettings(
-    jwtExpiresIn.value * 60,
+    jwtExpiresIn.value,
     refreshTokenAttempts.value,
     refreshTokenExpiry.value * 24 * 3600
   );

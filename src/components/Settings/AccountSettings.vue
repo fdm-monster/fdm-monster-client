@@ -2,87 +2,62 @@
   <v-card>
     <SettingsToolbar :icon="page.icon" :title="page.title" />
 
-    <v-list subheader three-line v-if="!loginEnabled">
-      <v-list-item-content>
-        <v-list-item>
-          <v-list-item-content>
-            <v-alert color="primary">
-              Login is currently disabled. To adjust your username and password, please enable that
-              setting at the Server Protection settings page. Then log in and visit this page.
-            </v-alert>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-content>
-    </v-list>
-    <v-list subheader three-line>
-      <v-list-item-content>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title> Username</v-list-item-title>
-            <v-list-item-action-text>
-              <v-text-field
-                v-model="formData.username"
-                :disabled="!loginEnabled"
-                label="Fill in your username"
-              />
-            </v-list-item-action-text>
-          </v-list-item-content>
-        </v-list-item>
-        <div class="ml-4 mb-4">
-          <v-btn :disabled="!loginEnabled" color="primary" @click="changeUsername()"
-            >Change username
-          </v-btn>
-        </div>
-        <v-divider />
-        <br />
+    <v-card-text>
+      <v-alert color="secondary" v-if="!loginEnabled">
+        Login is currently disabled. To adjust your username and password, please enable that
+        setting at the Server Protection settings page. Then log in and visit this page.
+      </v-alert>
 
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title> Old Password</v-list-item-title>
-            <v-list-item-action-text>
-              <v-text-field
-                v-model="formData.oldPassword"
-                :disabled="!loginEnabled"
-                placeholder="Old password"
-                type="password"
-              />
-            </v-list-item-action-text>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title> New Password</v-list-item-title>
-            <v-list-item-action-text>
-              <v-text-field
-                v-model="formData.newPassword"
-                :disabled="!loginEnabled"
-                placeholder="New password"
-                type="password"
-              />
-            </v-list-item-action-text>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title> Repeat New Password</v-list-item-title>
-            <v-list-item-action-text>
-              <v-text-field
-                v-model="formData.repeatPassword"
-                :disabled="!loginEnabled"
-                placeholder="Repeat new password"
-                type="password"
-              />
-            </v-list-item-action-text>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-content>
-    </v-list>
-    <div class="ml-4 mb-4">
-      <v-btn :disabled="!loginEnabled" color="primary" @click="changePassword()"
-        >Change password
-      </v-btn>
-    </div>
-    <v-divider />
+      <SettingSection
+        title="Username"
+        :class="{
+          'login-disabled': !loginEnabled,
+        }"
+      >
+        <v-text-field
+          v-model="formData.username"
+          :disabled="!loginEnabled"
+          label="Fill in your username"
+        />
+        <v-btn :disabled="!loginEnabled" color="primary" @click="changeUsername()">
+          Change username
+        </v-btn>
+      </SettingSection>
+
+      <v-divider />
+
+      <SettingSection
+        title="Change Password"
+        :class="{
+          'login-disabled': !loginEnabled,
+        }"
+      >
+        <v-text-field
+          v-model="formData.oldPassword"
+          :disabled="!loginEnabled"
+          placeholder="Old password"
+          type="password"
+        />
+
+        <v-text-field
+          v-model="formData.newPassword"
+          :disabled="!loginEnabled"
+          placeholder="New password"
+          type="password"
+        />
+
+        <v-text-field
+          v-model="formData.repeatPassword"
+          :disabled="!loginEnabled"
+          placeholder="Repeat new password"
+          type="password"
+        />
+
+        <v-btn :disabled="!loginEnabled" color="primary" @click="changePassword()">
+          Change password
+        </v-btn>
+      </SettingSection>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -97,6 +72,7 @@ import { useRouter } from "vue-router/composables";
 import { useSettingsStore } from "@/store/settings.store";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { settingsPage } from "@/components/Settings/Shared/setting.constants";
+import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 
 const page = settingsPage["account"];
 const settingsStore = useSettingsStore();
@@ -156,3 +132,9 @@ async function changePassword() {
   await routeToLogin(router);
 }
 </script>
+
+<style>
+.login-disabled {
+  opacity: 0.5;
+}
+</style>

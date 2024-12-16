@@ -2,128 +2,138 @@
   <v-card>
     <SettingsToolbar :icon="page.icon" :title="page.title" />
 
-    <v-list subheader>
-      <v-subheader>Emergency Commands to rectify problematic situations</v-subheader>
+    <v-card-text>
+      <v-list subheader>
+        <v-subheader>Emergency Commands to rectify problematic situations</v-subheader>
 
-      <!-- Server Commands -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Server commands</v-list-item-title>
-          <v-list-item-subtitle>
-            <span>Restart the server to resolve any active issues</span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-btn :disabled="isLoading" color="primary" @click="restartServer" class="ml-4">
-          Restart server
+        <!-- Server Commands -->
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>Server commands</v-list-item-title>
+            <v-list-item-subtitle>
+              <span>Restart the server to resolve any active issues</span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-btn :disabled="isLoading" color="primary" @click="restartServer" class="ml-4">
+            Restart server
+          </v-btn>
+          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+        </v-list-item>
+
+        <!-- Batch Disabling -->
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>Batch disabling</v-list-item-title>
+            <v-list-item-subtitle>
+              <span>Disable all printers at once without affecting ongoing prints</span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-btn
+            :disabled="isLoading || noPrintersOrAllDisabled"
+            color="primary"
+            @click="batchToggleEnabled(false)"
+            class="ml-4"
+          >
+            Batch disable
+          </v-btn>
+          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+          <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
+        </v-list-item>
+
+        <!-- Batch Enabling -->
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>Batch enabling</v-list-item-title>
+            <v-list-item-subtitle>
+              <span>Enable all printers, excluding those in maintenance mode</span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-btn
+            :disabled="isLoading || noPrintersOrAllEnabled"
+            color="primary"
+            @click="batchToggleEnabled(true)"
+            class="ml-4"
+          >
+            Batch enable
+          </v-btn>
+          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+          <v-icon
+            v-if="noPrintersOrAllEnabled"
+            color="warning"
+            class="ml-2"
+            v-tooltip.bottom="'No printers available'"
+            >warning</v-icon
+          >
+        </v-list-item>
+
+        <!-- USB Connect -->
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>Batch USB connect</v-list-item-title>
+            <v-list-item-subtitle>
+              <span>Connect all available USB devices</span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-btn
+            :disabled="!hasConnectUsbFeature || isLoading || noPrintersOrAllDisabled"
+            color="primary"
+            @click="connectUSBs"
+            class="ml-4"
+          >
+            <v-icon class="mr-2">usb</v-icon> Connect USBs
+          </v-btn>
+          <v-alert v-if="!hasConnectUsbFeature" class="ml-4 mt-2" type="warning" color="orange">
+            <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server
+            update.
+          </v-alert>
+          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+        </v-list-item>
+
+        <!-- Socket Connect -->
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>Batch socket connect</v-list-item-title>
+            <v-list-item-subtitle>
+              <span>Connect all sockets in a batch process</span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-btn
+            :disabled="!hasConnectSocketFeature || isLoading || noPrintersOrAllDisabled"
+            color="primary"
+            @click="connectSockets"
+            class="ml-4"
+          >
+            <v-icon class="mr-2">hub</v-icon> Connect Sockets
+          </v-btn>
+          <v-alert v-if="!hasConnectSocketFeature" class="ml-4 mt-2" type="warning" color="orange">
+            <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server
+            update.
+          </v-alert>
+          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <!-- Response Time Measurement -->
+      <SettingSection title="Test all printer network response times" :usecols="false">
+        <v-btn color="primary" @click="clickFetchNameState" :loading="isLoading">
+          Measure network response times
         </v-btn>
-        <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-      </v-list-item>
+      </SettingSection>
 
-      <!-- Batch Disabling -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Batch disabling</v-list-item-title>
-          <v-list-item-subtitle>
-            <span>Disable all printers at once without affecting ongoing prints</span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-btn
-          :disabled="isLoading || noPrintersOrAllDisabled"
-          color="primary"
-          @click="batchToggleEnabled(false)"
-          class="ml-4"
-        >
-          Batch disable
-        </v-btn>
+      <div class="ml-7 mt-3">
+        <Bar
+          v-if="namesFetched"
+          style="background-color: #272727"
+          :data="chartConfig"
+          :options="chartOptions"
+          height="100"
+        />
+        <span v-else>A graph will be shown, presenting the times in milliseconds (ms)</span>
         <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-        <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
-      </v-list-item>
-
-      <!-- Batch Enabling -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Batch enabling</v-list-item-title>
-          <v-list-item-subtitle>
-            <span>Enable all printers, excluding those in maintenance mode</span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-btn
-          :disabled="isLoading || noPrintersOrAllEnabled"
-          color="primary"
-          @click="batchToggleEnabled(true)"
-          class="ml-4"
-        >
-          Batch enable
-        </v-btn>
-        <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-        <v-icon
-          v-if="noPrintersOrAllEnabled"
-          color="warning"
-          class="ml-2"
-          v-tooltip.bottom="'No printers available'"
-          >warning</v-icon
-        >
-      </v-list-item>
-
-      <!-- USB Connect -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Batch USB connect</v-list-item-title>
-          <v-list-item-subtitle>
-            <span>Connect all available USB devices</span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-btn
-          :disabled="!hasConnectUsbFeature || isLoading || noPrintersOrAllDisabled"
-          color="primary"
-          @click="connectUSBs"
-          class="ml-4"
-        >
-          <v-icon class="mr-2">usb</v-icon> Connect USBs
-        </v-btn>
-        <v-alert v-if="!hasConnectUsbFeature" class="ml-4 mt-2" type="warning" color="orange">
-          <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server update.
-        </v-alert>
-        <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-      </v-list-item>
-
-      <!-- Socket Connect -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Batch socket connect</v-list-item-title>
-          <v-list-item-subtitle>
-            <span>Connect all sockets in a batch process</span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        <v-btn
-          :disabled="!hasConnectSocketFeature || isLoading || noPrintersOrAllDisabled"
-          color="primary"
-          @click="connectSockets"
-          class="ml-4"
-        >
-          <v-icon class="mr-2">hub</v-icon> Connect Sockets
-        </v-btn>
-        <v-alert v-if="!hasConnectSocketFeature" class="ml-4 mt-2" type="warning" color="orange">
-          <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server update.
-        </v-alert>
-        <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-      </v-list-item>
-    </v-list>
-
-    <!-- Response Time Measurement -->
-    <v-divider></v-divider>
-    <v-card-actions class="mt-3">
-      <v-alert border="left" type="info" color="blue"> Test all OctoPrint response times </v-alert>
-      <v-btn color="primary" @click="clickFetchNameState" :loading="isLoading" class="ml-4">
-        Measure response times
-      </v-btn>
-      <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-    </v-card-actions>
-    <div class="ml-7 mt-3">
-      <span v-if="namesFetched"> Response times: </span>
-      <Bar v-if="namesFetched" :data="chartConfig" :options="chartOptions" height="40" />
-      <span v-else>A graph will be shown, presenting the times in milliseconds (ms)</span>
-    </div>
+      </div>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -150,6 +160,7 @@ import { OctoPrintSettingsDto } from "@/backend/dto/octoprint-settings.dto";
 import { sleep } from "@/utils/time.utils";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { settingsPage } from "@/components/Settings/Shared/setting.constants";
+import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -177,9 +188,9 @@ const chartConfig = ref<ChartData>({
   labels: [],
   datasets: [
     {
-      label: "OctoPrint Settings response times (ms)",
+      label: "Response times (ms)",
       data: [],
-      borderColor: "#FF6384",
+      borderColor: "var(--v-primary-base)",
       backgroundColor: "#ffffff",
     },
   ],
@@ -233,7 +244,7 @@ async function clickFetchNameState() {
       }));
 
     const times = printerSettingsBatch.map((n) => n.time);
-    const labels = printerSettingsBatch.map((n) => n.value?.appearance?.name);
+    const labels = printerSettingsBatch.map((n) => n.value?.appearance?.name ?? "?");
     responseTimesAvg.value = times.reduce((a: number, b: number) => a + b, 0) / times.length;
     responseTimesMin.value = Math.min(...times);
     responseTimesMax.value = Math.max(...times);
@@ -241,15 +252,13 @@ async function clickFetchNameState() {
       labels,
       datasets: [
         {
-          label: "OctoPrint Settings response times (ms)",
+          label: "Settings response times (ms)",
           data: times,
-          borderColor: "#FF6384",
+          borderColor: "var(--v-primary-base)",
           backgroundColor: "#ffffff",
         },
       ],
     };
-
-    await sleep(500);
 
     namesFetched.value = true;
     fetchedNames.value = names;
