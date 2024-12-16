@@ -5,7 +5,7 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="text-h6">Settings</v-list-item-title>
-            <v-list-item-subtitle>Adjust your Fdm Monster</v-list-item-subtitle>
+            <v-list-item-subtitle>Adjust your FDM Monster</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
 
@@ -40,58 +40,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 
-const items = ref([
-  {
-    title: "Grid",
-    icon: "grid_on",
-    path: "/settings/grid",
-    divider: false,
-  },
-  {
-    title: "Floors",
-    icon: "house_siding",
-    path: "/settings/floors",
-    divider: true,
-  },
-  { title: "OctoPrint", icon: "image", path: "/settings/octoprint", divider: false },
-
-  {
-    title: "Emergency Commands",
-    icon: "warning",
-    path: "/settings/emergency-commands",
-    divider: true,
-  },
-  {
-    title: "Users",
-    icon: "group",
-    path: "/settings/user-management",
-    divider: false,
-  },
-  {
-    title: "Account",
-    icon: "account_circle",
-    path: "/settings/account",
-    divider: false,
-  },
-  {
-    title: "Server Protection",
-    icon: "security",
-    path: "/settings/server-protection",
-    divider: true,
-  },
-  {
-    title: "Software Upgrade",
-    icon: "upgrade",
-    path: "/settings/software-upgrade",
-    divider: false,
-  },
-  { title: "Diagnostics", icon: "bug_report", path: "/settings/diagnostics", divider: false },
-  {
-    title: "Experimental",
-    icon: "settings_applications",
-    path: "/settings/experimental",
-    divider: false,
-  },
-]);
+const items = ref(Object.values(settingsPage));
 </script>
