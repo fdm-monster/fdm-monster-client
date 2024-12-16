@@ -5,7 +5,7 @@
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="text-h6">Settings</v-list-item-title>
-            <v-list-item-subtitle>Adjust your Fdm Monster</v-list-item-subtitle>
+            <v-list-item-subtitle>Adjust your FDM Monster</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
 

@@ -10,21 +10,26 @@
           tooltip="Automatically cleanup old files to ensure the SD card has enough space."
         >
           <v-checkbox
+            class="mb-3"
+            @change="setFileCleanSettings"
             v-model="fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
             label="Remove old file before upload"
           />
+
           <v-text-field
+            @change="setFileCleanSettings"
             v-model="fileHandlingSettings.autoRemoveOldFilesCriteriumDays"
             :disabled="!fileHandlingSettings.autoRemoveOldFilesBeforeUpload"
             label="Amount of days to keep files"
             min="0"
-            outlined
             type="number"
           />
+
           <v-checkbox
+            @change="setFileCleanSettings"
             v-model="fileHandlingSettings.autoRemoveOldFilesAtBoot"
             label="Remove old files when (re)booting the server"
-          ></v-checkbox>
+          />
 
           <v-progress-circular
             v-if="loading.fileCleanSettings"
@@ -43,10 +48,10 @@
           tooltip="Set the server connection timeout in milliseconds."
         >
           <v-text-field
+            @change="updateTimeoutSettings"
             v-model="settingsStore.settings.timeout.apiTimeout"
             label="Connection Timeout"
             min="0"
-            outlined
             type="number"
           />
 
@@ -68,6 +73,7 @@
           <v-btn
             :disabled="noPrintersOrAllDisabled || loading.purgeFiles"
             color="primary"
+            class="mb-2"
             @click="purgeFiles()"
           >
             Purge File References
@@ -91,6 +97,7 @@
           <v-btn
             :disabled="noPrintersOrAllDisabled || loading.bulkDisableGCodeAnalysis"
             color="primary"
+            class="mb-2"
             @click="bulkDisableGCodeAnalysis()"
           >
             Bulk Disable GCode Analysis
