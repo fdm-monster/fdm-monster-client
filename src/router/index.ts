@@ -6,7 +6,7 @@ import AboutHelp from "../components/AboutHelp/AboutView.vue";
 import PrintStatisticsView from "@/components/PrintStatistics/PrintStatisticsView.vue";
 import OctoPrintSettings from "@/components/Settings/OctoPrintSettings.vue";
 import EmergencyCommands from "../components/Settings/EmergencyCommands.vue";
-import UserManagementSettings from "@/components/Settings/UsersSettings.vue";
+import UsersSettings from "@/components/Settings/UsersSettings.vue";
 import FloorSettings from "@/components/Settings/FloorSettings.vue";
 import AccountSettings from "../components/Settings/AccountSettings.vue";
 import GridSettings from "../components/Settings/GridSettings.vue";
@@ -99,7 +99,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "user-management",
         meta: NeedsAuth,
-        component: UserManagementSettings,
+        component: UsersSettings,
       },
       {
         path: "octoprint",
