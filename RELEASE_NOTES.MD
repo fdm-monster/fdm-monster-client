@@ -1,5 +1,7 @@
 # Release notes
 
+## Client 23/12/2024 1.8.6
+
 Features
 
 - Settings: redesign settings layout 
