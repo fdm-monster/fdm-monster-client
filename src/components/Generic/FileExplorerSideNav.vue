@@ -277,7 +277,7 @@
             link
             v-bind="attrs"
             v-on="on"
-            @click.prevent.stop="clickClearFiles()"
+            @click.prevent.stop="clickDeleteAllFiles()"
           >
             <v-list-item-avatar>
               <v-icon>delete</v-icon>
@@ -681,10 +681,14 @@ async function clickResumePrint() {
   await PrinterJobService.resumePrintJob(printerId.value);
 }
 
-async function clickClearFiles() {
+async function clickDeleteAllFiles() {
   if (!printerId.value) return;
+  if (!confirm("Are you sure to delete all files for this printer?")) {
+    return;
+  }
+
   loading.value = true;
-  await printersStore.clearPrinterFiles(printerId.value);
+  await printersStore.deletePrinterFiles(printerId.value);
   loading.value = false;
   shownFileCache.value = printersStore.printerFiles(printerId.value);
 }
