@@ -145,7 +145,7 @@ export const usePrinterStore = defineStore("Printers", {
         console.warn("Printer was not purged as it did not occur in state", printerId);
       }
     },
-    async clearPrinterFiles(printerId: IdType) {
+    async deletePrinterFiles(printerId: IdType) {
       if (!printerId) {
         throw new Error("No printerId was provided");
       }
