@@ -1,5 +1,9 @@
 # Release notes
 
+Fixes
+
+- Printer tile: clicking on an empty tile should not enable grid mode 
+
 ## Client 23/12/2024 1.8.6
 
 Features

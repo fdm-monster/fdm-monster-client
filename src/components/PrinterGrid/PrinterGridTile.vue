@@ -454,7 +454,6 @@ const clickConnectUsb = async () => {
 
 const selectOrClearPrinterPosition = async () => {
   if (!props.printer || !printerId.value) {
-    gridStore.gridEditMode = true;
     return;
   }
 
@@ -464,6 +463,7 @@ const selectOrClearPrinterPosition = async () => {
     await FloorService.deletePrinterFromFloor(floorId, printerId.value);
     return;
   }
+
   printerStore.toggleSelectedPrinter(props.printer);
 };
 </script>
@@ -506,6 +506,7 @@ const selectOrClearPrinterPosition = async () => {
 
 .tile-no-printer:hover {
   background-color: #2a2a2a;
+  cursor: not-allowed;
 }
 
 .plus-hover-icon {
