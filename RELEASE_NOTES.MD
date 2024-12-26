@@ -1,5 +1,9 @@
 # Release notes
 
+Chores
+
+- Adjust server version api response (no more isPm2 or isNodemon flags)
+
 Fixes
 
 - Delete files on printer details (sidenav) should be protected by a confirmation dialog. 
