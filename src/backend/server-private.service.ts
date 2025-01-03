@@ -5,12 +5,6 @@ import { downloadFileByBlob } from "@/utils/download-file.util";
 import { getHttpClient } from "@/shared/http-client";
 
 export class ServerPrivateService extends BaseService {
-  public static async restartServer() {
-    const path = ServerApi.serverRestartCommandRoute;
-
-    return await this.post(path);
-  }
-
   public static async downloadYamlExport(input: ExportYamlModel) {
     const client = await getHttpClient();
     const response = await client.request<any>({
