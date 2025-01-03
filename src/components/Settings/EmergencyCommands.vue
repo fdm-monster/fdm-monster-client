@@ -6,20 +6,6 @@
       <v-list subheader>
         <v-subheader>Emergency Commands to rectify problematic situations</v-subheader>
 
-        <!-- Server Commands -->
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title>Server commands</v-list-item-title>
-            <v-list-item-subtitle>
-              <span>Restart the server to resolve any active issues</span>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-          <v-btn :disabled="isLoading" color="primary" @click="restartServer" class="ml-4">
-            Restart server
-          </v-btn>
-          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-        </v-list-item>
-
         <!-- Batch Disabling -->
         <v-list-item>
           <v-list-item-content>
@@ -157,7 +143,6 @@ import {
 import { Bar } from "vue-chartjs";
 import { IdType } from "@/utils/id.type";
 import { OctoPrintSettingsDto } from "@/backend/dto/octoprint-settings.dto";
-import { sleep } from "@/utils/time.utils";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
 import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
@@ -262,16 +247,6 @@ async function clickFetchNameState() {
 
     namesFetched.value = true;
     fetchedNames.value = names;
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-async function restartServer() {
-  isLoading.value = true;
-  try {
-    await ServerPrivateService.restartServer();
-    isLoading.value = false;
   } finally {
     isLoading.value = false;
   }

@@ -7,6 +7,7 @@ Chores
 Fixes
 
 - Delete files on printer details (sidenav) should be protected by a confirmation dialog. 
+- Emergency commands: server restart does not work - broken button removed
 
 ## Client 25/12/2024 1.8.7
 
