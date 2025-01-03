@@ -1,5 +1,7 @@
 # Release notes
 
+## Client 03/01/2025 1.8.8
+
 Chores
 
 - Adjust server version api response (no more isPm2 or isNodemon flags)
