@@ -1496,7 +1496,7 @@ __metadata:
     prettier: "npm:2.8.8"
     register-service-worker: "npm:1.7.2"
     rimraf: "npm:6.0.1"
-    sass: "npm:1.83.1"
+    sass: "npm:1.83.2"
     sass-loader: "npm:16.0.4"
     semver: "npm:7.6.3"
     socket.io-client: "npm:4.8.1"
@@ -13371,9 +13371,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.83.1":
-  version: 1.83.1
-  resolution: "sass@npm:1.83.1"
+"sass@npm:1.83.2":
+  version: 1.83.2
+  resolution: "sass@npm:1.83.2"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^4.0.0"
@@ -13384,7 +13384,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10c0/9772506cd8290df7b5e800055098e91a8a65100840fd9e90c660deb74b248b3ddbbd1a274b8f7f09777d472d2c873575357bd87939a40fb5a80bdf654985486f
+  checksum: 10c0/09daaf7015d2e714e8832f8e59b07db195cae556b0c4eb3e0f8d006c5e1811d9ae96dd957b4a05c9c1d21050205954d76df15e8a27ba828005692addd70d7100
   languageName: node
   linkType: hard
 
