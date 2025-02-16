@@ -6642,9 +6642,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.73":
-  version: 1.5.100
-  resolution: "electron-to-chromium@npm:1.5.100"
-  checksum: 10c0/4c3b42062e9d0fe10b22c54fc1ee9cc973e346fc71deff1084b75247a1448518a22e75f5a4cfcd07f86c7789f1122d4476a2ceae831e97963995f33ddfc6299e
+  version: 1.5.101
+  resolution: "electron-to-chromium@npm:1.5.101"
+  checksum: 10c0/9c6579e58b09cc27151ad135444253d241b8a354c2d1a122d280086549ce3c78a47388f6c37774d93ee73b353defdc1f215b702de2b18d34d53fcf8ed25e5f53
   languageName: node
   linkType: hard
 
@@ -15194,9 +15194,9 @@ __metadata:
   linkType: hard
 
 "vue-component-type-helpers@npm:^2.0.0":
-  version: 2.2.0
-  resolution: "vue-component-type-helpers@npm:2.2.0"
-  checksum: 10c0/3e95ddc38e01accdc1f0ae4bdeb3b5a32fd9ad3f7f10100d84c2752492d4f757d305d3026d26244b574d921eb35123a5f1cfa6f2e2c943a4ecd7deeaf777843d
+  version: 2.2.2
+  resolution: "vue-component-type-helpers@npm:2.2.2"
+  checksum: 10c0/1d7278a82678320238203b79bebd347a761328c7be7e2dc29bba90447b9957f1e3fe12ed531717f6a71598dd64f45404cb95e87ffcb590a1219bda79d3927931
   languageName: node
   linkType: hard
 
