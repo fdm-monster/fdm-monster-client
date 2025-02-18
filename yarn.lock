@@ -6642,9 +6642,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.73":
-  version: 1.5.101
-  resolution: "electron-to-chromium@npm:1.5.101"
-  checksum: 10c0/9c6579e58b09cc27151ad135444253d241b8a354c2d1a122d280086549ce3c78a47388f6c37774d93ee73b353defdc1f215b702de2b18d34d53fcf8ed25e5f53
+  version: 1.5.102
+  resolution: "electron-to-chromium@npm:1.5.102"
+  checksum: 10c0/db07dab3ee3b7fbc39ad26203925669ade86b12a62d09fa14ae48a354a0f34d162ac9a2ca9d6f70ceb1b16821b01b155e56467702bcc915da1e1dd147dd034b4
   languageName: node
   linkType: hard
 
@@ -10642,21 +10642,21 @@ __metadata:
   linkType: hard
 
 "launch-editor-middleware@npm:^2.2.1":
-  version: 2.9.1
-  resolution: "launch-editor-middleware@npm:2.9.1"
+  version: 2.10.0
+  resolution: "launch-editor-middleware@npm:2.10.0"
   dependencies:
-    launch-editor: "npm:^2.9.1"
-  checksum: 10c0/567986c5195e1b53e433e41cfa0968c7e3bc45edfeb5b5997cb83613d3be9a58c09524614749c0db834069d6978982c8780601ebf98396842a23e85e22fc8f67
+    launch-editor: "npm:^2.10.0"
+  checksum: 10c0/c6e12b274333940422957cf154f0aeb93d69fc5d49a0e6a8d98e9079a6e408948d02a608011c2928815ec9eaecf5143adce1ae266d728f68d69c286573584286
   languageName: node
   linkType: hard
 
-"launch-editor@npm:^2.2.1, launch-editor@npm:^2.6.0, launch-editor@npm:^2.9.1":
-  version: 2.9.1
-  resolution: "launch-editor@npm:2.9.1"
+"launch-editor@npm:^2.10.0, launch-editor@npm:^2.2.1, launch-editor@npm:^2.6.0":
+  version: 2.10.0
+  resolution: "launch-editor@npm:2.10.0"
   dependencies:
     picocolors: "npm:^1.0.0"
     shell-quote: "npm:^1.8.1"
-  checksum: 10c0/891f1d136ed8e4ea12e16c196a0d2e07f23c7b983e3ab532b2be1775fb244909581507cce97c50f9d5ca92680b53e4a75c72ddcf20184aa6c4da6ebbe87703f5
+  checksum: 10c0/8b5a26be6b0da1da039ed2254b837dea0651a6406ea4dc4c9a5b28ea72862f1b12880135c495baf9d8a08997473b44034172506781744cf82e155451a40b7d51
   languageName: node
   linkType: hard
 
@@ -11370,9 +11370,9 @@ __metadata:
   linkType: hard
 
 "mrmime@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "mrmime@npm:2.0.0"
-  checksum: 10c0/312b35ed288986aec90955410b21ed7427fd1e4ee318cb5fc18765c8d029eeded9444faa46589e5b1ed6b35fb2054a802ac8dcb917ddf6b3e189cb3bf11a965c
+  version: 2.0.1
+  resolution: "mrmime@npm:2.0.1"
+  checksum: 10c0/af05afd95af202fdd620422f976ad67dc18e6ee29beb03dd1ce950ea6ef664de378e44197246df4c7cdd73d47f2e7143a6e26e473084b9e4aa2095c0ad1e1761
   languageName: node
   linkType: hard
 
