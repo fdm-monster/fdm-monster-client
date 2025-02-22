@@ -211,6 +211,12 @@ Features:
 
 - Add support for two printer service types Moonraker & OctoPrint in the frontend
 
+## Client 22/06/2024 1.5.19
+
+Hotfixes:
+
+- Hotfix: fix printTime nullref error causes continuous errors
+
 ## Client 22/06/2024 1.5.18
 
 Fixes:
@@ -294,3 +300,67 @@ Fixes:
 - yaml import: also clear import file field when an error has occurred during import
 - yaml import: show an error message to provide context about why import has failed
 - OctoFarm import: Only known properties will be imported, preventing import errors
+
+## Client 01/04/2024 1.5.8
+
+Fixes:
+
+- Validation observer was not properly recognized by Vue 2 Options API usage
+
+## Client 13/04/2024 1.5.7
+
+Fixes:
+
+- Apprehended hard to understand formatting client upgrades
+
+## Client 13/04/2024 1.5.6
+
+Fixes:
+
+- SocketIO socket would sometimes be opened twice. This is now prevented.
+- Printer test command would not show all failure scenarios. Added more like "error", "connection error", "closed" and "connection closed"  
+
+## Client 13/04/2024 1.5.5
+
+Features:
+
+- Extend YAML export with printer groups
+
+## Client 14/02/2024 1.5.4
+
+Features:
+
+- Add printer control dialog for homing the printer and moving the axes
+
+## Client 14/02/2024 1.5.3
+
+Fixes:
+
+- Null reference errors in printer state store `isPrinterStoppable` and `isPrinterPaused`
+
+## Client 13/02/2024 1.5.2
+
+Chores:
+
+- Update Sentry setup in client
+- PrinterMaintenance dialog in Vue `<script lang="ts" setup></script>` style
+
+Features:
+
+- Print completions page has been greatly simplified
+
+Fixes: 
+
+- Null reference fix printer tile (currentJob)
+- Null reference fix side nav file list
+- Empty dialog content - placeholder warning for debugging purpose 
+
+## Client 12/02/2024 1.5.1
+
+Fix:
+
+- Prevent reactivity issue inside printer groups query, remove returning erronous printers
+
+## Older releases have not been registered
+
+Before this release sadly there were no release notes.  
