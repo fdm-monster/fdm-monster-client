@@ -1453,7 +1453,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@fdm-monster/client@workspace:."
   dependencies:
-    "@fontsource/roboto": "npm:5.2.0"
+    "@fontsource/roboto": "npm:5.2.1"
     "@sentry/tracing": "npm:7.120.3"
     "@sentry/vue": "npm:8.55.0"
     "@tanstack/vue-query": "npm:5.66.11"
@@ -1517,10 +1517,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@fontsource/roboto@npm:5.2.0":
-  version: 5.2.0
-  resolution: "@fontsource/roboto@npm:5.2.0"
-  checksum: 10c0/7e1a21d873c573268e25eaed7f08c39ec746134b14a06d40ef2c805ab4aa1fa9834ffe30d4c57c4d641c020496f65391f5b2a54bf22a07689e7d80a9c8371690
+"@fontsource/roboto@npm:5.2.1":
+  version: 5.2.1
+  resolution: "@fontsource/roboto@npm:5.2.1"
+  checksum: 10c0/0ac9f1ef24940fac1e71eb91337a3fb14978de21dcda6491c1fcf395f7914393608e801b53b83b6e8dca2cb18e7689722d5a7e27bec678559e48fd6735f7f7f4
   languageName: node
   linkType: hard
 
