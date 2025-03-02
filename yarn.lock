@@ -2950,11 +2950,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.13.7
-  resolution: "@types/node@npm:22.13.7"
+  version: 22.13.8
+  resolution: "@types/node@npm:22.13.8"
   dependencies:
     undici-types: "npm:~6.20.0"
-  checksum: 10c0/cd44f2a77369def4d21a917c1a4b518777f9488495fe1fd26284c4f19cc2c01e2f7e4030bf92ec14b613fa3d314e52b484b711f4c5a14fa6a01a30adf2c878db
+  checksum: 10c0/bfc92b734a9dce6ac5daee0a52feccdf5dcb3804d895e4bc5384e2f4644612b8801725cd03c8c3c0888fb5eeb16b875877ac44b77641e0196dc1a837b1c2a366
   languageName: node
   linkType: hard
 
@@ -4980,7 +4980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.0.0, browserslist@npm:^4.16.3, browserslist@npm:^4.21.4, browserslist@npm:^4.23.3, browserslist@npm:^4.24.0, browserslist@npm:^4.24.3":
+"browserslist@npm:^4.0.0, browserslist@npm:^4.16.3, browserslist@npm:^4.21.4, browserslist@npm:^4.23.3, browserslist@npm:^4.24.0, browserslist@npm:^4.24.4":
   version: 4.24.4
   resolution: "browserslist@npm:4.24.4"
   dependencies:
@@ -5726,25 +5726,18 @@ __metadata:
   linkType: hard
 
 "core-js-compat@npm:^3.38.0, core-js-compat@npm:^3.40.0, core-js-compat@npm:^3.8.3":
-  version: 3.40.0
-  resolution: "core-js-compat@npm:3.40.0"
+  version: 3.41.0
+  resolution: "core-js-compat@npm:3.41.0"
   dependencies:
-    browserslist: "npm:^4.24.3"
-  checksum: 10c0/44f6e88726fe266a5be9581a79766800478a8d5c492885f2d4c2a4e2babd9b06bc1689d5340d3a61ae7332f990aff2e83b6203ff8773137a627cfedfbeefabeb
+    browserslist: "npm:^4.24.4"
+  checksum: 10c0/92d2c748d3dd1c4e3b6cee6b6683b9212db9bc0a6574d933781210daf3baaeb76334ed4636eb8935b45802aa8d9235ab604c9a262694e02a2fa17ad0f6976829
   languageName: node
   linkType: hard
 
-"core-js@npm:3.41.0":
+"core-js@npm:3.41.0, core-js@npm:^3.8.3":
   version: 3.41.0
   resolution: "core-js@npm:3.41.0"
   checksum: 10c0/a29ed0b7fe81acf49d04ce5c17a1947166b1c15197327a5d12f95bbe84b46d60c3c13de701d808f41da06fa316285f3f55ce5903abc8d5642afc1eac4457afc8
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^3.8.3":
-  version: 3.40.0
-  resolution: "core-js@npm:3.40.0"
-  checksum: 10c0/db7946ada881e845d8b157061945b1187618fa45cf162f392a151e8a497962aed2da688c982eaa1d444c864be97a70f8be4d73385294b515d224dd164d19f1d4
   languageName: node
   linkType: hard
 
@@ -14603,21 +14596,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tldts-core@npm:^6.1.79":
-  version: 6.1.79
-  resolution: "tldts-core@npm:6.1.79"
-  checksum: 10c0/01554b7e7481bf7f62f0bd1be79bfcd52ca2cc099c0af0d0db4cdbc88cb1a1eb118ff8878fff93b758b148b185447d752cccdecfdec75f97ceddb5ec5c900e8f
+"tldts-core@npm:^6.1.82":
+  version: 6.1.82
+  resolution: "tldts-core@npm:6.1.82"
+  checksum: 10c0/bdbefb17837d7d85b79a44824feafad3d12fbbfbe4f0a89d9618765b18e880d4c7ebe9e87258a2a0e85deec23adbcaaa5f4240129d8017f896b0cda0c32ae6e4
   languageName: node
   linkType: hard
 
 "tldts@npm:^6.1.32":
-  version: 6.1.79
-  resolution: "tldts@npm:6.1.79"
+  version: 6.1.82
+  resolution: "tldts@npm:6.1.82"
   dependencies:
-    tldts-core: "npm:^6.1.79"
+    tldts-core: "npm:^6.1.82"
   bin:
     tldts: bin/cli.js
-  checksum: 10c0/c4de29f5c041f1b7293b916e2d758c8879e389264ac0fbe20d52bd07bb3550afba871b76c93167ecc4c2cd3232b635f31b75b9764d543f2c6941c794ef2fa96d
+  checksum: 10c0/e01dd47de5a1e5ca7ffe33d9e18cfd608e93ef45cf1f80f3fced1cea192d07a840664ded894b590551ebcaaf8a583a68a4b23bc0645b5885508b57010a9316af
   languageName: node
   linkType: hard
 
@@ -15219,9 +15212,9 @@ __metadata:
   linkType: hard
 
 "vue-component-type-helpers@npm:^2.0.0":
-  version: 2.2.4
-  resolution: "vue-component-type-helpers@npm:2.2.4"
-  checksum: 10c0/2e743d161a50c686095b7dbc37a7e4bd9d944bad01b33d3518881aa31065877efbd2fa219bb87e63697c74ea02ce356da4c8dc9e48abd1b42ea83ed36fe138ba
+  version: 2.2.8
+  resolution: "vue-component-type-helpers@npm:2.2.8"
+  checksum: 10c0/c1dfd755ddee15d38057404f101ee607757f88de18e0dd03ad2677be7b0688d86e79e9dab54df9800347abe9826246fc4abbcb54e7827d9289808ba288347bfd
   languageName: node
   linkType: hard
 
