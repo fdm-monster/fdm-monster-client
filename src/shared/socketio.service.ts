@@ -44,7 +44,7 @@ export class SocketIoService {
     authStore.loadTokens();
     constructSocket(apiBase, authStore.loginRequired ? authStore.token : undefined);
 
-    appSocketIO?.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
+    appSocketIO?.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(data));
     appSocketIO?.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);
     });
@@ -62,14 +62,26 @@ export class SocketIoService {
   }
 
   onMessage(message: SocketIoUpdateMessage) {
-    if (message.trackedUploads.current?.length || message.trackedUploads.failed?.length) {
-      console.debug("[SocketIO] trackedUploads message received");
+    console.debug(
+      Object.keys(message),
+      Object.keys(message).map((key) => message[key]?.length),
+      message?.trackedUploads.current,
+      message?.trackedUploads.done
+    );
+
+    if (message.trackedUploads.current?.length) {
       message.trackedUploads.current.forEach((u) => {
+        console.log(
+          `File ${u.multerFile.originalname} progress ${u.progress?.percent * 100} complete ${
+            u.complete
+          }`,
+          u.progress
+        );
         this.snackbar.openProgressMessage(
           u.correlationToken,
           u.multerFile.originalname,
           (u.progress?.percent || 0) * 100,
-          false
+          u.complete
         );
       });
     }

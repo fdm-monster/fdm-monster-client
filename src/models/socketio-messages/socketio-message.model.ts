@@ -14,6 +14,7 @@ export interface TrackedUpload {
     percent: number;
     [k: string]: number;
   };
+  complete: boolean;
 }
 
 export interface UploadStates {
@@ -73,4 +74,5 @@ export interface SocketIoUpdateMessage {
   printerEvents: Record<IdType, PrinterStateDto>;
   trackedUploads: UploadStates;
   floors: FloorDto[];
+  [k: string]: any;
 }
