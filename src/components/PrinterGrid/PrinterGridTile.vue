@@ -246,6 +246,12 @@
           <strong>
             {{ value?.toFixed(1) + "%" }}
           </strong>
+          <span v-if="uploadTrackerState?.progress?.percent ?? 101 < 100" class="ml-2">
+            Uploading
+            {{ (uploadTrackerState?.progress?.percent ?? 0) * 100 + "%" }}
+            {{ uploadTrackerState?.progress?.percent }}
+            {{ uploadTrackerState?.correlationToken }}
+          </span>
 
           <v-tooltip
             close-delay="100"
@@ -305,6 +311,7 @@ import { useFeatureStore } from "@/store/features.store";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { useThumbnailQuery } from "@/queries/thumbnail.query";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
+import { useTrackedUploadsStore } from "@/store/tracked-uploads.store";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
@@ -320,6 +327,7 @@ const floorStore = useFloorStore();
 const featureStore = useFeatureStore();
 const settingsStore = useSettingsStore();
 const gridStore = useGridStore();
+const uploadTrackerStore = useTrackedUploadsStore();
 const controlDialog = useDialog(DialogName.PrinterControlDialog);
 const addOrUpdateDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const snackbar = useSnackbar();
@@ -330,6 +338,12 @@ const { data: thumbnail } = useThumbnailQuery(printerId, settingsStore.thumbnail
 
 const largeTilesEnabled = computed(() => settingsStore.largeTiles);
 const tileIconThumbnailSize = computed(() => (largeTilesEnabled.value ? "80px" : "40px"));
+
+const uploadTrackerState = computed(() => {
+  if (!printerId.value) return;
+
+  return uploadTrackerStore.getByPrinterId(printerId.value).value;
+});
 
 const isOnline = computed(() =>
   printerId.value ? printerStateStore.isApiResponding(printerId.value) : false

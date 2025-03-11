@@ -5,6 +5,7 @@ import { CurrentOrHistoryPayload } from "@/models/printers/printer-current-job.m
 
 export interface TrackedUpload {
   correlationToken: string;
+  printerId: IdType;
   startedAt: number;
   multerFile: {
     originalname: string;

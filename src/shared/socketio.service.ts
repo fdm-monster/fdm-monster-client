@@ -17,6 +17,7 @@ import {
   getSocketState,
   resetSocketConnection,
 } from "@/store/connection.store";
+import { useTrackedUploadsStore } from "../store/tracked-uploads.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -31,7 +32,7 @@ export class SocketIoService {
   private floorStore = useFloorStore();
   private printerStateStore = usePrinterStateStore();
   private testPrinterStore = useTestPrinterStore();
-  private snackbar = useSnackbar();
+  private trackedUploadsStore = useTrackedUploadsStore();
 
   socketState() {
     return getSocketState();
@@ -70,20 +71,7 @@ export class SocketIoService {
     );
 
     if (message.trackedUploads.current?.length) {
-      message.trackedUploads.current.forEach((u) => {
-        console.log(
-          `File ${u.multerFile.originalname} progress ${u.progress?.percent * 100} complete ${
-            u.complete
-          }`,
-          u.progress
-        );
-        this.snackbar.openProgressMessage(
-          u.correlationToken,
-          u.multerFile.originalname,
-          (u.progress?.percent || 0) * 100,
-          u.complete
-        );
-      });
+      this.trackedUploadsStore.setUploads(message?.trackedUploads.current);
     }
 
     if (message.floors?.length) {
