@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 03/01/2025 1.9.0
+
+Fixes
+
+- Upload progress bar won't get stuck anymore, requires FDMM server 1.8.3 or higher!
+
 ## Client 03/01/2025 1.8.8
 
 Chores
