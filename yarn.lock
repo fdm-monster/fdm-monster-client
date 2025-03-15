@@ -11320,7 +11320,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^0.5.6, mkdirp@npm:~0.5.1":
+"mkdirp@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "mkdirp@npm:3.0.1"
+  bin:
+    mkdirp: dist/cjs/src/bin.js
+  checksum: 10c0/9f2b975e9246351f5e3a40dcfac99fcd0baa31fbfab615fe059fb11e51f10e4803c63de1f384c54d656e4db31d000e4767e9ef076a22e12a641357602e31d57d
+  languageName: node
+  linkType: hard
+
+"mkdirp@npm:~0.5.1":
   version: 0.5.6
   resolution: "mkdirp@npm:0.5.6"
   dependencies:
@@ -11328,15 +11337,6 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 10c0/e2e2be789218807b58abced04e7b49851d9e46e88a2f9539242cc8a92c9b5c3a0b9bab360bd3014e02a140fc4fbc58e31176c408b493f8a2a6f4986bd7527b01
-  languageName: node
-  linkType: hard
-
-"mkdirp@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "mkdirp@npm:3.0.1"
-  bin:
-    mkdirp: dist/cjs/src/bin.js
-  checksum: 10c0/9f2b975e9246351f5e3a40dcfac99fcd0baa31fbfab615fe059fb11e51f10e4803c63de1f384c54d656e4db31d000e4767e9ef076a22e12a641357602e31d57d
   languageName: node
   linkType: hard
 
@@ -12164,13 +12164,12 @@ __metadata:
   linkType: hard
 
 "portfinder@npm:^1.0.26":
-  version: 1.0.34
-  resolution: "portfinder@npm:1.0.34"
+  version: 1.0.35
+  resolution: "portfinder@npm:1.0.35"
   dependencies:
     async: "npm:^3.2.6"
     debug: "npm:^4.3.6"
-    mkdirp: "npm:^0.5.6"
-  checksum: 10c0/1ca7ea711b4c3ab6fe06d32a5b0099401105a8003741bdfde2be727e3bd039887264c52b4ceb8278510cc2d4a57124c03fbe95e67614cbfbdc05cee9a495e513
+  checksum: 10c0/bdc3653bf7f8e6f83464812fba8cb26abdb1a7d3d4977199f6edd857a1697c829d5ac4342b626590619efbbddc9916a1847145812d32bb0d2457ee6e895f9082
   languageName: node
   linkType: hard
 
