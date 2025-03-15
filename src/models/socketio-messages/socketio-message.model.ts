@@ -5,21 +5,21 @@ import { CurrentOrHistoryPayload } from "@/models/printers/printer-current-job.m
 
 export interface TrackedUpload {
   correlationToken: string;
+  printerId: IdType;
   startedAt: number;
   multerFile: {
     originalname: string;
     [k: string]: any;
   };
-  progress: {
-    percent: number;
-    [k: string]: number;
-  };
+  progress: number;
+  completed: boolean;
+  completedAt?: number;
+  success?: boolean;
+  reason?: string;
 }
 
 export interface UploadStates {
   current: TrackedUpload[];
-  done: TrackedUpload[];
-  failed: TrackedUpload[];
 }
 
 export interface SocketState {
@@ -73,4 +73,5 @@ export interface SocketIoUpdateMessage {
   printerEvents: Record<IdType, PrinterStateDto>;
   trackedUploads: UploadStates;
   floors: FloorDto[];
+  [k: string]: any;
 }

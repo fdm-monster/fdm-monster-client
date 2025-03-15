@@ -17,6 +17,7 @@ import {
   getSocketState,
   resetSocketConnection,
 } from "@/store/connection.store";
+import { useTrackedUploadsStore } from "@/store/tracked-uploads.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -31,6 +32,7 @@ export class SocketIoService {
   private floorStore = useFloorStore();
   private printerStateStore = usePrinterStateStore();
   private testPrinterStore = useTestPrinterStore();
+  private trackedUploadsStore = useTrackedUploadsStore();
   private snackbar = useSnackbar();
 
   socketState() {
@@ -44,7 +46,7 @@ export class SocketIoService {
     authStore.loadTokens();
     constructSocket(apiBase, authStore.loginRequired ? authStore.token : undefined);
 
-    appSocketIO?.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(JSON.parse(data)));
+    appSocketIO?.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(data));
     appSocketIO?.on(IO_MESSAGES.TestPrinterState, (data) => {
       this.testPrinterStore.saveEvent(data);
     });
@@ -62,14 +64,16 @@ export class SocketIoService {
   }
 
   onMessage(message: SocketIoUpdateMessage) {
-    if (message.trackedUploads.current?.length || message.trackedUploads.failed?.length) {
-      console.debug("[SocketIO] trackedUploads message received");
-      message.trackedUploads.current.forEach((u) => {
+    if (message.trackedUploads.current?.length) {
+      this.trackedUploadsStore.setUploads(message?.trackedUploads.current);
+      const activeUploads = this.trackedUploadsStore.activeUploads;
+
+      activeUploads.forEach((u) => {
         this.snackbar.openProgressMessage(
           u.correlationToken,
           u.multerFile.originalname,
-          (u.progress?.percent || 0) * 100,
-          false
+          (u.progress || 0) * 100,
+          u.completed
         );
       });
     }

@@ -243,9 +243,7 @@
         class="progress-bar"
       >
         <template v-slot:default="{ value }">
-          <strong>
-            {{ value?.toFixed(1) + "%" }}
-          </strong>
+          <strong> {{ value?.toFixed(1) + "%" }} </strong>
 
           <v-tooltip
             close-delay="100"
@@ -305,6 +303,7 @@ import { useFeatureStore } from "@/store/features.store";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { useThumbnailQuery } from "@/queries/thumbnail.query";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
+import { useTrackedUploadsStore } from "@/store/tracked-uploads.store";
 
 const defaultColor = "rgba(100,100,100,0.1)";
 
@@ -320,6 +319,7 @@ const floorStore = useFloorStore();
 const featureStore = useFeatureStore();
 const settingsStore = useSettingsStore();
 const gridStore = useGridStore();
+const uploadTrackerStore = useTrackedUploadsStore();
 const controlDialog = useDialog(DialogName.PrinterControlDialog);
 const addOrUpdateDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 const snackbar = useSnackbar();
