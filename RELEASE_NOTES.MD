@@ -1,6 +1,6 @@
 # Release notes
 
-## Client 03/01/2025 1.9.0
+## Client 15/03/2025 1.9.0
 
 Fixes
 
