@@ -1,16 +1,13 @@
 import { defineStore } from "pinia";
-import { TrackedUpload } from "../models/socketio-messages/socketio-message.model";
-import { computed, ref } from "vue";
-import { IdType } from "../utils/id.type";
+import { TrackedUpload } from "@/models/socketio-messages/socketio-message.model";
+import { ref, computed } from "vue";
 
 export const useTrackedUploadsStore = defineStore("tracked-uploads", () => {
   const current = ref<TrackedUpload[]>([]);
 
-  const getByPrinterId = (printerId: IdType) => {
-    return computed(() =>
-      current.value.reverse().find((ut) => ut.printerId === printerId.toString())
-    );
-  };
+  const activeUploads = computed(() => {
+    return current.value.filter((u) => !u.completed);
+  });
 
   function setUploads(uploads: TrackedUpload[]) {
     current.value.splice(0);
@@ -20,6 +17,6 @@ export const useTrackedUploadsStore = defineStore("tracked-uploads", () => {
   return {
     current,
     setUploads,
-    getByPrinterId,
+    activeUploads,
   };
 });

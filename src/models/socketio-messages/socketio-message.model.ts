@@ -11,11 +11,11 @@ export interface TrackedUpload {
     originalname: string;
     [k: string]: any;
   };
-  progress: {
-    percent: number;
-    [k: string]: number;
-  };
-  complete: boolean;
+  progress: number;
+  completed: boolean;
+  completedAt?: number;
+  success?: boolean;
+  reason?: string;
 }
 
 export interface UploadStates {

@@ -33,6 +33,7 @@ export class SocketIoService {
   private printerStateStore = usePrinterStateStore();
   private testPrinterStore = useTestPrinterStore();
   private trackedUploadsStore = useTrackedUploadsStore();
+  private snackbar = useSnackbar();
 
   socketState() {
     return getSocketState();
@@ -72,6 +73,16 @@ export class SocketIoService {
 
     if (message.trackedUploads.current?.length) {
       this.trackedUploadsStore.setUploads(message?.trackedUploads.current);
+      const activeUploads = this.trackedUploadsStore.activeUploads;
+
+      activeUploads.forEach((u) => {
+        this.snackbar.openProgressMessage(
+          u.correlationToken,
+          u.multerFile.originalname,
+          (u.progress || 0) * 100,
+          u.completed
+        );
+      });
     }
 
     if (message.floors?.length) {
