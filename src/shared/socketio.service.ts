@@ -17,7 +17,7 @@ import {
   getSocketState,
   resetSocketConnection,
 } from "@/store/connection.store";
-import { useTrackedUploadsStore } from "../store/tracked-uploads.store";
+import { useTrackedUploadsStore } from "@/store/tracked-uploads.store";
 
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
@@ -64,13 +64,6 @@ export class SocketIoService {
   }
 
   onMessage(message: SocketIoUpdateMessage) {
-    console.debug(
-      Object.keys(message),
-      Object.keys(message).map((key) => message[key]?.length),
-      message?.trackedUploads.current,
-      message?.trackedUploads.done
-    );
-
     if (message.trackedUploads.current?.length) {
       this.trackedUploadsStore.setUploads(message?.trackedUploads.current);
       const activeUploads = this.trackedUploadsStore.activeUploads;

@@ -20,8 +20,6 @@ export interface TrackedUpload {
 
 export interface UploadStates {
   current: TrackedUpload[];
-  done: TrackedUpload[];
-  failed: TrackedUpload[];
 }
 
 export interface SocketState {
