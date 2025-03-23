@@ -22,16 +22,16 @@
         <v-item-group v-model="formData.printerType" mandatory>
           <v-container>
             <v-row>
-              <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="6">
+              <v-col v-for="item of serviceTypes" :key="item.name" cols="4" md="4">
                 <v-item v-slot="{ active, toggle }">
                   <v-card
                     :color="active ? 'primary' : 'blue-grey darken-4'"
                     class="d-flex align-center justify-center elevation-8"
-                    height="75px"
+                    height="60px"
                     width="225px"
                     @click="toggle"
                   >
-                    <v-img :src="item.logo" :height="item.height" max-width="125px" width="125px" />
+                    <v-img :src="item.logo" :height="item.height" max-width="100px" width="125px" />
                     <v-scroll-y-transition>
                       <h3 class="ml-3 align-center">{{ item.name }}</h3>
                     </v-scroll-y-transition>
@@ -78,7 +78,11 @@
               :counter="apiKeyRules.length"
               class="ma-1"
               hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
-              :label="formData.printerType === 1 ? 'API Key (optional)' : 'API Key (required)*'"
+              :label="
+                formData.printerType === 1 || formData.printerType === 2
+                  ? 'API Key (optional)'
+                  : 'API Key (required)*'
+              "
               persistent-hint
               required
             />
@@ -126,6 +130,7 @@
 import { computed, inject, ref } from "vue";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
+import prusaLinkLogoSvg from "@/assets/prusa-link-logo.svg";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -138,7 +143,14 @@ import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
-import { isMoonrakerType } from "@/utils/printer-type.utils";
+import {
+  isPrusaLinkType,
+  isMoonrakerType,
+  getServiceName,
+  OctoPrintType,
+  PrusaLinkType,
+  MoonrakerType,
+} from "@/utils/printer-type.utils";
 import { useFloorStore } from "@/store/floor.store";
 import { captureException } from "@sentry/vue";
 
@@ -163,14 +175,19 @@ const serviceTypes = computed(() => {
     if (hasKlipperSupport) {
       return [
         {
-          name: "OctoPrint",
+          name: getServiceName(OctoPrintType),
           logo: octoPrintTentacleSvg,
-          height: "75px",
+          height: "60px",
         },
         {
-          name: "Klipper",
+          name: getServiceName(MoonrakerType),
           logo: klipperLogoSvg,
-          height: "75px",
+          height: "60px",
+        },
+        {
+          name: getServiceName(PrusaLinkType),
+          logo: prusaLinkLogoSvg,
+          height: "20px",
         },
       ];
     }
@@ -248,7 +265,7 @@ const testPrinter = async () => {
 const isValid = () => {
   const form = formData.value;
   if (!form) return false;
-  if (isMoonrakerType(form.printerType)) {
+  if (isMoonrakerType(form.printerType) || isPrusaLinkType(form.printerType)) {
     return form.printerURL?.length && form.name?.length;
   }
   return form.printerURL?.length && form.name?.length && form.apiKey?.length;
@@ -296,7 +313,7 @@ const submit = async () => {
 
   const createdPrinter = formData.value;
 
-  if (isMoonrakerType(createdPrinter.printerType)) {
+  if (isMoonrakerType(createdPrinter.printerType) || isPrusaLinkType(createdPrinter.printerType)) {
     createdPrinter.apiKey = "";
   }
 
