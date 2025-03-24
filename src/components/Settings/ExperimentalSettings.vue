@@ -72,28 +72,6 @@
       <v-divider />
 
       <SettingSection
-        title="Database Settings"
-        tooltip="By enabling this setting you will set FDM Monster to SQLite as a database source
-                    (standalone mode). Please set 'ENABLE_EXPERIMENTAL_TYPEORM' to 'true' to enable
-                    this feature."
-      >
-        <div class="d-flex align-center">
-          <v-checkbox
-            v-model="experimentalTypeORMSupport"
-            label="Enable TypeORM Support"
-            hide-details
-            disabled
-          >
-            <template v-slot:label>
-              <span>Enable TypeORM Support</span>
-            </template>
-          </v-checkbox>
-        </div>
-      </SettingSection>
-
-      <v-divider />
-
-      <SettingSection
         title="Experimental UI Features"
         tooltip="Enables the next version of the FDM Monster UI (experimental)."
       >
@@ -132,7 +110,6 @@ import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 const page = settingsPage["experimental"];
 const experimentalMoonrakerSupport = ref(false);
 const experimentalThumbnailSupport = ref(false);
-const experimentalTypeORMSupport = ref(false);
 const experimentalClientSupport = ref(false);
 const isMoonrakerSupportLoading = ref(false);
 const isThumbnailSupportLoading = ref(false);
@@ -145,7 +122,6 @@ async function loadSettings() {
   const settings = await SettingsService.getSettings();
   experimentalMoonrakerSupport.value = settings.server.experimentalMoonrakerSupport;
   experimentalThumbnailSupport.value = settings.server.experimentalThumbnailSupport;
-  experimentalTypeORMSupport.value = settings.server.experimentalTypeormSupport;
   experimentalClientSupport.value = settings.server.experimentalClientSupport;
 }
 
