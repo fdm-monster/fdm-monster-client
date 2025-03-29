@@ -1483,7 +1483,7 @@ __metadata:
     core-js: "npm:3.41.0"
     cypress: "npm:14.2.1"
     eslint: "npm:8.57.1"
-    eslint-config-prettier: "npm:9.1.0"
+    eslint-config-prettier: "npm:10.1.1"
     eslint-plugin-prettier: "npm:4.2.1"
     eslint-plugin-vue: "npm:9.33.0"
     jest: "npm:29.7.0"
@@ -6979,7 +6979,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:9.1.0, eslint-config-prettier@npm:^9.0.0":
+"eslint-config-prettier@npm:10.1.1":
+  version: 10.1.1
+  resolution: "eslint-config-prettier@npm:10.1.1"
+  peerDependencies:
+    eslint: ">=7.0.0"
+  bin:
+    eslint-config-prettier: bin/cli.js
+  checksum: 10c0/3dbfdf6495dd62e2e1644ea9e8e978100dabcd8740fd264df1222d130001a1e8de05d6ed6c67d3a60727386a07507f067d1ca79af6d546910414beab19e7966e
+  languageName: node
+  linkType: hard
+
+"eslint-config-prettier@npm:^9.0.0":
   version: 9.1.0
   resolution: "eslint-config-prettier@npm:9.1.0"
   peerDependencies:
