@@ -3,6 +3,7 @@
 Chore
 
 - Remove OctoPrint reference in "Refreshing OctoPrint connection state"
+- Cleanup unused API endpoints
 
 ## Client 15/03/2025 1.9.0
 

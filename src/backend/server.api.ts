@@ -41,7 +41,6 @@ export class ServerApi {
   static updateLoginRequiredRoute = `${ServerApi.settingsRoute}/login-required`;
   static updateRegistrationEnabledRoute = `${ServerApi.settingsRoute}/registration-enabled`;
   static updateCredentialSettings = `${ServerApi.settingsRoute}/credential`;
-  static serverSettingsRoute = `${ServerApi.settingsRoute}/server`;
   static fileCleanSettingsRoute = `${ServerApi.settingsRoute}/file-clean`;
   static updateFrontendSettingsRoute = `${ServerApi.settingsRoute}/frontend`;
   static updateTimeoutSettingRoute = `${ServerApi.settingsRoute}/timeout`;
@@ -49,12 +48,6 @@ export class ServerApi {
   static updateExperimentalMoonrakerSupportRoute = `${ServerApi.settingsRoute}/experimental-moonraker-support`;
   static updateExperimentalThumbnailSupportRoute = `${ServerApi.settingsRoute}/experimental-thumbnail-support`;
   static updateExperimentalClientSupportRoute = `${ServerApi.settingsRoute}/experimental-client-support`;
-
-  static serverPrivateRoute = `${ServerApi.base}/server`;
-
-  static pluginRoute = `${ServerApi.base}/plugin`;
-  static pluginFirmwareUpdateRoute = `${ServerApi.pluginRoute}/firmware-update`;
-  static pluginFirmwareReleasesRoute = `${ServerApi.pluginFirmwareUpdateRoute}/releases`;
 
   static getPrinterRoute = (id: IdType) => `${ServerApi.printerRoute}/${id}`;
   static postPrinterDisabledReasonRoute = (id: IdType) =>
@@ -71,18 +64,10 @@ export class ServerApi {
   static syncPrinterNameSettingRoute = (id: IdType) =>
     `${ServerApi.getPrinterSettingsRoute(id)}/sync-printername`;
   static getFloorRoute = (id: IdType) => `${ServerApi.floorRoute}/${id}`;
-  static setSelectedFloorRoute = (floorId: IdType) =>
-    `${ServerApi.floorRoute}/selected-floor/${floorId}`;
   static addOrRemovePrinterFromFloorRoute = (id: IdType) =>
     `${ServerApi.getFloorRoute(id)}/printer`;
   static sendQuickStopM112Route = (id: IdType) =>
     `${ServerApi.customGCodeRoute}/send-emergency-m112/${id}`;
-  static installFirmwareUpdatePluginRoute = (id: IdType) =>
-    `${ServerApi.pluginFirmwareUpdateRoute}/${id}/install-firmware-update-plugin`;
-  static configurePluginSettingsRoute = (id: IdType) =>
-    `${ServerApi.pluginFirmwareUpdateRoute}/${id}/configure-plugin-settings`;
-  static flashFirmwareRoute = (id: IdType) =>
-    `${ServerApi.pluginFirmwareUpdateRoute}/${id}/flash-firmware`;
   static updatePrinterFloorNameRoute = (id: IdType) => `${ServerApi.getFloorRoute(id)}/name`;
   static updatePrinterFloorNumberRoute = (id: IdType) =>
     `${ServerApi.getFloorRoute(id)}/floor-number`;
