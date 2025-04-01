@@ -28,7 +28,7 @@
     "chart.js": "4.4.8",
     "core-js": "3.41.0",
     "jwt-decode": "4.0.0",
-    "luxon": "3.6.0",
+    "luxon": "3.6.1",
     "pinia": "2.3.1",
     "register-service-worker": "1.7.2",
     "semver": "7.7.1",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@fontsource/roboto": "5.2.5",
     "@types/jest": "29.5.14",
-    "@types/luxon": "3.4.2",
+    "@types/luxon": "3.6.0",
     "@types/semver": "7.7.0",
     "@types/validator": "13.12.3",
     "@typescript-eslint/eslint-plugin": "7.18.0",
