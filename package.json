@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@sentry/tracing": "7.120.3",
-    "@sentry/vue": "9.10.1",
+    "@sentry/vue": "9.11.0",
     "@tanstack/vue-query": "5.71.5",
     "@vue/composition-api": "1.7.2",
     "@vueuse/core": "11.3.0",
