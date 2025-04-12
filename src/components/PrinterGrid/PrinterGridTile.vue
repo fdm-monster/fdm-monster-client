@@ -2,28 +2,28 @@
   <div v-drop-printer-position="{ x, y, printerSet: printer }">
     <v-card
       v-drop-upload="{ printers: [printer] }"
-      elevation="5"
-      class="tile colored-tile rounded-lg"
       :class="{
         'tile-large': largeTilesEnabled,
         'tile-selected': selected,
         'tile-unselected': unselected,
         'tile-no-printer': !printer,
       }"
+      class="tile colored-tile rounded-lg"
+      elevation="5"
       @click="selectOrClearPrinterPosition()"
     >
-      <div class="printer-title" v-show="printer">
+      <div v-show="printer" class="printer-title">
         {{ printer?.name ?? "&nbsp;" }}
       </div>
 
       <!-- Create printer - hover button-->
       <div
         v-if="!printer || gridStore.gridEditMode"
-        style="position: absolute"
         :style="{
           height: largeTilesEnabled ? 'calc(120px - 20px)' : 'calc(84px - 20px)',
         }"
         class="plus-hover-icon"
+        style="position: absolute"
       >
         <div class="d-flex flex flex-column justify-center" style="height: 100%">
           <PrinterCreateAction
@@ -35,8 +35,8 @@
           <v-btn
             v-if="printer"
             color="error"
-            small
             rounded
+            small
             @click.c.capture.native.stop="selectOrClearPrinterPosition()"
           >
             <v-icon>clear</v-icon>
@@ -45,50 +45,50 @@
         </div>
       </div>
 
-      <div class="printer-file-or-stream-viewer" v-if="!!printer && isOnline">
+      <div v-if="!!printer && isOnline" class="printer-file-or-stream-viewer">
         <v-img
           v-if="!thumbnail?.length"
-          style="opacity: 0.3; filter: grayscale(100%)"
-          :width="tileIconThumbnailSize"
           :src="require('@/assets/logo.png')"
+          :width="tileIconThumbnailSize"
           alt="No thumbnail was found in GCode"
+          style="opacity: 0.3; filter: grayscale(100%)"
         />
         <v-img
           v-else
-          :width="tileIconThumbnailSize"
           :src="'data:image/png;base64,' + (thumbnail ?? '')"
+          :width="tileIconThumbnailSize"
         />
       </div>
-      <div class="printer-file-or-stream-viewer" v-else-if="!!printer">
+      <div v-else-if="!!printer" class="printer-file-or-stream-viewer">
         <v-icon
-          :size="tileIconThumbnailSize"
           v-if="printerState?.text.includes('API')"
+          :size="tileIconThumbnailSize"
           color="secondary"
         >
           wifi_off
         </v-icon>
-        <v-icon :size="tileIconThumbnailSize" v-if="!printer.enabled" color="secondary">
+        <v-icon v-if="!printer.enabled" :size="tileIconThumbnailSize" color="secondary">
           disabled_by_default
         </v-icon>
         <v-icon
-          :size="tileIconThumbnailSize"
           v-if="printerState?.text.includes('unset')"
+          :size="tileIconThumbnailSize"
           color="secondary"
         >
           question_mark
         </v-icon>
       </div>
 
-      <div class="printer-menu" v-if="printer && !gridStore.gridEditMode">
+      <div v-if="printer && !gridStore.gridEditMode" class="printer-menu">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+              color="darkgray"
+              elevation="0"
+              small
+              style="border-radius: 7px"
               v-bind="attrs"
               v-on="on"
-              small
-              color="darkgray"
-              style="border-radius: 7px"
-              elevation="0"
               @click.prevent.stop="clickInfo()"
             >
               <v-icon dark>menu</v-icon>
@@ -99,31 +99,30 @@
       </div>
 
       <div
-        class="printer-controls"
         v-if="printer && !gridStore.gridEditMode"
-        style="overflow: clip"
         :style="{
           position: largeTilesEnabled ? 'inherit' : 'absolute',
           top: largeTilesEnabled ? 'inherit' : '30px',
         }"
+        class="printer-controls"
+        style="overflow: clip"
       >
         <small class="file-name">{{ currentPrintingFilePath ?? "&nbsp;" }}</small>
       </div>
 
       <!-- Hover controls -->
-      <div class="centered-controls" v-if="printer && !gridStore.gridEditMode">
+      <div v-if="printer && !gridStore.gridEditMode" class="centered-controls">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              v-bind="attrs"
-              v-on="on"
-              v-if="hasPrinterControlFeature"
               :disabled="!isOnline || !isOperational"
-              x-small
               :small="largeTilesEnabled"
               color="darkgray"
-              style="border-radius: 7px"
               elevation="0"
+              style="border-radius: 7px"
+              v-bind="attrs"
+              x-small
+              v-on="on"
               @click.prevent.stop="clickOpenPrinterControlDialog()"
             >
               <v-icon>open_with</v-icon>
@@ -137,13 +136,13 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               v-if="!isOperational && isOnline"
-              v-bind="attrs"
-              v-on="on"
-              x-small
               :small="largeTilesEnabled"
               color="darkgray"
-              style="border-radius: 7px"
               elevation="0"
+              style="border-radius: 7px"
+              v-bind="attrs"
+              x-small
+              v-on="on"
               @click.prevent.stop="clickConnectUsb()"
             >
               <v-icon>usb</v-icon>
@@ -155,13 +154,13 @@
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              v-bind="attrs"
-              v-on="on"
-              x-small
               :small="largeTilesEnabled"
               color="darkgray"
-              style="border-radius: 7px"
               elevation="0"
+              style="border-radius: 7px"
+              v-bind="attrs"
+              x-small
+              v-on="on"
               @click.prevent.stop="clickRefreshSocket()"
             >
               <v-icon>refresh</v-icon>
@@ -173,14 +172,14 @@
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              v-bind="attrs"
-              v-on="on"
               :disabled="!isOnline || (!isPaused && !isPrinting)"
-              x-small
               :small="largeTilesEnabled"
               color="darkgray"
-              style="border-radius: 7px"
               elevation="0"
+              style="border-radius: 7px"
+              v-bind="attrs"
+              x-small
+              v-on="on"
               @click.prevent.stop="isPaused ? clickResumePrint() : clickPausePrint()"
             >
               <v-icon v-if="!isPaused">pause</v-icon>
@@ -195,36 +194,38 @@
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              v-bind="attrs"
-              v-on="on"
-              x-small
-              :small="largeTilesEnabled"
               :disabled="!isOnline || (preferCancelOverQuickStop && !isPrinting && !isPaused)"
+              :small="largeTilesEnabled"
               color="darkgray"
-              style="border-radius: 7px"
               elevation="0"
+              style="border-radius: 7px"
+              v-bind="attrs"
+              x-small
+              v-on="on"
               @click.prevent.stop="preferCancelOverQuickStop ? clickStop() : clickQuickStop()"
             >
-              <v-icon>{{ preferCancelOverQuickStop ? "stop" : "dangerous" }} </v-icon>
+              <v-icon>{{ preferCancelOverQuickStop ? "stop" : "dangerous" }}</v-icon>
             </v-btn>
           </template>
-          <template v-slot:default>{{
-            preferCancelOverQuickStop
-              ? "Cancel current print gracefully"
-              : "Perform quick stop of printer"
-          }}</template>
+          <template v-slot:default
+            >{{
+              preferCancelOverQuickStop
+                ? "Cancel current print gracefully"
+                : "Perform quick stop of printer"
+            }}
+          </template>
         </v-tooltip>
 
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              v-bind="attrs"
-              v-on="on"
-              x-small
               :small="largeTilesEnabled"
               color="darkgray"
-              style="border-radius: 7px"
               elevation="0"
+              style="border-radius: 7px"
+              v-bind="attrs"
+              x-small
+              v-on="on"
               @click.prevent.stop="clickOpenSettings()"
             >
               <v-icon>settings</v-icon>
@@ -239,18 +240,18 @@
         v-if="printer && !gridStore.gridEditMode"
         :value="currentJob?.progress?.completion"
         background-color="dark-gray"
-        height="14"
         class="progress-bar"
+        height="14"
       >
         <template v-slot:default="{ value }">
           <strong> {{ value?.toFixed(1) + "%" }} </strong>
 
           <v-tooltip
+            :disabled="printer?.enabled"
             close-delay="100"
             color="danger"
             open-delay="0"
             top
-            :disabled="printer?.enabled"
           >
             <template v-slot:activator="{ on, attrs }">
               <span class="xsmall-resized-font text--secondary ml-sm-2" v-bind="attrs" v-on="on">
@@ -299,7 +300,6 @@ import { usePrinterStateStore } from "@/store/printer-state.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useDialog } from "@/shared/dialog.composable";
-import { useFeatureStore } from "@/store/features.store";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { useThumbnailQuery } from "@/queries/thumbnail.query";
 import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateAction.vue";
@@ -315,7 +315,6 @@ const props = defineProps({
 const printerStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
 const floorStore = useFloorStore();
-const featureStore = useFeatureStore();
 const settingsStore = useSettingsStore();
 const gridStore = useGridStore();
 const controlDialog = useDialog(DialogName.PrinterControlDialog);
@@ -358,10 +357,6 @@ const unselected = computed(() => {
 
 const preferCancelOverQuickStop = computed(() => {
   return settingsStore.preferCancelOverQuickStop;
-});
-
-const hasPrinterControlFeature = computed(() => {
-  return featureStore.hasFeature("printerControlApi");
 });
 
 const printerState = computed(() => {

@@ -28,7 +28,7 @@
               label="Select a YAML file for import *"
             />
 
-            <v-alert type="error" v-if="errorMessage">
+            <v-alert v-if="errorMessage" type="error">
               {{ errorMessage }}
               <br />
               Details: {{ errorDetailedMessage.slice(0, 75) }}

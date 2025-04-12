@@ -61,14 +61,14 @@
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-btn
-            :disabled="!hasConnectUsbFeature || isLoading || noPrintersOrAllDisabled"
+            :disabled="isLoading || noPrintersOrAllDisabled"
             color="primary"
             @click="connectUSBs"
             class="ml-4"
           >
             <v-icon class="mr-2">usb</v-icon> Connect USBs
           </v-btn>
-          <v-alert v-if="!hasConnectUsbFeature" class="ml-4 mt-2" type="warning" color="orange">
+          <v-alert class="ml-4 mt-2" type="warning" color="orange">
             <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server
             update.
           </v-alert>
@@ -84,14 +84,14 @@
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-btn
-            :disabled="!hasConnectSocketFeature || isLoading || noPrintersOrAllDisabled"
+            :disabled="isLoading || noPrintersOrAllDisabled"
             color="primary"
             @click="connectSockets"
             class="ml-4"
           >
             <v-icon class="mr-2">hub</v-icon> Connect Sockets
           </v-btn>
-          <v-alert v-if="!hasConnectSocketFeature" class="ml-4 mt-2" type="warning" color="orange">
+          <v-alert class="ml-4 mt-2" type="warning" color="orange">
             <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server
             update.
           </v-alert>
@@ -125,10 +125,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from "vue";
-import { ServerPrivateService } from "@/backend/server-private.service";
 import { BatchService } from "@/backend/batch.service";
 import { usePrinterStore } from "@/store/printer.store";
-import { useFeatureStore } from "@/store/features.store";
 import {
   BarElement,
   CategoryScale,
@@ -159,7 +157,6 @@ export type BatchOctoPrintSettingsDto = {
 
 const page = settingsPage["emergencyCommands"];
 const printerStore = usePrinterStore();
-const featureStore = useFeatureStore();
 
 const isLoading = ref(false);
 const namesFetched = ref(false);
@@ -204,14 +201,6 @@ const noPrintersOrAllEnabled = computed(() => {
     printerStore.printers.length === 0 ||
     printerStore.printers.every((printer) => !!printer.enabled)
   );
-});
-
-const hasConnectUsbFeature = computed(() => {
-  return featureStore.hasFeature("batchConnectUsbCalls");
-});
-
-const hasConnectSocketFeature = computed(() => {
-  return featureStore.hasFeature("batchConnectSocketCalls");
 });
 
 async function clickFetchNameState() {
