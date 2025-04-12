@@ -4,6 +4,7 @@ Chore
 
 - Remove OctoPrint reference in "Refreshing OctoPrint connection state"
 - Cleanup unused API endpoints
+- Remove all unused feature flags - the features are not optional
 
 ## Client 15/03/2025 1.9.0
 
