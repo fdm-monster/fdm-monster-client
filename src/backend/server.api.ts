@@ -36,9 +36,11 @@ export class ServerApi {
 
   static readonly deleteGroupRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}`;
 
-  static readonly updateGroupNameRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}/name`;
+  static readonly updateGroupNameRoute = (id: IdType) =>
+    `${ServerApi.base}/printer-group/${id}/name`;
 
-  static readonly addPrinterToGroupRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}/printer`;
+  static readonly addPrinterToGroupRoute = (id: IdType) =>
+    `${ServerApi.base}/printer-group/${id}/printer`;
 
   static readonly deletePrinterFromGroupRoute = ServerApi.addPrinterToGroupRoute;
 
@@ -50,8 +52,10 @@ export class ServerApi {
   static readonly restartOctoPrintRoute = (id: IdType) =>
     `${ServerApi.getPrinterRoute(id)}/restart-octoprint`;
 
-  static readonly refreshSocketRoute = (id: IdType) => `${ServerApi.getPrinterRoute(id)}/refresh-socket`;
-  static readonly getPrinterSettingsRoute = (id: IdType) => `${ServerApi.printerSettingsRoute}/${id}`;
+  static readonly refreshSocketRoute = (id: IdType) =>
+    `${ServerApi.getPrinterRoute(id)}/refresh-socket`;
+  static readonly getPrinterSettingsRoute = (id: IdType) =>
+    `${ServerApi.printerSettingsRoute}/${id}`;
   static readonly setPrinterSettingsGCodeAnalysisRoute = (id: IdType) =>
     `${ServerApi.getPrinterSettingsRoute(id)}/gcode-analysis`;
   static readonly syncPrinterNameSettingRoute = (id: IdType) =>
@@ -61,14 +65,18 @@ export class ServerApi {
     `${ServerApi.getFloorRoute(id)}/printer`;
   static readonly sendQuickStopM112Route = (id: IdType) =>
     `${ServerApi.customGCodeRoute}/send-emergency-m112/${id}`;
-  static readonly updatePrinterFloorNameRoute = (id: IdType) => `${ServerApi.getFloorRoute(id)}/name`;
+  static readonly updatePrinterFloorNameRoute = (id: IdType) =>
+    `${ServerApi.getFloorRoute(id)}/name`;
   static readonly updatePrinterFloorNumberRoute = (id: IdType) =>
     `${ServerApi.getFloorRoute(id)}/floor-number`;
-  static readonly printerFilesClearRoute = (id: IdType) => `${ServerApi.printerFilesRoute}/${id}/clear`;
+  static readonly printerFilesClearRoute = (id: IdType) =>
+    `${ServerApi.printerFilesRoute}/${id}/clear`;
   static readonly printerFilesSelectAndPrintRoute = (id: IdType) =>
     `${ServerApi.printerFilesRoute}/${id}/select`;
-  static readonly printerFilesUploadRoute = (id: IdType) => `${ServerApi.printerFilesRoute}/${id}/upload`;
-  static readonly printerFilesCacheRoute = (id: IdType) => `${ServerApi.printerFilesRoute}/${id}/cache`;
+  static readonly printerFilesUploadRoute = (id: IdType) =>
+    `${ServerApi.printerFilesRoute}/${id}/upload`;
+  static readonly printerFilesCacheRoute = (id: IdType) =>
+    `${ServerApi.printerFilesRoute}/${id}/cache`;
   static readonly printerEnabledRoute = (id: IdType) => `${ServerApi.getPrinterRoute(id)}/enabled`;
   static readonly printerSerialConnectRoute = (id: IdType) =>
     `${ServerApi.getPrinterRoute(id)}/serial-connect`;
@@ -82,10 +90,15 @@ export class ServerApi {
   static readonly printerPauseJobRoute = (id: IdType) => `${ServerApi.printerJobRoute(id)}/pause`;
   static readonly printerResumeJobRoute = (id: IdType) => `${ServerApi.printerJobRoute(id)}/resume`;
 
-  static readonly userChangeUsernameRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/change-username`;
-  static readonly userChangePasswordRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/change-password`;
+  static readonly userChangeUsernameRoute = (id: IdType) =>
+    `${ServerApi.userRoute}/${id}/change-username`;
+  static readonly userChangePasswordRoute = (id: IdType) =>
+    `${ServerApi.userRoute}/${id}/change-password`;
   static readonly userDeleteRoute = (id: IdType) => `${ServerApi.userRoute}/${id}`;
-  static readonly userSetVerifiedRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-verified`;
-  static readonly userSetRootUserRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-root-user`;
-  static readonly userSetUserRolesRoute = (id: IdType) => `${ServerApi.userRoute}/${id}/set-user-roles`;
+  static readonly userSetVerifiedRoute = (id: IdType) =>
+    `${ServerApi.userRoute}/${id}/set-verified`;
+  static readonly userSetRootUserRoute = (id: IdType) =>
+    `${ServerApi.userRoute}/${id}/set-root-user`;
+  static readonly userSetUserRolesRoute = (id: IdType) =>
+    `${ServerApi.userRoute}/${id}/set-user-roles`;
 }
