@@ -115,14 +115,14 @@ const clearSelectedPrinters = () => {
 
 const batchReprintFiles = async () => {
   await useDialog(DialogName.BatchReprintDialog).handleAsync(
-    printersStore.selectedPrinters?.map((p) => p.id),
+    printersStore.selectedPrinters?.map((p) => p.id)
   );
 };
 
 const uploadFile = () => {
   const selectedPrintersValue = selectedPrinters.value;
   const accessiblePrinters = selectedPrintersValue.filter((p) =>
-    printerStateStore.isApiResponding(p.id),
+    printerStateStore.isApiResponding(p.id)
   );
 
   if (!selectedFile.value) return;
