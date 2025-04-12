@@ -16,14 +16,14 @@
           </v-list-item-content>
           <v-btn
             :disabled="isLoading || noPrintersOrAllDisabled"
+            class="ml-4"
             color="primary"
             @click="batchToggleEnabled(false)"
-            class="ml-4"
           >
             Batch disable
           </v-btn>
-          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
-          <v-icon v-if="noPrintersOrAllDisabled" color="warning" class="ml-2"> warning </v-icon>
+          <v-progress-circular v-if="isLoading" class="ml-2" indeterminate size="30" width="4" />
+          <v-icon v-if="noPrintersOrAllDisabled" class="ml-2" color="warning"> warning</v-icon>
         </v-list-item>
 
         <!-- Batch Enabling -->
@@ -36,20 +36,21 @@
           </v-list-item-content>
           <v-btn
             :disabled="isLoading || noPrintersOrAllEnabled"
+            class="ml-4"
             color="primary"
             @click="batchToggleEnabled(true)"
-            class="ml-4"
           >
             Batch enable
           </v-btn>
-          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+          <v-progress-circular v-if="isLoading" class="ml-2" indeterminate size="30" width="4" />
           <v-icon
             v-if="noPrintersOrAllEnabled"
-            color="warning"
-            class="ml-2"
             v-tooltip.bottom="'No printers available'"
-            >warning</v-icon
+            class="ml-2"
+            color="warning"
           >
+            warning
+          </v-icon>
         </v-list-item>
 
         <!-- USB Connect -->
@@ -62,17 +63,14 @@
           </v-list-item-content>
           <v-btn
             :disabled="isLoading || noPrintersOrAllDisabled"
+            class="ml-4"
             color="primary"
             @click="connectUSBs"
-            class="ml-4"
           >
-            <v-icon class="mr-2">usb</v-icon> Connect USBs
+            <v-icon class="mr-2">usb</v-icon>
+            Connect USBs
           </v-btn>
-          <v-alert class="ml-4 mt-2" type="warning" color="orange">
-            <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server
-            update.
-          </v-alert>
-          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+          <v-progress-circular v-if="isLoading" class="ml-2" indeterminate size="30" width="4" />
         </v-list-item>
 
         <!-- Socket Connect -->
@@ -85,25 +83,22 @@
           </v-list-item-content>
           <v-btn
             :disabled="isLoading || noPrintersOrAllDisabled"
+            class="ml-4"
             color="primary"
             @click="connectSockets"
-            class="ml-4"
           >
-            <v-icon class="mr-2">hub</v-icon> Connect Sockets
+            <v-icon class="mr-2">hub</v-icon>
+            Connect Sockets
           </v-btn>
-          <v-alert class="ml-4 mt-2" type="warning" color="orange">
-            <v-icon class="mr-2">warning</v-icon> This feature requires an FDM Monster server
-            update.
-          </v-alert>
-          <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+          <v-progress-circular v-if="isLoading" class="ml-2" indeterminate size="30" width="4" />
         </v-list-item>
       </v-list>
 
       <v-divider></v-divider>
 
       <!-- Response Time Measurement -->
-      <SettingSection title="Test all printer network response times" :usecols="false">
-        <v-btn color="primary" @click="clickFetchNameState" :loading="isLoading">
+      <SettingSection :usecols="false" title="Test all printer network response times">
+        <v-btn :loading="isLoading" color="primary" @click="clickFetchNameState">
           Measure network response times
         </v-btn>
       </SettingSection>
@@ -111,13 +106,13 @@
       <div class="ml-7 mt-3">
         <Bar
           v-if="namesFetched"
-          style="background-color: #272727"
           :data="chartConfig"
           :options="chartOptions"
           height="100"
+          style="background-color: #272727"
         />
         <span v-else>A graph will be shown, presenting the times in milliseconds (ms)</span>
-        <v-progress-circular v-if="isLoading" indeterminate size="30" width="4" class="ml-2" />
+        <v-progress-circular v-if="isLoading" class="ml-2" indeterminate size="30" width="4" />
       </div>
     </v-card-text>
   </v-card>
