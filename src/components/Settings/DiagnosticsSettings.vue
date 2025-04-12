@@ -3,14 +3,11 @@
     <SettingsToolbar :icon="page.icon" :title="page.title" />
     <v-card-text>
       <div>
-        <SettingSection
-          title="Remote Sentry diagnostic reports"
-          v-if="hasAnonymousDiagnosticsToggleFeature"
-        >
+        <SettingSection title="Remote Sentry diagnostic reports">
           <v-checkbox
-            @change="saveSentryDiagnosticsSettings"
             v-model="sentryDiagnosticsEnabled"
             label="Enable remote Sentry diagnostic reports"
+            @change="saveSentryDiagnosticsSettings"
           />
 
           <v-btn color="secondary" @click="sendTestSentryException()">
@@ -22,9 +19,8 @@
         <v-divider />
 
         <SettingSection
-          title="Download a .zip file containing all logs from the server"
-          v-if="hasLogDumpFeature"
           :usecols="false"
+          title="Download a .zip file containing all logs from the server"
         >
           <v-row>
             <v-col cols="3">
@@ -37,7 +33,7 @@
         </SettingSection>
 
         <v-divider />
-        <SettingSection title="Clear log files" v-if="hasLogClearFeature">
+        <SettingSection v-if="hasLogClearFeature" title="Clear log files">
           <v-btn color="default" @click="clearOldLogFiles()">
             <v-icon>download</v-icon>
             Clear log files older than a week
@@ -50,7 +46,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { AppService } from "@/backend/app.service";
 import { useSettingsStore } from "@/store/settings.store";
 import { SettingsService } from "@/backend";
 import { setSentryEnabled } from "@/utils/sentry.util";
@@ -64,18 +59,10 @@ import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 const page = settingsPage["diagnostics"];
 const snackBar = useSnackbar();
 const settingsStore = useSettingsStore();
-const hasAnonymousDiagnosticsToggleFeature = ref(false);
-const hasLogDumpFeature = ref(false);
 const hasLogClearFeature = ref(false);
 const sentryDiagnosticsEnabled = ref(false);
 
 onMounted(async () => {
-  const features = await AppService.getFeatures();
-  hasAnonymousDiagnosticsToggleFeature.value =
-    features.anonymousDiagnosticsToggle?.available || false;
-  hasLogDumpFeature.value = features.logDumpZip?.available || false;
-  hasLogClearFeature.value = features.clearLogFiles?.available || false;
-
   await settingsStore.loadSettings();
   sentryDiagnosticsEnabled.value = settingsStore.serverSettings?.sentryDiagnosticsEnabled || false;
 });

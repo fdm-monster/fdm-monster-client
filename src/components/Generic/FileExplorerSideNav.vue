@@ -14,14 +14,14 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               color="primary"
-              width="40"
               fab
               v-bind="attrs"
+              width="40"
               @click="openPrinterURL()"
               v-on="on"
               @click.middle="openPrinterURL()"
-              >{{ avatarInitials() }}</v-btn
-            >
+              >{{ avatarInitials() }}
+            </v-btn>
           </template>
           <span>Visit the {{ serviceName }} associated to this printer</span>
         </v-tooltip>
@@ -110,7 +110,7 @@
         <span>Visit the {{ serviceName }} associated to this printer</span>
       </v-tooltip>
 
-      <v-tooltip left v-if="isMoonraker">
+      <v-tooltip v-if="isMoonraker" left>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item
             class="extra-dense-list-item"
@@ -228,7 +228,7 @@
         <span>Disconnect USB, disrupting any print</span>
       </v-tooltip>
 
-      <v-tooltip v-if="featureStore.hasFeature('pauseResumePrinterCommand')" left>
+      <v-tooltip left>
         <template v-slot:activator="{ on, attrs }">
           <v-list-item
             :disabled="!isOnline || (!isPaused && !isPrinting)"
@@ -437,9 +437,8 @@ import { PrinterJobService } from "@/backend/printer-job.service";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { interpretStates } from "@/shared/printer-state.constants";
 import { useSettingsStore } from "@/store/settings.store";
-import { useFeatureStore } from "@/store/features.store";
 import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
-import { isMoonrakerType, isOctoPrintType, getServiceName } from "@/utils/printer-type.utils";
+import { getServiceName, isMoonrakerType, isOctoPrintType } from "@/utils/printer-type.utils";
 import { useQueryClient } from "@tanstack/vue-query";
 import { thumbnailQueryKey } from "@/queries/thumbnail.query";
 import { useDialog } from "@/shared/dialog.composable";
@@ -447,7 +446,6 @@ import { useDialog } from "@/shared/dialog.composable";
 const queryClient = useQueryClient();
 const printersStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
-const featureStore = useFeatureStore();
 
 const fileSearch = ref<string>();
 const shownFileCache = ref<FileDto[]>([]);

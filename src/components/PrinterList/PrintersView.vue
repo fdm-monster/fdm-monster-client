@@ -33,9 +33,9 @@
         :search="search"
         :single-expand="true"
         class="elevation-1"
-        @current-items="itemsChanged"
         item-key="id"
         show-expand
+        @current-items="itemsChanged"
         @click:row="clickRow"
       >
         <template v-slot:no-results>
@@ -295,12 +295,6 @@ const selectedGroupObject = computed(() => {
   if (!selectedGroup.value && selectedGroup.value !== 0) return;
 
   return groupsWithPrinters.value[selectedGroup.value];
-});
-
-const isSupportedPrinterType = computed(() => {
-  return featureStore
-    .getFeature<{ types: string[] }>("multiplePrinterServices")
-    ?.subFeatures?.types?.includes("klipper");
 });
 
 const diffSeconds = (timestamp: number) => {

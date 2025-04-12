@@ -3,7 +3,7 @@
     <SettingsToolbar :icon="page.icon" :title="page.title" />
 
     <v-card-text>
-      <SettingSection title="Current versions" :usecols="false">
+      <SettingSection :usecols="false" title="Current versions">
         <span> Your server's version is: {{ serverVersion }} </span>
         <span> Your client's version is: {{ version }} </span>
         <span v-if="monsterPiVersion">
@@ -16,7 +16,7 @@
 
       <v-divider />
 
-      <SettingSection title="Server upgrade" :usecols="false">
+      <SettingSection :usecols="false" title="Server upgrade">
         <v-list-item-subtitle>
           Please visit
           <a href="https://docs.fdm-monster.net/docs/installing/">
@@ -28,7 +28,7 @@
 
       <v-divider />
 
-      <SettingSection title="Client upgrade" :usecols="false">
+      <SettingSection :usecols="false" title="Client upgrade">
         <span>
           Please visit
           <a href="https://docs.fdm-monster.net/docs/configuration/updating_client_bundle">
@@ -42,20 +42,20 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title v-if="!rateLimitExceeded">
-                Select a release to upgrade to:</v-list-item-title
-              >
-              <v-list-item-subtitle class="mt-2" v-if="!rateLimitExceeded">
+                Select a release to upgrade to:
+              </v-list-item-title>
+              <v-list-item-subtitle v-if="!rateLimitExceeded" class="mt-2">
                 Minimum required version: {{ minimum?.tag_name }}
               </v-list-item-subtitle>
 
-              <v-alert color="error" v-if="errorMessage" style="color: black" class="mt-4 mb-6">
+              <v-alert v-if="errorMessage" class="mt-4 mb-6" color="error" style="color: black">
                 {{ errorMessage }}
               </v-alert>
               <span v-else-if="loading"> <v-alert>Loading releases...</v-alert></span>
               <v-alert v-if="!rateLimitExceeded && !loading && !filteredReleases?.length"
-                >No releases to show.</v-alert
-              >
-              <v-radio-group v-model="selectedRelease" v-if="filteredReleases?.length">
+                >No releases to show.
+              </v-alert>
+              <v-radio-group v-if="filteredReleases?.length" v-model="selectedRelease">
                 <v-radio
                   v-for="release in filteredReleases"
                   :key="release.tag_name"
@@ -65,26 +65,26 @@
                 />
               </v-radio-group>
               <div>
-                <v-alert v-if="showPrereleases" color="primary" max-width="500px">
+                <v-alert v-if="showPreReleases" color="primary" max-width="500px">
                   You are viewing prereleases, please install such versions at your own risk!
                 </v-alert>
               </div>
               <div>
                 <v-checkbox
-                  :disabled="rateLimitExceeded"
                   v-model="allowDowngrade"
+                  :disabled="rateLimitExceeded"
                   class="mt-0"
                   label="Allow downgrade"
                 ></v-checkbox>
                 <v-checkbox
-                  class="mt-0"
-                  v-model="showPrereleases"
+                  v-model="showPreReleases"
                   :disabled="getIsCurrentUnstable || rateLimitExceeded"
                   :label="
                     getIsCurrentUnstable
                       ? 'Show prerelease versions (Currently already on prerelease version)'
                       : 'Show prerelease versions'
                   "
+                  class="mt-0"
                 ></v-checkbox>
               </div>
 
@@ -119,7 +119,6 @@ import { version as packageJsonVersion } from "../../../package.json";
 import { IRelease } from "@/models/server/client-releases.model";
 import { compare, minor } from "semver";
 import SettingsToolbar from "@/components/Settings/Shared/SettingsToolbar.vue";
-import { useFeatureStore } from "@/store/features.store";
 import { settingsPage } from "@/components/Settings/Shared/setting.constants";
 import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 
@@ -134,9 +133,8 @@ const version = ref(packageJsonVersion);
 const current = ref<IRelease>();
 const minimum = ref<IRelease>();
 const selectedRelease = ref<string>();
-const showPrereleases = ref<boolean>(false);
+const showPreReleases = ref<boolean>(false);
 const loadedClientReleases = ref<IRelease[]>([]);
-const featureStore = useFeatureStore();
 
 onMounted(async () => {
   await loadReleases();
@@ -151,23 +149,21 @@ async function loadReleases() {
   errorMessage.value = "";
   rateLimitExceeded.value = false;
 
-  if (featureStore.hasFeature("githubRateLimitApi")) {
-    try {
-      const rateLimit = await AppService.getGithubRateLimit();
-      if (rateLimit.rate.remaining === 0) {
-        const limitResetAt = new Date(rateLimit.rate.reset);
-        const time = limitResetAt.toLocaleTimeString();
-        const diff = rateLimit.rate.reset * 1000 - Date.now();
-        const diffMinutes = Math.ceil(diff / 60000);
-        errorMessage.value = `Server has reached a rate limit of the Github API. This limit will be reset at ${time} (in ${diffMinutes} minutes)`;
-        loading.value = false;
-        rateLimitExceeded.value = true;
-        return;
-      }
-    } catch (e) {
+  try {
+    const rateLimit = await AppService.getGithubRateLimit();
+    if (rateLimit.rate.remaining === 0) {
+      const limitResetAt = new Date(rateLimit.rate.reset);
+      const time = limitResetAt.toLocaleTimeString();
+      const diff = rateLimit.rate.reset * 1000 - Date.now();
+      const diffMinutes = Math.ceil(diff / 60000);
+      errorMessage.value = `Server has reached a rate limit of the Github API. This limit will be reset at ${time} (in ${diffMinutes} minutes)`;
       loading.value = false;
+      rateLimitExceeded.value = true;
       return;
     }
+  } catch (e) {
+    loading.value = false;
+    return;
   }
 
   try {
@@ -190,7 +186,7 @@ const filteredReleases = computed(() => {
 
     return (
       isMinimumVersionOrHigher &&
-      (isCurrentUnstable() || showPrereleases.value || !isReleaseCandidate) &&
+      (isCurrentUnstable() || showPreReleases.value || !isReleaseCandidate) &&
       !isDraft
     );
   });
