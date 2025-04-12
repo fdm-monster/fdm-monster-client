@@ -1,6 +1,5 @@
 export interface VersionModel {
   version: string;
-  isDockerContainer: boolean;
   isNode: boolean;
   os: string;
   monsterPi: string | null;

@@ -1,23 +1,11 @@
 import { ServerApi } from "@/backend/server.api";
 import { BaseService } from "@/backend/base.service";
 import { LoginDetails, PrinterDto } from "@/models/printers/printer.model";
-import {
-  CreatePrinter,
-  getDefaultCreatePrinter,
-  PreCreatePrinter,
-} from "@/models/printers/create-printer.model";
+import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { IdType } from "@/utils/id.type";
 
 export class PrintersService extends BaseService {
-  static applyLoginDetailsPatchForm(
-    patch: { printerURL: string; apiKey: string; name: string },
-    formData: PreCreatePrinter
-  ) {
-    formData.name = patch.name || newRandomNamePair();
-    formData.apiKey = patch.apiKey;
-  }
-
   static convertPrinterToCreateForm(printer: CreatePrinter) {
     // Inverse transformation
     const newFormData = getDefaultCreatePrinter();
@@ -40,13 +28,13 @@ export class PrintersService extends BaseService {
   static async getPrinters() {
     const path = ServerApi.printerRoute;
 
-    return (await this.get<PrinterDto[]>(path)) as PrinterDto[];
+    return await this.get<PrinterDto[]>(path);
   }
 
   static async getPrinterLoginDetails(printerId: IdType) {
     const path = ServerApi.getPrinterLoginDetailsRoute(printerId);
 
-    return (await this.get<LoginDetails>(path)) as LoginDetails;
+    return await this.get<LoginDetails>(path);
   }
 
   static async restartOctoPrint(printerId: IdType) {
