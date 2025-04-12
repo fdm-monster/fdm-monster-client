@@ -46,6 +46,7 @@
             <v-icon class="pr-2" small>delete</v-icon>
             Clear all ({{ selectedPrinters.length }})
           </v-btn>
+
           <v-btn class="ml-2" color="secondary" x-small @click="$refs.fileUpload?.click()">
             Select gcode file
           </v-btn>
@@ -112,20 +113,16 @@ const clearSelectedPrinters = () => {
   printersStore.clearSelectedPrinters();
 };
 
-const selectAllPrinters = () => {
-  printersStore.selectAllPrinters();
-};
-
 const batchReprintFiles = async () => {
   await useDialog(DialogName.BatchReprintDialog).handleAsync(
-    printersStore.selectedPrinters?.map((p) => p.id)
+    printersStore.selectedPrinters?.map((p) => p.id),
   );
 };
 
 const uploadFile = () => {
   const selectedPrintersValue = selectedPrinters.value;
   const accessiblePrinters = selectedPrintersValue.filter((p) =>
-    printerStateStore.isApiResponding(p.id)
+    printerStateStore.isApiResponding(p.id),
   );
 
   if (!selectedFile.value) return;
