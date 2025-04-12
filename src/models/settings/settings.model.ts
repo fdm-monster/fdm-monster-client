@@ -39,14 +39,10 @@ export interface CredentialSettingsDto {
 }
 
 export interface ServerSettingsSensitiveDto {
-  debugSettings: {
-    debugSocketIoEvents: boolean;
-    debugSocketReconnect: boolean;
-    debugSocketRetries: boolean;
-    debugSocketSetup: boolean;
-    debugSocketMessages: boolean;
-    debugSocketIoBandwidth: boolean;
-  };
+  experimentalTypeormSupport: boolean;
+  experimentalMoonrakerSupport: boolean;
+  experimentalClientSupport: boolean;
+  experimentalThumbnailSupport: boolean;
 }
 
 export interface SettingsSensitiveDto {
