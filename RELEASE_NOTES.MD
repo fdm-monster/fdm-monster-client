@@ -1,5 +1,7 @@
 # Release notes
 
+## Client 12/04/2025 1.10.0
+
 Chore
 
 - Remove OctoPrint reference in "Refreshing OctoPrint connection state"
