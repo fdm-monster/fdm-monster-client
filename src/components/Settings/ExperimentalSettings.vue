@@ -36,6 +36,29 @@
           Disabling Moonraker support will disable all printers of type Moonraker. You need to
           re-enable them after re-enabling this feature.
         </v-alert>
+
+        <div class="d-flex align-center">
+          <v-checkbox
+            v-model="experimentalPrusaLinkSupport"
+            :disabled="isPrusaLinkSupportLoading"
+            @change="updatePrusaLinkSupport"
+            hide-details
+          >
+            <template v-slot:label>
+              <span>Enable Experimental Prusa-Link Support</span>
+            </template>
+          </v-checkbox>
+          <v-progress-circular
+            v-if="isPrusaLinkSupportLoading"
+            indeterminate
+            size="30"
+            width="4"
+            class="ml-2 mt-4"
+          />
+          <v-icon v-if="showPrusaLinkSuccess" color="success" class="ml-2 mt-4">
+            check_circle
+          </v-icon>
+        </div>
       </SettingSection>
 
       <v-divider />
@@ -131,19 +154,23 @@ import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 
 const page = settingsPage["experimental"];
 const experimentalMoonrakerSupport = ref(false);
+const experimentalPrusaLinkSupport = ref(false);
 const experimentalThumbnailSupport = ref(false);
 const experimentalTypeORMSupport = ref(false);
 const experimentalClientSupport = ref(false);
 const isMoonrakerSupportLoading = ref(false);
+const isPrusaLinkSupportLoading = ref(false);
 const isThumbnailSupportLoading = ref(false);
 const isClientLoading = ref(false);
 const showMoonrakerSuccess = ref(false);
+const showPrusaLinkSuccess = ref(false);
 const showThumbnailSuccess = ref(false);
 const showClientSuccess = ref(false);
 
 async function loadSettings() {
   const settings = await SettingsService.getSettings();
   experimentalMoonrakerSupport.value = settings.server.experimentalMoonrakerSupport;
+  experimentalPrusaLinkSupport.value = settings.server.experimentalPrusaLinkSupport;
   experimentalThumbnailSupport.value = settings.server.experimentalThumbnailSupport;
   experimentalTypeORMSupport.value = settings.server.experimentalTypeormSupport;
   experimentalClientSupport.value = settings.server.experimentalClientSupport;
@@ -172,6 +199,28 @@ const updateMoonrakerSupport = async () => {
     console.error("Failed to update Moonraker support:", error);
     experimentalMoonrakerSupport.value = !experimentalMoonrakerSupport.value;
     isMoonrakerSupportLoading.value = false;
+  }
+};
+
+const updatePrusaLinkSupport = async () => {
+  isPrusaLinkSupportLoading.value = true;
+  showPrusaLinkSuccess.value = false;
+
+  try {
+    await SettingsService.updateExperimentalPrusaLinkSupport(experimentalPrusaLinkSupport.value);
+    await loadSettings();
+    setTimeout(() => {
+      isPrusaLinkSupportLoading.value = false;
+      showPrusaLinkSuccess.value = true;
+    }, 250);
+
+    setTimeout(() => {
+      showPrusaLinkSuccess.value = false;
+    }, 3000);
+  } catch (error) {
+    console.error("Failed to update Moonraker support:", error);
+    experimentalPrusaLinkSupport.value = !experimentalPrusaLinkSupport.value;
+    isPrusaLinkSupportLoading.value = false;
   }
 };
 
