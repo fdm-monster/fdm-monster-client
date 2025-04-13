@@ -3,12 +3,12 @@
     <SettingsToolbar :icon="page.icon" :title="page.title" />
 
     <v-card-text>
-      <SettingSection title="Login and registration" :usecols="false">
+      <SettingSection :usecols="false" title="Login and registration">
         <v-row>
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-checkbox v-model="loginRequired" label="Require Login" @change="setLoginRequired" />
           </v-col>
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-checkbox
               v-model="registrationEnabled"
               label="Enable Registration"
@@ -20,14 +20,14 @@
 
       <v-divider />
 
-      <SettingSection title="Login expiry settings (advanced)" :usecols="false">
-        <v-alert color="secondary" class="mb-6">
+      <SettingSection :usecols="false" title="Login expiry settings (advanced)">
+        <v-alert class="mb-6" color="secondary">
           <v-icon>info</v-icon> &nbsp; Be cautious, setting the wrong expiry could make you lose
           access to the server!
         </v-alert>
 
         <v-row>
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-text-field
               v-model="jwtExpiresIn"
               :rules="[(val) => !!val && val >= 120 && val <= 120 * 60]"
@@ -37,25 +37,25 @@
         </v-row>
 
         <v-row>
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-checkbox
               v-model="refreshTokenAttemptsEnabled"
-              @change="onRefreshTokenEnabledChange()"
               label="Enable Refresh Token Attempts"
+              @change="onRefreshTokenEnabledChange()"
             ></v-checkbox>
           </v-col>
 
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-text-field
-              type="number"
               v-model="refreshTokenAttempts"
               :disabled="!refreshTokenAttemptsEnabled"
               :rules="[(val) => !!val && val >= 50]"
               label="Refresh Token Attempts (disabled: -1)"
+              type="number"
             />
           </v-col>
 
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-text-field
               v-model="refreshTokenExpiry"
               :rules="[(val) => !!val && val >= 1 && val <= 30]"
@@ -65,12 +65,12 @@
         </v-row>
 
         <v-row>
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-btn color="primary" @click="saveLoginExpirySettings()">
               save login expiry settings
             </v-btn>
           </v-col>
-          <v-col cols="4" sm="12" lg="3" xl="2">
+          <v-col cols="4" lg="3" sm="12" xl="2">
             <v-btn color="default" @click="resetLoginExpirySettingsToDefault()">
               Reset to default
             </v-btn>
