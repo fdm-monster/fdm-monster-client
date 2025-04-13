@@ -77,7 +77,7 @@
                       label="Edit"
                       single-line
                       type="number"
-                    ></v-text-field>
+                    />
                   </template>
                 </v-edit-dialog>
               </v-toolbar-title>
@@ -190,7 +190,7 @@ export default defineComponent({
       const { id: floorId } = this.selectedFloor;
       await this.floorStore.updateFloorNumber({
         floorId,
-        floorNumber: this.editedFloorNumber,
+        floorNumber: parseInt(this.editedFloorNumber.toString()),
       });
       this.snackbar.info("Floor level updated");
       // Adapt to potential sort change
