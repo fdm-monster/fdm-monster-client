@@ -1456,7 +1456,7 @@ __metadata:
     "@fontsource/roboto": "npm:5.2.5"
     "@sentry/tracing": "npm:7.120.3"
     "@sentry/vue": "npm:9.13.0"
-    "@tanstack/vue-query": "npm:5.74.3"
+    "@tanstack/vue-query": "npm:5.74.4"
     "@types/jest": "npm:29.5.14"
     "@types/luxon": "npm:3.6.2"
     "@types/semver": "npm:7.7.0"
@@ -2614,19 +2614,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:5.74.3":
-  version: 5.74.3
-  resolution: "@tanstack/query-core@npm:5.74.3"
-  checksum: 10c0/ad28c2a4b9c39b23fb4a621474f134320f4cf5a2ea62a12918ca27d95b4b4a8b15316d5eceba04debbe2ecc7453f4dbaeb8deede7eeef07a83ad6ee42659b326
+"@tanstack/query-core@npm:5.74.4":
+  version: 5.74.4
+  resolution: "@tanstack/query-core@npm:5.74.4"
+  checksum: 10c0/e74d0520b2ee14c8a65f9ff00e335cb9d25453b8af08d776ff3f7a6ba24178cbf4d6a884412df5a0747737e4ca87f637dafaad2c0f0e6afd7cd22e32e0d7dced
   languageName: node
   linkType: hard
 
-"@tanstack/vue-query@npm:5.74.3":
-  version: 5.74.3
-  resolution: "@tanstack/vue-query@npm:5.74.3"
+"@tanstack/vue-query@npm:5.74.4":
+  version: 5.74.4
+  resolution: "@tanstack/vue-query@npm:5.74.4"
   dependencies:
     "@tanstack/match-sorter-utils": "npm:^8.19.4"
-    "@tanstack/query-core": "npm:5.74.3"
+    "@tanstack/query-core": "npm:5.74.4"
     "@vue/devtools-api": "npm:^6.6.3"
     vue-demi: "npm:^0.14.10"
   peerDependencies:
@@ -2635,7 +2635,7 @@ __metadata:
   peerDependenciesMeta:
     "@vue/composition-api":
       optional: true
-  checksum: 10c0/aeacdb4eeee1cda9227ee0de61fe6db03018a8639bf7c251a24e381b909c9d4c0ec380a6f8982da414b097387aca352fa481bfad53318c9d755f0412b6525a0d
+  checksum: 10c0/a78f1642af473ac28fa38037a01824fa1113aa73fc98d22b60a8e4da74bb481706a44888c24d349012706dccab34046ae8116a383d42246c6a20f6eaa013237a
   languageName: node
   linkType: hard
 
