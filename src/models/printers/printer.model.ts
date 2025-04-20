@@ -16,5 +16,7 @@ export interface PrinterDto {
   name: string;
   webSocketURL: string;
   apiKey: string;
+  username: string;
+  password: string;
   printerURL: string;
 }
