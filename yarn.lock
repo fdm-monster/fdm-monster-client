@@ -2949,11 +2949,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.14.1
-  resolution: "@types/node@npm:22.14.1"
+  version: 22.15.0
+  resolution: "@types/node@npm:22.15.0"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/d49c4d00403b1c2348cf0701b505fd636d80aabe18102105998dc62fdd36dcaf911e73c7a868c48c21c1022b825c67b475b65b1222d84b704d8244d152bb7f86
+  checksum: 10c0/f60c716f473ec7cbb6fffd8488d29a9ea697f4f5d71c1ebca72e17cdce1c7df054c295122a2589463c44490d875f485f9251ada3c3167bdbe4fbe8a677059780
   languageName: node
   linkType: hard
 
@@ -6627,9 +6627,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.73":
-  version: 1.5.140
-  resolution: "electron-to-chromium@npm:1.5.140"
-  checksum: 10c0/cd0c5a3e0624592494e03b1ae28e04b0d4f8dec0e2ff8fc0f38dc8622fdf795811ef8abe41167f03380f969515c2f4f23297f6e1372ff36aad01c78446565e6d
+  version: 1.5.142
+  resolution: "electron-to-chromium@npm:1.5.142"
+  checksum: 10c0/05bc0c695a4b7c6fac499700199bfd90d767eea352e67171f005920a225e42fa08dc62ba0d31523fcd2e9b49e25aab133f82270e784888fb5c3c032f6607cdeb
   languageName: node
   linkType: hard
 
@@ -8062,8 +8062,8 @@ __metadata:
   linkType: hard
 
 "glob@npm:^11.0.0":
-  version: 11.0.1
-  resolution: "glob@npm:11.0.1"
+  version: 11.0.2
+  resolution: "glob@npm:11.0.2"
   dependencies:
     foreground-child: "npm:^3.1.0"
     jackspeak: "npm:^4.0.1"
@@ -8073,7 +8073,7 @@ __metadata:
     path-scurry: "npm:^2.0.0"
   bin:
     glob: dist/esm/bin.mjs
-  checksum: 10c0/2b32588be52e9e90f914c7d8dec32f3144b81b84054b0f70e9adfebf37cd7014570489f2a79d21f7801b9a4bd4cca94f426966bfd00fb64a5b705cfe10da3a03
+  checksum: 10c0/49f91c64ca882d5e3a72397bd45a146ca91fd3ca53dafb5254daf6c0e83fc510d39ea66f136f9ac7ca075cdd11fbe9aaa235b28f743bd477622e472f4fdc0240
   languageName: node
   linkType: hard
 
