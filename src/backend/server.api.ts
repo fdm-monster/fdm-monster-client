@@ -33,6 +33,7 @@ export class ServerApi {
   static readonly updateExperimentalMoonrakerSupportRoute = `${ServerApi.settingsRoute}/experimental-moonraker-support`;
   static readonly updateExperimentalThumbnailSupportRoute = `${ServerApi.settingsRoute}/experimental-thumbnail-support`;
   static readonly updateExperimentalClientSupportRoute = `${ServerApi.settingsRoute}/experimental-client-support`;
+  static readonly updateExperimentalPrusaLinkSupportRoute = `${ServerApi.settingsRoute}/experimental-prusa-link-support`;
 
   static readonly deleteGroupRoute = (id: IdType) => `${ServerApi.base}/printer-group/${id}`;
 

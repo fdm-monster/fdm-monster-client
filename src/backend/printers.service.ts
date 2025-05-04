@@ -15,6 +15,8 @@ export class PrintersService extends BaseService {
     newFormData.printerType = printer.printerType;
     newFormData.name = printer.name || newRandomNamePair();
     newFormData.apiKey = printer.apiKey;
+    newFormData.username = printer.username;
+    newFormData.password = printer.password;
     newFormData.enabled = printer.enabled;
     return newFormData;
   }
@@ -61,7 +63,7 @@ export class PrintersService extends BaseService {
 
   static async sendPrinterJogCommand(
     printerId: IdType,
-    amounts: { x?: number; y?: number; z?: number }
+    amounts: { x?: number; y?: number; z?: number },
   ) {
     const path = ServerApi.printerJogCommandRoute(printerId);
 

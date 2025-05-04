@@ -22,18 +22,15 @@ import { useTrackedUploadsStore } from "@/store/tracked-uploads.store";
 enum IO_MESSAGES {
   LegacyUpdate = "legacy-update",
   TestPrinterState = "test-printer-state",
-  // CompletionEvent = "completion-event",
-  HostState = "host-state",
-  ApiAccessibility = "api-accessibility",
 }
 
 export class SocketIoService {
-  private printerStore = usePrinterStore();
-  private floorStore = useFloorStore();
-  private printerStateStore = usePrinterStateStore();
-  private testPrinterStore = useTestPrinterStore();
-  private trackedUploadsStore = useTrackedUploadsStore();
-  private snackbar = useSnackbar();
+  private readonly printerStore = usePrinterStore();
+  private readonly floorStore = useFloorStore();
+  private readonly printerStateStore = usePrinterStateStore();
+  private readonly testPrinterStore = useTestPrinterStore();
+  private readonly trackedUploadsStore = useTrackedUploadsStore();
+  private readonly snackbar = useSnackbar();
 
   socketState() {
     return getSocketState();

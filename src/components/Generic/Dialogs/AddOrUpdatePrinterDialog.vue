@@ -2,7 +2,6 @@
   <BaseDialog
     :id="dialog.dialogId"
     :max-width="showChecksPanel ? '900px' : '800px'"
-    @beforeOpened="onBeforeDialogOpened()"
     @escape="closeDialog()"
     @opened="onDialogOpened()"
   >
@@ -22,16 +21,16 @@
         <v-item-group v-model="formData.printerType" mandatory>
           <v-container>
             <v-row>
-              <v-col v-for="item of serviceTypes" :key="item.name" cols="12" md="6">
+              <v-col v-for="item of serviceTypes" :key="item.name" cols="4" md="4">
                 <v-item v-slot="{ active, toggle }">
                   <v-card
                     :color="active ? 'primary' : 'blue-grey darken-4'"
                     class="d-flex align-center justify-center elevation-8"
-                    height="75px"
+                    height="60px"
                     width="225px"
                     @click="toggle"
                   >
-                    <v-img :src="item.logo" :height="item.height" max-width="125px" width="125px" />
+                    <v-img :height="item.height" :src="item.logo" max-width="100px" width="125px" />
                     <v-scroll-y-transition>
                       <h3 class="ml-3 align-center">{{ item.name }}</h3>
                     </v-scroll-y-transition>
@@ -74,11 +73,36 @@
             />
 
             <v-text-field
+              v-if="formData.printerType === OctoPrintType"
               v-model="formData.apiKey"
               :counter="apiKeyRules.length"
+              :label="
+                formData.printerType === OctoPrintType || formData.printerType === MoonrakerType
+                  ? 'API Key (optional)'
+                  : 'API Key (required)*'
+              "
               class="ma-1"
               hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
-              :label="formData.printerType === 1 ? 'API Key (optional)' : 'API Key (required)*'"
+              persistent-hint
+              required
+            />
+
+            <v-text-field
+              v-if="formData.printerType === PrusaLinkType"
+              v-model="formData.username"
+              class="ma-1"
+              hint="Username (often 'maker')"
+              label="Username"
+              persistent-hint
+              required
+            />
+
+            <v-text-field
+              v-if="formData.printerType === PrusaLinkType"
+              v-model="formData.password"
+              class="ma-1"
+              hint="Password (visit your printer settings)"
+              label="Password"
               persistent-hint
               required
             />
@@ -88,11 +112,11 @@
             <v-btn @click="showChecksPanel = false">Hide checks</v-btn>
           </PrinterChecksPanel>
         </v-row>
-        <v-alert color="primary" class="my-3" v-if="printerValidationError?.length">
+        <v-alert v-if="printerValidationError?.length" class="my-3" color="primary">
           {{ printerValidationError }}
-          <v-checkbox color="warning" v-model="forceSavePrinter" label="Force save" />
+          <v-checkbox v-model="forceSavePrinter" color="warning" label="Force save" />
         </v-alert>
-        <v-alert class="my-3" v-if="validatingPrinter">
+        <v-alert v-if="validatingPrinter" class="my-3">
           Validating printer
           <v-progress-circular indeterminate />
         </v-alert>
@@ -102,8 +126,8 @@
         <v-spacer />
         <v-btn text @click="closeDialog()">Close</v-btn>
         <v-btn
-          :disabled="!isValid()"
           v-if="isUpdating"
+          :disabled="!isValid()"
           color="gray"
           text
           @click="duplicatePrinter()"
@@ -126,6 +150,7 @@
 import { computed, inject, ref } from "vue";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
+import prusaLinkLogoSvg from "@/assets/prusa-link-logo.svg";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -138,7 +163,14 @@ import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
-import { isMoonrakerType } from "@/utils/printer-type.utils";
+import {
+  getServiceName,
+  isMoonrakerType,
+  isPrusaLinkType,
+  MoonrakerType,
+  OctoPrintType,
+  PrusaLinkType,
+} from "@/utils/printer-type.utils";
 import { useFloorStore } from "@/store/floor.store";
 import { captureException } from "@sentry/vue";
 
@@ -163,14 +195,19 @@ const serviceTypes = computed(() => {
     if (hasKlipperSupport) {
       return [
         {
-          name: "OctoPrint",
+          name: getServiceName(OctoPrintType),
           logo: octoPrintTentacleSvg,
-          height: "75px",
+          height: "60px",
         },
         {
-          name: "Klipper",
+          name: getServiceName(MoonrakerType),
           logo: klipperLogoSvg,
-          height: "75px",
+          height: "60px",
+        },
+        {
+          name: getServiceName(PrusaLinkType),
+          logo: prusaLinkLogoSvg,
+          height: "20px",
         },
       ];
     }
@@ -186,8 +223,6 @@ const serviceTypes = computed(() => {
 });
 
 const printerId = computed(() => printersStore.updateDialogPrinter?.id);
-
-function onBeforeDialogOpened() {}
 
 async function onDialogOpened() {
   await featureStore.loadFeatures();
@@ -240,7 +275,7 @@ const testPrinter = async () => {
   openTestPanel();
 
   const { correlationToken } = await testPrinterStore.createTestPrinter(
-    formData.value as CreatePrinter
+    formData.value as CreatePrinter,
   );
   testPrinterStore.currentCorrelationToken = correlationToken;
 };
@@ -250,6 +285,9 @@ const isValid = () => {
   if (!form) return false;
   if (isMoonrakerType(form.printerType)) {
     return form.printerURL?.length && form.name?.length;
+  }
+  if (isPrusaLinkType(form.printerType)) {
+    return form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length;
   }
   return form.printerURL?.length && form.name?.length && form.apiKey?.length;
 };
@@ -270,7 +308,7 @@ const updatePrinter = async (updatedPrinter: CreatePrinter) => {
       printerId: printerId as string,
       updatedPrinter,
     },
-    forceSavePrinter.value
+    forceSavePrinter.value,
   );
 
   snackbar.openInfoMessage({
@@ -296,7 +334,7 @@ const submit = async () => {
 
   const createdPrinter = formData.value;
 
-  if (isMoonrakerType(createdPrinter.printerType)) {
+  if (isMoonrakerType(createdPrinter.printerType) || isPrusaLinkType(createdPrinter.printerType)) {
     createdPrinter.apiKey = "";
   }
 

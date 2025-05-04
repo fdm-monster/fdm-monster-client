@@ -1,15 +1,27 @@
+export const OctoPrintType = 0;
+export const MoonrakerType = 1;
+export const PrusaLinkType = 2;
+
 export function isOctoPrintType(printerType?: number) {
-  return printerType === 0;
+  return printerType === OctoPrintType;
 }
 
 export function isMoonrakerType(printerType?: number) {
-  return printerType === 1;
+  return printerType === MoonrakerType;
+}
+
+export function isPrusaLinkType(printerType?: number) {
+  return printerType === PrusaLinkType;
 }
 
 export function getServiceName(printerType?: number) {
-  return isOctoPrintType(printerType)
-    ? "OctoPrint"
-    : isMoonrakerType(printerType)
-    ? "Moonraker"
-    : "Unknown";
+  if (isOctoPrintType(printerType)) {
+    return "OctoPrint";
+  } else if (isMoonrakerType(printerType)) {
+    return "Moonraker";
+  } else if (isPrusaLinkType(printerType)) {
+    return "PrusaLink";
+  } else {
+    return "Unknown";
+  }
 }
