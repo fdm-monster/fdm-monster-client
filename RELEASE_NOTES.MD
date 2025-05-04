@@ -6,6 +6,10 @@ Feature
 
 - Introduce UI tweaks for FDM Monster 1.9 PrusaLink support 
 
+Fixes
+
+- Floor settings: When updating a floor, the floor number is now explicitly sent to backend as integer
+
 ## Client 12/04/2025 1.10.0
 
 Chore
