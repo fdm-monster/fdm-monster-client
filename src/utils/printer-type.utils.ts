@@ -15,11 +15,13 @@ export function isPrusaLinkType(printerType?: number) {
 }
 
 export function getServiceName(printerType?: number) {
-  return isOctoPrintType(printerType)
-    ? "OctoPrint"
-    : isMoonrakerType(printerType)
-    ? "Moonraker"
-    : isPrusaLinkType(printerType)
-    ? "PrusaLink"
-    : "Unknown";
+  if (isOctoPrintType(printerType)) {
+    return "OctoPrint";
+  } else if (isMoonrakerType(printerType)) {
+    return "Moonraker";
+  } else if (isPrusaLinkType(printerType)) {
+    return "PrusaLink";
+  } else {
+    return "Unknown";
+  }
 }
