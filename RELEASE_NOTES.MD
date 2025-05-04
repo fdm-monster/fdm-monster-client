@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 04/05/2025 1.10.1
+
+Feature
+
+- Introduce UI tweaks for FDM Monster 1.9 PrusaLink support 
+
 ## Client 12/04/2025 1.10.0
 
 Chore
