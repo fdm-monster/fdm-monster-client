@@ -15,6 +15,7 @@ export interface ConnectionInfo {
 
 export interface TimeoutSettings {
   apiTimeout: number;
+  apiUploadTimeout: number;
 }
 
 export interface WizardSettingsDto {
