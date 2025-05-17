@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 04/05/2025 1.10.2
+
+Fix
+
+- PrusaLink support should not be dependent on whether Klipper support is enabled. Fixed with new API subfeature, which was missing. 
+
 ## Client 04/05/2025 1.10.1
 
 Feature

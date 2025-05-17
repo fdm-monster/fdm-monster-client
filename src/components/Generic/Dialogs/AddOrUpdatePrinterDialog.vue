@@ -192,25 +192,25 @@ const serviceTypes = computed(() => {
   if (featureStore.hasFeature("multiplePrinterServices")) {
     const feature = featureStore.getFeature<{ types: string[] }>("multiplePrinterServices");
     const hasKlipperSupport = feature?.subFeatures?.types?.includes("klipper");
-    if (hasKlipperSupport) {
-      return [
-        {
-          name: getServiceName(OctoPrintType),
-          logo: octoPrintTentacleSvg,
-          height: "60px",
-        },
-        {
-          name: getServiceName(MoonrakerType),
-          logo: klipperLogoSvg,
-          height: "60px",
-        },
-        {
-          name: getServiceName(PrusaLinkType),
-          logo: prusaLinkLogoSvg,
-          height: "20px",
-        },
-      ];
-    }
+    const hasPrusaLinkSupport = feature?.subFeatures?.types?.includes("prusaLink");
+
+    return [
+      {
+        name: getServiceName(OctoPrintType),
+        logo: octoPrintTentacleSvg,
+        height: "60px",
+      },
+      ...(hasKlipperSupport ? [{
+        name: getServiceName(MoonrakerType),
+        logo: klipperLogoSvg,
+        height: "60px",
+      }] : []),
+      ...(hasPrusaLinkSupport ? [{
+        name: getServiceName(PrusaLinkType),
+        logo: prusaLinkLogoSvg,
+        height: "20px",
+      }] : []),
+    ];
   }
 
   return [
@@ -237,7 +237,7 @@ async function onDialogOpened() {
 const storedPrinter = computed(() => printersStore.updateDialogPrinter);
 const isUpdating = computed(() => !!storedPrinter.value);
 const submitButtonText = computed(
-  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
+  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create"),
 );
 
 const avatarInitials = computed(() => {
