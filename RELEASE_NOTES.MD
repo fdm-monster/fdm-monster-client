@@ -2,9 +2,13 @@
 
 ## Client 17/05/2025 1.10.3
 
-Feature:
+Feature
 
 - ability to set upload timeout separately
+
+Chore
+
+- Rename OctoPrint settings page to Printer
 
 ## Client 17/05/2025 1.10.2
 
