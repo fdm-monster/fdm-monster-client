@@ -78,7 +78,7 @@
               :counter="apiKeyRules.length"
               :label="
                 formData.printerType === OctoPrintType || formData.printerType === MoonrakerType
-                  ? 'API Key (optional)'
+                  ? 'API Key (unsupported)'
                   : 'API Key (required)*'
               "
               class="ma-1"

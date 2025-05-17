@@ -45,7 +45,7 @@
             hide-details
           >
             <template v-slot:label>
-              <span>Enable Experimental Prusa-Link Support</span>
+              <span>Enable Experimental PrusaLink Support</span>
             </template>
           </v-checkbox>
           <v-progress-circular
