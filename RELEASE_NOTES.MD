@@ -1,6 +1,12 @@
 # Release notes
 
-## Client 04/05/2025 1.10.2
+## Client 17/05/2025 1.10.3
+
+Feature:
+
+- ability to set upload timeout separately
+
+## Client 17/05/2025 1.10.2
 
 Fix
 

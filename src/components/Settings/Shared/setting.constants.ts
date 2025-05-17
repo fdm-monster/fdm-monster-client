@@ -1,7 +1,7 @@
 export const settingPage = {
   grid: "grid",
   floors: "floors",
-  octoprint: "octoprint",
+  printer: "printer",
   emergencyCommands: "emergencyCommands",
   users: "users",
   account: "account",
@@ -24,10 +24,10 @@ export const settingsPage = {
     path: "/settings/floors",
     divider: true,
   },
-  [settingPage.octoprint]: {
-    title: "OctoPrint",
-    icon: "image",
-    path: "/settings/octoprint",
+  [settingPage.printer]: {
+    title: "Printer",
+    icon: "local_print_shop",
+    path: "/settings/printer",
     divider: false,
   },
   [settingPage.emergencyCommands]: {

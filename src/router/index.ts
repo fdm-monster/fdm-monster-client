@@ -4,7 +4,7 @@ import PrintersView from "@/components/PrinterList/PrintersView.vue";
 import Settings from "../components/Settings/SettingsView.vue";
 import AboutHelp from "../components/AboutHelp/AboutView.vue";
 import PrintStatisticsView from "@/components/PrintStatistics/PrintStatisticsView.vue";
-import OctoPrintSettings from "@/components/Settings/OctoPrintSettings.vue";
+import PrinterSettings from "@/components/Settings/PrinterSettings.vue";
 import EmergencyCommands from "../components/Settings/EmergencyCommands.vue";
 import UsersSettings from "@/components/Settings/UsersSettings.vue";
 import FloorSettings from "@/components/Settings/FloorSettings.vue";
@@ -102,9 +102,9 @@ const routes: Array<RouteConfig> = [
         component: UsersSettings,
       },
       {
-        path: "octoprint",
+        path: "printer",
         meta: NeedsAuth,
-        component: OctoPrintSettings,
+        component: PrinterSettings,
       },
       {
         path: "emergency-commands",
