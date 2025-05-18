@@ -72,8 +72,8 @@ export class ServerApi {
     `${ServerApi.getFloorRoute(id)}/floor-number`;
   static readonly printerFilesClearRoute = (id: IdType) =>
     `${ServerApi.printerFilesRoute}/${id}/clear`;
-  static readonly printerFilesSelectAndPrintRoute = (id: IdType) =>
-    `${ServerApi.printerFilesRoute}/${id}/select`;
+  static readonly printerFilesStartPrintRoute = (id: IdType) =>
+    `${ServerApi.printerFilesRoute}/${id}/select`; // TODO rename to start-print
   static readonly printerFilesUploadRoute = (id: IdType) =>
     `${ServerApi.printerFilesRoute}/${id}/upload`;
   static readonly printerFilesCacheRoute = (id: IdType) =>

@@ -16,10 +16,10 @@ export class PrinterFileService extends BaseService {
   static async getThumbnail(printerId: IdType) {
     const path = `${ServerApi.printerFilesRoute}/${printerId}/thumbnail`;
 
-    return (await this.get(path)) as {
+    return await this.get<{
       id: string;
       thumbnailBase64: string;
-    };
+    }>(path);
   }
 
   /**
@@ -29,18 +29,19 @@ export class PrinterFileService extends BaseService {
   static async getFileCache(printerId: IdType) {
     const path = `${ServerApi.printerFilesCacheRoute(printerId)}`;
 
-    return (await this.get(path)) as FileDto[];
+    return await this.get<FileDto[]>(path);
   }
 
   static async selectAndPrintFile(printerId: IdType, filePath: string, print = true) {
-    const path = ServerApi.printerFilesSelectAndPrintRoute(printerId);
+    const path = ServerApi.printerFilesStartPrintRoute(printerId);
     return await this.post(path, { filePath, print });
   }
 
-  static async uploadFile(printer: PrinterDto, file: File) {
+  static async uploadFile(printer: PrinterDto, file: File, startPrint: boolean = true) {
     const path = ServerApi.printerFilesUploadRoute(printer.id);
 
     const formData = new FormData();
+    formData.append("startPrint", startPrint.toString());
     formData.append("files[0]", file);
 
     return this.postUpload(path, formData, {
@@ -50,7 +51,7 @@ export class PrinterFileService extends BaseService {
           "single-file-upload",
           `Uploading file ${file.name}`,
           (100 * progress.loaded) / progress.total!,
-          false
+          false,
         );
       },
     });
@@ -75,7 +76,7 @@ export class PrinterFileService extends BaseService {
 
   static async downloadFile(printerId: IdType, path: string) {
     const urlPath = `${ServerApi.printerFilesRoute}/${printerId}/download/${encodeURIComponent(
-      path
+      path,
     )}`;
     const arrayBuffer = await this.getDownload(urlPath);
     downloadFileByBlob(arrayBuffer.data, path);

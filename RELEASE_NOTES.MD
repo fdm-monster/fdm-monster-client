@@ -5,6 +5,7 @@
 Feature
 
 - Detect server disconnects, presenting this in overlay message with page reload
+- Ability to add startPrint to specify print or not after upload
 
 Fixes
 
