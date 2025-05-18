@@ -52,12 +52,21 @@
           </v-btn>
           <v-btn
             :disabled="!selectedFile"
+            class="ml-2"
+            color="green"
+            x-small
+            @click="uploadFile(false)"
+          >
+            Upload only
+          </v-btn>
+          <v-btn
+            :disabled="!selectedFile"
             class="ml-2 mr-5"
             color="green"
             x-small
-            @click="uploadFile()"
+            @click="uploadFile(true)"
           >
-            Upload gcode file
+            Upload and print
           </v-btn>
           <input
             ref="fileUpload"
@@ -115,14 +124,14 @@ const clearSelectedPrinters = () => {
 
 const batchReprintFiles = async () => {
   await useDialog(DialogName.BatchReprintDialog).handleAsync(
-    printersStore.selectedPrinters?.map((p) => p.id)
+    printersStore.selectedPrinters?.map((p) => p.id),
   );
 };
 
-const uploadFile = () => {
+const uploadFile = (startPrint: boolean) => {
   const selectedPrintersValue = selectedPrinters.value;
   const accessiblePrinters = selectedPrintersValue.filter((p) =>
-    printerStateStore.isApiResponding(p.id)
+    printerStateStore.isApiResponding(p.id),
   );
 
   if (!selectedFile.value) return;
@@ -136,7 +145,7 @@ const uploadFile = () => {
     });
   }
 
-  const uploads = convertMultiPrinterFileToQueue(accessiblePrinters, selectedFile.value);
+  const uploads = convertMultiPrinterFileToQueue(accessiblePrinters, selectedFile.value, startPrint);
   uploadsStore.queueUploads(uploads);
 
   if (fileUpload.value) {

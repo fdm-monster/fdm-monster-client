@@ -38,12 +38,12 @@ export const useUploadsStore = defineStore("Uploads", () => {
     // Dont upload when queue empty
     if (!queuedUploads.value?.length) return;
     uploadingNow.value = true;
-    const { file, printer } = nextUpload.value;
+    const { file, printer, startPrint } = nextUpload.value;
     // We'd rather fail fast and avoid the same upload failing many times
     queuedUploads.value.splice(0, 1);
 
     try {
-      await PrinterFileService.uploadFile(printer, file);
+      await PrinterFileService.uploadFile(printer, file, startPrint);
       await queryClient.invalidateQueries({
         queryKey: [thumbnailQueryKey, printer.id],
         exact: true,
@@ -54,6 +54,7 @@ export const useUploadsStore = defineStore("Uploads", () => {
           file,
           printer,
           error: e,
+          startPrint: false,
         };
         failedUploads.value.push(failedUpload);
         snackbar.openErrorMessage({
