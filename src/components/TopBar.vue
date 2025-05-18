@@ -46,6 +46,7 @@
     <span v-if="isDevEnv" class="ml-2">
       <small>
         S{{ socketState.setup ? 1 : 0 }} C{{ socketState.connected ? 1 : 0 }}
+        A{{ socketState.active ? 1 : 0}}
         {{ socketState.id }}
       </small>
     </span>
@@ -95,7 +96,7 @@ import { useRouter } from "vue-router/composables";
 import { routeToLogin } from "@/router/utils";
 import { useIntervalFn } from "@vueuse/core";
 import { isDevEnv, isProdEnv } from "@/shared/app.constants";
-import { getSocketState, socketState } from "@/store/connection.store";
+import { socketState } from "@/shared/socketio.service";
 
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
@@ -121,10 +122,6 @@ const expiry = computed(() => {
   const diffValue = authStore.tokenClaims.exp - now.value / 1000;
   return `${Math.round(diffValue)}s`;
 });
-
-// const socketState = computed(() => {
-//   return getSocketState();
-// });
 
 const username = computed(() => {
   return profileStore.username;

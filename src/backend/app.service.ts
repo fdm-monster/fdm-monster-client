@@ -14,23 +14,23 @@ export class AppService extends BaseService {
   }
 
   static async getGithubRateLimit() {
-    return (await this.get("/api/server/github-rate-limit")) as GithubRateLimit;
+    return await this.get<GithubRateLimit>("/api/server/github-rate-limit");
   }
 
   static async getClientReleases() {
-    return (await this.get("/api/server/client-releases")) as IClientReleases;
+    return await this.get<IClientReleases>("/api/server/client-releases");
   }
 
   static async getVersion() {
-    return (await this.get("/api/version")) as VersionModel;
+    return await this.get<VersionModel>("/api/version");
   }
 
   static async getFeatures() {
-    return (await this.get("/api/features")) as FeaturesModel;
+    return await this.get<FeaturesModel>("/api/features");
   }
 
   static async test() {
     const httpClient = await getHttpClient(false, false);
-    return (await httpClient.get("/api/test")) as { message: string };
+    return await httpClient.get<{ message: string }>("/api/test");
   }
 }

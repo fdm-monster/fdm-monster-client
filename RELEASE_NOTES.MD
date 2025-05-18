@@ -1,5 +1,22 @@
 # Release notes
 
+## Client 18/05/2025 1.11.0
+
+Feature
+
+- Detect server disconnects, presenting this in overlay message with page reload
+
+Fixes
+
+- Camera page wasn't flagged as requiring authentication
+- SocketIO service now detects and handles expired JWT token
+- SocketIO service now detects server disconnects and reconnects
+- ServerProtectionSettings would send JWT expiry as string, this is now explicitly a number
+
+Chore
+
+- Cleaned up and rewrote SocketIO client
+
 ## Client 17/05/2025 1.10.3
 
 Feature
