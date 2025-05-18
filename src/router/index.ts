@@ -64,6 +64,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/cameras",
     name: RouteNames.CameraGridView,
+    meta: NeedsAuth,
     component: CameraGridView,
   },
   {
