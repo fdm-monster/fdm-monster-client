@@ -6642,9 +6642,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.160":
-  version: 1.5.170
-  resolution: "electron-to-chromium@npm:1.5.170"
-  checksum: 10c0/138c6d293b310729f7550f6d36ae4b2bdd0453220e8b11d8780395cf38c9ae816b1f30a3978d790f1951cfa89e7c7911af4a779094c33ae167c89c7ba6751834
+  version: 1.5.171
+  resolution: "electron-to-chromium@npm:1.5.171"
+  checksum: 10c0/e9d7e70d5fe829951c955287877155889a752336e48c715e373c6919f8e438bb686b7278511013aa8456c329c55895059a1d9e4b799217483f28dbae60c198d8
   languageName: node
   linkType: hard
 
@@ -14447,8 +14447,8 @@ __metadata:
   linkType: hard
 
 "terser@npm:^5.10.0, terser@npm:^5.31.1":
-  version: 5.43.0
-  resolution: "terser@npm:5.43.0"
+  version: 5.43.1
+  resolution: "terser@npm:5.43.1"
   dependencies:
     "@jridgewell/source-map": "npm:^0.3.3"
     acorn: "npm:^8.14.0"
@@ -14456,7 +14456,7 @@ __metadata:
     source-map-support: "npm:~0.5.20"
   bin:
     terser: bin/terser
-  checksum: 10c0/9bc6ef2ad20a6f12328b28b4a75f58095ba726a586f22036a27899178eebb7640a281559546a9efddb31a7020287996006d18897b2bd254398b8c3a1cf24969b
+  checksum: 10c0/9cd3fa09ea6bcb79eb71995216b8bef0651b18c5c3877535fc699a77e1ab43b140a4da5811ac9baeb654fa9ec939b17324092f0f0bdb19c402e101e3db946986
   languageName: node
   linkType: hard
 
