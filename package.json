@@ -80,7 +80,7 @@
     "vue-svg-loader": "0.16.0",
     "vue-template-compiler": "2.7.16",
     "vuetify-loader": "1.9.2",
-    "webpack": "5.100.1"
+    "webpack": "5.100.2"
   },
   "packageManager": "yarn@4.9.2"
 }
