@@ -4799,8 +4799,8 @@ __metadata:
   linkType: hard
 
 "babel-preset-current-node-syntax@npm:^1.0.0":
-  version: 1.1.1
-  resolution: "babel-preset-current-node-syntax@npm:1.1.1"
+  version: 1.2.0
+  resolution: "babel-preset-current-node-syntax@npm:1.2.0"
   dependencies:
     "@babel/plugin-syntax-async-generators": "npm:^7.8.4"
     "@babel/plugin-syntax-bigint": "npm:^7.8.3"
@@ -4819,7 +4819,7 @@ __metadata:
     "@babel/plugin-syntax-top-level-await": "npm:^7.14.5"
   peerDependencies:
     "@babel/core": ^7.0.0 || ^8.0.0-0
-  checksum: 10c0/e774fbd1504fecbd209da23a6aaa575fa39b50edb21197284321f319c2e81831d6c114f6d3734ec22c5dfb66e54d6404b370590bf44b975003b6b6e650184064
+  checksum: 10c0/94a4f81cddf9b051045d08489e4fff7336292016301664c138cfa3d9ffe3fe2ba10a24ad6ae589fd95af1ac72ba0216e1653555c187e694d7b17be0c002bea10
   languageName: node
   linkType: hard
 
