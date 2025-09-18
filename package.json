@@ -82,5 +82,5 @@
     "vuetify-loader": "1.9.2",
     "webpack": "5.101.3"
   },
-  "packageManager": "yarn@4.10.1"
+  "packageManager": "yarn@4.10.2"
 }
