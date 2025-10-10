@@ -74,7 +74,7 @@
     "rimraf": "6.0.1",
     "sass": "1.93.2",
     "sass-loader": "16.0.5",
-    "ts-jest": "29.4.4",
+    "ts-jest": "29.4.5",
     "typescript": "5.9.3",
     "vue-cli-plugin-vuetify": "2.5.8",
     "vue-svg-loader": "0.16.0",
