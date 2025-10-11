@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import { useJwt } from "@vueuse/integrations/useJwt";
+import { useJwt } from "@vueuse/integrations";
 import type { JwtPayload } from "jwt-decode";
 import { AuthService, type Tokens } from "@/backend/auth.service";
 import { AxiosError, HttpStatusCode } from "axios";
 import { WizardSettingsDto } from "@/models/settings/settings.model";
 import { AUTH_ERROR_REASON, convertAuthErrorReason } from "@/shared/auth.constants";
-import { useEventBus } from "@vueuse/core/index";
+import { useEventBus } from "@vueuse/core";
 
 export interface IClaims extends JwtPayload {
   name: string;
