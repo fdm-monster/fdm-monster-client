@@ -18,7 +18,7 @@ jobs:
       - run: yarn install --immutable
       - run: yarn run build
       - run: yarn run test:unit
-      - uses: JS-DevTools/npm-publish@v3
+      - uses: JS-DevTools/npm-publish@v4
         if: ${{ github.repository.name == 'fdm-monster-client' }}
         with:
           dry-run: true
