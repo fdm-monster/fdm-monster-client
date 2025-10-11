@@ -45,8 +45,9 @@
 
     <span v-if="isDevEnv" class="ml-2">
       <small>
-        S{{ socketState.setup ? 1 : 0 }} C{{ socketState.connected ? 1 : 0 }}
-        A{{ socketState.active ? 1 : 0}}
+        S{{ socketState.setup ? 1 : 0 }} C{{ socketState.connected ? 1 : 0 }} A{{
+          socketState.active ? 1 : 0
+        }}
         {{ socketState.id }}
       </small>
     </span>

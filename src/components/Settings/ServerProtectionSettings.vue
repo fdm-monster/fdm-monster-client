@@ -171,8 +171,7 @@ async function saveLoginExpirySettings() {
   if (!jwtExpiresIn.value || jwtExpiresIn.value < 120 || jwtExpiresIn.value > 120 * 60) {
     throw new Error("JWT Expiry must be between 2 and 120 minutes");
   }
-  if (
-    !refreshTokenAttemptsEnabled.value) {
+  if (!refreshTokenAttemptsEnabled.value) {
     refreshTokenAttempts.value = -1;
   }
   if (
@@ -188,7 +187,7 @@ async function saveLoginExpirySettings() {
   await SettingsService.updateCredentialSettings(
     jwtExpiresIn.value,
     refreshTokenAttempts.value,
-    refreshTokenExpiry.value * 24 * 3600,
+    refreshTokenExpiry.value * 24 * 3600
   );
   snackbar.info("Login expiry settings updated");
 }

@@ -20,7 +20,7 @@
               @click="openPrinterURL()"
               v-on="on"
               @click.middle="openPrinterURL()"
-            >{{ avatarInitials() }}
+              >{{ avatarInitials() }}
             </v-btn>
           </template>
           <span>Visit the {{ serviceName }} associated to this printer {{ avatarInitials() }}</span>
@@ -245,7 +245,7 @@
               <v-icon v-if="isPaused">play_circle_outline</v-icon>
             </v-list-item-avatar>
             <v-list-item-content
-            >{{ isPaused ? "Resume print" : "Pause print" }}
+              >{{ isPaused ? "Resume print" : "Pause print" }}
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -440,7 +440,12 @@ import { usePrinterStateStore } from "@/store/printer-state.store";
 import { interpretStates } from "@/shared/printer-state.constants";
 import { useSettingsStore } from "@/store/settings.store";
 import octoPrintIcon from "@/assets/octoprint-tentacle.svg";
-import { getServiceName, isMoonrakerType, isOctoPrintType, isPrusaLinkType } from "@/utils/printer-type.utils";
+import {
+  getServiceName,
+  isMoonrakerType,
+  isOctoPrintType,
+  isPrusaLinkType,
+} from "@/utils/printer-type.utils";
 import { useQueryClient } from "@tanstack/vue-query";
 import { thumbnailQueryKey } from "@/queries/thumbnail.query";
 import { useDialog } from "@/shared/dialog.composable";
@@ -458,7 +463,7 @@ const storedSideNavPrinter = computed(() => printersStore.sideNavPrinter);
 const printerId = computed(() => storedSideNavPrinter.value?.id);
 
 const isOnline = computed(() =>
-  printerId.value ? printerStateStore.isApiResponding(printerId.value) : false,
+  printerId.value ? printerStateStore.isApiResponding(printerId.value) : false
 );
 
 const isOctoPrint = computed(() => {
@@ -473,11 +478,10 @@ const isPrusaLink = computed(() => {
   return isPrusaLinkType(storedSideNavPrinter.value?.printerType);
 });
 
-
 const serviceName = computed(() => getServiceName(storedSideNavPrinter.value?.printerType));
 
 const isOperational = computed(() =>
-  printerId.value ? printerStateStore.isPrinterOperational(printerId.value) : false,
+  printerId.value ? printerStateStore.isPrinterOperational(printerId.value) : false
 );
 
 const isEnabled = computed(() => {
@@ -496,7 +500,7 @@ const filesListed = computed<FileDto[]>(() => {
   if (!shownFileCache.value?.length) return [];
   return (
     shownFileCache.value.filter((f) =>
-      fileSearch.value?.length ? `${f.path}`.toLowerCase().includes(fileSearch.value) : true,
+      fileSearch.value?.length ? `${f.path}`.toLowerCase().includes(fileSearch.value) : true
     ) || []
   );
 });
@@ -546,7 +550,7 @@ const printerState = computed(() => {
       printerId.value,
       states?.text,
       states?.color,
-      states?.rgb,
+      states?.rgb
     );
   }
   return states;

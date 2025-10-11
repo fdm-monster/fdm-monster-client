@@ -182,8 +182,12 @@ onMounted(async () => {
 });
 
 async function updateTimeoutSettings() {
-  settingsStore.settings.timeout.apiTimeout = parseInt(settingsStore.settings.timeout.apiTimeout.toString());
-  settingsStore.settings.timeout.apiUploadTimeout = parseInt(settingsStore.settings.timeout.apiUploadTimeout.toString());
+  settingsStore.settings.timeout.apiTimeout = parseInt(
+    settingsStore.settings.timeout.apiTimeout.toString()
+  );
+  settingsStore.settings.timeout.apiUploadTimeout = parseInt(
+    settingsStore.settings.timeout.apiUploadTimeout.toString()
+  );
   if (!settingsStore.settings?.timeout?.apiTimeout) {
     snackbar.error("Timeout not set");
     return;

@@ -63,7 +63,7 @@ export class PrintersService extends BaseService {
 
   static async sendPrinterJogCommand(
     printerId: IdType,
-    amounts: { x?: number; y?: number; z?: number },
+    amounts: { x?: number; y?: number; z?: number }
   ) {
     const path = ServerApi.printerJogCommandRoute(printerId);
 
