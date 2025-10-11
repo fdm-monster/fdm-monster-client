@@ -124,14 +124,14 @@ const clearSelectedPrinters = () => {
 
 const batchReprintFiles = async () => {
   await useDialog(DialogName.BatchReprintDialog).handleAsync(
-    printersStore.selectedPrinters?.map((p) => p.id),
+    printersStore.selectedPrinters?.map((p) => p.id)
   );
 };
 
 const uploadFile = (startPrint: boolean) => {
   const selectedPrintersValue = selectedPrinters.value;
   const accessiblePrinters = selectedPrintersValue.filter((p) =>
-    printerStateStore.isApiResponding(p.id),
+    printerStateStore.isApiResponding(p.id)
   );
 
   if (!selectedFile.value) return;
@@ -145,7 +145,11 @@ const uploadFile = (startPrint: boolean) => {
     });
   }
 
-  const uploads = convertMultiPrinterFileToQueue(accessiblePrinters, selectedFile.value, startPrint);
+  const uploads = convertMultiPrinterFileToQueue(
+    accessiblePrinters,
+    selectedFile.value,
+    startPrint
+  );
   uploadsStore.queueUploads(uploads);
 
   if (fileUpload.value) {

@@ -6,7 +6,10 @@
 
       <div v-if="serverDisconnected">
         <h1>FDM Monster Server Disconnected</h1>
-        <p>Did not receive an answer from the server. Please ensure the server is started and reload the page.</p>
+        <p>
+          Did not receive an answer from the server. Please ensure the server is started and reload
+          the page.
+        </p>
 
         <v-sheet class="pa-4 rounded" color="grey darken-3" width="100%">
           <v-row>
@@ -209,7 +212,7 @@ authPermissionDeniedKey.on(async (event) => {
 const authFailKey = useEventBus("auth:failure");
 authFailKey.on(async (event: any) => {
   console.debug(
-    `[AppLoader] Event received: 'auth:failure', going back to login, context: ${event}`,
+    `[AppLoader] Event received: 'auth:failure', going back to login, context: ${event}`
   );
   setOverlay(true, "Authentication failed, going back to login");
 
@@ -231,7 +234,7 @@ loginEventKey.on(async () => {
 const accountNotVerifiedEventKey = useEventBus(`auth:${AUTH_ERROR_REASON.AccountNotVerified}`);
 accountNotVerifiedEventKey.on(async () => {
   console.debug(
-    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.AccountNotVerified}', going to login`,
+    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.AccountNotVerified}', going to login`
   );
   snackbar.error("Account not verified, please ask an administrator to verify your account.");
   setOverlay(true, "Account not verified, please ask an administrator to verify your account.");
@@ -243,11 +246,11 @@ accountNotVerifiedEventKey.on(async () => {
 
 // Emitted by auth.store.ts handleAndEmitAuthenticationError
 const passwordChangeRequiredEventKey = useEventBus(
-  `auth:${AUTH_ERROR_REASON.PasswordChangeRequired}`,
+  `auth:${AUTH_ERROR_REASON.PasswordChangeRequired}`
 );
 passwordChangeRequiredEventKey.on(async () => {
   console.debug(
-    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.PasswordChangeRequired}', going to login`,
+    `[AppLoader] Event received: 'auth:${AUTH_ERROR_REASON.PasswordChangeRequired}', going to login`
   );
   snackbar.error("Password change required, please change your password.");
   setOverlay(true, "Password change required, please change your password.");
@@ -257,18 +260,14 @@ passwordChangeRequiredEventKey.on(async () => {
   setOverlay(false);
 });
 
-const serverDisconnectedKey = useEventBus(
-  "server:disconnected",
-);
+const serverDisconnectedKey = useEventBus("server:disconnected");
 serverDisconnectedKey.on(async (event) => {
   setOverlay(true);
   serverDisconnected.value = true;
   loading.value = true;
 });
 
-const serverConnectedKey = useEventBus(
-  "server:connected",
-);
+const serverConnectedKey = useEventBus("server:connected");
 serverConnectedKey.on(async (event) => {
   setOverlay(false);
   serverDisconnected.value = false;

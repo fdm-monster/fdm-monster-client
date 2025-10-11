@@ -200,16 +200,24 @@ const serviceTypes = computed(() => {
         logo: octoPrintTentacleSvg,
         height: "60px",
       },
-      ...(hasKlipperSupport ? [{
-        name: getServiceName(MoonrakerType),
-        logo: klipperLogoSvg,
-        height: "60px",
-      }] : []),
-      ...(hasPrusaLinkSupport ? [{
-        name: getServiceName(PrusaLinkType),
-        logo: prusaLinkLogoSvg,
-        height: "20px",
-      }] : []),
+      ...(hasKlipperSupport
+        ? [
+            {
+              name: getServiceName(MoonrakerType),
+              logo: klipperLogoSvg,
+              height: "60px",
+            },
+          ]
+        : []),
+      ...(hasPrusaLinkSupport
+        ? [
+            {
+              name: getServiceName(PrusaLinkType),
+              logo: prusaLinkLogoSvg,
+              height: "20px",
+            },
+          ]
+        : []),
     ];
   }
 
@@ -237,7 +245,7 @@ async function onDialogOpened() {
 const storedPrinter = computed(() => printersStore.updateDialogPrinter);
 const isUpdating = computed(() => !!storedPrinter.value);
 const submitButtonText = computed(
-  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create"),
+  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
 );
 
 const avatarInitials = computed(() => {
@@ -275,7 +283,7 @@ const testPrinter = async () => {
   openTestPanel();
 
   const { correlationToken } = await testPrinterStore.createTestPrinter(
-    formData.value as CreatePrinter,
+    formData.value as CreatePrinter
   );
   testPrinterStore.currentCorrelationToken = correlationToken;
 };
@@ -287,7 +295,9 @@ const isValid = () => {
     return form.printerURL?.length && form.name?.length;
   }
   if (isPrusaLinkType(form.printerType)) {
-    return form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length;
+    return (
+      form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length
+    );
   }
   return form.printerURL?.length && form.name?.length && form.apiKey?.length;
 };
@@ -308,7 +318,7 @@ const updatePrinter = async (updatedPrinter: CreatePrinter) => {
       printerId: printerId as string,
       updatedPrinter,
     },
-    forceSavePrinter.value,
+    forceSavePrinter.value
   );
 
   snackbar.openInfoMessage({

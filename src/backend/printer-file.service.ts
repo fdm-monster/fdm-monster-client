@@ -51,7 +51,7 @@ export class PrinterFileService extends BaseService {
           "single-file-upload",
           `Uploading file ${file.name}`,
           (100 * progress.loaded) / progress.total!,
-          false,
+          false
         );
       },
     });
@@ -76,7 +76,7 @@ export class PrinterFileService extends BaseService {
 
   static async downloadFile(printerId: IdType, path: string) {
     const urlPath = `${ServerApi.printerFilesRoute}/${printerId}/download/${encodeURIComponent(
-      path,
+      path
     )}`;
     const arrayBuffer = await this.getDownload(urlPath);
     downloadFileByBlob(arrayBuffer.data, path);

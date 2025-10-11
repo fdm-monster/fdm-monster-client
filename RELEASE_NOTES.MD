@@ -1,5 +1,17 @@
 # Release notes
 
+## Client 11/10/2025 1.11.2
+
+Chore
+
+- Package updates
+
+## Client 11/10/2025 1.11.1
+
+Feature
+
+- Ability to add startPrint to specify print or not after upload. Only set to false for the new "UPLOAD ONLY" button
+
 ## Client 18/05/2025 1.11.0
 
 Feature
