@@ -12,7 +12,7 @@ jobs:
     outputs:
       foundClientVersion: ${{ steps.init.outputs.foundClientVersion }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: get-client-version
         # https://gist.github.com/DarrenN/8c6a5b969481725a4413?permalink_comment_id=3863317#gistcomment-3863317
         run: |
@@ -33,7 +33,7 @@ jobs:
     environment: npm-release
     if: needs.checkversion.outputs.foundClientVersion == 'false'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: 22.x
