@@ -1,9 +1,9 @@
 <template>
   <BaseDialog
-    :id="dialog.dialogId"
-    :max-width="showChecksPanel ? '900px' : '800px'"
-    @escape="closeDialog()"
-    @opened="onDialogOpened()"
+      :id="dialog.dialogId"
+      :max-width="showChecksPanel ? '900px' : '800px'"
+      @escape="closeDialog()"
+      @opened="onDialogOpened()"
   >
     <v-card class="pa-4">
       <v-card-title>
@@ -46,65 +46,65 @@
             <v-row v-if="formData">
               <v-col>
                 <v-text-field
-                  v-model="formData.name"
-                  :counter="printerNameRules.max"
-                  autofocus
-                  class="ma-1"
-                  label="Printer name*"
-                  required
+                    v-model="formData.name"
+                    :counter="printerNameRules.max"
+                    autofocus
+                    class="ma-1"
+                    label="Printer name*"
+                    required
                 />
               </v-col>
               <v-col>
                 <v-checkbox
-                  v-model="formData.enabled"
-                  hint="Disabling makes the printer passive"
-                  label="Enabled*"
-                  persistent-hint
-                  required
+                    v-model="formData.enabled"
+                    hint="Disabling makes the printer passive"
+                    label="Enabled*"
+                    persistent-hint
+                    required
                 />
               </v-col>
             </v-row>
 
             <v-text-field
-              v-model="formData.printerURL"
-              class="ma-1"
-              hint="F.e. 'octopi.local' or 'https://my.printer.com'"
-              label="Printer URL*"
+                v-model="formData.printerURL"
+                class="ma-1"
+                hint="F.e. 'octopi.local' or 'https://my.printer.com'"
+                label="Printer URL*"
             />
 
             <v-text-field
-              v-if="formData.printerType === OctoPrintType"
-              v-model="formData.apiKey"
-              :counter="apiKeyRules.length"
-              :label="
+                v-if="formData.printerType === OctoPrintType"
+                v-model="formData.apiKey"
+                :counter="apiKeyRules.length"
+                :label="
                 formData.printerType === OctoPrintType || formData.printerType === MoonrakerType
                   ? 'API Key (unsupported)'
                   : 'API Key (required)*'
               "
-              class="ma-1"
-              hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
-              persistent-hint
-              required
+                class="ma-1"
+                hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
+                persistent-hint
+                required
             />
 
             <v-text-field
-              v-if="formData.printerType === PrusaLinkType"
-              v-model="formData.username"
-              class="ma-1"
-              hint="Username (often 'maker')"
-              label="Username"
-              persistent-hint
-              required
+                v-if="formData.printerType === PrusaLinkType"
+                v-model="formData.username"
+                class="ma-1"
+                hint="Username (often 'maker')"
+                label="Username"
+                persistent-hint
+                required
             />
 
             <v-text-field
-              v-if="formData.printerType === PrusaLinkType"
-              v-model="formData.password"
-              class="ma-1"
-              hint="Password (visit your printer settings)"
-              label="Password"
-              persistent-hint
-              required
+                v-if="formData.printerType === PrusaLinkType"
+                v-model="formData.password"
+                class="ma-1"
+                hint="Password (visit your printer settings)"
+                label="Password"
+                persistent-hint
+                required
             />
           </v-col>
 
@@ -206,31 +206,32 @@ const serviceTypes = computed(() => {
         height: "60px",
       },
       ...(hasKlipperSupport
-        ? [
+          ? [
             {
               name: getServiceName(MoonrakerType),
               logo: klipperLogoSvg,
               height: "60px",
             },
           ]
-        : []),
+          : []),
       ...(hasPrusaLinkSupport
-        ? [
+          ? [
             {
               name: getServiceName(PrusaLinkType),
               logo: prusaLinkLogoSvg,
               height: "20px",
             },
           ]
+          : []),
       ...(hasBambuSupport
-        ? [
+          ? [
             {
               name: getServiceName(BambuType),
               logo: bambuLogoSvg,
               height: "20px",
             },
-          ]          
-        : []),
+          ]
+          : []),
     ];
   }
 
@@ -258,7 +259,7 @@ async function onDialogOpened() {
 const storedPrinter = computed(() => printersStore.updateDialogPrinter);
 const isUpdating = computed(() => !!storedPrinter.value);
 const submitButtonText = computed(
-  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
+    () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
 );
 
 const avatarInitials = computed(() => {
@@ -295,8 +296,8 @@ const testPrinter = async () => {
   testPrinterStore.clearEvents();
   openTestPanel();
 
-  const { correlationToken } = await testPrinterStore.createTestPrinter(
-    formData.value as CreatePrinter
+  const {correlationToken} = await testPrinterStore.createTestPrinter(
+      formData.value as CreatePrinter
   );
   testPrinterStore.currentCorrelationToken = correlationToken;
 };
@@ -309,7 +310,7 @@ const isValid = () => {
   }
   if (isPrusaLinkType(form.printerType)) {
     return (
-      form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length
+        form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length
     );
   }
   return form.printerURL?.length && form.name?.length && form.apiKey?.length;
@@ -318,7 +319,7 @@ const isValid = () => {
 const createPrinter = async (newPrinterData: CreatePrinter) => {
   const printer = await printersStore.createPrinter(newPrinterData, forceSavePrinter.value);
   snackbar.openInfoMessage({
-    title: `Printer ${newPrinterData.name} created`,
+    title: `Printer ${ newPrinterData.name } created`,
   });
   return printer;
 };
@@ -327,15 +328,15 @@ const updatePrinter = async (updatedPrinter: CreatePrinter) => {
   const printerId = updatedPrinter.id;
 
   const printer = await printersStore.updatePrinter(
-    {
-      printerId: printerId as string,
-      updatedPrinter,
-    },
-    forceSavePrinter.value
+      {
+        printerId: printerId as string,
+        updatedPrinter,
+      },
+      forceSavePrinter.value
   );
 
   snackbar.openInfoMessage({
-    title: `Printer ${updatedPrinter.name} updated`,
+    title: `Printer ${ updatedPrinter.name } updated`,
   });
 
   return printer;
@@ -348,9 +349,9 @@ const submit = async () => {
   validatingPrinter.value = true;
 
   if (
-    formData.value.printerURL?.length &&
-    !formData.value.printerURL?.startsWith("http://") &&
-    !formData.value.printerURL?.startsWith("https://")
+      formData.value.printerURL?.length &&
+      !formData.value.printerURL?.startsWith("http://") &&
+      !formData.value.printerURL?.startsWith("https://")
   ) {
     formData.value.printerURL = "https://" + formData.value.printerURL;
   }
