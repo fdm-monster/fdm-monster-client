@@ -24,13 +24,13 @@
               <v-col v-for="item of serviceTypes" :key="item.name" cols="4" md="4">
                 <v-item v-slot="{ active, toggle }">
                   <v-card
-                    :color="active ? 'primary' : 'blue-grey darken-4'"
-                    class="d-flex align-center justify-center elevation-8"
-                    height="60px"
-                    width="225px"
-                    @click="toggle"
+                      :color="active ? 'primary' : 'blue-grey darken-4'"
+                      class="d-flex align-center justify-center elevation-8"
+                      height="60px"
+                      width="225px"
+                      @click="toggle"
                   >
-                    <v-img :height="item.height" :src="item.logo" max-width="100px" width="125px" />
+                    <v-img :height="item.height" :src="item.logo" max-width="100px" width="125px"/>
                     <v-scroll-y-transition>
                       <h3 class="ml-3 align-center">{{ item.name }}</h3>
                     </v-scroll-y-transition>
@@ -78,8 +78,8 @@
                 :counter="apiKeyRules.length"
                 :label="
                 formData.printerType === OctoPrintType || formData.printerType === MoonrakerType
-                  ? 'API Key (unsupported)'
-                  : 'API Key (required)*'
+                  ? 'API Key (required)*'
+                  : 'API Key (unsupported)'
               "
                 class="ma-1"
                 hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
@@ -88,7 +88,7 @@
             />
 
             <v-text-field
-                v-if="formData.printerType === PrusaLinkType"
+                v-if="formData.printerType === PrusaLinkType || formData.printerType === BambuType"
                 v-model="formData.username"
                 class="ma-1"
                 hint="Username (often 'maker')"
@@ -98,7 +98,7 @@
             />
 
             <v-text-field
-                v-if="formData.printerType === PrusaLinkType"
+                v-if="formData.printerType === PrusaLinkType || formData.printerType === BambuType"
                 v-model="formData.password"
                 class="ma-1"
                 hint="Password (visit your printer settings)"
@@ -114,23 +114,23 @@
         </v-row>
         <v-alert v-if="printerValidationError?.length" class="my-3" color="primary">
           {{ printerValidationError }}
-          <v-checkbox v-model="forceSavePrinter" color="warning" label="Force save" />
+          <v-checkbox v-model="forceSavePrinter" color="warning" label="Force save"/>
         </v-alert>
         <v-alert v-if="validatingPrinter" class="my-3">
           Validating printer
-          <v-progress-circular indeterminate />
+          <v-progress-circular indeterminate/>
         </v-alert>
       </v-card-text>
       <v-card-actions>
         <em class="red--text">* indicates required field</em>
-        <v-spacer />
+        <v-spacer/>
         <v-btn text @click="closeDialog()">Close</v-btn>
         <v-btn
-          v-if="isUpdating"
-          :disabled="!isValid()"
-          color="gray"
-          text
-          @click="duplicatePrinter()"
+            v-if="isUpdating"
+            :disabled="!isValid()"
+            color="gray"
+            text
+            @click="duplicatePrinter()"
         >
           Duplicate
         </v-btn>
