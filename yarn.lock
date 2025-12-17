@@ -1484,7 +1484,7 @@ __metadata:
     babel-jest: "npm:29.7.0"
     chart.js: "npm:4.5.1"
     core-js: "npm:3.47.0"
-    cypress: "npm:15.7.1"
+    cypress: "npm:15.8.0"
     eslint: "npm:8.57.1"
     eslint-config-prettier: "npm:10.1.8"
     eslint-plugin-prettier: "npm:4.2.5"
@@ -6125,9 +6125,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:15.7.1":
-  version: 15.7.1
-  resolution: "cypress@npm:15.7.1"
+"cypress@npm:15.8.0":
+  version: 15.8.0
+  resolution: "cypress@npm:15.8.0"
   dependencies:
     "@cypress/request": "npm:^3.0.9"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -6173,7 +6173,7 @@ __metadata:
     yauzl: "npm:^2.10.0"
   bin:
     cypress: bin/cypress
-  checksum: 10c0/537d5352c86067455b96fcbc35934820b391413e6d3327204d0936ac14ffb4d69a02290a5007dc532c87976c43b6ebe503d84907768c0daa7d68318907b7ac80
+  checksum: 10c0/f0cddee7d2ebfb251db3ca9d6fd3bff489f6fedf84f95f5c74579f515eac0bfadadfb69f2505a9959e911c21a5a5ff8f5667ccb2c28c8f7371ffe7bf7b8625d3
   languageName: node
   linkType: hard
 
