@@ -38,7 +38,8 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v5
         with:
-          node-version: 22.x
+          node-version: 24.x
+          registry-url: 'https://registry.npmjs.org'
 
       # https://stackoverflow.com/questions/57968497/how-do-i-set-an-env-var-with-a-bash-expression-in-github-actions
       - name: get-client-version
@@ -63,7 +64,6 @@ jobs:
       # Publish to NPM
       - uses: JS-DevTools/npm-publish@v4
         with:
-          token: ${{ secrets.NPM_TOKEN }}
           package: package.json
           
       # Create GitHub release
