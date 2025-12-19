@@ -5,7 +5,6 @@ export interface ExportYamlModel {
   exportFloors: boolean;
   exportSettings: boolean;
   exportUsers: boolean;
-  exportUserRoles: boolean;
   // Used to determine import strategy
   printerComparisonStrategiesByPriority: string[];
   floorComparisonStrategiesByPriority: string;

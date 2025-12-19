@@ -100,12 +100,6 @@
             />
             <v-checkbox v-model="exportSettings" class="pa-0 ma-0 ml-2" label="Include settings" />
             <v-checkbox v-model="exportUsers" class="pa-0 ma-0 ml-2" label="Include users" />
-            <v-checkbox
-              v-model="exportUserRoles"
-              :disabled="disableExportUserRoles"
-              class="pa-0 ma-0 ml-2"
-              label="Include user roles"
-            />
 
             Include notes (for yourself):
             <v-textarea v-model="notes" rows="1"></v-textarea>
@@ -153,17 +147,12 @@ const exportGroups = ref(true);
 const exportPrinters = ref(true);
 const exportSettings = ref(true);
 const exportUsers = ref(true);
-const exportUserRoles = ref(true);
 const importFile = ref(undefined);
 const notes = ref("");
 const validatingImport = ref(false);
 const importSummary = ref<any>(null);
 
 const disableExportGroups = computed(() => {
-  return !featureStore.hasFeature("printerGroupsApi");
-});
-
-const disableExportUserRoles = computed(() => {
   return !featureStore.hasFeature("printerGroupsApi");
 });
 
@@ -178,7 +167,6 @@ const isImportMode = computed(() => {
 const onBeforeDialogOpened = async () => {
   await featureStore.loadFeatures();
   exportGroups.value = featureStore.hasFeature("printerGroupsApi");
-  exportUserRoles.value = featureStore.hasFeature("printerGroupsApi");
 };
 
 const onDialogOpened = async () => {
@@ -218,7 +206,6 @@ const validateImportFile = async () => {
       groupsCount: parsed.groups?.length || 0,
       hasSettings: !!parsed.settings,
       usersCount: parsed.users?.length || 0,
-      userRolesCount: parsed.user_roles?.length || 0,
     };
 
     snackbar.openInfoMessage({ title: "Import file validated successfully" });
@@ -242,7 +229,6 @@ const downloadExportYamlFile = async () => {
     exportFloorGrid: exportFloorGrid.value,
     exportSettings: exportSettings.value,
     exportUsers: exportUsers.value,
-    exportUserRoles: exportUserRoles.value,
     printerComparisonStrategiesByPriority: ["name", "url"],
     exportFloors: exportFloors.value,
     floorComparisonStrategiesByPriority: "floor",
