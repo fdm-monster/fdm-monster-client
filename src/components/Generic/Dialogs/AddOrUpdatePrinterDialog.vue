@@ -91,8 +91,8 @@
                 v-if="formData.printerType === PrusaLinkType || formData.printerType === BambuType"
                 v-model="formData.username"
                 class="ma-1"
-                hint="Username (often 'maker')"
-                label="Username"
+                :hint="formData.printerType === BambuType ? 'Serial number from printer' : 'Username (often \'maker\')'"
+                :label="formData.printerType === BambuType ? 'Serial' : 'Username'"
                 persistent-hint
                 required
             />
@@ -101,8 +101,8 @@
                 v-if="formData.printerType === PrusaLinkType || formData.printerType === BambuType"
                 v-model="formData.password"
                 class="ma-1"
-                hint="Password (visit your printer settings)"
-                label="Password"
+                :hint="formData.printerType === BambuType ? 'Access code from printer settings' : 'Password (visit your printer settings)'"
+                :label="formData.printerType === BambuType ? 'AccessCode' : 'Password'"
                 persistent-hint
                 required
             />
@@ -305,10 +305,10 @@ const testPrinter = async () => {
 const isValid = () => {
   const form = formData.value;
   if (!form) return false;
-  if (isMoonrakerType(form.printerType) || isBambuType(form.printerType)) {
+  if (isMoonrakerType(form.printerType)) {
     return form.printerURL?.length && form.name?.length;
   }
-  if (isPrusaLinkType(form.printerType)) {
+  if (isPrusaLinkType(form.printerType) || isBambuType(form.printerType)) {
     return (
         form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length
     );
