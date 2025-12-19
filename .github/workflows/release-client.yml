@@ -2,9 +2,11 @@ name: Dist Release
 on:
   push:
     branches:
-      - 'develop'
       - 'main'
-      - 'release/*'  # Add this line to include all release branches
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
   checkversion:
