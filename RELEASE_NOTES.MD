@@ -1,5 +1,20 @@
 # Release notes
 
+## Client 19/12/2025 1.12.0
+
+Features
+
+- Bambu Lab printer support: Add Bambu Lab as a supported printer type with proper validation and name detection
+- Advanced YAML export: Extended YAML export functionality to include system data beyond just printers
+- First-time setup: Import functionality now supports importing system data from YAML files
+- Experimental settings: Added Bambu Lab support toggle in experimental settings page
+
+Fixes
+
+- Bambu Lab: Fixed serial number and access code validation and handling
+- Printer dialog: Fixed API key validation for Bambu Lab printers
+- YAML import: Improved error handling and validation for system data imports
+
 ## Client 11/10/2025 1.11.2
 
 Chore
