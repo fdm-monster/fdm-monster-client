@@ -28,12 +28,61 @@
               label="Select a YAML file for import *"
             />
 
+            <v-btn
+              v-if="isFileProvided && !importSummary"
+              :disabled="!isFileProvided"
+              :loading="validatingImport"
+              color="secondary"
+              class="mb-4"
+              @click="validateImportFile()"
+            >
+              <v-icon class="mr-2">checklist</v-icon>
+              Validate & Preview
+            </v-btn>
+
             <v-alert v-if="errorMessage" type="error">
               {{ errorMessage }}
               <br />
               Details: {{ errorDetailedMessage.slice(0, 75) }}
               <span v-if="errorDetailedMessage.length > 75">...</span>
             </v-alert>
+
+            <v-card v-if="importSummary" class="mt-4 pa-4">
+              <h4 class="mb-4">
+                <v-icon class="mr-2" color="success">info</v-icon>
+                Import Summary
+              </h4>
+              <div class="mb-2">
+                <strong>Version:</strong> {{ importSummary.version }}
+              </div>
+              <div class="mb-2">
+                <strong>Database Type:</strong> {{ importSummary.databaseType }}
+              </div>
+              <div class="mb-2">
+                <strong>Exported:</strong> {{ importSummary.exportedAt }}
+              </div>
+              <v-divider class="my-3" />
+              <div class="mb-2">
+                <v-icon class="mr-2" small>print</v-icon>
+                <strong>Printers:</strong> {{ importSummary.printersCount }}
+              </div>
+              <div class="mb-2">
+                <v-icon class="mr-2" small>layers</v-icon>
+                <strong>Floors:</strong> {{ importSummary.floorsCount }}
+              </div>
+              <div class="mb-2">
+                <v-icon class="mr-2" small>group_work</v-icon>
+                <strong>Groups:</strong> {{ importSummary.groupsCount }}
+              </div>
+              <div v-if="importSummary.hasSettings" class="mb-2">
+                <v-icon class="mr-2" small color="warning">settings</v-icon>
+                <strong>Settings:</strong> Included
+              </div>
+              <div v-if="importSummary.usersCount > 0" class="mb-2">
+                <v-icon class="mr-2" small color="warning">person</v-icon>
+                <strong>Users:</strong> {{ importSummary.usersCount }}
+              </div>
+            </v-card>
           </div>
           <div v-else>
             <v-checkbox v-model="exportFloors" class="pa-0 ma-0 mt-2 ml-2" label="Include floors" />
@@ -49,6 +98,8 @@
               class="pa-0 ma-0 ml-2"
               label="Include grid positions (auto-includes printers)"
             />
+            <v-checkbox v-model="exportSettings" class="pa-0 ma-0 ml-2" label="Include settings" />
+            <v-checkbox v-model="exportUsers" class="pa-0 ma-0 ml-2" label="Include users" />
 
             Include notes (for yourself):
             <v-textarea v-model="notes" rows="1"></v-textarea>
@@ -57,7 +108,7 @@
             <v-icon>download</v-icon>
             Export YAML file
           </v-btn>
-          <v-btn v-if="isImportMode" :disabled="!isFileProvided" @click="uploadAndImportYamlFile()">
+          <v-btn v-if="isImportMode && importSummary" :disabled="!isFileProvided" @click="uploadAndImportYamlFile()">
             <v-icon>upload</v-icon>
             Import YAML data
           </v-btn>
@@ -81,6 +132,7 @@ import { useDialog } from "@/shared/dialog.composable";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useFeatureStore } from "@/store/features.store";
 import { computed, ref } from "vue";
+import { load } from "js-yaml";
 
 const featureStore = useFeatureStore();
 const dialog = useDialog(DialogName.YamlImportExport);
@@ -93,8 +145,12 @@ const exportFloors = ref(true);
 const exportFloorGrid = ref(true);
 const exportGroups = ref(true);
 const exportPrinters = ref(true);
+const exportSettings = ref(true);
+const exportUsers = ref(true);
 const importFile = ref(undefined);
 const notes = ref("");
+const validatingImport = ref(false);
+const importSummary = ref<any>(null);
 
 const disableExportGroups = computed(() => {
   return !featureStore.hasFeature("printerGroupsApi");
@@ -118,6 +174,48 @@ const onDialogOpened = async () => {
   errorMessage.value = "";
   errorDetailedMessage.value = "";
   notes.value = "";
+  importSummary.value = null;
+  validatingImport.value = false;
+};
+
+const validateImportFile = async () => {
+  if (!importFile.value) {
+    errorMessage.value = "No file selected";
+    return;
+  }
+
+  validatingImport.value = true;
+  errorMessage.value = "";
+  errorDetailedMessage.value = "";
+  importSummary.value = null;
+
+  try {
+    const text = await importFile.value.text();
+    const parsed = load(text) as any;
+
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("Invalid YAML file format");
+    }
+
+    importSummary.value = {
+      version: parsed.version || "Unknown",
+      databaseType: parsed.databaseType || "Unknown",
+      exportedAt: parsed.exportedAt ? new Date(parsed.exportedAt).toLocaleString() : "Unknown",
+      printersCount: parsed.printers?.length || 0,
+      floorsCount: parsed.floors?.length || 0,
+      groupsCount: parsed.groups?.length || 0,
+      hasSettings: !!parsed.settings,
+      usersCount: parsed.users?.length || 0,
+    };
+
+    snackbar.openInfoMessage({ title: "Import file validated successfully" });
+  } catch (error: any) {
+    errorMessage.value = "Failed to validate import file";
+    errorDetailedMessage.value = error.message;
+    importSummary.value = null;
+  } finally {
+    validatingImport.value = false;
+  }
 };
 
 const downloadExportYamlFile = async () => {
@@ -129,6 +227,8 @@ const downloadExportYamlFile = async () => {
     exportPrinters: exportPrinters.value,
     exportGroups: exportGroups.value,
     exportFloorGrid: exportFloorGrid.value,
+    exportSettings: exportSettings.value,
+    exportUsers: exportUsers.value,
     printerComparisonStrategiesByPriority: ["name", "url"],
     exportFloors: exportFloors.value,
     floorComparisonStrategiesByPriority: "floor",
@@ -166,6 +266,8 @@ const closeDialog = () => {
   errorMessage.value = "";
   errorDetailedMessage.value = "";
   notes.value = "";
+  importSummary.value = null;
+  validatingImport.value = false;
   dialog.closeDialog();
 };
 </script>

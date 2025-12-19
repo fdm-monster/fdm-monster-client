@@ -74,6 +74,11 @@ export class SettingsService extends BaseService {
     return (await this.put(path, { enabled })) as SettingsDto; // Assuming it returns SettingsDto
   }
 
+  static async updateExperimentalBambuSupport(enabled: boolean) {
+    const path = ServerApi.updateExperimentalBambuSupportRoute;
+    return (await this.put(path, { enabled })) as SettingsDto;
+  }
+
   static async updateExperimentalThumbnailSupport(enabled: boolean) {
     const path = ServerApi.updateExperimentalThumbnailSupportRoute;
     return (await this.put(path, { enabled })) as SettingsDto; // Assuming it returns SettingsDto

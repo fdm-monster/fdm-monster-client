@@ -1,9 +1,9 @@
 <template>
   <BaseDialog
-    :id="dialog.dialogId"
-    :max-width="showChecksPanel ? '900px' : '800px'"
-    @escape="closeDialog()"
-    @opened="onDialogOpened()"
+      :id="dialog.dialogId"
+      :max-width="showChecksPanel ? '900px' : '800px'"
+      @escape="closeDialog()"
+      @opened="onDialogOpened()"
   >
     <v-card class="pa-4">
       <v-card-title>
@@ -24,13 +24,13 @@
               <v-col v-for="item of serviceTypes" :key="item.name" cols="4" md="4">
                 <v-item v-slot="{ active, toggle }">
                   <v-card
-                    :color="active ? 'primary' : 'blue-grey darken-4'"
-                    class="d-flex align-center justify-center elevation-8"
-                    height="60px"
-                    width="225px"
-                    @click="toggle"
+                      :color="active ? 'primary' : 'blue-grey darken-4'"
+                      class="d-flex align-center justify-center elevation-8"
+                      height="60px"
+                      width="225px"
+                      @click="toggle"
                   >
-                    <v-img :height="item.height" :src="item.logo" max-width="100px" width="125px" />
+                    <v-img :height="item.height" :src="item.logo" max-width="100px" width="125px"/>
                     <v-scroll-y-transition>
                       <h3 class="ml-3 align-center">{{ item.name }}</h3>
                     </v-scroll-y-transition>
@@ -46,65 +46,65 @@
             <v-row v-if="formData">
               <v-col>
                 <v-text-field
-                  v-model="formData.name"
-                  :counter="printerNameRules.max"
-                  autofocus
-                  class="ma-1"
-                  label="Printer name*"
-                  required
+                    v-model="formData.name"
+                    :counter="printerNameRules.max"
+                    autofocus
+                    class="ma-1"
+                    label="Printer name*"
+                    required
                 />
               </v-col>
               <v-col>
                 <v-checkbox
-                  v-model="formData.enabled"
-                  hint="Disabling makes the printer passive"
-                  label="Enabled*"
-                  persistent-hint
-                  required
+                    v-model="formData.enabled"
+                    hint="Disabling makes the printer passive"
+                    label="Enabled*"
+                    persistent-hint
+                    required
                 />
               </v-col>
             </v-row>
 
             <v-text-field
-              v-model="formData.printerURL"
-              class="ma-1"
-              hint="F.e. 'octopi.local' or 'https://my.printer.com'"
-              label="Printer URL*"
+                v-model="formData.printerURL"
+                class="ma-1"
+                hint="F.e. 'octopi.local' or 'https://my.printer.com'"
+                label="Printer URL*"
             />
 
             <v-text-field
-              v-if="formData.printerType === OctoPrintType"
-              v-model="formData.apiKey"
-              :counter="apiKeyRules.length"
-              :label="
+                v-if="formData.printerType === OctoPrintType"
+                v-model="formData.apiKey"
+                :counter="apiKeyRules.length"
+                :label="
                 formData.printerType === OctoPrintType || formData.printerType === MoonrakerType
-                  ? 'API Key (unsupported)'
-                  : 'API Key (required)*'
+                  ? 'API Key (required)*'
+                  : 'API Key (unsupported)'
               "
-              class="ma-1"
-              hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
-              persistent-hint
-              required
+                class="ma-1"
+                hint="User or Application Key with 32 or 43 characters (Global API key will fail)"
+                persistent-hint
+                required
             />
 
             <v-text-field
-              v-if="formData.printerType === PrusaLinkType"
-              v-model="formData.username"
-              class="ma-1"
-              hint="Username (often 'maker')"
-              label="Username"
-              persistent-hint
-              required
+                v-if="formData.printerType === PrusaLinkType || formData.printerType === BambuType"
+                v-model="formData.username"
+                class="ma-1"
+                :hint="formData.printerType === BambuType ? 'Serial number from printer' : 'Username (often \'maker\')'"
+                :label="formData.printerType === BambuType ? 'Serial' : 'Username'"
+                persistent-hint
+                required
             />
 
             <v-text-field
-              v-if="formData.printerType === PrusaLinkType"
-              v-model="formData.password"
-              class="ma-1"
-              hint="Password (visit your printer settings)"
-              label="Password"
-              persistent-hint
-              required
+                v-if="formData.printerType === PrusaLinkType || formData.printerType === BambuType"
+                v-model="formData.password"
+                class="ma-1"
+                :hint="formData.printerType === BambuType ? 'Access code from printer settings' : 'Password (visit your printer settings)'"
+                :label="formData.printerType === BambuType ? 'AccessCode' : 'Password'"
+                persistent-hint
+                required
             />
           </v-col>
 
@@ -114,23 +114,23 @@
         </v-row>
         <v-alert v-if="printerValidationError?.length" class="my-3" color="primary">
           {{ printerValidationError }}
-          <v-checkbox v-model="forceSavePrinter" color="warning" label="Force save" />
+          <v-checkbox v-model="forceSavePrinter" color="warning" label="Force save"/>
         </v-alert>
         <v-alert v-if="validatingPrinter" class="my-3">
           Validating printer
-          <v-progress-circular indeterminate />
+          <v-progress-circular indeterminate/>
         </v-alert>
       </v-card-text>
       <v-card-actions>
         <em class="red--text">* indicates required field</em>
-        <v-spacer />
+        <v-spacer/>
         <v-btn text @click="closeDialog()">Close</v-btn>
         <v-btn
-          v-if="isUpdating"
-          :disabled="!isValid()"
-          color="gray"
-          text
-          @click="duplicatePrinter()"
+            v-if="isUpdating"
+            :disabled="!isValid()"
+            color="gray"
+            text
+            @click="duplicatePrinter()"
         >
           Duplicate
         </v-btn>
@@ -151,6 +151,7 @@ import { computed, inject, ref } from "vue";
 import klipperLogoSvg from "@/assets/klipper-logo.svg";
 import octoPrintTentacleSvg from "@/assets/octoprint-tentacle.svg";
 import prusaLinkLogoSvg from "@/assets/prusa-link-logo.svg";
+import bambuLogoSvg from "@/assets/bambu-logo.png";
 import { generateInitials, newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { usePrinterStore } from "@/store/printer.store";
 import { PrintersService } from "@/backend";
@@ -161,15 +162,18 @@ import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { AxiosError } from "axios";
+
 import { CreatePrinter, getDefaultCreatePrinter } from "@/models/printers/create-printer.model";
 import { useFeatureStore } from "@/store/features.store";
 import {
   getServiceName,
   isMoonrakerType,
   isPrusaLinkType,
+  isBambuType,
   MoonrakerType,
   OctoPrintType,
   PrusaLinkType,
+  BambuType
 } from "@/utils/printer-type.utils";
 import { useFloorStore } from "@/store/floor.store";
 import { captureException } from "@sentry/vue";
@@ -193,6 +197,7 @@ const serviceTypes = computed(() => {
     const feature = featureStore.getFeature<{ types: string[] }>("multiplePrinterServices");
     const hasKlipperSupport = feature?.subFeatures?.types?.includes("klipper");
     const hasPrusaLinkSupport = feature?.subFeatures?.types?.includes("prusaLink");
+    const hasBambuSupport = feature?.subFeatures?.types?.includes("bambu");
 
     return [
       {
@@ -201,23 +206,32 @@ const serviceTypes = computed(() => {
         height: "60px",
       },
       ...(hasKlipperSupport
-        ? [
+          ? [
             {
               name: getServiceName(MoonrakerType),
               logo: klipperLogoSvg,
               height: "60px",
             },
           ]
-        : []),
+          : []),
       ...(hasPrusaLinkSupport
-        ? [
+          ? [
             {
               name: getServiceName(PrusaLinkType),
               logo: prusaLinkLogoSvg,
               height: "20px",
             },
           ]
-        : []),
+          : []),
+      ...(hasBambuSupport
+          ? [
+            {
+              name: getServiceName(BambuType),
+              logo: bambuLogoSvg,
+              height: "20px",
+            },
+          ]
+          : []),
     ];
   }
 
@@ -245,7 +259,7 @@ async function onDialogOpened() {
 const storedPrinter = computed(() => printersStore.updateDialogPrinter);
 const isUpdating = computed(() => !!storedPrinter.value);
 const submitButtonText = computed(
-  () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
+    () => (forceSavePrinter.value ? "Force " : "") + (isUpdating.value ? "Save" : "Create")
 );
 
 const avatarInitials = computed(() => {
@@ -282,8 +296,8 @@ const testPrinter = async () => {
   testPrinterStore.clearEvents();
   openTestPanel();
 
-  const { correlationToken } = await testPrinterStore.createTestPrinter(
-    formData.value as CreatePrinter
+  const {correlationToken} = await testPrinterStore.createTestPrinter(
+      formData.value as CreatePrinter
   );
   testPrinterStore.currentCorrelationToken = correlationToken;
 };
@@ -294,9 +308,9 @@ const isValid = () => {
   if (isMoonrakerType(form.printerType)) {
     return form.printerURL?.length && form.name?.length;
   }
-  if (isPrusaLinkType(form.printerType)) {
+  if (isPrusaLinkType(form.printerType) || isBambuType(form.printerType)) {
     return (
-      form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length
+        form.printerURL?.length && form.name?.length && form.username?.length && form.password?.length
     );
   }
   return form.printerURL?.length && form.name?.length && form.apiKey?.length;
@@ -305,7 +319,7 @@ const isValid = () => {
 const createPrinter = async (newPrinterData: CreatePrinter) => {
   const printer = await printersStore.createPrinter(newPrinterData, forceSavePrinter.value);
   snackbar.openInfoMessage({
-    title: `Printer ${newPrinterData.name} created`,
+    title: `Printer ${ newPrinterData.name } created`,
   });
   return printer;
 };
@@ -314,15 +328,15 @@ const updatePrinter = async (updatedPrinter: CreatePrinter) => {
   const printerId = updatedPrinter.id;
 
   const printer = await printersStore.updatePrinter(
-    {
-      printerId: printerId as string,
-      updatedPrinter,
-    },
-    forceSavePrinter.value
+      {
+        printerId: printerId as string,
+        updatedPrinter,
+      },
+      forceSavePrinter.value
   );
 
   snackbar.openInfoMessage({
-    title: `Printer ${updatedPrinter.name} updated`,
+    title: `Printer ${ updatedPrinter.name } updated`,
   });
 
   return printer;
@@ -335,9 +349,9 @@ const submit = async () => {
   validatingPrinter.value = true;
 
   if (
-    formData.value.printerURL?.length &&
-    !formData.value.printerURL?.startsWith("http://") &&
-    !formData.value.printerURL?.startsWith("https://")
+      formData.value.printerURL?.length &&
+      !formData.value.printerURL?.startsWith("http://") &&
+      !formData.value.printerURL?.startsWith("https://")
   ) {
     formData.value.printerURL = "https://" + formData.value.printerURL;
   }

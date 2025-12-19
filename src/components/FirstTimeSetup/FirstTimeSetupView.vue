@@ -27,7 +27,83 @@
             <h1>FDM Monster</h1>
             <small>This server is not yet configured.</small>
           </div>
-          <v-btn class="mt-14 mb-14" color="primary" @click="stepper = 2">Start Setup</v-btn>
+          <v-btn class="mt-14 mb-4" color="primary" @click="stepper = 2">Start Setup</v-btn>
+
+          <v-divider class="mt-6 mb-6" />
+
+          <div class="mt-6 mb-6">
+            <h4 class="mb-4">
+              <v-icon class="mr-2">restore</v-icon>
+              Or restore from backup
+            </h4>
+            <v-file-input
+              v-model="backupFile"
+              accept=".yaml"
+              label="Select a YAML backup file"
+              prepend-icon="upload_file"
+              class="mt-4 mb-4"
+              style="max-width: 500px; margin: 0 auto"
+            />
+            <v-btn
+              :disabled="!backupFile"
+              :loading="validatingBackup"
+              color="secondary"
+              @click="validateBackupFile()"
+            >
+              <v-icon class="mr-2">checklist</v-icon>
+              Validate & Preview Backup
+            </v-btn>
+
+            <v-alert v-if="backupValidationError" type="error" class="mt-4">
+              {{ backupValidationError }}
+            </v-alert>
+
+            <v-card v-if="backupSummary" class="mt-4 pa-4 text-left" style="max-width: 600px; margin: 0 auto">
+              <h4 class="mb-4">
+                <v-icon class="mr-2" color="success">info</v-icon>
+                Backup Summary
+              </h4>
+              <div class="mb-2">
+                <strong>Version:</strong> {{ backupSummary.version }}
+              </div>
+              <div class="mb-2">
+                <strong>Database Type:</strong> {{ backupSummary.databaseType }}
+              </div>
+              <div class="mb-2">
+                <strong>Exported:</strong> {{ backupSummary.exportedAt }}
+              </div>
+              <v-divider class="my-3" />
+              <div class="mb-2">
+                <v-icon class="mr-2" small>print</v-icon>
+                <strong>Printers:</strong> {{ backupSummary.printersCount }}
+              </div>
+              <div class="mb-2">
+                <v-icon class="mr-2" small>layers</v-icon>
+                <strong>Floors:</strong> {{ backupSummary.floorsCount }}
+              </div>
+              <div class="mb-2">
+                <v-icon class="mr-2" small>group_work</v-icon>
+                <strong>Groups:</strong> {{ backupSummary.groupsCount }}
+              </div>
+              <div v-if="backupSummary.hasSettings" class="mb-2">
+                <v-icon class="mr-2" small color="warning">settings</v-icon>
+                <strong>Settings:</strong> Included
+              </div>
+              <div v-if="backupSummary.usersCount > 0" class="mb-2">
+                <v-icon class="mr-2" small color="warning">person</v-icon>
+                <strong>Users:</strong> {{ backupSummary.usersCount }}
+              </div>
+              <v-btn
+                class="mt-4"
+                color="success"
+                @click="importBackupFile()"
+                :loading="importingBackup"
+              >
+                <v-icon class="mr-2">upload</v-icon>
+                Import Backup
+              </v-btn>
+            </v-card>
+          </div>
 
           <div class="mt-6 border_all">
             <v-icon class="mr-6">question_mark</v-icon>
@@ -196,6 +272,7 @@ import { FirstTimeSetupService } from "@/backend/first-time-setup.service";
 import { useSnackbar } from "@/shared/snackbar.composable";
 import { useRouter } from "vue-router/composables";
 import { useAuthStore } from "@/store/auth.store";
+import { load } from "js-yaml";
 
 const router = useRouter();
 const snackbar = useSnackbar();
@@ -212,6 +289,11 @@ const formStep2 = ref({
 });
 
 const stepper = ref(1);
+const backupFile = ref<File | undefined>(undefined);
+const validatingBackup = ref(false);
+const importingBackup = ref(false);
+const backupValidationError = ref("");
+const backupSummary = ref<any>(null);
 
 onMounted(async () => {
   await authStore.checkAuthenticationRequirements();
@@ -225,6 +307,65 @@ onMounted(async () => {
     }
   }
 });
+
+async function validateBackupFile() {
+  if (!backupFile.value) {
+    backupValidationError.value = "No file selected";
+    return;
+  }
+
+  validatingBackup.value = true;
+  backupValidationError.value = "";
+  backupSummary.value = null;
+
+  try {
+    const text = await backupFile.value.text();
+    const parsed = load(text) as any;
+
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("Invalid YAML file format");
+    }
+
+    backupSummary.value = {
+      version: parsed.version || "Unknown",
+      databaseType: parsed.databaseType || "Unknown",
+      exportedAt: parsed.exportedAt ? new Date(parsed.exportedAt).toLocaleString() : "Unknown",
+      printersCount: parsed.printers?.length || 0,
+      floorsCount: parsed.floors?.length || 0,
+      groupsCount: parsed.groups?.length || 0,
+      hasSettings: !!parsed.settings,
+      usersCount: parsed.users?.length || 0,
+      userRolesCount: parsed.user_roles?.length || 0,
+    };
+
+    snackbar.openInfoMessage({ title: "Backup file validated successfully" });
+  } catch (error: any) {
+    backupValidationError.value = `Failed to validate backup: ${error.message}`;
+    backupSummary.value = null;
+  } finally {
+    validatingBackup.value = false;
+  }
+}
+
+async function importBackupFile() {
+  if (!backupFile.value) {
+    snackbar.error("No file selected");
+    return;
+  }
+
+  importingBackup.value = true;
+  try {
+    await FirstTimeSetupService.uploadAndImportYaml(backupFile.value);
+    snackbar.openInfoMessage({ title: "Backup imported successfully. Redirecting to login..." });
+    // Wizard is now completed on the backend, redirect to login
+    await router.push({ name: "Login" });
+  } catch (error: any) {
+    backupValidationError.value = `Failed to import backup: ${error.message}`;
+    snackbar.error(`Failed to import backup: ${error.message}`);
+  } finally {
+    importingBackup.value = false;
+  }
+}
 
 async function submitWizard() {
   if (!formValid.value) {

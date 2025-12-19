@@ -59,6 +59,29 @@
             check_circle
           </v-icon>
         </div>
+
+        <div class="d-flex align-center">
+          <v-checkbox
+              v-model="experimentalBambuSupport"
+              :disabled="isBambuSupportLoading"
+              @change="updateBambuSupport"
+              hide-details
+          >
+            <template v-slot:label>
+              <span>Enable Experimental Bambu Support</span>
+            </template>
+          </v-checkbox>
+          <v-progress-circular
+              v-if="isBambuSupportLoading"
+              indeterminate
+              size="30"
+              width="4"
+              class="ml-2 mt-4"
+          />
+          <v-icon v-if="showBambuSuccess" color="success" class="ml-2 mt-4">
+            check_circle
+          </v-icon>
+        </div>
       </SettingSection>
 
       <v-divider />
@@ -155,15 +178,18 @@ import SettingSection from "@/components/Settings/Shared/SettingSection.vue";
 const page = settingsPage["experimental"];
 const experimentalMoonrakerSupport = ref(false);
 const experimentalPrusaLinkSupport = ref(false);
+const experimentalBambuSupport = ref(false);
 const experimentalThumbnailSupport = ref(false);
 const experimentalTypeORMSupport = ref(false);
 const experimentalClientSupport = ref(false);
 const isMoonrakerSupportLoading = ref(false);
 const isPrusaLinkSupportLoading = ref(false);
+const isBambuSupportLoading = ref(false);
 const isThumbnailSupportLoading = ref(false);
 const isClientLoading = ref(false);
 const showMoonrakerSuccess = ref(false);
 const showPrusaLinkSuccess = ref(false);
+const showBambuSuccess = ref(false);
 const showThumbnailSuccess = ref(false);
 const showClientSuccess = ref(false);
 
@@ -171,6 +197,7 @@ async function loadSettings() {
   const settings = await SettingsService.getSettings();
   experimentalMoonrakerSupport.value = settings.server.experimentalMoonrakerSupport;
   experimentalPrusaLinkSupport.value = settings.server.experimentalPrusaLinkSupport;
+  experimentalBambuSupport.value = settings.server.experimentalBambuSupport;
   experimentalThumbnailSupport.value = settings.server.experimentalThumbnailSupport;
   experimentalTypeORMSupport.value = settings.server.experimentalTypeormSupport;
   experimentalClientSupport.value = settings.server.experimentalClientSupport;
@@ -221,6 +248,28 @@ const updatePrusaLinkSupport = async () => {
     console.error("Failed to update Moonraker support:", error);
     experimentalPrusaLinkSupport.value = !experimentalPrusaLinkSupport.value;
     isPrusaLinkSupportLoading.value = false;
+  }
+};
+
+const updateBambuSupport = async () => {
+  isBambuSupportLoading.value = true;
+  showBambuSuccess.value = false;
+
+  try {
+    await SettingsService.updateExperimentalBambuSupport(experimentalBambuSupport.value);
+    await loadSettings();
+    setTimeout(() => {
+      isBambuSupportLoading.value = false;
+      showBambuSuccess.value = true;
+    }, 250);
+
+    setTimeout(() => {
+      showBambuSuccess.value = false;
+    }, 3000);
+  } catch (error) {
+    console.error("Failed to update Bambu support:", error);
+    experimentalBambuSupport.value = !experimentalBambuSupport.value;
+    isBambuSupportLoading.value = false;
   }
 };
 
