@@ -6,13 +6,13 @@ __metadata:
   cacheKey: 10c0
 
 "@achrinza/node-ipc@npm:^9.2.5":
-  version: 9.2.9
-  resolution: "@achrinza/node-ipc@npm:9.2.9"
+  version: 9.2.10
+  resolution: "@achrinza/node-ipc@npm:9.2.10"
   dependencies:
     "@node-ipc/js-queue": "npm:2.0.3"
     event-pubsub: "npm:4.3.0"
     js-message: "npm:1.0.7"
-  checksum: 10c0/f68fcc462580274c404ae643afe938cb338abf1510131d4ace0a969a4c5efc1eaa189b51761e1278e463ae3abd1cbee460ff1bfe430fc0b8d225a94d7c28af6d
+  checksum: 10c0/413b3d719e130b407be3cbe9841a70afa89935df8f2d803c37b76ddd2ff3a5c00332e21063ae4797099f0b622cd8aa87f52ffe877182a02f87336d7ce6715242
   languageName: node
   linkType: hard
 
