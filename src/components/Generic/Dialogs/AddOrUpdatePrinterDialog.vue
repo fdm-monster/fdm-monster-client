@@ -22,7 +22,7 @@
           <v-container>
             <v-row>
               <v-col v-for="item of serviceTypes" :key="item.name" cols="4" md="4">
-                <v-item v-slot="{ active, toggle }">
+                <v-item v-slot="{ active, toggle }" :value="item.type">
                   <v-card
                       :color="active ? 'primary' : 'blue-grey darken-4'"
                       class="d-flex align-center justify-center elevation-8"
@@ -202,6 +202,7 @@ const serviceTypes = computed(() => {
     return [
       {
         name: getServiceName(OctoPrintType),
+        type: OctoPrintType,
         logo: octoPrintTentacleSvg,
         height: "60px",
       },
@@ -209,6 +210,7 @@ const serviceTypes = computed(() => {
           ? [
             {
               name: getServiceName(MoonrakerType),
+              type: MoonrakerType,
               logo: klipperLogoSvg,
               height: "60px",
             },
@@ -219,6 +221,7 @@ const serviceTypes = computed(() => {
             {
               name: getServiceName(PrusaLinkType),
               logo: prusaLinkLogoSvg,
+              type: PrusaLinkType,
               height: "20px",
             },
           ]
@@ -227,6 +230,7 @@ const serviceTypes = computed(() => {
           ? [
             {
               name: getServiceName(BambuType),
+              type: BambuType,
               logo: bambuLogoSvg,
               height: "20px",
             },
@@ -238,6 +242,7 @@ const serviceTypes = computed(() => {
   return [
     {
       name: "OctoPrint",
+      type: OctoPrintType,
       logo: octoPrintTentacleSvg,
       height: "75px",
     },
