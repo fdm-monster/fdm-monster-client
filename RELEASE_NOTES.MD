@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 22/12/2025 1.12.1
+
+Fixes
+
+- Printer dialog: Fixed printer type selection to use actual type values instead of array indices
+
 ## Client 19/12/2025 1.12.0
 
 Features
