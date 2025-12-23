@@ -1,5 +1,11 @@
 # Release notes
 
+## Client 22/12/2025 1.12.2
+
+Fixes
+
+- Printer tile: 'No USB' label replaced with 'Unknown state' 
+
 ## Client 22/12/2025 1.12.1
 
 Fixes
