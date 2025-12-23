@@ -1589,7 +1589,7 @@ __metadata:
     sass: "npm:1.97.1"
     sass-loader: "npm:16.0.6"
     semver: "npm:7.7.3"
-    socket.io-client: "npm:4.8.2"
+    socket.io-client: "npm:4.8.3"
     ts-jest: "npm:29.4.6"
     typescript: "npm:5.9.3"
     validator: "npm:13.15.26"
@@ -13999,15 +13999,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:4.8.2":
-  version: 4.8.2
-  resolution: "socket.io-client@npm:4.8.2"
+"socket.io-client@npm:4.8.3":
+  version: 4.8.3
+  resolution: "socket.io-client@npm:4.8.3"
   dependencies:
     "@socket.io/component-emitter": "npm:~3.1.0"
     debug: "npm:~4.4.1"
     engine.io-client: "npm:~6.6.1"
     socket.io-parser: "npm:~4.2.4"
-  checksum: 10c0/3f07b3b6b1632452adbb132a1a55dfdec2df1670e36cddedcf2433d8186f9eb8bef9f6088e8f019e4351f02c5e3da7340bc5820745ec6c600ea5ca2910802ee5
+  checksum: 10c0/76c0d86de0b636d0bf5011cf3425212c900f43dac632db6eb493816920cd035af7ddd92fea9a106b45eb347405953c0414eb3a5d465b180215e46fc8b61420b3
   languageName: node
   linkType: hard
 
