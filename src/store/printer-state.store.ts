@@ -9,8 +9,8 @@ import { isPrinterIdling, isPrinterPrinting } from "@/shared/printer-state.const
 
 interface State {
   printerIds: number[];
-  printerEventsById: Map<number, PrinterStateDto>;
-  socketStatesById: Map<number, SocketState>;
+  printerEventsById: Record<number, PrinterStateDto>;
+  socketStatesById: Record<number, SocketState>;
 }
 
 export const usePrinterStateStore = defineStore("PrinterState", {
@@ -192,7 +192,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
   actions: {
     setSocketStates(socketStates: Record<number, SocketState>) {
       this.socketStatesById = socketStates;
-      this.printerIds = Object.keys(socketStates);
+      this.printerIds = Object.keys(socketStates).map(Number);
     },
     setPrinterEvents(printerEvents: Record<number, PrinterStateDto>) {
       this.printerEventsById = printerEvents;
@@ -200,7 +200,7 @@ export const usePrinterStateStore = defineStore("PrinterState", {
     },
     deletePrinterEvents(printerId: number) {
       delete this.printerEventsById[printerId];
-      this.printerIds = Object.keys(this.printerEventsById);
+      this.printerIds = Object.keys(this.printerEventsById).map(Number);
     },
     async selectAndPrintFile({ printerId, fullPath }: { printerId: number; fullPath: string }) {
       if (!printerId) return;

@@ -81,7 +81,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 const snackbar = useSnackbar();
 const loginEnabled = ref<boolean>();
-const userId = ref<string>("");
+const userId = ref<number | undefined>(undefined);
 const formData = ref<{
   username: string;
   oldPassword: string;
@@ -95,11 +95,11 @@ onMounted(async () => {
 
   await profileStore.getProfile();
   formData.value.username = profileStore.username as string;
-  userId.value = profileStore.userId as string;
+  userId.value = profileStore.userId as number;
 });
 
 async function changeUsername() {
-  if (!userId.value?.toString()?.length) {
+  if (userId.value === undefined) {
     snackbar.openErrorMessage({ title: "User not loaded" });
     return;
   }
@@ -111,7 +111,7 @@ async function changeUsername() {
 }
 
 async function changePassword() {
-  if (!userId.value?.toString()?.length) {
+  if (userId.value === undefined) {
     snackbar.openErrorMessage({ title: "User not loaded" });
     return;
   }
