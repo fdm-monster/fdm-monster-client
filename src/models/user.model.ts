@@ -1,10 +1,10 @@
 export interface Role {
-  id: string | number;
+  id: number;
   name: string;
 }
 
 export interface User {
-  id: string;
+  id: number;
   username: string;
   isDemoUser: boolean;
   isVerified: boolean;

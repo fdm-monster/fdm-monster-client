@@ -58,8 +58,8 @@
                     type="password"
                   />
                   <v-select
-                    v-model="formData.roleIds"
-                    :items="roles.map((r) => ({ text: r.name, value: r.id }))"
+                    v-model="formData.roles"
+                    :items="roles.map((r) => ({ text: r.name, value: r.name }))"
                     :rules="[rules.required]"
                     label="Roles*"
                     multiple
@@ -90,13 +90,12 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialog } from "@/shared/dialog.composable";
 import { AppConstants } from "@/shared/app.constants";
 import { useSnackbar } from "@/shared/snackbar.composable";
-import { IdType } from "@/utils/id.type";
 import { Role } from "@/models/user.model";
 
 interface CreateUserForm {
   username: string;
   password: string;
-  roleIds: IdType[];
+  roles: string[];
 }
 
 const dialog = useDialog(DialogName.CreateUserDialog);
@@ -106,7 +105,7 @@ const snackbar = useSnackbar();
 const formData = ref<CreateUserForm>({
   username: "",
   password: "",
-  roleIds: [],
+  roles: [],
 });
 
 const passwordConfirm = ref("");
@@ -157,7 +156,7 @@ const validateFormData = () => {
     snackbar.openErrorMessage({ title: "Passwords do not match" });
     return false;
   }
-  if (!formData.value.roleIds.length) {
+  if (!formData.value.roles.length) {
     snackbar.openErrorMessage({ title: "Please select a role" });
     return false;
   }
@@ -184,7 +183,7 @@ const closeDialog = () => {
   formData.value = {
     username: "",
     password: "",
-    roleIds: [],
+    roles: [],
   };
   passwordConfirm.value = "";
   dialog.closeDialog();

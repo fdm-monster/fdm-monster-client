@@ -1,19 +1,17 @@
 import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
-import { IdType } from "@/utils/id.type";
 
 export interface PrinterGroupDto<KeyType = number> {
   printerId: KeyType;
   groupId: KeyType;
 }
 
-export interface GroupDto<KeyType extends string | number = number> {
+export interface GroupDto<KeyType extends number = number> {
   id: KeyType;
   name: string;
 }
 
-export interface GroupWithPrintersDto<KeyType extends string | number = number>
-  extends GroupDto<KeyType> {
+export interface GroupWithPrintersDto<KeyType extends number = number> extends GroupDto<KeyType> {
   printers: PrinterGroupDto<KeyType>[];
 }
 
@@ -26,37 +24,37 @@ export class PrinterGroupService extends BaseService {
     return (await this.post(path, body)) as void;
   }
 
-  static async deleteGroup(groupId: IdType) {
+  static async deleteGroup(groupId: number) {
     const path = `${ServerApi.deleteGroupRoute(groupId)}`;
-    return (await this.delete(path)) as GroupWithPrintersDto<IdType>[];
+    return (await this.delete(path)) as GroupWithPrintersDto[];
   }
 
   static async getGroupsWithPrinters() {
     const path = `${ServerApi.printerGroupRoute}`;
-    return (await this.get(path)) as GroupWithPrintersDto<IdType>[];
+    return (await this.get(path)) as GroupWithPrintersDto[];
   }
 
-  static async addPrinterToGroup(groupId: IdType, printerId: IdType) {
+  static async addPrinterToGroup(groupId: number, printerId: number) {
     const path = `${ServerApi.addPrinterToGroupRoute(groupId)}`;
     const body = {
       printerId,
     };
-    return (await this.post(path, body)) as GroupWithPrintersDto<IdType>[];
+    return (await this.post(path, body)) as GroupWithPrintersDto[];
   }
 
-  static async deletePrinterFromGroup(groupId: IdType, printerId: IdType) {
+  static async deletePrinterFromGroup(groupId: number, printerId: number) {
     const path = `${ServerApi.deletePrinterFromGroupRoute(groupId)}`;
     const body = {
       printerId,
     };
-    return (await this.delete(path, body)) as GroupWithPrintersDto<IdType>[];
+    return (await this.delete(path, body)) as GroupWithPrintersDto[];
   }
 
-  static async updateGroupName(groupId: IdType, name: string) {
+  static async updateGroupName(groupId: number, name: string) {
     const path = `${ServerApi.updateGroupNameRoute(groupId)}`;
     const body = {
       name,
     };
-    return (await this.patch(path, body)) as GroupWithPrintersDto<IdType>[];
+    return (await this.patch(path, body)) as GroupWithPrintersDto[];
   }
 }

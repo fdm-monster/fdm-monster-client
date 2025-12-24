@@ -9,7 +9,6 @@ import { useTestPrinterStore } from "@/store/test-printer.store";
 import { useSnackbar } from "./snackbar.composable";
 import { getBaseUri } from "@/shared/http-client";
 import { useAuthStore } from "@/store/auth.store";
-import { IdType } from "@/utils/id.type";
 import { useTrackedUploadsStore } from "@/store/tracked-uploads.store";
 import { io, Socket } from "socket.io-client";
 import { reactive } from "vue";
@@ -149,7 +148,7 @@ export class SocketIoService {
 
     if (message.printerEvents) {
       this.printerStateStore.setPrinterEvents(
-        message.printerEvents as Record<IdType, PrinterStateDto>
+        message.printerEvents as Record<number, PrinterStateDto>
       );
     }
   }

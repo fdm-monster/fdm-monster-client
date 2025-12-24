@@ -1,21 +1,20 @@
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
-import { IdType } from "@/utils/id.type";
 
 export interface FloorDto {
-  id: IdType;
+  id: number;
   name: string;
   floor: number;
   printers: PositionDto[];
 }
 
 export interface PreCreateFloor {
-  id?: IdType;
+  id?: number;
   name: string;
   floor: string;
   printers: PositionDto[];
 }
 
-export interface PositionDto<KeyType = IdType> {
+export interface PositionDto<KeyType = number> {
   x: number;
   y: number;
   printerId: KeyType;

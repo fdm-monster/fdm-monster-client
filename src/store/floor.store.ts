@@ -4,7 +4,6 @@ import { useSettingsStore } from "./settings.store";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { usePrinterStore } from "./printer.store";
 import { FloorService } from "@/backend/floor.service";
-import { IdType } from "@/utils/id.type";
 
 export interface State {
   floors: FloorDto[];
@@ -27,13 +26,13 @@ export const useFloorStore = defineStore("Floors", {
       return state.floors.sort((f, f2) => f.floor - f2.floor);
     },
     floor(state) {
-      return (floorId: IdType) => state.floors.find((pf) => pf.id === floorId);
+      return (floorId: number) => state.floors.find((pf) => pf.id === floorId);
     },
     floorNames(state) {
       return state.floors.map((f) => f.name);
     },
     floorOfPrinter() {
-      return (printerId: IdType) => {
+      return (printerId: number) => {
         return this.floors.find((f: FloorDto) =>
           f.printers.map((pid) => pid.printerId).includes(printerId)
         );
@@ -91,16 +90,16 @@ export const useFloorStore = defineStore("Floors", {
       const foundFloorIndex = this.floors.findIndex((f) => f.id === floorId);
       this.selectedFloorIndex = foundFloorIndex === -1 ? 0 : foundFloorIndex;
     },
-    async deleteFloor(floorId: IdType) {
+    async deleteFloor(floorId: number) {
       await FloorService.deleteFloor(floorId);
       this._popPrinterFloor(floorId);
     },
-    async updateFloorName({ floorId, name }: { floorId: IdType; name: string }) {
+    async updateFloorName({ floorId, name }: { floorId: number; name: string }) {
       const floor = await FloorService.updateFloorName(floorId, name);
       this._replaceFloor(floor);
       return floor;
     },
-    async updateFloorNumber({ floorId, floorNumber }: { floorId: IdType; floorNumber: number }) {
+    async updateFloorNumber({ floorId, floorNumber }: { floorId: number; floorNumber: number }) {
       const floor = await FloorService.updateFloorNumber(floorId, floorNumber);
       this._replaceFloor(floor);
       return floor;
@@ -111,8 +110,8 @@ export const useFloorStore = defineStore("Floors", {
       x,
       y,
     }: {
-      floorId: IdType;
-      printerId: IdType;
+      floorId: number;
+      printerId: number;
       x: number;
       y: number;
     }) {
@@ -141,11 +140,11 @@ export const useFloorStore = defineStore("Floors", {
 
       this.selectedFloorIndex = selectedPrinterFloorIndex;
     },
-    async deletePrinterFromFloor({ floorId, printerId }: { floorId: IdType; printerId: IdType }) {
+    async deletePrinterFromFloor({ floorId, printerId }: { floorId: number; printerId: number }) {
       const result = await FloorService.deletePrinterFromFloor(floorId, printerId);
       this._replaceFloor(result);
     },
-    _popPrinterFloor(floorId: IdType) {
+    _popPrinterFloor(floorId: number) {
       const foundFloorIndex = this.floors.findIndex((pg) => pg.id === floorId);
       if (foundFloorIndex !== -1) {
         this.floors.splice(foundFloorIndex, 1);

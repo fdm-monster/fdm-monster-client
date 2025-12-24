@@ -5,7 +5,6 @@ import { PrinterFileService, PrintersService } from "@/backend";
 import { CreatePrinter } from "@/models/printers/create-printer.model";
 import { PrinterJobService } from "@/backend/printer-job.service";
 import { usePrinterStateStore } from "./printer-state.store";
-import { IdType } from "@/utils/id.type";
 import {
   isPrinterDisabled,
   isPrinterDisconnected,
@@ -14,7 +13,7 @@ import {
 
 interface State {
   printers: PrinterDto[];
-  printerFileCache: Record<IdType, FileDto[]>;
+  printerFileCache: Record<number, FileDto[]>;
 
   sideNavPrinter?: PrinterDto;
   updateDialogPrinter?: PrinterDto;
@@ -34,16 +33,16 @@ export const usePrinterStore = defineStore("Printers", {
   }),
   getters: {
     printer() {
-      return (printerId?: IdType) => {
+      return (printerId?: number) => {
         return this.printers.find((p) => p.id == printerId);
       };
     },
     isSelectedPrinter(state) {
-      return (printerId?: IdType) =>
+      return (printerId?: number) =>
         !!state.selectedPrinters.find((p: PrinterDto) => p.id === printerId);
     },
     printerFiles() {
-      return (printerId: IdType) => this.printerFileCache[printerId];
+      return (printerId: number) => this.printerFileCache[printerId];
     },
     disabledCount(): number {
       return this.printers.filter(isPrinterDisabled).length;
@@ -95,7 +94,7 @@ export const usePrinterStore = defineStore("Printers", {
         printerId,
         updatedPrinter,
       }: {
-        printerId: IdType;
+        printerId: number;
         updatedPrinter: CreatePrinter;
       },
       forceSave: boolean
@@ -109,7 +108,7 @@ export const usePrinterStore = defineStore("Printers", {
       this.setPrinters(data);
       return data;
     },
-    async deletePrinter(printerId: IdType) {
+    async deletePrinter(printerId: number) {
       const data = await PrintersService.deletePrinter(printerId);
       this._popPrinter(printerId);
       return data;
@@ -127,7 +126,7 @@ export const usePrinterStore = defineStore("Printers", {
         a.name?.toLowerCase()?.localeCompare(b?.name?.toLowerCase()) ? 1 : -1
       );
     },
-    _popPrinter(printerId: IdType) {
+    _popPrinter(printerId: number) {
       const printerIndex = this.printers.findIndex((p: PrinterDto) => p.id === printerId);
 
       if (printerIndex !== -1) {
@@ -136,7 +135,7 @@ export const usePrinterStore = defineStore("Printers", {
         console.warn("Printer was not popped as it did not occur in state", printerId);
       }
     },
-    _replacePrinter({ printerId, printer }: { printerId: IdType; printer: PrinterDto }) {
+    _replacePrinter({ printerId, printer }: { printerId: number; printer: PrinterDto }) {
       const printerIndex = this.printers.findIndex((p: PrinterDto) => p.id === printerId);
 
       if (printerIndex !== -1) {
@@ -145,7 +144,7 @@ export const usePrinterStore = defineStore("Printers", {
         console.warn("Printer was not purged as it did not occur in state", printerId);
       }
     },
-    async deletePrinterFiles(printerId: IdType) {
+    async deletePrinterFiles(printerId: number) {
       if (!printerId) {
         throw new Error("No printerId was provided");
       }
@@ -158,7 +157,7 @@ export const usePrinterStore = defineStore("Printers", {
         this.printerFileCache[printerId] = result.failedFiles;
       }
     },
-    async loadPrinterFiles(printerId: IdType) {
+    async loadPrinterFiles(printerId: number) {
       const files = await PrinterFileService.getFiles(printerId);
 
       files.sort((f1, f2) => (f1.date < f2.date ? 1 : -1));
@@ -166,7 +165,7 @@ export const usePrinterStore = defineStore("Printers", {
       this.printerFileCache[printerId] = files;
       return files;
     },
-    async deletePrinterFile(printerId: IdType, fullPath: string) {
+    async deletePrinterFile(printerId: number, fullPath: string) {
       await PrinterFileService.deleteFileOrFolder(printerId, fullPath);
 
       const fileBucket = this.printerFileCache[printerId];
@@ -185,7 +184,7 @@ export const usePrinterStore = defineStore("Printers", {
 
       return this.printerFiles(printerId);
     },
-    async sendStopJobCommand(printerId?: IdType) {
+    async sendStopJobCommand(printerId?: number) {
       const printerStateStore = usePrinterStateStore();
       if (!printerId) return;
       const printer = this.printer(printerId);

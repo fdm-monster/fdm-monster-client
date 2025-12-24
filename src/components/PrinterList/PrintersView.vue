@@ -220,7 +220,6 @@ import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateActio
 import PrinterDeleteAction from "@/components/Generic/Actions/PrinterDeleteAction.vue";
 import { useFloorStore } from "@/store/floor.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
-import { IdType } from "@/utils/id.type";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useFeatureStore } from "@/store/features.store";
 import { useQuery } from "@tanstack/vue-query";
@@ -238,8 +237,8 @@ const featureStore = useFeatureStore();
 
 const addOrUpdatePrinterDialog = useDialog(DialogName.AddOrUpdatePrinterDialog);
 
-const groupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
-const filteredGroupsWithPrinters = ref<GroupWithPrintersDto<IdType>[]>([]);
+const groupsWithPrinters = ref<GroupWithPrintersDto[]>([]);
+const filteredGroupsWithPrinters = ref<GroupWithPrintersDto[]>([]);
 const newGroupName = ref("");
 const updatedGroupName = ref("");
 const selectedGroup = ref<number>();
@@ -298,15 +297,15 @@ const diffSeconds = (timestamp: number) => {
   return (now - timestamp) / 1000;
 };
 
-const groupsOfPrinter = (printerId: IdType) => {
+const groupsOfPrinter = (printerId: number) => {
   return groupsWithPrinters.value.filter((g) => g.printers.find((p) => p.printerId === printerId));
 };
 
-const nonGroupsOfPrinter = (printerId: IdType) => {
+const nonGroupsOfPrinter = (printerId: number) => {
   return groupsWithPrinters.value.filter((g) => !g.printers.find((p) => p.printerId === printerId));
 };
 
-const floorOfPrinter = (printerId: IdType) => {
+const floorOfPrinter = (printerId: number) => {
   return floorStore.floorOfPrinter(printerId);
 };
 
@@ -354,7 +353,7 @@ const selectGroupForUpdatingName = () => {
   updatedGroupName.value = selectedGroupObject.value?.name;
 };
 
-const updateGroupName = async (group?: GroupWithPrintersDto<IdType>) => {
+const updateGroupName = async (group?: GroupWithPrintersDto) => {
   if (!group?.id) {
     throw new Error("Group id was not defined");
   }
@@ -370,7 +369,7 @@ const updateGroupName = async (group?: GroupWithPrintersDto<IdType>) => {
   await printerGroupsQuery.refetch();
 };
 
-const deleteGroup = async (groupId: IdType) => {
+const deleteGroup = async (groupId: number) => {
   const existingGroup = groupsWithPrinters.value.find((g) => g.id === groupId);
   if (!existingGroup) {
     throw new Error("Group was not found, please reload the page");
@@ -389,13 +388,13 @@ const deleteGroup = async (groupId: IdType) => {
   snackbar.info("Deleted group");
 };
 
-const addPrinterToGroup = async (groupId: IdType, printerId: IdType) => {
+const addPrinterToGroup = async (groupId: number, printerId: number) => {
   await PrinterGroupService.addPrinterToGroup(groupId, printerId);
   await printerGroupsQuery.refetch();
   snackbar.info("Added printer to group");
 };
 
-const deletePrinterFromGroup = async (groupId: IdType, printerId: IdType) => {
+const deletePrinterFromGroup = async (groupId: number, printerId: number) => {
   await PrinterGroupService.deletePrinterFromGroup(groupId, printerId);
   await printerGroupsQuery.refetch();
   snackbar.info("Removed printer from group");

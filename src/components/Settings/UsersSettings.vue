@@ -55,7 +55,7 @@
                     <li v-if="user.isRootUser">
                       <v-chip class="mb-2 mt-2" small> OWNER </v-chip>
                     </li>
-                    <li v-for="role of convertRoles(user.roles)" :key="role">
+                    <li v-for="role of user.roles" :key="role">
                       <v-chip class="mb-2 mt-2" small>
                         {{ role }}
                       </v-chip>
@@ -89,7 +89,7 @@
 
             <v-select
               v-if="profile?.isRootUser"
-              :items="roles.map((r) => ({ text: r.name, value: r.id }))"
+              :items="roles.map((r) => ({ text: r.name, value: r.name }))"
               v-model="user.roles"
               multiple
               label="Select roles"
@@ -159,10 +159,6 @@ const userQuery = useQuery({
   queryKey: ["userRolesProfile"],
   queryFn: loadData,
 });
-
-function convertRoles(roleIds: (string | number)[]): (string | undefined)[] {
-  return roleIds.map((roleId) => roles.value.find((r) => r.id == roleId)?.name);
-}
 
 function isCurrentAccount(user: User): boolean {
   return user.id == profile.value?.id;
