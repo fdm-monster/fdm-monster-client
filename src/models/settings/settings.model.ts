@@ -40,7 +40,6 @@ export interface CredentialSettingsDto {
 }
 
 export interface ServerSettingsSensitiveDto {
-  experimentalTypeormSupport: boolean;
   experimentalMoonrakerSupport: boolean;
   experimentalClientSupport: boolean;
   experimentalThumbnailSupport: boolean;

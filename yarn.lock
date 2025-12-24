@@ -1548,6 +1548,7 @@ __metadata:
     "@sentry/vue": "npm:10.32.1"
     "@tanstack/vue-query": "npm:5.92.1"
     "@types/jest": "npm:30.0.0"
+    "@types/js-yaml": "npm:4.0.9"
     "@types/luxon": "npm:3.7.1"
     "@types/semver": "npm:7.7.1"
     "@types/validator": "npm:13.15.10"
@@ -3078,6 +3079,13 @@ __metadata:
     jest-matcher-utils: "npm:^27.0.0"
     pretty-format: "npm:^27.0.0"
   checksum: 10c0/29ef3da9b94a15736a67fc13956f385ac2ba2c6297f50d550446842c278f2e0d9f343dcd8e31c321ada5d8a1bd67bc1d79c7b6ff1802d55508c692123b3d9794
+  languageName: node
+  linkType: hard
+
+"@types/js-yaml@npm:4.0.9":
+  version: 4.0.9
+  resolution: "@types/js-yaml@npm:4.0.9"
+  checksum: 10c0/24de857aa8d61526bbfbbaa383aa538283ad17363fcd5bb5148e2c7f604547db36646440e739d78241ed008702a8920665d1add5618687b6743858fae00da211
   languageName: node
   linkType: hard
 

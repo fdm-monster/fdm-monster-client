@@ -1,6 +1,13 @@
 # Release notes
 
-## Client 22/12/2025 1.12.2
+## Client 24/12/2025 1.12.3
+
+Fixes
+
+- Remove unused printer group feature flag
+- Remove unused typeorm feature flag
+
+## Client 23/12/2025 1.12.2
 
 Fixes
 

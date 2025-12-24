@@ -5,7 +5,6 @@ export interface ServerSettingsDto {
   experimentalMoonrakerSupport: boolean;
   experimentalPrusaLinkSupport: boolean;
   experimentalBambuSupport: boolean;
-  experimentalTypeormSupport: boolean;
   experimentalClientSupport: boolean;
   experimentalThumbnailSupport: boolean;
 }

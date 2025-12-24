@@ -5,7 +5,7 @@
         Printers
         <v-spacer></v-spacer>
         <v-select
-          v-if="hasPrinterGroupFeature && groupsWithPrinters.length"
+          v-if="groupsWithPrinters.length"
           multiple
           :items="groupsWithPrinters"
           item-text="name"
@@ -86,7 +86,7 @@
         <template v-slot:item.floor="{ item }">
           <v-chip v-if="item.id"> {{ floorOfPrinter(item.id)?.name }}</v-chip>
         </template>
-        <template v-if="hasPrinterGroupFeature" v-slot:item.group="{ item }">
+        <template v-slot:item.group="{ item }">
           <v-chip
             v-for="group of groupsOfPrinter(item.id)"
             :key="group.id"
@@ -147,7 +147,7 @@
       </v-data-table>
     </v-card>
 
-    <v-card class="mt-4" v-if="hasPrinterGroupFeature">
+    <v-card class="mt-4">
       <v-card-title>Printer Groups</v-card-title>
 
       <v-card-text>
@@ -247,15 +247,12 @@ const currentPrintersShownCount = ref<number>(0);
 
 const search = ref("");
 const expanded = ref<PrinterDto[]>([]);
-const hasPrinterGroupFeature = computed(() => featureStore.hasFeature("printerGroupsApi"));
 const tableHeaders = computed(() => [
   { text: "Enabled", value: "enabled" },
   { text: "Type", value: "printerType" },
   { text: "Printer Name", align: "start", sortable: true, value: "name" },
   { text: "Floor", value: "floor", sortable: false },
-  ...(featureStore.hasFeature("printerGroupsApi")
-    ? [{ text: "Group(s)", value: "group", sortable: true }]
-    : []),
+  { text: "Group(s)", value: "group", sortable: true },
   { text: "Actions", value: "actions", sortable: false },
   { text: "Socket Update", value: "socketupdate", sortable: false },
   { text: "", value: "data-table-expand" },
@@ -269,9 +266,7 @@ async function loadData() {
   loading.value = true;
   currentPrintersShownCount.value = 0;
   await featureStore.loadFeatures();
-  if (featureStore.hasFeature("printerGroupsApi")) {
-    groupsWithPrinters.value = await PrinterGroupService.getGroupsWithPrinters();
-  }
+  groupsWithPrinters.value = await PrinterGroupService.getGroupsWithPrinters();
   loading.value = false;
   return groupsWithPrinters;
 }
@@ -282,7 +277,7 @@ const printerGroupsQuery = useQuery({
 });
 
 const printers = computed(() => {
-  if (!featureStore.hasFeature("printerGroupsApi") || !filteredGroupsWithPrinters.value?.length) {
+  if (!filteredGroupsWithPrinters.value?.length) {
     return printerStore.printers;
   }
   const printerIdsInFilteredGroups =
