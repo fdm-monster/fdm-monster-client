@@ -1,5 +1,12 @@
 # Release notes
 
+## Client 24/12/2025 1.13.0
+
+Fixes
+
+- The frontend now only support number id types (dropping mongodb support)
+- User Roles changes have been switched to role name strings
+
 ## Client 24/12/2025 1.12.3
 
 Fixes
