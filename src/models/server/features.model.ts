@@ -5,7 +5,6 @@ export interface IFeatureFlag<T = any> {
 }
 
 export class FeaturesModel<T = any> {
-  printerGroupsApi?: IFeatureFlag<T>;
   multiplePrinterServices?: IFeatureFlag<T>;
 }
 

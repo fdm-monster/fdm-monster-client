@@ -118,28 +118,6 @@
       <v-divider />
 
       <SettingSection
-        title="Database Settings"
-        tooltip="By enabling this setting you will set FDM Monster to SQLite as a database source
-                    (standalone mode). Please set 'ENABLE_EXPERIMENTAL_TYPEORM' to 'true' to enable
-                    this feature."
-      >
-        <div class="d-flex align-center">
-          <v-checkbox
-            v-model="experimentalTypeORMSupport"
-            label="Enable TypeORM Support"
-            hide-details
-            disabled
-          >
-            <template v-slot:label>
-              <span>Enable TypeORM Support</span>
-            </template>
-          </v-checkbox>
-        </div>
-      </SettingSection>
-
-      <v-divider />
-
-      <SettingSection
         title="Experimental UI Features"
         tooltip="Enables the next version of the FDM Monster UI (experimental)."
       >
@@ -180,7 +158,6 @@ const experimentalMoonrakerSupport = ref(false);
 const experimentalPrusaLinkSupport = ref(false);
 const experimentalBambuSupport = ref(false);
 const experimentalThumbnailSupport = ref(false);
-const experimentalTypeORMSupport = ref(false);
 const experimentalClientSupport = ref(false);
 const isMoonrakerSupportLoading = ref(false);
 const isPrusaLinkSupportLoading = ref(false);
@@ -199,7 +176,6 @@ async function loadSettings() {
   experimentalPrusaLinkSupport.value = settings.server.experimentalPrusaLinkSupport;
   experimentalBambuSupport.value = settings.server.experimentalBambuSupport;
   experimentalThumbnailSupport.value = settings.server.experimentalThumbnailSupport;
-  experimentalTypeORMSupport.value = settings.server.experimentalTypeormSupport;
   experimentalClientSupport.value = settings.server.experimentalClientSupport;
 }
 
@@ -306,7 +282,7 @@ const updateClientSupport = async () => {
       showClientSuccess.value = true;
 
       setTimeout(() => {
-        window.location.reload();
+        globalThis.location.reload();
       }, 100);
     }, 100);
 
