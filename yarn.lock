@@ -2715,9 +2715,9 @@ __metadata:
   linkType: hard
 
 "@sinclair/typebox@npm:^0.34.0":
-  version: 0.34.41
-  resolution: "@sinclair/typebox@npm:0.34.41"
-  checksum: 10c0/0fb61fc2f90c25e30b19b0096eb8ab3ccef401d3e2acfce42168ff0ee877ba5981c8243fa6b1035ac756cde95316724e978b2837dd642d7e4e095de03a999c90
+  version: 0.34.45
+  resolution: "@sinclair/typebox@npm:0.34.45"
+  checksum: 10c0/05b8e0107f38f06632811156ebac86d2ab72c4f1876a440eeb9f0e02be1b245959552a7a5515f4d56a2a18c2dc147dcdb60ccabb43608cead87ab4359de89142
   languageName: node
   linkType: hard
 
@@ -14601,11 +14601,11 @@ __metadata:
   linkType: hard
 
 "systeminformation@npm:^5.27.14":
-  version: 5.27.16
-  resolution: "systeminformation@npm:5.27.16"
+  version: 5.27.17
+  resolution: "systeminformation@npm:5.27.17"
   bin:
     systeminformation: lib/cli.js
-  checksum: 10c0/2fc5fe3d081aeafff02ab89fa516df47559f15d017790f018208f75926e402df7f6e383c1a1716429093558545d4c8d57dd8fc2cf9aa568c4edc2f8e2dd0423f
+  checksum: 10c0/5cb508a0789d005d6d2f9084ff2567a078039c38723ac95a4ba2657f7808ee564d34c2d17bd67fe7747b820b375f837628c928a4a39b1702bf173072a48c74c6
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
