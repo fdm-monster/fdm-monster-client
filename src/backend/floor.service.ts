@@ -24,7 +24,7 @@ export class FloorService extends BaseService {
     modifiedData.floor = Number.parseInt(modifiedData.floor);
 
     if (Number.isNaN(modifiedData.floor)) {
-      throw new Error("Floor number did not convert to number.");
+      throw new TypeError("Floor number did not convert to number.");
     }
 
     return modifiedData as FloorDto;
