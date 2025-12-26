@@ -61,7 +61,6 @@ import { PrintersService } from "@/backend";
 import { usePrinterStore } from "@/store/printer.store";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialog } from "@/shared/dialog.composable";
-import { IdType } from "@/utils/id.type";
 
 const selectedQuickItems = ref([]);
 const quickItems = [

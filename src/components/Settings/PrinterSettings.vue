@@ -243,7 +243,7 @@ async function bulkDisableGCodeAnalysis() {
       await PrinterSettingsService.setGCodeAnalysis(printer.id, false);
     }
     snackbar.openInfoMessage({
-      title: `Finished disabling GCode analysis for ${printers.length} online printers.`,
+      title: `Finished disabling GCode analysis for ${Object.keys(printers).length} online printers.`,
     });
   } finally {
     loading.value.bulkDisableGCodeAnalysis = false;

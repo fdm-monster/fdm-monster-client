@@ -95,18 +95,17 @@ import { useDialog } from "@/shared/dialog.composable";
 import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { computed, ref } from "vue";
 import { usePrinterStore } from "@/store/printer.store";
-import { IdType } from "@/utils/id.type";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { PrintersService } from "@/backend";
 
-const dialog = useDialog<{ printerId: IdType }>(DialogName.PrinterControlDialog);
+const dialog = useDialog<{ printerId: number }>(DialogName.PrinterControlDialog);
 const printerStore = usePrinterStore();
 const printerStateStore = usePrinterStateStore();
 const printerId = ref();
 
 function onBeforeDialogOpened() {}
 
-async function onDialogOpened(input: { printerId: IdType }) {
+async function onDialogOpened(input: { printerId: number }) {
   printerId.value = input.printerId;
 }
 

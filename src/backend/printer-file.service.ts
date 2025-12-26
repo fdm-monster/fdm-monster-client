@@ -3,17 +3,16 @@ import { ServerApi } from "@/backend/server.api";
 import { ClearedFilesResult, FileDto } from "@/models/printers/printer-file.model";
 import { PrinterDto } from "@/models/printers/printer.model";
 import { useSnackbar } from "@/shared/snackbar.composable";
-import { IdType } from "@/utils/id.type";
 import { downloadFileByBlob } from "@/utils/download-file.util";
 
 export class PrinterFileService extends BaseService {
-  static async getFiles(printerId: IdType) {
+  static async getFiles(printerId: number) {
     const path = `${ServerApi.printerFilesRoute}/${printerId}`;
 
     return (await this.get(path)) as FileDto[];
   }
 
-  static async getThumbnail(printerId: IdType) {
+  static async getThumbnail(printerId: number) {
     const path = `${ServerApi.printerFilesRoute}/${printerId}/thumbnail`;
 
     return await this.get<{
@@ -26,13 +25,13 @@ export class PrinterFileService extends BaseService {
    * A nice alternative for offline or disabled printers
    * @param printerId
    */
-  static async getFileCache(printerId: IdType) {
+  static async getFileCache(printerId: number) {
     const path = `${ServerApi.printerFilesCacheRoute(printerId)}`;
 
     return await this.get<FileDto[]>(path);
   }
 
-  static async selectAndPrintFile(printerId: IdType, filePath: string, print = true) {
+  static async selectAndPrintFile(printerId: number, filePath: string, print = true) {
     const path = ServerApi.printerFilesStartPrintRoute(printerId);
     return await this.post(path, { filePath, print });
   }
@@ -57,7 +56,7 @@ export class PrinterFileService extends BaseService {
     });
   }
 
-  static async clearFiles(printerId: IdType) {
+  static async clearFiles(printerId: number) {
     const path = `${ServerApi.printerFilesClearRoute(printerId)}`;
 
     return this.delete<ClearedFilesResult>(path);
@@ -69,12 +68,12 @@ export class PrinterFileService extends BaseService {
     return this.post(path);
   }
 
-  static async deleteFileOrFolder(printerId: IdType, path: string) {
+  static async deleteFileOrFolder(printerId: number, path: string) {
     const urlPath = `${ServerApi.printerFilesRoute}/${printerId}?path=${encodeURIComponent(path)}`;
     return this.delete(urlPath);
   }
 
-  static async downloadFile(printerId: IdType, path: string) {
+  static async downloadFile(printerId: number, path: string) {
     const urlPath = `${ServerApi.printerFilesRoute}/${printerId}/download/${encodeURIComponent(
       path
     )}`;

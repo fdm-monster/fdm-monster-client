@@ -2,7 +2,6 @@ import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 import { newRandomNamePair } from "@/shared/noun-adjectives.data";
 import { FloorDto, getDefaultCreateFloor, PreCreateFloor } from "@/models/floors/floor.model";
-import { IdType } from "@/utils/id.type";
 
 export class FloorService extends BaseService {
   static convertPrinterFloorToCreateForm(printerFloor?: FloorDto): PreCreateFloor {
@@ -22,10 +21,10 @@ export class FloorService extends BaseService {
     const modifiedData: any = { ...formData };
 
     // Fix the string properties to become int
-    modifiedData.floor = parseInt(modifiedData.floor);
+    modifiedData.floor = Number.parseInt(modifiedData.floor);
 
     if (Number.isNaN(modifiedData.floor)) {
-      throw new Error("Floor number did not convert to number.");
+      throw new TypeError("Floor number did not convert to number.");
     }
 
     return modifiedData as FloorDto;
@@ -34,45 +33,45 @@ export class FloorService extends BaseService {
   static async getFloors() {
     const path = `${ServerApi.floorRoute}/`;
 
-    return (await this.get<FloorDto[]>(path)) as FloorDto[];
+    return await this.get<FloorDto[]>(path);
   }
 
   static async createFloor(floor: FloorDto) {
     const path = `${ServerApi.floorRoute}/`;
 
-    return (await this.post(path, floor)) as FloorDto;
+    return await this.post<FloorDto>(path, floor);
   }
 
-  static async updateFloorName(floorId: IdType, name: string) {
+  static async updateFloorName(floorId: number, name: string) {
     const path = `${ServerApi.updatePrinterFloorNameRoute(floorId)}/`;
 
-    return (await this.patch(path, { name })) as FloorDto;
+    return await this.patch<FloorDto>(path, { name });
   }
 
-  static async updateFloorNumber(floorId: IdType, floor: number) {
+  static async updateFloorNumber(floorId: number, floor: number) {
     const path = `${ServerApi.updatePrinterFloorNumberRoute(floorId)}/`;
 
-    return (await this.patch(path, { floor })) as FloorDto;
+    return await this.patch<FloorDto>(path, { floor });
   }
 
-  static async deleteFloor(floorId: IdType) {
+  static async deleteFloor(floorId: number) {
     const path = `${ServerApi.getFloorRoute(floorId)}/`;
 
     return await this.delete(path);
   }
 
   static async addPrinterToFloor(
-    floorId: IdType,
-    body: { printerId: IdType; x: number; y: number }
+    floorId: number,
+    body: { printerId: number; x: number; y: number }
   ) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
-    return (await this.post(path, body)) as FloorDto;
+    return await this.post<FloorDto>(path, body);
   }
 
-  static async deletePrinterFromFloor(floorId: IdType, printerId: IdType) {
+  static async deletePrinterFromFloor(floorId: number, printerId: number) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
-    return (await this.delete(path, { printerId })) as FloorDto;
+    return await this.delete<FloorDto>(path, { printerId });
   }
 }

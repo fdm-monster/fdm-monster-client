@@ -118,8 +118,8 @@ export default defineComponent({
       return this.activePrintJobs.length || 0;
     },
     currentJob() {
-      return (printerId: string) => {
-        if (!printerId?.length) return;
+      return (printerId: number) => {
+        if (!printerId) return;
         return this.printerStateStore.printerJobsById[printerId];
       };
     },

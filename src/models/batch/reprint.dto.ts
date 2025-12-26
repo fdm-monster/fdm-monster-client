@@ -1,11 +1,10 @@
-import { IdType } from "@/utils/id.type";
 import { FileDto } from "@/models/printers/printer-file.model";
 
 export interface ReprintFileDto {
   file?: FileDto;
   reprintState: ReprintState;
   connectionState: ConnectionState | null;
-  printerId: IdType;
+  printerId: number;
 }
 
 export enum ReprintState {

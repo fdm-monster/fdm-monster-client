@@ -4,7 +4,7 @@ import { UserService } from "@/backend/user.service";
 interface State {
   username: string | null;
   isDemoUser: boolean | null;
-  userId: string | null;
+  userId: number | null;
 }
 
 export const useProfileStore = defineStore("profile", {

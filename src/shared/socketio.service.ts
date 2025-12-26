@@ -1,15 +1,12 @@
-import {
-  PrinterStateDto,
-  SocketIoUpdateMessage,
-} from "@/models/socketio-messages/socketio-message.model";
+import { SocketIoUpdateMessage } from "@/models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "@/store/printer.store";
 import { useFloorStore } from "@/store/floor.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
 import { useTestPrinterStore } from "@/store/test-printer.store";
+import { useDebugSocketStore } from "@/store/debug-socket.store";
 import { useSnackbar } from "./snackbar.composable";
 import { getBaseUri } from "@/shared/http-client";
 import { useAuthStore } from "@/store/auth.store";
-import { IdType } from "@/utils/id.type";
 import { useTrackedUploadsStore } from "@/store/tracked-uploads.store";
 import { io, Socket } from "socket.io-client";
 import { reactive } from "vue";
@@ -34,6 +31,7 @@ export class SocketIoService {
   private readonly printerStateStore = usePrinterStateStore();
   private readonly testPrinterStore = useTestPrinterStore();
   private readonly trackedUploadsStore = useTrackedUploadsStore();
+  private readonly debugSocketStore = useDebugSocketStore();
   private readonly snackbar = useSnackbar();
   private readonly authStore = useAuthStore();
 
@@ -148,9 +146,7 @@ export class SocketIoService {
     }
 
     if (message.printerEvents) {
-      this.printerStateStore.setPrinterEvents(
-        message.printerEvents as Record<IdType, PrinterStateDto>
-      );
+      this.printerStateStore.setPrinterEvents(message.printerEvents);
     }
   }
 
@@ -202,6 +198,11 @@ export class SocketIoService {
     if (!appSocketIO) {
       throw new Error("Cant bind socket app events, socket not created");
     }
+
+    // Register catch-all handler for debugging
+    appSocketIO.onAny((event, ...args) => {
+      this.debugSocketStore.logMessage("in", event, args.length === 1 ? args[0] : args);
+    });
 
     // Register legacy update handler
     appSocketIO.on(IO_MESSAGES.LegacyUpdate, (data) => this.onMessage(data));

@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/vue-query";
 import { PrinterFileService } from "@/backend";
-import { IdType } from "@/utils/id.type";
 import { ComputedRef } from "vue";
 
 export const thumbnailQueryKey = "thumbnail";
 
 export const useThumbnailQuery = (
-  printerId: ComputedRef<IdType | undefined>,
+  printerId: ComputedRef<number | undefined>,
   enabled?: boolean
 ) => {
   return useQuery({

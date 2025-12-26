@@ -1,11 +1,10 @@
 import { PrinterDto } from "@/models/printers/printer.model";
 import { FloorDto } from "../floors/floor.model";
-import { IdType } from "@/utils/id.type";
 import { CurrentOrHistoryPayload } from "@/models/printers/printer-current-job.model";
 
 export interface TrackedUpload {
   correlationToken: string;
-  printerId: IdType;
+  printerId: number;
   startedAt: number;
   multerFile: {
     originalname: string;
@@ -69,8 +68,8 @@ export interface PrinterStateDto {
 
 export interface SocketIoUpdateMessage {
   printers: PrinterDto[];
-  socketStates: Record<IdType, SocketState>;
-  printerEvents: Record<IdType, PrinterStateDto>;
+  socketStates: Record<number, SocketState>;
+  printerEvents: Record<number, PrinterStateDto>;
   trackedUploads: UploadStates;
   floors: FloorDto[];
   [k: string]: any;

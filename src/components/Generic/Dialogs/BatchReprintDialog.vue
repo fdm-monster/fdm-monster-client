@@ -97,7 +97,6 @@ import { DialogName } from "@/components/Generic/Dialogs/dialog.constants";
 import { useDialog } from "@/shared/dialog.composable";
 import { ref } from "vue";
 import { BatchService } from "@/backend/batch.service";
-import { IdType } from "@/utils/id.type";
 import { ReprintFileDto, ReprintState } from "@/models/batch/reprint.dto";
 import { usePrinterStore } from "@/store/printer.store";
 import { errorSummary } from "@/utils/error.utils";
@@ -113,11 +112,11 @@ const selectedItems = ref<ReprintFileDto[]>([]);
 const errorLoading = ref("");
 const snackbar = useSnackbar();
 
-function onBeforeDialogOpened(_: IdType[]) {
+function onBeforeDialogOpened(_: number[]) {
   loading.value = true;
 }
 
-async function onDialogOpened(printerIds: IdType[]) {
+async function onDialogOpened(printerIds: number[]) {
   inputPrinterIds.value = printerIds;
   try {
     const response = await BatchService.batchGetLastPrintedFiles(inputPrinterIds.value);
@@ -132,7 +131,7 @@ async function onDialogOpened(printerIds: IdType[]) {
   loading.value = false;
 }
 
-function getPrintServiceName(printerId: IdType) {
+function getPrintServiceName(printerId: number) {
   const printerType = printerStore.printer(printerId)?.printerType;
   if (printerType === 0) {
     return "OctoPrint";

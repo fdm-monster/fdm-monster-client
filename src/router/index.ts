@@ -22,6 +22,7 @@ import FirstTimeSetupView from "@/components/FirstTimeSetup/FirstTimeSetupView.v
 import RegistrationView from "@/components/Login/RegistrationView.vue";
 import ServerProtectionSettings from "@/components/Settings/ServerProtectionSettings.vue";
 import ExperimentalSettings from "@/components/Settings/ExperimentalSettings.vue";
+import DebugSocketSettings from "@/components/Settings/DebugSocketSettings.vue";
 
 const NeedsAuth = {
   requiresAuth: true,
@@ -126,6 +127,11 @@ const routes: Array<RouteConfig> = [
         path: "experimental",
         meta: NeedsAuth,
         component: ExperimentalSettings,
+      },
+      {
+        path: "debug-socket",
+        meta: NeedsAuth,
+        component: DebugSocketSettings,
       },
     ],
   },
