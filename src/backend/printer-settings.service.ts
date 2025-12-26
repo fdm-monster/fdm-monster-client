@@ -2,12 +2,6 @@ import { BaseService } from "@/backend/base.service";
 import { ServerApi } from "@/backend/server.api";
 
 export class PrinterSettingsService extends BaseService {
-  static async getSettings(printerId: number) {
-    const path = `${ServerApi.getPrinterSettingsRoute(printerId)}`;
-
-    return await this.get(path);
-  }
-
   /**
    * Enabled: true => idle, enabled: false => disabled
    * @param printerId
