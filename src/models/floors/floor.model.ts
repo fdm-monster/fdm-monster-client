@@ -14,11 +14,11 @@ export interface PreCreateFloor {
   printers: PositionDto[];
 }
 
-export interface PositionDto<KeyType = number> {
+export interface PositionDto {
   x: number;
   y: number;
-  printerId: KeyType;
-  floorId: KeyType;
+  printerId: number;
+  floorId: number;
 }
 
 export const getDefaultCreateFloor = (): PreCreateFloor => ({

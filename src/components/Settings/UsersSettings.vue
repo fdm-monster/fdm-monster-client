@@ -243,8 +243,6 @@ async function setRootUser(user: User, isRootUser: boolean = true) {
 async function updateUserRoles(user: User) {
   try {
     loading.value = true;
-    console.log(user.roles);
-    console.log(user.roles.map((v) => typeof v));
     await UserService.setUserRoles(user.id, user.roles);
     await userQuery.refetch();
     snackbar.info(`Roles updated for ${user.username}`);

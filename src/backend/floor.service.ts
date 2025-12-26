@@ -21,7 +21,7 @@ export class FloorService extends BaseService {
     const modifiedData: any = { ...formData };
 
     // Fix the string properties to become int
-    modifiedData.floor = parseInt(modifiedData.floor);
+    modifiedData.floor = Number.parseInt(modifiedData.floor);
 
     if (Number.isNaN(modifiedData.floor)) {
       throw new Error("Floor number did not convert to number.");
@@ -33,25 +33,25 @@ export class FloorService extends BaseService {
   static async getFloors() {
     const path = `${ServerApi.floorRoute}/`;
 
-    return (await this.get<FloorDto[]>(path)) as FloorDto[];
+    return await this.get<FloorDto[]>(path);
   }
 
   static async createFloor(floor: FloorDto) {
     const path = `${ServerApi.floorRoute}/`;
 
-    return (await this.post(path, floor)) as FloorDto;
+    return await this.post<FloorDto>(path, floor);
   }
 
   static async updateFloorName(floorId: number, name: string) {
     const path = `${ServerApi.updatePrinterFloorNameRoute(floorId)}/`;
 
-    return (await this.patch(path, { name })) as FloorDto;
+    return await this.patch<FloorDto>(path, { name });
   }
 
   static async updateFloorNumber(floorId: number, floor: number) {
     const path = `${ServerApi.updatePrinterFloorNumberRoute(floorId)}/`;
 
-    return (await this.patch(path, { floor })) as FloorDto;
+    return await this.patch<FloorDto>(path, { floor });
   }
 
   static async deleteFloor(floorId: number) {
@@ -66,12 +66,12 @@ export class FloorService extends BaseService {
   ) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
-    return (await this.post(path, body)) as FloorDto;
+    return await this.post<FloorDto>(path, body);
   }
 
   static async deletePrinterFromFloor(floorId: number, printerId: number) {
     const path = `${ServerApi.addOrRemovePrinterFromFloorRoute(floorId)}/`;
 
-    return (await this.delete(path, { printerId })) as FloorDto;
+    return await this.delete<FloorDto>(path, { printerId });
   }
 }

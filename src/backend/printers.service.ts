@@ -78,13 +78,13 @@ export class PrintersService extends BaseService {
   static async createPrinter(printer: CreatePrinter, forceSave: boolean) {
     const path = `${ServerApi.printerRoute}?forceSave=${forceSave}`;
 
-    return (await this.post(path, printer)) as PrinterDto;
+    return await this.post<PrinterDto>(path, printer);
   }
 
   static async batchImportPrinters(printers: CreatePrinter[]) {
     const path = ServerApi.printerBatchRoute;
 
-    return (await this.post(path, printers)) as PrinterDto[];
+    return await this.post<PrinterDto[]>(path, printers)
   }
 
   static async deletePrinter(printerId: number) {
@@ -96,19 +96,19 @@ export class PrintersService extends BaseService {
   static async updatePrinter(printerId: number, printer: CreatePrinter, forceSave: boolean) {
     const path = ServerApi.getPrinterRoute(printerId);
     const fullPath = `${path}?forceSave=${forceSave}`;
-    return (await this.patch(fullPath, printer)) as PrinterDto;
+    return await this.patch<PrinterDto>(fullPath, printer);
   }
 
   static async updatePrinterMaintenance(printerId: number, disabledReason: string | null = null) {
     const path = ServerApi.postPrinterDisabledReasonRoute(printerId);
 
-    return (await this.patch(path, { disabledReason })) as PrinterDto;
+    return await this.patch<PrinterDto>(path, { disabledReason });
   }
 
   static async testConnection(printer: CreatePrinter) {
     const path = ServerApi.printerTestConnectionRoute;
 
-    return (await this.post(path, printer)) as PrinterDto;
+    return await this.post<PrinterDto>(path, printer);
   }
 
   static async toggleEnabled(printerId: number, enabled: boolean) {
