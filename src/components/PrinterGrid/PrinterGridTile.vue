@@ -248,9 +248,9 @@
 
           <v-tooltip
             :disabled="printer?.enabled"
-            close-delay="100"
+            :close-delay="100"
             color="danger"
-            open-delay="0"
+            :open-delay="0"
             top
           >
             <template v-slot:activator="{ on, attrs }">
@@ -307,7 +307,7 @@ import PrinterCreateAction from "@/components/Generic/Actions/PrinterCreateActio
 const defaultColor = "rgba(100,100,100,0.1)";
 
 const props = defineProps({
-  printer: { type: Object as PropType<PrinterDto | undefined>, required: true },
+  printer: { type: Object as PropType<PrinterDto | undefined>, required: false },
   x: { type: Number, required: true },
   y: { type: Number, required: true },
 });

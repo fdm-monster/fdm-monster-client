@@ -17,9 +17,11 @@ import { VueQueryPlugin } from "@tanstack/vue-query";
 import BaseDialog from "@/components/Generic/Dialogs/BaseDialog.vue";
 import { version as packageJsonVersion } from "../package.json";
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 Vue.config.productionTip = false;
-Vue.config.silent = true;
-Vue.config.devtools = false;
+Vue.config.devtools = isDev;
+Vue.config.silent = !isDev;
 
 configureVeeValidate();
 registerFileDropDirective();
