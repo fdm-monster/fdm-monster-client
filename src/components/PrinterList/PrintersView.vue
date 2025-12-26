@@ -27,7 +27,7 @@
       </v-card-title>
 
       <v-data-table
-        :expanded.sync="expanded"
+        v-model:expanded="expanded"
         :headers="tableHeaders"
         :items="printers"
         :search="search"
