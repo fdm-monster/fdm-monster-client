@@ -1,6 +1,10 @@
 # Release notes
 
-## Client 24/12/2025 1.13.0
+## Client 26/12/2025 1.13.0
+
+Feature
+
+- SocketIO debug page in settings
 
 Fixes
 
