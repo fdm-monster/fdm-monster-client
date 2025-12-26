@@ -1,7 +1,4 @@
-import {
-  PrinterStateDto,
-  SocketIoUpdateMessage,
-} from "@/models/socketio-messages/socketio-message.model";
+import { SocketIoUpdateMessage } from "@/models/socketio-messages/socketio-message.model";
 import { usePrinterStore } from "@/store/printer.store";
 import { useFloorStore } from "@/store/floor.store";
 import { usePrinterStateStore } from "@/store/printer-state.store";
@@ -147,9 +144,7 @@ export class SocketIoService {
     }
 
     if (message.printerEvents) {
-      this.printerStateStore.setPrinterEvents(
-        message.printerEvents as Record<number, PrinterStateDto>
-      );
+      this.printerStateStore.setPrinterEvents(message.printerEvents);
     }
   }
 
