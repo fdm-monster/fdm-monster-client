@@ -6,6 +6,8 @@ Fixes
 
 - The frontend now only support number id types (dropping mongodb support)
 - User Roles changes have been switched to role name strings
+- Enable non-silent errors in production console, disable devtools in prod
+- Fix some prop constrains (v-tooltip open-delay and grid tile printer is not-required)
 
 ## Client 24/12/2025 1.12.3
 
