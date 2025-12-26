@@ -320,7 +320,7 @@ const openCreatePrinterDialog = () => {
 
 const clickRow = (item: PrinterDto, event: any) => {
   if (event.isExpanded) {
-    const index = expanded.value.findIndex((i) => i === item);
+    const index = expanded.value.indexOf(item);
     expanded.value.splice(index, 1);
   } else {
     expanded.value.push(item);
