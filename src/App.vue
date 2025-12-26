@@ -28,6 +28,7 @@
     <FileExplorerSideNav />
     <BatchReprintDialog />
     <PrinterControlDialog />
+    <JsonViewerDialog />
   </v-app>
 </template>
 
@@ -53,6 +54,7 @@ import AppErrorSnackbar from "@/components/Generic/Snackbars/AppErrorSnackbar.vu
 import AppInfoSnackbar from "@/components/Generic/Snackbars/AppInfoSnackbar.vue";
 import CreateUserDialog from "@/components/Generic/Dialogs/CreateUserDialog.vue";
 import GridSettingsDialog from "@/components/Generic/Dialogs/GridSettingsDialog.vue";
+import JsonViewerDialog from "@/components/Generic/Dialogs/JsonViewerDialog.vue";
 
 const uploadsStore = useUploadsStore();
 const authStore = useAuthStore();

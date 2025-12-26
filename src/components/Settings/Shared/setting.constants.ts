@@ -9,6 +9,7 @@ export const settingPage = {
   softwareUpgrade: "softwareUpgrade",
   diagnostics: "diagnostics",
   experimental: "experimental",
+  debugSocket: "debugSocket",
 } as const;
 
 export const settingsPage = {
@@ -70,6 +71,12 @@ export const settingsPage = {
     title: "Experimental",
     icon: "settings_applications",
     path: "/settings/experimental",
+    divider: false,
+  },
+  [settingPage.debugSocket]: {
+    title: "SocketIO Debug",
+    icon: "wifi_tethering",
+    path: "/settings/debug-socket",
     divider: false,
   },
 } as const;

@@ -72,7 +72,7 @@ export class ServerApi {
   static readonly printerFilesClearRoute = (id: number) =>
     `${ServerApi.printerFilesRoute}/${id}/clear`;
   static readonly printerFilesStartPrintRoute = (id: number) =>
-    `${ServerApi.printerFilesRoute}/${id}/select`; // TODO rename to start-print
+    `${ServerApi.printerFilesRoute}/${id}/select`;
   static readonly printerFilesUploadRoute = (id: number) =>
     `${ServerApi.printerFilesRoute}/${id}/upload`;
   static readonly printerFilesCacheRoute = (id: number) =>
