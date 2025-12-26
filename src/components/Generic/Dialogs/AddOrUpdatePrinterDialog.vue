@@ -334,7 +334,7 @@ const updatePrinter = async (updatedPrinter: CreatePrinter) => {
 
   const printer = await printersStore.updatePrinter(
       {
-        printerId: printerId as string,
+        printerId: printerId!,
         updatedPrinter,
       },
       forceSavePrinter.value
