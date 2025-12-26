@@ -12,8 +12,9 @@ export class UserService extends BaseService {
   static async createUser(data: ICreateUser) {
     const path = ServerApi.userRoute;
 
-    return await this.post(path, data);
+    await this.post(path, data);
   }
+
   static async listUsers() {
     const path = ServerApi.userRoute;
 
