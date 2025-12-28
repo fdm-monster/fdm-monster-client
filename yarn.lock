@@ -14601,11 +14601,11 @@ __metadata:
   linkType: hard
 
 "systeminformation@npm:^5.27.14":
-  version: 5.28.1
-  resolution: "systeminformation@npm:5.28.1"
+  version: 5.28.2
+  resolution: "systeminformation@npm:5.28.2"
   bin:
     systeminformation: lib/cli.js
-  checksum: 10c0/e3e9cfb3e112b9b7c7def2cf62a9d096d0ba17cbda7a07bcd3efd69ed649be72a72725234063f4e59b15656dc2746155afd35ec03073685378607d88c136bdae
+  checksum: 10c0/d37de7bda422f1f80fa95b1cc498cbcada4d5113b6a9f3d60e8e27e8f371efc8a8f137d75e71c844c5f20d5336185cc2c469e6dd2a92c6d569a1ad0d308eec62
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
